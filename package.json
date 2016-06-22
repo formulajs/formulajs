@@ -1,21 +1,27 @@
 {
-  "author": "Ismael Ghalimi <ismael@stoic.com>",
+  "author": "Handsoncode <hello@handsontable.com>",
   "name": "formulajs",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "git@github.com:sutoiku/formula.js.git"
+    "url": "git@github.com:handsontable/formula.js.git"
   },
   "main": "index.js",
   "bin": {
     "implementation-stats": "./bin/implementation-stats"
   },
+  "scripts": {
+    "test": "make test",
+    "lint": "make lint",
+    "watch": "make watch",
+    "build": "make build",
+    "coverage": "make coverage"
+  },
   "dependencies": {
-    "bessel": "0.2.0",
-    "jStat": "1.0.6",
-    "numeral": "1.5.3",
-    "numeric": "1.2.6"
+    "bessel": "^0.2.0",
+    "jStat": "^1.5.3",
+    "numbro": "^1.8.0"
   },
   "devDependencies": {
     "istanbul": "*",
@@ -34,5 +40,6 @@
       "pattern": "lib",
       "data-cover-never": "node_modules"
     }
-  }
+  },
+  "license": "MIT"
 }

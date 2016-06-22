@@ -1,13 +1,11 @@
 formula.js
 ==========
 
-[![Build Status](https://drone.io/github.com/sutoiku/formula.js/status.png)](https://drone.io/github.com/sutoiku/formula.js/latest)
-
 JavaScript implementation of most Microsoft Excel formula functions
 
-This library is under development.
+This project is forked from [sutoiku/formula.js](https://github.com/sutoiku/formula.js) and it's developed for Handsontable needs.
 
-Documentation available at [stoic.com/formula](http://stoic.com/formula)
+Documentation available at [sutoiku/formula.js](https://github.com/sutoiku/formula.js)
 
 LICENSE
 -------
