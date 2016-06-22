@@ -362,57 +362,12 @@ suite('Math & Trig', function() {
     mathTrig.LTE('string', 2).should.equal(error.error);
   });
 
-  test('MDETERM', function() {
-    mathTrig.MDETERM([
-      [1, 2],
-      [3, 4]
-    ]).should.equal(-2);
-    mathTrig.MDETERM([
-      [1, 'invalid'],
-      [3, 4]
-    ]).should.equal(error.value);
-  });
-
   test('MINUS', function() {
     mathTrig.MINUS(10, 4).should.equal(6);
     mathTrig.MINUS(1.2, 4).should.equal(-2.8);
     mathTrig.MINUS().should.equal(error.na);
     mathTrig.MINUS(1).should.equal(error.na);
     mathTrig.MINUS(1, 'string').should.equal(error.value);
-  });
-
-  test('MINVERSE', function() {
-    should.deepEqual(mathTrig.MINVERSE([
-      [1, 2],
-      [3, 4]
-    ]), [
-      [-1.9999999999999996, 0.9999999999999998],
-      [1.4999999999999998, -0.49999999999999994]
-    ]);
-    mathTrig.MINVERSE([
-      [1, 'invalid'],
-      [3, 4]
-    ]).should.equal(error.value);
-  });
-
-  test('MMULT', function() {
-    should.deepEqual(mathTrig.MMULT([
-      [1, 2],
-      [3, 4]
-    ], [
-      [1, 2],
-      [3, 4]
-    ]), [
-      [7, 10],
-      [15, 22]
-    ]);
-    mathTrig.MMULT([
-      [1, 2],
-      [3, 'invalid']
-    ], [
-      [1, 2],
-      [3, 4]
-    ]).should.equal(error.value);
   });
 
   test('MOD', function() {
@@ -446,15 +401,6 @@ suite('Math & Trig', function() {
     mathTrig.MULTIPLY().should.equal(error.na);
     mathTrig.MULTIPLY(1).should.equal(error.na);
     mathTrig.MULTIPLY(1, 'string').should.equal(error.value);
-  });
-
-  test('MUNIT', function() {
-    should.deepEqual(mathTrig.MUNIT(3), [
-      [1, 0, 0],
-      [0, 1, 0],
-      [0, 0, 1]
-    ]);
-    mathTrig.MUNIT('invalid').should.equal(error.value);
   });
 
   test('NE', function() {
