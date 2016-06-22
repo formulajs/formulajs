@@ -11,6 +11,13 @@
   "bin": {
     "implementation-stats": "./bin/implementation-stats"
   },
+  "scripts": {
+    "test": "make test",
+    "lint": "make lint",
+    "watch": "make watch",
+    "build": "make build",
+    "coverage": "make coverage"
+  },
   "dependencies": {
     "bessel": "^0.2.0",
     "jStat": "^1.5.3",
@@ -33,5 +40,6 @@
       "pattern": "lib",
       "data-cover-never": "node_modules"
     }
-  }
+  },
+  "license": "MIT"
 }
