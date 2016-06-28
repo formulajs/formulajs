@@ -92,6 +92,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      fn[i] = root[i];
 	    }
 	  }
+
 	  return fn;
 	}
 
@@ -597,7 +598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return o;
 	  }
 	  for (var i, j, n, d, r = 1;
-	    (n = o.pop()) !== undefined;) {
+	       (n = o.pop()) !== undefined;) {
 	    while (n > 1) {
 	      if (n % 2) {
 	        for (i = 3, j = Math.floor(Math.sqrt(n)); i <= j && n % i; i += 2) {
@@ -608,7 +609,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        d = 2;
 	      }
 	      for (n /= d, r *= d, i = o.length; i;
-	        (o[--i] % d) === 0 && (o[i] /= d) === 1 && o.splice(i, 1)) {
+	           (o[--i] % d) === 0 && (o[i] /= d) === 1 && o.splice(i, 1)) {
 	        //empty
 	      }
 	    }
@@ -622,6 +623,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return number;
 	  }
 	  return Math.log(number);
+	};
+
+	exports.LN10 = function() {
+	  return Math.log(10);
+	};
+
+	exports.LN2 = function() {
+	  return Math.log(2);
+	};
+
+	exports.LOG10E = function() {
+	  return Math.log10(Math.E);
+	};
+
+	exports.LOG2E = function() {
+	  return Math.log2(Math.E);
 	};
 
 	exports.LOG = function(number, base) {
@@ -655,7 +672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return (divisor > 0) ? modulus : -modulus;
 	};
 
-	  exports.MROUND = function(number, multiple) {
+	exports.MROUND = function(number, multiple) {
 	  number = utils.parseNumber(number);
 	  multiple = utils.parseNumber(multiple);
 	  if (utils.anyIsError(number, multiple)) {
@@ -694,6 +711,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.PI = function() {
 	  return Math.PI;
+	};
+
+	exports.E = function() {
+	  return Math.E;
 	};
 
 	exports.POWER = function(number, power) {
@@ -854,32 +875,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Math.sin(number);
 	};
 
-	  exports.SINH = function(number) {
-	    number = utils.parseNumber(number);
-	    if (number instanceof Error) {
-	      return number;
-	    }
-	    return (Math.exp(number) - Math.exp(-number)) / 2;
-	  };
+	exports.SINH = function(number) {
+	  number = utils.parseNumber(number);
+	  if (number instanceof Error) {
+	    return number;
+	  }
+	  return (Math.exp(number) - Math.exp(-number)) / 2;
+	};
 
-	  exports.SQRT = function(number) {
-	    number = utils.parseNumber(number);
-	    if (number instanceof Error) {
-	      return number;
-	    }
-	    if (number < 0) {
-	      return error.num;
-	    }
-	    return Math.sqrt(number);
-	  };
+	exports.SQRT = function(number) {
+	  number = utils.parseNumber(number);
+	  if (number instanceof Error) {
+	    return number;
+	  }
+	  if (number < 0) {
+	    return error.num;
+	  }
+	  return Math.sqrt(number);
+	};
 
-	  exports.SQRTPI = function(number) {
-	    number = utils.parseNumber(number);
-	    if (number instanceof Error) {
-	      return number;
-	    }
-	    return Math.sqrt(number * Math.PI);
-	  };
+	exports.SQRTPI = function(number) {
+	  number = utils.parseNumber(number);
+	  if (number instanceof Error) {
+	    return number;
+	  }
+	  return Math.sqrt(number * Math.PI);
+	};
+
+	exports.SQRT1_2 = function() {
+	  return 1 / Math.sqrt(2);
+	};
+
+	exports.SQRT2 = function() {
+	  return Math.sqrt(2);
+	};
 
 	exports.SUBTOTAL = function(function_code, ref1) {
 	  function_code = utils.parseNumber(function_code);
@@ -909,7 +938,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return statistical.VAR.S(ref1);
 	    case 11:
 	      return statistical.VAR.P(ref1);
-	      // no hidden values for us
+	    // no hidden values for us
 	    case 101:
 	      return statistical.AVERAGE(ref1);
 	    case 102:
@@ -1247,6 +1276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var sign = (number > 0) ? 1 : -1;
 	  return sign * (Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits);
 	};
+
 
 /***/ },
 /* 3 */
@@ -1741,7 +1771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  if (observed[0] && expected[0] &&
-	      observed[0].length !== expected[0].length) {
+	    observed[0].length !== expected[0].length) {
 	    return error.value;
 	  }
 
@@ -3246,12 +3276,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	//TODO
 	exports.ASC = function() {
-	 throw new Error('ASC is not implemented');
+	  throw new Error('ASC is not implemented');
 	};
 
 	//TODO
 	exports.BAHTTEXT = function() {
-	 throw new Error('BAHTTEXT is not implemented');
+	  throw new Error('BAHTTEXT is not implemented');
 	};
 
 	exports.CHAR = function(number) {
@@ -3291,7 +3321,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	//TODO
 	exports.DBCS = function() {
-	 throw new Error('DBCS is not implemented');
+	  throw new Error('DBCS is not implemented');
 	};
 
 	exports.DOLLAR = function(number, decimals) {
@@ -3413,7 +3443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.PRONETIC = function() {
-	 throw new Error('PRONETIC is not implemented');
+	  throw new Error('PRONETIC is not implemented');
 	};
 
 	exports.PROPER = function(text) {
@@ -11231,7 +11261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.CELL = function() {
-	 throw new Error('CELL is not implemented');
+	  throw new Error('CELL is not implemented');
 	};
 
 	exports.ERROR = {};
@@ -11251,7 +11281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.INFO = function() {
-	 throw new Error('INFO is not implemented');
+	  throw new Error('INFO is not implemented');
 	};
 
 	exports.ISBLANK = function(value) {
@@ -11382,6 +11412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
+	  
 	  return bessel.besseli(x, n);
 	};
 
@@ -11391,6 +11422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
+	  
 	  return bessel.besselj(x, n);
 	};
 
@@ -11400,6 +11432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
+	  
 	  return bessel.besselk(x, n);
 	};
 
@@ -11409,6 +11442,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
+	  
 	  return bessel.bessely(x, n);
 	};
 
@@ -12111,7 +12145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.ERF.PRECISE = function() {
-	 throw new Error('ERF.PRECISE is not implemented');
+	  throw new Error('ERF.PRECISE is not implemented');
 	};
 
 	exports.ERFC = function(x) {
@@ -12125,7 +12159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.ERFC.PRECISE = function() {
-	 throw new Error('ERFC.PRECISE is not implemented');
+	  throw new Error('ERFC.PRECISE is not implemented');
 	};
 
 	exports.GESTEP = function(number, step) {
@@ -12918,6 +12952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
+
 /***/ },
 /* 50 */
 /***/ function(module, exports, __webpack_require__) {
@@ -13213,6 +13248,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return error.num;
 	  }
 	  var date = new Date(year, month - 1, day);
+
 	  return date;
 	};
 
@@ -13227,6 +13263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (date <= -2203891200000) {
 	    return (date - d1900) / 86400000 + 1;
 	  }
+
 	  return (date - d1900) / 86400000 + 2;
 	};
 
@@ -13235,18 +13272,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (date instanceof Error) {
 	    return date;
 	  }
+
 	  return date.getDate();
 	};
 
 	exports.DAYS = function(end_date, start_date) {
 	  end_date = utils.parseDate(end_date);
 	  start_date = utils.parseDate(start_date);
+
 	  if (end_date instanceof Error) {
 	    return end_date;
 	  }
 	  if (start_date instanceof Error) {
 	    return start_date;
 	  }
+
 	  return serial(end_date) - serial(start_date);
 	};
 
@@ -13254,6 +13294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  method = utils.parseBool(method);
 	  start_date = utils.parseDate(start_date);
 	  end_date = utils.parseDate(end_date);
+
 	  if (start_date instanceof Error) {
 	    return start_date;
 	  }
@@ -13266,6 +13307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var sm = start_date.getMonth();
 	  var em = end_date.getMonth();
 	  var sd, ed;
+
 	  if (method) {
 	    sd = start_date.getDate() === 31 ? 30 : start_date.getDate();
 	    ed = end_date.getDate() === 31 ? 30 : end_date.getDate();
@@ -13284,12 +13326,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      ed = end_date.getDate();
 	    }
 	  }
+
 	  return 360 * (end_date.getFullYear() - start_date.getFullYear()) +
 	    30 * (em - sm) + (ed - sd);
 	};
 
 	exports.EDATE = function(start_date, months) {
 	  start_date = utils.parseDate(start_date);
+
 	  if (start_date instanceof Error) {
 	    return start_date;
 	  }
@@ -13298,11 +13342,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  months = parseInt(months, 10);
 	  start_date.setMonth(start_date.getMonth() + months);
+
 	  return serial(start_date);
 	};
 
 	exports.EOMONTH = function(start_date, months) {
 	  start_date = utils.parseDate(start_date);
+
 	  if (start_date instanceof Error) {
 	    return start_date;
 	  }
@@ -13310,14 +13356,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return error.value;
 	  }
 	  months = parseInt(months, 10);
+
 	  return serial(new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0));
 	};
 
 	exports.HOUR = function(serial_number) {
 	  serial_number = utils.parseDate(serial_number);
+
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
+
 	  return serial_number.getHours();
 	};
 
@@ -13348,12 +13397,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  min   = (min   > 0) ? min   + 'M' : '';
 	  sec   = (sec   > 0) ? sec   + 'S' : '';
 
-	  return 'P' + year + month + day +
-	  'T' + hour + min + sec;
+	  return 'P' + year + month + day + 'T' + hour + min + sec;
 	};
 
 	exports.ISOWEEKNUM = function(date) {
 	  date = utils.parseDate(date);
+
 	  if (date instanceof Error) {
 	    return date;
 	  }
@@ -13361,22 +13410,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  date.setHours(0, 0, 0);
 	  date.setDate(date.getDate() + 4 - (date.getDay() || 7));
 	  var yearStart = new Date(date.getFullYear(), 0, 1);
+
 	  return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 	};
 
 	exports.MINUTE = function(serial_number) {
 	  serial_number = utils.parseDate(serial_number);
+
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
+
 	  return serial_number.getMinutes();
 	};
 
 	exports.MONTH = function(serial_number) {
 	  serial_number = utils.parseDate(serial_number);
+
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
+
 	  return serial_number.getMonth() + 1;
 	};
 
@@ -13386,10 +13440,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.NETWORKDAYS.INTL = function(start_date, end_date, weekend, holidays) {
 	  start_date = utils.parseDate(start_date);
+
 	  if (start_date instanceof Error) {
 	    return start_date;
 	  }
 	  end_date = utils.parseDate(end_date);
+
 	  if (end_date instanceof Error) {
 	    return end_date;
 	  }
@@ -13406,6 +13462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } else if (!(holidays instanceof Array)) {
 	    holidays = [holidays];
 	  }
+
 	  for (var i = 0; i < holidays.length; i++) {
 	    var h = utils.parseDate(holidays[i]);
 	    if (h instanceof Error) {
@@ -13436,6 +13493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    day.setDate(day.getDate() + 1);
 	  }
+
 	  return total;
 	};
 
@@ -13448,6 +13506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
+
 	  return serial_number.getSeconds();
 	};
 
@@ -13461,17 +13520,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (hour < 0 || minute < 0 || second < 0) {
 	    return error.num;
 	  }
+
 	  return (3600 * hour + 60 * minute + second) / 86400;
 	};
 
 	exports.TIMEVALUE = function(time_text) {
 	  time_text = utils.parseDate(time_text);
+
 	  if (time_text instanceof Error) {
 	    return time_text;
 	  }
-	  return (3600 * time_text.getHours() +
-	    60 * time_text.getMinutes() +
-	    time_text.getSeconds()) / 86400;
+
+	  return (3600 * time_text.getHours() + 60 * time_text.getMinutes() + time_text.getSeconds()) / 86400;
 	};
 
 	exports.TODAY = function() {
@@ -13487,6 +13547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return_type = 1;
 	  }
 	  var day = serial_number.getDay();
+
 	  return WEEK_TYPES[return_type][day];
 	};
 
@@ -13505,6 +13566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var jan = new Date(serial_number.getFullYear(), 0, 1);
 	  var inc = jan.getDay() < week_start ? 1 : 0;
 	  jan -= Math.abs(jan.getDay() - week_start) * 24 * 60 * 60 * 1000;
+
 	  return Math.floor(((serial_number - jan) / (1000 * 60 * 60 * 24)) / 7 + 1) + inc;
 	};
 
@@ -13562,14 +13624,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    d++;
 	  }
+
 	  return start_date;
 	};
 
 	exports.YEAR = function(serial_number) {
 	  serial_number = utils.parseDate(serial_number);
+	  
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
+
 	  return serial_number.getFullYear();
 	};
 
@@ -13627,8 +13692,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var ylength = 365;
 	      if (sy === ey || ((sy + 1) === ey) && ((sm > em) || ((sm === em) && (sd >= ed)))) {
 	        if ((sy === ey && isLeapYear(sy)) ||
-	            feb29Between(start_date, end_date) ||
-	            (em === 1 && ed === 29)) {
+	          feb29Between(start_date, end_date) ||
+	          (em === 1 && ed === 29)) {
 	          ylength = 366;
 	        }
 	        return daysBetween(start_date, end_date) / ylength;
@@ -13650,9 +13715,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	function serial(date) {
-	  var addOn = (date > -2203891200000)?2:1;
+	  var addOn = (date > -2203891200000) ? 2 : 1;
+	  
 	  return (date - d1900) / 86400000 + addOn;
 	}
+
 
 /***/ },
 /* 52 */
@@ -13666,10 +13733,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	function compact(array) {
 	  if (!array) { return array; }
 	  var result = [];
+	  
 	  for (var i = 0; i < array.length; ++i) {
 	    if (!array[i]) { continue; }
 	    result.push(array[i]);
 	  }
+	  
 	  return result;
 	}
 
@@ -13686,6 +13755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (index == null) {
 	    return error.value;
 	  }
+	  
 	  return index;
 	};
 
@@ -13732,6 +13802,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      result.push(n - 1);
 	    }
 	  }
+	  
 	  return result;
 	}
 
@@ -13743,6 +13814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13753,6 +13825,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    sum += targetFields[resultIndexes[i]];
 	  }
+	  
 	  return resultIndexes.length === 0 ? error.div0 : sum / resultIndexes.length;
 	};
 
@@ -13763,16 +13836,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var targetValues = [];
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
+	  
 	  return stats.COUNT(targetValues);
 	};
 
@@ -13781,18 +13857,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
+	  
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var targetValues = [];
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
+	  
 	  return stats.COUNTA(targetValues);
 	};
 
@@ -13801,6 +13881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
+	  
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
 	  if (typeof field === "string") {
@@ -13809,6 +13890,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  // Return error if no record meets the criteria
 	  if (resultIndexes.length === 0) {
 	    return error.value;
@@ -13829,18 +13911,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var maxValue = targetFields[resultIndexes[0]];
 	  for (var i = 1; i < resultIndexes.length; i++) {
 	    if (maxValue < targetFields[resultIndexes[i]]) {
 	      maxValue = targetFields[resultIndexes[i]];
 	    }
 	  }
+	  
 	  return maxValue;
 	};
 
@@ -13849,6 +13934,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
+	  
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
 	  if (typeof field === "string") {
@@ -13857,12 +13943,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var minValue = targetFields[resultIndexes[0]];
 	  for (var i = 1; i < resultIndexes.length; i++) {
 	    if (minValue > targetFields[resultIndexes[i]]) {
 	      minValue = targetFields[resultIndexes[i]];
 	    }
 	  }
+	  
 	  return minValue;
 	};
 
@@ -13871,23 +13959,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
+	  
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var targetValues = [];
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
 	  targetValues = compact(targetValues);
+	  
 	  var result = 1;
 	  for (i = 0; i < targetValues.length; i++) {
 	    result *= targetValues[i];
 	  }
+	  
 	  return result;
 	};
 
@@ -13898,6 +13991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13909,6 +14003,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
 	  targetValues = compact(targetValues);
+	  
 	  return stats.STDEV.S(targetValues);
 	};
 
@@ -13919,17 +14014,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var targetValues = [];
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
 	  targetValues = compact(targetValues);
+	  
 	  return stats.STDEV.P(targetValues);
 	};
 
@@ -13940,16 +14038,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
+	  
 	  var targetValues = [];
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
+	  
 	  return maths.SUM(targetValues);
 	};
 
@@ -13960,6 +14061,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13970,6 +14072,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
+	  
 	  return stats.VAR.S(targetValues);
 	};
 
@@ -13980,6 +14083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+	  
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13990,6 +14094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  for (var i = 0; i < resultIndexes.length; i++) {
 	    targetValues[i] = targetFields[resultIndexes[i]];
 	  }
+	  
 	  return stats.VAR.P(targetValues);
 	};
 
@@ -14162,47 +14267,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.ACCRINTM = function() {
-	 throw new Error('ACCRINTM is not implemented');
+	  throw new Error('ACCRINTM is not implemented');
 	};
 
 	// TODO
 	exports.AMORDEGRC = function() {
-	 throw new Error('AMORDEGRC is not implemented');
+	  throw new Error('AMORDEGRC is not implemented');
 	};
 
 	// TODO
 	exports.AMORLINC = function() {
-	 throw new Error('AMORLINC is not implemented');
+	  throw new Error('AMORLINC is not implemented');
 	};
 
 	// TODO
 	exports.COUPDAYBS = function() {
-	 throw new Error('COUPDAYBS is not implemented');
+	  throw new Error('COUPDAYBS is not implemented');
 	};
 
 	// TODO
 	exports.COUPDAYS = function() {
-	 throw new Error('COUPDAYS is not implemented');
+	  throw new Error('COUPDAYS is not implemented');
 	};
 
 	// TODO
 	exports.COUPDAYSNC = function() {
-	 throw new Error('COUPDAYSNC is not implemented');
+	  throw new Error('COUPDAYSNC is not implemented');
 	};
 
 	// TODO
 	exports.COUPNCD = function() {
-	 throw new Error('COUPNCD is not implemented');
+	  throw new Error('COUPNCD is not implemented');
 	};
 
 	// TODO
 	exports.COUPNUM = function() {
-	 throw new Error('COUPNUM is not implemented');
+	  throw new Error('COUPNUM is not implemented');
 	};
 
 	// TODO
 	exports.COUPPCD = function() {
-	 throw new Error('COUPPCD is not implemented');
+	  throw new Error('COUPPCD is not implemented');
 	};
 
 	exports.CUMIPMT = function(rate, periods, value, start, end, type) {
@@ -14407,7 +14512,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.DISC = function() {
-	 throw new Error('DISC is not implemented');
+	  throw new Error('DISC is not implemented');
 	};
 
 	exports.DOLLARDE = function(dollar, fraction) {
@@ -14480,7 +14585,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.DURATION = function() {
-	 throw new Error('DURATION is not implemented');
+	  throw new Error('DURATION is not implemented');
 	};
 
 	exports.EFFECT = function(rate, periods) {
@@ -14554,7 +14659,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.INTRATE = function() {
-	 throw new Error('INTRATE is not implemented');
+	  throw new Error('INTRATE is not implemented');
 	};
 
 	exports.IPMT = function(rate, period, periods, present, future, type) {
@@ -14684,7 +14789,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.MDURATION = function() {
-	 throw new Error('MDURATION is not implemented');
+	  throw new Error('MDURATION is not implemented');
 	};
 
 	exports.MIRR = function(values, finance_rate, reinvest_rate) {
@@ -14776,22 +14881,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.ODDFPRICE = function() {
-	 throw new Error('ODDFPRICE is not implemented');
+	  throw new Error('ODDFPRICE is not implemented');
 	};
 
 	// TODO
 	exports.ODDFYIELD = function() {
-	 throw new Error('ODDFYIELD is not implemented');
+	  throw new Error('ODDFYIELD is not implemented');
 	};
 
 	// TODO
 	exports.ODDLPRICE = function() {
-	 throw new Error('ODDLPRICE is not implemented');
+	  throw new Error('ODDLPRICE is not implemented');
 	};
 
 	// TODO
 	exports.ODDLYIELD = function() {
-	 throw new Error('ODDLYIELD is not implemented');
+	  throw new Error('ODDLYIELD is not implemented');
 	};
 
 	exports.PDURATION = function(rate, present, future) {
@@ -14859,17 +14964,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.PRICE = function() {
-	 throw new Error('PRICE is not implemented');
+	  throw new Error('PRICE is not implemented');
 	};
 
 	// TODO
 	exports.PRICEDISC = function() {
-	 throw new Error('PRICEDISC is not implemented');
+	  throw new Error('PRICEDISC is not implemented');
 	};
 
 	// TODO
 	exports.PRICEMAT = function() {
-	 throw new Error('PRICEMAT is not implemented');
+	  throw new Error('PRICEMAT is not implemented');
 	};
 
 	exports.PV = function(rate, periods, payment, future, type) {
@@ -14950,7 +15055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.RECEIVED = function() {
-	 throw new Error('RECEIVED is not implemented');
+	  throw new Error('RECEIVED is not implemented');
 	};
 
 	exports.RRI = function(periods, present, future) {
@@ -15097,7 +15202,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.VDB = function() {
-	 throw new Error('VDB is not implemented');
+	  throw new Error('VDB is not implemented');
 	};
 
 
@@ -15188,18 +15293,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// TODO
 	exports.YIELD = function() {
-	 throw new Error('YIELD is not implemented');
+	  throw new Error('YIELD is not implemented');
 	};
 
 	// TODO
 	exports.YIELDDISC = function() {
-	 throw new Error('YIELDDISC is not implemented');
+	  throw new Error('YIELDDISC is not implemented');
 	};
 
 	// TODO
 	exports.YIELDMAT = function() {
-	 throw new Error('YIELDMAT is not implemented');
+	  throw new Error('YIELDMAT is not implemented');
 	};
+
 
 /***/ },
 /* 55 */
