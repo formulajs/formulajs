@@ -326,10 +326,25 @@ suite('Math & Trig', function() {
     mathTrig.LCM(24, 'invalid').should.equal(error.value);
   });
 
-
   test('LN', function() {
     mathTrig.LN(Math.E).should.equal(1);
     mathTrig.LN('invalid').should.equal(error.value);
+  });
+
+  test('LN10', function() {
+    mathTrig.LN10().should.equal(Math.log(10));
+  });
+
+  test('LN2', function() {
+    mathTrig.LN2().should.equal(Math.log(2));
+  });
+
+  test('LOG10E', function() {
+    mathTrig.LOG10E().should.equal(Math.log10(Math.E));
+  });
+
+  test('LOG2E', function() {
+    mathTrig.LOG2E().should.equal(Math.log2(Math.E));
   });
 
   test('LOG', function() {
@@ -427,6 +442,10 @@ suite('Math & Trig', function() {
 
   test('PI', function() {
     mathTrig.PI().should.equal(Math.PI);
+  });
+
+  test('E', function() {
+    mathTrig.E().should.equal(Math.E);
   });
 
   test('POWER', function() {
@@ -571,6 +590,14 @@ suite('Math & Trig', function() {
   test('SQRTPI', function() {
     mathTrig.SQRTPI(3).should.approximately(3.0699801238394655, 1e-9);
     mathTrig.SQRTPI('invalid').should.equal(error.value);
+  });
+
+  test('SQRT1_2', function() {
+    mathTrig.SQRT1_2().should.approximately(1 / Math.sqrt(2), 1e-9);
+  });
+
+  test('SQRT2', function() {
+    mathTrig.SQRT2().should.approximately(Math.sqrt(2), 1e-9);
   });
 
   test('SUBTOTAL', function() {

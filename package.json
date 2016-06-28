@@ -16,7 +16,8 @@
     "lint": "make lint",
     "watch": "make watch",
     "build": "make build",
-    "coverage": "make coverage"
+    "coverage": "make coverage",
+    "release": "generate-release"
   },
   "dependencies": {
     "bessel": "^0.2.0",
@@ -24,15 +25,16 @@
     "numbro": "^1.8.0"
   },
   "devDependencies": {
-    "istanbul": "*",
-    "mocha": "*",
-    "should": "*",
-    "coveralls": "^2.11.1",
-    "jshint": "^2.5.2",
-    "mocha-lcov-reporter": "0.0.1",
     "blanket": "^1.1.6",
     "cli-table": "^0.3.0",
+    "coveralls": "^2.11.1",
+    "generate-release": "^0.6.3",
+    "istanbul": "*",
+    "jshint": "^2.5.2",
+    "mocha": "*",
+    "mocha-lcov-reporter": "0.0.1",
     "mocha-spec-cov": "0.0.3",
+    "should": "*",
     "webpack": "^1.4.0"
   },
   "config": {
