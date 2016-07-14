@@ -28,7 +28,7 @@
     "blanket": "^1.1.6",
     "cli-table": "^0.3.0",
     "coveralls": "^2.11.1",
-    "generate-release": "^0.6.3",
+    "generate-release": "^0.10.2",
     "istanbul": "*",
     "jshint": "^2.5.2",
     "mocha": "*",
