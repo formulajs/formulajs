@@ -3,8 +3,27 @@ var utils  = require('../lib/utils');
 var should = require('should');
 var error  = require('../lib/error');
 
-suite('Utils', function() {
-  test('flatten', function() {
+describe('Utils', function() {
+  it('flattenShallow', function() {
+    should.deepEqual(utils.flattenShallow([
+      [1, 2],
+      [3, 4]
+    ]), [1, 2, 3, 4]);
+
+    should.deepEqual(utils.flattenShallow('not array'), 'not array');
+  });
+
+  it('isFlat', function() {
+    utils.isFlat([
+      [1, 2],
+      [3, 4]
+    ]).should.equal(false);
+
+    utils.isFlat([1, 2, 3]).should.equal(true);
+    utils.isFlat().should.equal(false);
+  });
+
+  it('flatten', function() {
     should.deepEqual(utils.flatten([
       [1, 2],
       [3, 4]
@@ -17,17 +36,17 @@ suite('Utils', function() {
     ]), [1, 2, 3, 4, 5, 6]);
   });
 
-  test('argsToArray', function() {
+  it('argsToArray', function() {
     (function() {
       should.deepEqual(utils.argsToArray(arguments), [1, 2, 3]);
     })(1, 2, 3);
   });
 
-  test('cleanFloat', function() {
+  it('cleanFloat', function() {
     utils.cleanFloat(3.0999999999999996).should.equal(3.1);
   });
 
-  test('parseBool', function() {
+  it('parseBool', function() {
     utils.parseBool(true).should.equal(true);
     utils.parseBool(0).should.equal(false);
     utils.parseBool(1).should.equal(true);
@@ -39,30 +58,33 @@ suite('Utils', function() {
     utils.parseBool(err).should.equal(err);
   });
 
-  test('parseNumberArray', function() {
+  it('parseNumberArray', function() {
     utils.parseNumberArray().should.equal(error.value);
   });
 
-  test('parseMatrix', function() {
+  it('parseMatrix', function() {
     utils.parseMatrix().should.equal(error.value);
+    utils.parseMatrix([[1, 2, 3], [4, 5, 6]]).should.deepEqual([[1, 2, 3], [4, 5, 6]]);
+    utils.parseMatrix([[1, 2, 3], ['4', 5, 6]]).should.deepEqual([[1, 2, 3], [4, 5, 6]]);
+    utils.parseMatrix([[1, 2, 3], ['foo', 5, 6]]).should.equal(error.value);
   });
 
-  test('parseDateArray', function() {
+  it('parseDateArray', function() {
     utils.parseDateArray(['01/jan/2009', 'invalid']).should.equal(error.value);
   });
 
-  test('arrayValuesToNumbers', function() {
+  it('arrayValuesToNumbers', function() {
     should.deepEqual(utils.arrayValuesToNumbers(['1.4']), [1.4]);
     should.deepEqual(utils.arrayValuesToNumbers(['not convertible']), [0]);
   });
 
-  test('rest', function() {
+  it('rest', function() {
     utils.rest([1,2,3], 2).length.should.equal(1);
     utils.rest('abc', 2).length.should.equal(1);
     utils.rest(true, 2).should.equal(true);
   });
 
-  test('initial', function() {
+  it('initial', function() {
     utils.initial([1,2,3], 1).length.should.equal(2);
     utils.initial('abc', 2).length.should.equal(1);
     utils.initial(true, 1).should.equal(true);

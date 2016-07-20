@@ -1,18 +1,17 @@
 {
-  "readme_file_location": "./README.md",
   "package_file_location": "./package.json",
   "no_confirm": false,
   "skip_git_pull": false,
   "skip_git_push": false,
-  "set_release_message": true,
-  "release": "origin",
+  "release_message": true,
+  "remote": "origin",
   "pre_commit_commands": [
     "npm run build",
     "npm run test"
   ],
   "post_commit_commands": [],
   "post_complete_commands": [],
-  "additional_files_to_commit": [
+  "files_to_commit": [
     "./dist/**/*"
   ]
 }

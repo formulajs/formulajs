@@ -2,8 +2,8 @@
 var error = require('../lib/error');
 var lookup = require('../lib/lookup-reference');
 
-suite('Lookup Reference', function() {
-  test('MATCH', function() {
+describe('Lookup Reference', function() {
+  it('MATCH', function() {
     lookup.MATCH().should.equal(error.na);
     lookup.MATCH(1).should.equal(error.na);
     lookup.MATCH(1, [0, 1, 2, 3, 4, 100, 7]).should.equal(2);

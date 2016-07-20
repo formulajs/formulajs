@@ -1,6 +1,6 @@
 build
 node_modules
-coverage-report.html
+coverage
 *.tgz
 test/generated
 .idea

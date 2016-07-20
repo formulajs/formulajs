@@ -3,33 +3,41 @@ var mathTrig = require('../lib/math-trig');
 var error = require('../lib/error');
 var should = require('should');
 
-suite('Math & Trig', function() {
-  test('ABS', function() {
+describe('Math & Trig', function() {
+  it('ABS', function() {
+    mathTrig.ABS().should.equal(error.value);
     mathTrig.ABS(-1).should.equal(1);
     mathTrig.ABS('invalid').should.equal(error.value);
   });
 
-  test('ACOS', function() {
+  it('ACOS', function() {
+    mathTrig.ACOS().should.equal(error.value);
+    mathTrig.ACOS(100).should.equal(error.num);
     mathTrig.ACOS(1).should.equal(0);
     mathTrig.ACOS('invalid').should.equal(error.value);
   });
 
-  test('ACOSH', function() {
+  it('ACOSH', function() {
+    mathTrig.ACOSH().should.equal(error.value);
+    mathTrig.ACOSH(-100).should.equal(error.num);
     mathTrig.ACOSH(1).should.equal(0);
     mathTrig.ACOSH('invalid').should.equal(error.value);
   });
 
-  test('ACOT', function() {
+  it('ACOT', function() {
+    mathTrig.ACOT().should.equal(error.value);
     mathTrig.ACOT(1).should.approximately(0.7853981633974483, 1e-9);
     mathTrig.ACOT('invalid').should.equal(error.value);
   });
 
-  test('ACOTH', function() {
+  it('ACOTH', function() {
+    mathTrig.ACOTH().should.equal(error.value);
+    mathTrig.ACOTH(0.1).should.equal(error.num);
     mathTrig.ACOTH(1).should.equal(Infinity);
     mathTrig.ACOTH('invalid').should.equal(error.value);
   });
 
-  test('ADD', function() {
+  it('ADD', function() {
     mathTrig.ADD(10, 4).should.equal(14);
     mathTrig.ADD(1.2, 4).should.equal(5.2);
     mathTrig.ADD().should.equal(error.na);
@@ -39,7 +47,7 @@ suite('Math & Trig', function() {
 
 
   //TODO: more edge cases, explore the second argument (options)
-  test('AGGREGATE', function() {
+  it('AGGREGATE', function() {
     mathTrig.AGGREGATE(1, 4, [1, 2, 3]).should.equal(2);
     mathTrig.AGGREGATE(2, 4, [1, 2, 3, 'does not count']).should.equal(3);
     mathTrig.AGGREGATE(3, 4, [1, 2, 3, 'counts']).should.equal(4);
@@ -62,43 +70,45 @@ suite('Math & Trig', function() {
     mathTrig.AGGREGATE('invalid', 4, [1, 2, 3], 2).should.equal(error.value);
   });
 
-  test('ARABIC', function() {
+  it('ARABIC', function() {
     mathTrig.ARABIC('X').should.equal(10);
     mathTrig.ARABIC('ABC').should.equal(error.value);
   });
 
-  test('ASIN', function() {
+  it('ASIN', function() {
     mathTrig.ASIN(0.5).should.approximately(0.5235987755982989, 1e-9);
+    mathTrig.ASIN(-100).should.equal(error.num);
     mathTrig.ASIN('invalid').should.equal(error.value);
   });
 
-  test('ASINH', function() {
+  it('ASINH', function() {
     mathTrig.ASINH(0.5).should.approximately(0.48121182505960347, 1e-9);
     mathTrig.ASINH('invalid').should.equal(error.value);
   });
 
-  test('ATAN', function() {
+  it('ATAN', function() {
     mathTrig.ATAN(1).should.approximately(0.7853981633974483, 1e-9);
     mathTrig.ATAN('invalid').should.equal(error.value);
   });
 
-  test('ATAN2', function() {
+  it('ATAN2', function() {
     mathTrig.ATAN2(1, 1).should.approximately(0.7853981633974483, 1e-9);
     mathTrig.ATAN2(1, 'invalid').should.equal(error.value);
   });
 
-  test('ATANH', function() {
+  it('ATANH', function() {
     mathTrig.ATANH(1).should.equal(Infinity);
     mathTrig.ATANH('invalid').should.equal(error.value);
+    mathTrig.ATANH(100).should.equal(error.num);
   });
 
-  test('BASE', function() {
+  it('BASE', function() {
     mathTrig.BASE(7, 2).should.equal('111');
     mathTrig.BASE(400, 10, 10).should.equal('0000000400');
     mathTrig.BASE('invalid', 10, 10).should.equal(error.value);
   });
 
-  test('CEILING', function() {
+  it('CEILING', function() {
     mathTrig.CEILING(4.1).should.equal(5);
     mathTrig.CEILING(4.9).should.equal(5);
     mathTrig.CEILING(-4.1).should.equal(-4);
@@ -120,7 +130,7 @@ suite('Math & Trig', function() {
     mathTrig.CEILING(-4.1, -2, 'invalid').should.equal(error.value);
   });
 
-  test('CEILING.MATH', function() {
+  it('CEILING.MATH', function() {
     mathTrig.CEILING.MATH(24.3, 5).should.equal(25);
     mathTrig.CEILING.MATH(6.7).should.equal(7);
     mathTrig.CEILING.MATH(-8.1, 2).should.equal(-8);
@@ -128,7 +138,7 @@ suite('Math & Trig', function() {
     mathTrig.CEILING.MATH(-5.5, 2, 'invalid').should.equal(error.value);
   });
 
-  test('CEILING.PRECISE', function() {
+  it('CEILING.PRECISE', function() {
     mathTrig.CEILING.PRECISE(4.3).should.equal(5);
     mathTrig.CEILING.PRECISE(-4.3).should.equal(-4);
     mathTrig.CEILING.PRECISE(4.3, 2).should.equal(6);
@@ -138,7 +148,7 @@ suite('Math & Trig', function() {
     mathTrig.CEILING.PRECISE(-4.3, 'invalid').should.equal(error.value);
   });
 
-  test("COMBIN", function() {
+  it("COMBIN", function() {
     mathTrig.COMBIN(0, 0).should.equal(1);
     mathTrig.COMBIN(1, 0).should.equal(1);
     mathTrig.COMBIN(1, 1).should.equal(1);
@@ -151,7 +161,7 @@ suite('Math & Trig', function() {
     mathTrig.COMBIN(10, 'invalid').should.equal(error.value);
   });
 
-  test("COMBINA", function() {
+  it("COMBINA", function() {
     mathTrig.COMBINA(0, 0).should.equal(1);
     mathTrig.COMBINA(1, 0).should.equal(1);
     mathTrig.COMBINA(1, 1).should.equal(1);
@@ -164,37 +174,37 @@ suite('Math & Trig', function() {
     mathTrig.COMBINA(10, 'invalid').should.equal(error.value);
   });
 
-  test('COS', function() {
+  it('COS', function() {
     mathTrig.COS(0).should.equal(1);
     mathTrig.COS('invalid').should.equal(error.value);
   });
 
-  test('COSH', function() {
+  it('COSH', function() {
     mathTrig.COSH(0).should.equal(1);
     mathTrig.COSH('invalid').should.equal(error.value);
   });
 
-  test('COT', function() {
+  it('COT', function() {
     mathTrig.COT(1).should.approximately(0.6420926159343306, 1e-9);
     mathTrig.COT('invalid').should.equal(error.value);
   });
 
-  test('COTH', function() {
+  it('COTH', function() {
     mathTrig.COTH(1).should.approximately(1.3130352854993312, 1e-9);
     mathTrig.COTH('invalid').should.equal(error.value);
   });
 
-  test('CSC', function() {
+  it('CSC', function() {
     mathTrig.CSC(0).should.equal(Infinity);
     mathTrig.CSC('invalid').should.equal(error.value);
   });
 
-  test('CSCH', function() {
+  it('CSCH', function() {
     mathTrig.CSCH(0).should.equal(Infinity);
     mathTrig.CSCH('invalid').should.equal(error.value);
   });
 
-  test('DECIMAL', function() {
+  it('DECIMAL', function() {
     mathTrig.DECIMAL().should.equal(error.value);
     mathTrig.DECIMAL(10.5).should.equal(10);
     mathTrig.DECIMAL('0', 2).should.equal(0);
@@ -206,12 +216,12 @@ suite('Math & Trig', function() {
     mathTrig.DECIMAL('invalid').should.equal.NaN;
   });
 
-  test('DEGREES', function() {
+  it('DEGREES', function() {
     mathTrig.DEGREES(Math.PI).should.equal(180);
     mathTrig.DEGREES('invalid').should.equal(error.value);
   });
 
-  test('DIVIDE', function() {
+  it('DIVIDE', function() {
     mathTrig.DIVIDE(10, 4).should.equal(2.5);
     mathTrig.DIVIDE(12, -6).should.equal(-2);
     mathTrig.DIVIDE(0, 0).should.equal(error.div0);
@@ -222,12 +232,12 @@ suite('Math & Trig', function() {
     mathTrig.DIVIDE(1, 'string').should.equal(error.value);
   });
 
-  test('EVEN', function() {
+  it('EVEN', function() {
     mathTrig.EVEN(3).should.equal(4);
     mathTrig.EVEN('invalid').should.equal(error.value);
   });
 
-  test('EQ', function() {
+  it('EQ', function() {
     mathTrig.EQ(10, 10).should.equal(true);
     mathTrig.EQ(1.2, 1.2).should.equal(true);
     mathTrig.EQ('hello', 'jim').should.equal(false);
@@ -241,17 +251,17 @@ suite('Math & Trig', function() {
     mathTrig.EQ(1, 'string').should.equal(false);
   });
 
-  test('FACT', function() {
+  it('FACT', function() {
     mathTrig.FACT(6).should.equal(720);
     mathTrig.FACT('invalid').should.equal(error.value);
   });
 
-  test('FACTDOUBLE', function() {
+  it('FACTDOUBLE', function() {
     mathTrig.FACTDOUBLE(10).should.equal(3840);
     mathTrig.FACTDOUBLE('invalid').should.equal(error.value);
   });
 
-  test('FLOOR', function() {
+  it('FLOOR', function() {
     mathTrig.FLOOR(3.7, 2).should.equal(2);
     mathTrig.FLOOR(-2.5, -2).should.equal(-2);
     mathTrig.FLOOR(2.5, -2).should.equal(error.num);
@@ -261,7 +271,7 @@ suite('Math & Trig', function() {
     mathTrig.FLOOR('invalid', 0).should.equal(error.value);
   });
 
-  test('FLOOR.PRECISE', function() {
+  it('FLOOR.PRECISE', function() {
     mathTrig.FLOOR.PRECISE(2014.6, 0.2).should.equal(2014.4);
     mathTrig.FLOOR.PRECISE(-3.2,-1).should.equal(-4);
     mathTrig.FLOOR.PRECISE(3.2,1).should.equal(3);
@@ -270,7 +280,7 @@ suite('Math & Trig', function() {
     mathTrig.FLOOR.PRECISE(3.2).should.equal(3);
   });
 
-  test('FLOOR.MATH', function() {
+  it('FLOOR.MATH', function() {
     mathTrig.FLOOR.MATH(24.3, 5).should.equal(20);
     mathTrig.FLOOR.MATH(6.7).should.equal(6);
     mathTrig.FLOOR.MATH(-8.1, 2).should.equal(-10);
@@ -287,7 +297,7 @@ suite('Math & Trig', function() {
     mathTrig.FLOOR.MATH(3.2, 'invalid').should.equal(error.value);
   });
 
-  test('GCD', function() {
+  it('GCD', function() {
     mathTrig.GCD(5, 2).should.equal(1);
     mathTrig.GCD(24, 36).should.equal(12);
     mathTrig.GCD(7, 1).should.equal(1);
@@ -295,7 +305,7 @@ suite('Math & Trig', function() {
     mathTrig.GCD(5, 'invalid').should.equal(error.value);
   });
 
-  test('GTE', function() {
+  it('GTE', function() {
     mathTrig.GTE(10, 4).should.equal(true);
     mathTrig.GTE(10, 10).should.equal(true);
     mathTrig.GTE(10, 12).should.equal(false);
@@ -305,12 +315,12 @@ suite('Math & Trig', function() {
     mathTrig.GTE('string', 2).should.equal(error.error);
   });
 
-  test('INT', function() {
+  it('INT', function() {
     mathTrig.INT(5.5).should.equal(5);
     mathTrig.INT('invalid').should.equal(error.value);
   });
 
-  test('ISO.CEILING', function() {
+  it('ISO.CEILING', function() {
     mathTrig.ISO.CEILING(4.3).should.equal(5);
     mathTrig.ISO.CEILING(-4.3).should.equal(-4);
     mathTrig.ISO.CEILING(4.3, 2).should.equal(6);
@@ -320,44 +330,44 @@ suite('Math & Trig', function() {
     mathTrig.ISO.CEILING(-4.3, 'invalid').should.equal(error.value);
   });
 
-  test('LCM', function() {
+  it('LCM', function() {
     mathTrig.LCM(5, 2).should.equal(10);
     mathTrig.LCM(24, 36).should.equal(72);
     mathTrig.LCM(24, 'invalid').should.equal(error.value);
   });
 
-  test('LN', function() {
+  it('LN', function() {
     mathTrig.LN(Math.E).should.equal(1);
     mathTrig.LN('invalid').should.equal(error.value);
   });
 
-  test('LN10', function() {
+  it('LN10', function() {
     mathTrig.LN10().should.equal(Math.log(10));
   });
 
-  test('LN2', function() {
+  it('LN2', function() {
     mathTrig.LN2().should.equal(Math.log(2));
   });
 
-  test('LOG10E', function() {
-    mathTrig.LOG10E().should.equal(Math.log10(Math.E));
+  it('LOG10E', function() {
+    mathTrig.LOG10E().should.equal(Math.LOG10E);
   });
 
-  test('LOG2E', function() {
-    mathTrig.LOG2E().should.equal(Math.log2(Math.E));
+  it('LOG2E', function() {
+    mathTrig.LOG2E().should.equal(Math.LOG2E);
   });
 
-  test('LOG', function() {
+  it('LOG', function() {
     mathTrig.LOG(10, 10).should.equal(1);
     mathTrig.LOG(10, 'invalid').should.equal(error.value);
   });
 
-  test('LOG10', function() {
+  it('LOG10', function() {
     mathTrig.LOG10(10).should.equal(1);
     mathTrig.LOG10('invalid').should.equal(error.value);
   });
 
-  test('LT', function() {
+  it('LT', function() {
     mathTrig.LT(10, 4).should.equal(false);
     mathTrig.LT(10, 10).should.equal(false);
     mathTrig.LT(10, 12).should.equal(true);
@@ -367,7 +377,7 @@ suite('Math & Trig', function() {
     mathTrig.LT('string', 2).should.equal(error.error);
   });
 
-  test('LTE', function() {
+  it('LTE', function() {
     mathTrig.LTE(10, 4).should.equal(false);
     mathTrig.LTE(10, 10).should.equal(true);
     mathTrig.LTE(10, 12).should.equal(true);
@@ -377,7 +387,7 @@ suite('Math & Trig', function() {
     mathTrig.LTE('string', 2).should.equal(error.error);
   });
 
-  test('MINUS', function() {
+  it('MINUS', function() {
     mathTrig.MINUS(10, 4).should.equal(6);
     mathTrig.MINUS(1.2, 4).should.equal(-2.8);
     mathTrig.MINUS().should.equal(error.na);
@@ -385,7 +395,7 @@ suite('Math & Trig', function() {
     mathTrig.MINUS(1, 'string').should.equal(error.value);
   });
 
-  test('MOD', function() {
+  it('MOD', function() {
     mathTrig.MOD(3, 2).should.equal(1);
     mathTrig.MOD(-3, 2).should.equal(1);
     mathTrig.MOD(3, -2).should.equal(-1);
@@ -393,7 +403,7 @@ suite('Math & Trig', function() {
     mathTrig.MOD(3, 'invalid').should.equal(error.value);
   });
 
-  test('MROUND', function() {
+  it('MROUND', function() {
     mathTrig.MROUND(10, 3).should.equal(9);
     mathTrig.MROUND(-10, -3).should.equal(-9);
     mathTrig.MROUND(1.3, 0.2).should.approximately(1.4000000000000001, 1e-9);
@@ -401,13 +411,13 @@ suite('Math & Trig', function() {
     mathTrig.MROUND(5, 'invalid').should.equal(error.value);
   });
 
-  test('MULTINOMIAL', function() {
+  it('MULTINOMIAL', function() {
     mathTrig.MULTINOMIAL(2, 3, 4).should.equal(1260);
     mathTrig.MULTINOMIAL([2, 3, 4]).should.equal(1260);
     mathTrig.MULTINOMIAL([2, 'invalid', 4]).should.equal(error.value);
   });
 
-  test('MULTIPLY', function() {
+  it('MULTIPLY', function() {
     mathTrig.MULTIPLY(10, 4).should.equal(40);
     mathTrig.MULTIPLY(12, -6).should.equal(-72);
     mathTrig.MULTIPLY(0, 0).should.equal(0);
@@ -418,7 +428,7 @@ suite('Math & Trig', function() {
     mathTrig.MULTIPLY(1, 'string').should.equal(error.value);
   });
 
-  test('NE', function() {
+  it('NE', function() {
     mathTrig.NE(10, 10).should.equal(false);
     mathTrig.NE(1.2, 1.2).should.equal(false);
     mathTrig.NE('hello', 'jim').should.equal(true);
@@ -432,7 +442,7 @@ suite('Math & Trig', function() {
     mathTrig.NE(1, 'string').should.equal(true);
   });
 
-  test('ODD', function() {
+  it('ODD', function() {
     mathTrig.ODD(3).should.equal(3);
     mathTrig.ODD(2).should.equal(3);
     mathTrig.ODD(-1).should.equal(-1);
@@ -440,15 +450,15 @@ suite('Math & Trig', function() {
     mathTrig.ODD('invalid').should.equal(error.value);
   });
 
-  test('PI', function() {
+  it('PI', function() {
     mathTrig.PI().should.equal(Math.PI);
   });
 
-  test('E', function() {
+  it('E', function() {
     mathTrig.E().should.equal(Math.E);
   });
 
-  test('POWER', function() {
+  it('POWER', function() {
     mathTrig.POWER(5, 2).should.equal(25);
     mathTrig.POWER(98.6, 3.2).should.approximately(2401077.2220695773, 1e-9);
     mathTrig.POWER(4, 5 / 4).should.approximately(5.656854249492381, 1e-9);
@@ -456,7 +466,7 @@ suite('Math & Trig', function() {
     mathTrig.POWER(-1, 'invalid').should.equal(error.value);
   });
 
-  test('POW', function() {
+  it('POW', function() {
     mathTrig.POW(5).should.equal(error.na);
     mathTrig.POW(5, 2).should.equal(25);
     mathTrig.POW(98.6, 3.2).should.approximately(2401077.2220695773, 1e-9);
@@ -465,24 +475,24 @@ suite('Math & Trig', function() {
     mathTrig.POW(-1, 'invalid').should.equal(error.error);
   });
 
-  test('PRODUCT', function() {
+  it('PRODUCT', function() {
     mathTrig.PRODUCT([5, 15, 30]).should.equal(2250);
     mathTrig.PRODUCT([5, 'invalid', 30]).should.equal(error.value);
   });
 
-  test('QUOTIENT', function() {
+  it('QUOTIENT', function() {
     mathTrig.QUOTIENT(5, 2).should.equal(2);
     mathTrig.QUOTIENT(4.5, 3.1).should.equal(1);
     mathTrig.QUOTIENT(-10, 3).should.equal(-3);
     mathTrig.QUOTIENT(-10, 'invalid').should.equal(error.value);
   });
 
-  test('RADIANS', function() {
+  it('RADIANS', function() {
     mathTrig.RADIANS(180).should.equal(Math.PI);
     mathTrig.RADIANS('invalid').should.equal(error.value);
   });
 
-  test('RAND', function() {
+  it('RAND', function() {
     var sum = 0;
     var n = 10;
     var i = n;
@@ -494,7 +504,7 @@ suite('Math & Trig', function() {
     Number(parseInt(average), 10).should.equal(0);
   });
 
-  test('RANDBETWEEN', function() {
+  it('RANDBETWEEN', function() {
     var bottom = 5;
     var top = 10;
     var sum = 0;
@@ -509,13 +519,13 @@ suite('Math & Trig', function() {
     mathTrig.RANDBETWEEN(bottom, 'invalid').should.equal(error.value);
   });
 
-  test('ROMAN', function() {
+  it('ROMAN', function() {
     mathTrig.ROMAN(10).should.equal('X');
     mathTrig.ROMAN(103).should.equal('CIII');
     mathTrig.ROMAN('invalid').should.equal(error.value);
   });
 
-  test('ROUND', function() {
+  it('ROUND', function() {
     mathTrig.ROUND(2.15, 1).should.approximately(2.2, 1e-9);
     mathTrig.ROUND(2.149, 1).should.approximately(2.1, 1e-9);
     mathTrig.ROUND(-1.475, 2).should.approximately(-1.47, 1e-9); //TODO: check if -1.48 would be the correct result or a precision error
@@ -526,7 +536,7 @@ suite('Math & Trig', function() {
     mathTrig.ROUND(-50.55, 'invalid').should.equal(error.value);
   });
 
-  test('ROUNDDOWN', function() {
+  it('ROUNDDOWN', function() {
     mathTrig.ROUNDDOWN(3.2, 0).should.equal(3);
     mathTrig.ROUNDDOWN(76.9, 0).should.equal(76);
     mathTrig.ROUNDDOWN(3.14159, 3).should.approximately(3.141, 1e-9);
@@ -535,7 +545,7 @@ suite('Math & Trig', function() {
     mathTrig.ROUNDDOWN(31415.92654, 'invalid').should.equal(error.value);
   });
 
-  test('ROUNDUP', function() {
+  it('ROUNDUP', function() {
     mathTrig.ROUNDUP(3.2, 0).should.equal(4);
     mathTrig.ROUNDUP(76.9, 0).should.equal(77);
     mathTrig.ROUNDUP(3.14159, 3).should.approximately(3.142, 1e-9);
@@ -544,19 +554,19 @@ suite('Math & Trig', function() {
     mathTrig.ROUNDUP(31415.92654, 'invalid').should.equal(error.value);
   });
 
-  test('SEC', function() {
+  it('SEC', function() {
     mathTrig.SEC(45).should.approximately(1.9035944074044246, 1e-9);
     mathTrig.SEC(30).should.approximately(6.482921234962678, 1e-9);
     mathTrig.SEC('invalid').should.equal(error.value);
   });
 
-  test('SECH', function() {
+  it('SECH', function() {
     mathTrig.SECH(45).should.approximately(5.725037161098787e-20, 1e-9);
     mathTrig.SECH(30).should.approximately(1.8715245937680347e-13, 1e-9);
     mathTrig.SECH('invalid').should.equal(error.value);
   });
 
-  test('SERIESSUM', function() {
+  it('SERIESSUM', function() {
     mathTrig.SERIESSUM(mathTrig.PI() / 4, 0, 2, [
       1, -1 / mathTrig.FACT(2),
       1 / mathTrig.FACT(4), -1 / mathTrig.FACT(6)
@@ -564,43 +574,43 @@ suite('Math & Trig', function() {
     mathTrig.SERIESSUM(1, 2, 3, 'invalid').should.equal(error.value);
   });
 
-  test('SIGN', function() {
+  it('SIGN', function() {
     mathTrig.SIGN(0).should.equal(0);
     mathTrig.SIGN(-5).should.equal(-1);
     mathTrig.SIGN(5).should.equal(1);
     mathTrig.SIGN('invalid').should.equal(error.value);
   });
 
-  test('SIN', function() {
+  it('SIN', function() {
     mathTrig.SIN(Math.PI / 2).should.equal(1);
     mathTrig.SIN('invalid').should.equal(error.value);
   });
 
-  test('SINH', function() {
+  it('SINH', function() {
     mathTrig.SINH(1).should.approximately(1.1752011936438014, 1e-9); // the golden ratio: http://mathworld.wolfram.com/HyperbolicSine.html
     mathTrig.SINH('invalid').should.equal(error.value);
   });
 
-  test('SQRT', function() {
+  it('SQRT', function() {
     mathTrig.SQRT(4).should.equal(2);
     mathTrig.SQRT(-1).should.equal(error.num);
     mathTrig.SQRT('invalid').should.equal(error.value);
   });
 
-  test('SQRTPI', function() {
+  it('SQRTPI', function() {
     mathTrig.SQRTPI(3).should.approximately(3.0699801238394655, 1e-9);
     mathTrig.SQRTPI('invalid').should.equal(error.value);
   });
 
-  test('SQRT1_2', function() {
+  it('SQRT1_2', function() {
     mathTrig.SQRT1_2().should.approximately(1 / Math.sqrt(2), 1e-9);
   });
 
-  test('SQRT2', function() {
+  it('SQRT2', function() {
     mathTrig.SQRT2().should.approximately(Math.sqrt(2), 1e-9);
   });
 
-  test('SUBTOTAL', function() {
+  it('SUBTOTAL', function() {
     mathTrig.SUBTOTAL(1, [1, 2, 3]).should.equal(2);
     mathTrig.SUBTOTAL(2, [1, 2, 3, 'does not count']).should.equal(3);
     mathTrig.SUBTOTAL(3, [1, 2, 3, 'counts']).should.equal(4);
@@ -626,7 +636,7 @@ suite('Math & Trig', function() {
     mathTrig.SUBTOTAL('invalid', [1, 2, 3]).should.equal(error.value);
   });
 
-  test("SUM", function() {
+  it("SUM", function() {
     mathTrig.SUM(1, 2, 3).should.equal(6);
     mathTrig.SUM([1, 2, 3]).should.equal(6);
     mathTrig.SUM([1, 2, 3], 1, 2).should.equal(9);
@@ -658,7 +668,7 @@ suite('Math & Trig', function() {
     mathTrig.SUM(1, 'invalid').should.equal(1);
   });
 
-  test("SUMIF", function() {
+  it("SUMIF", function() {
     mathTrig.SUMIF([1, 2, 3], '>2').should.equal(3);
     mathTrig.SUMIF([
       [1, 1],
@@ -668,7 +678,7 @@ suite('Math & Trig', function() {
     mathTrig.SUMIF([1, 'invalid', 3], '>2').should.equal(error.value);
   });
 
-  test("SUMIFS", function() {
+  it("SUMIFS", function() {
     mathTrig.SUMIFS([1, 2, 3], '>1', '<3').should.equal(2);
     mathTrig.SUMIFS([
       [1, 1],
@@ -678,7 +688,7 @@ suite('Math & Trig', function() {
     mathTrig.SUMIFS([1, 'invalid', 3], '>1', '<3').should.equal(error.value);
   });
 
-  test('SUMPRODUCT', function() {
+  it('SUMPRODUCT', function() {
     mathTrig.SUMPRODUCT([
       [3, 4],
       [8, 6],
@@ -723,7 +733,7 @@ suite('Math & Trig', function() {
     mathTrig.SUMPRODUCT().should.equal(error.value);
   });
 
-  test("SUMSQ", function() {
+  it("SUMSQ", function() {
     mathTrig.SUMSQ(1, 2, 3).should.equal(14);
     mathTrig.SUMSQ([1, 2, 3]).should.equal(14);
     mathTrig.SUMSQ([
@@ -734,35 +744,35 @@ suite('Math & Trig', function() {
     mathTrig.SUMSQ(1, 'invalid', 3).should.equal(error.value);
   });
 
-  test("SUMX2MY2", function() {
+  it("SUMX2MY2", function() {
     mathTrig.SUMX2MY2([1, 2, 3], [4, 5, 6]).should.equal(-63);
     mathTrig.SUMX2MY2([1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).should.equal(-468);
     mathTrig.SUMX2MY2([1, 2, 3], [4, 'invalid', 6]).should.equal(error.value);
   });
 
-  test("SUMX2PY2", function() {
+  it("SUMX2PY2", function() {
     mathTrig.SUMX2PY2([1, 2, 3], [4, 5, 6]).should.equal(91);
     mathTrig.SUMX2PY2([1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).should.equal(650);
     mathTrig.SUMX2PY2([1, 2, 'invalid'], [4, 5, 6]).should.equal(error.value);
   });
 
-  test("SUMXMY2", function() {
+  it("SUMXMY2", function() {
     mathTrig.SUMXMY2([1, 2, 3], [4, 5, 6]).should.equal(27);
     mathTrig.SUMXMY2([1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).should.equal(216);
     mathTrig.SUMXMY2([1, 2, 'invalid'], [4, 5, 6]).should.equal(error.value);
   });
 
-  test('TAN', function() {
+  it('TAN', function() {
     mathTrig.TAN(mathTrig.RADIANS(45)).should.approximately(1, 1e-9);
     mathTrig.TAN('invalid').should.equal(error.value);
   });
 
-  test('TANH', function() {
+  it('TANH', function() {
     mathTrig.TANH(0.5).should.approximately(0.46211715726000974, 1e-9);
     mathTrig.TANH('invalid').should.equal(error.value);
   });
 
-  test('TRUNC', function() {
+  it('TRUNC', function() {
     mathTrig.TRUNC(8.9).should.equal(8);
     mathTrig.TRUNC(-8.9).should.equal(-8);
     mathTrig.TRUNC(0.45).should.equal(0);
