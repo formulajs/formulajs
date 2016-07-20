@@ -25,11 +25,10 @@ test-watch:
 lint:
 	@$(jshint) lib/*.js
 
-codeclimate:
-	@$(mocha) -r blanket -u tdd -R mocha-lcov-reporter | $(codeclimate-test-reporter)
-
 coverage:
-	@$(mocha) -u tdd -R html-cov -r blanket > coverage-report.html
+	@mkdir -p coverage
+	@$(mocha) -r blanket -u tdd -R mocha-lcov-reporter > coverage/lcov.info
+	@$(mocha) -u tdd -R html-cov -r blanket > coverage/coverage-report.html
 
 package: clean build
 	rm -rf *.tgz || true

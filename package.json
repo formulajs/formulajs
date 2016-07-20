@@ -18,7 +18,6 @@
     "watch": "make watch",
     "build": "make build",
     "coverage": "make coverage",
-    "codeclimate": "make codeclimate",
     "release": "generate-release"
   },
   "dependencies": {
@@ -30,7 +29,6 @@
     "blanket": "^1.1.6",
     "browserify": "^13.0.1",
     "cli-table": "^0.3.0",
-    "codeclimate-test-reporter": "^0.3.3",
     "generate-release": "^0.10.2",
     "http-server": "^0.9.0",
     "istanbul": "*",
