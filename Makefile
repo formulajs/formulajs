@@ -1,7 +1,9 @@
 webpack = node_modules/.bin/webpack
 jshint = node_modules/.bin/jshint
 mocha = node_modules/.bin/mocha
-coveralls = node_modules/.bin/coveralls
+browserify = node_modules/.bin/browserify
+http-server = node_modules/.bin/http-server
+codeclimate-test-reporter = node_modules/.bin/codeclimate-test-reporter
 
 build:
 	@$(webpack)
@@ -12,14 +14,19 @@ build:
 test:
 	@$(mocha) -u tdd -R mocha-spec-cov -r blanket
 
+test-browser:
+	@mkdir -p tmp
+	@$(browserify) test/index.js -s formulajs > tmp/test.js
+	@$(http-server) -p 8088 -s -o
+
 test-watch:
 	@$(mocha) -u tdd -R min -w
 
 lint:
 	@$(jshint) lib/*.js
 
-coveralls:
-	@$(mocha) -r blanket -u tdd -R mocha-lcov-reporter | $(coveralls)
+codeclimate:
+	@$(mocha) -r blanket -u tdd -R mocha-lcov-reporter | $(codeclimate-test-reporter)
 
 coverage:
 	@$(mocha) -u tdd -R html-cov -r blanket > coverage-report.html

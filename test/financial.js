@@ -3,8 +3,8 @@ var financial = require('../lib/financial');
 var error = require('../lib/error');
 require('should');
 
-suite('Financial', function() {
-  test("ACCRINT", function() {
+describe('Financial', function() {
+  it("ACCRINT", function() {
     financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 1, 0, true).should.approximately(183.88888888888889, 1e-9, 1e-9);
     financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 1, 0, true).should.approximately(183.88888888888889, 1e-9);
     financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 2, 0, true).should.approximately(183.88888888888889, 1e-9);
@@ -79,51 +79,51 @@ suite('Financial', function() {
   });
 
   // TODO: implement
-  test('ACCRINTM', function() {
+  it('ACCRINTM', function() {
     financial.ACCRINTM.should.throw('ACCRINTM is not implemented');
   });
 
   // TODO: implement
-  test('AMORDEGRC', function() {
+  it('AMORDEGRC', function() {
     financial.AMORDEGRC.should.throw('AMORDEGRC is not implemented');
   });
 
   // TODO: implement
-  test('AMORLINC', function() {
+  it('AMORLINC', function() {
     financial.AMORLINC.should.throw('AMORLINC is not implemented');
   });
 
   // TODO: implement
-  test('COUPDAYBS', function() {
+  it('COUPDAYBS', function() {
     financial.COUPDAYBS.should.throw('COUPDAYBS is not implemented');
   });
 
   // TODO: implement
-  test('COUPDAYS', function() {
+  it('COUPDAYS', function() {
     financial.COUPDAYS.should.throw('COUPDAYS is not implemented');
   });
 
   // TODO: implement
-  test('COUPDAYSNC', function() {
+  it('COUPDAYSNC', function() {
     financial.COUPDAYSNC.should.throw('COUPDAYSNC is not implemented');
   });
 
   // TODO: implement
-  test('COUPNCD', function() {
+  it('COUPNCD', function() {
     financial.COUPNCD.should.throw('COUPNCD is not implemented');
   });
 
   // TODO: implement
-  test('COUPNUM', function() {
+  it('COUPNUM', function() {
     financial.COUPNUM.should.throw('COUPNUM is not implemented');
   });
 
   // TODO: implement
-  test('COUPPCD', function() {
+  it('COUPPCD', function() {
     financial.COUPPCD.should.throw('COUPPCD is not implemented');
   });
 
-  test("CUMIPMT", function() {
+  it("CUMIPMT", function() {
     financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 13, 24, 0).should.approximately(-9916.77251395708, 1e-9);
     financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 13, 24, 1).should.approximately(-9834.815716321069, 1e-9);
     financial.CUMIPMT(-0.1 / 12, 30 * 12, 100000, 13, 24, 0).should.equal(error.num);
@@ -137,7 +137,7 @@ suite('Financial', function() {
     financial.CUMIPMT('invalid', 30 * 12, 100000, 13, 24, 0).should.equal(error.value);
   });
 
-  test("CUMPRINC", function() {
+  it("CUMPRINC", function() {
     financial.CUMPRINC(0.1 / 12, 30 * 12, 100000, 13, 24, 0).should.approximately(-614.0863271085149, 1e-9);
     financial.CUMPRINC(0.1 / 12, 30 * 12, 100000, 13, 24, 1).should.approximately(-609.0112334960476, 1e-9);
     financial.CUMPRINC(-0.1 / 12, 30 * 12, 100000, 13, 24, 0).should.equal(error.num);
@@ -152,7 +152,7 @@ suite('Financial', function() {
     financial.CUMPRINC('invalid', 30 * 12, 100000, 1, 24, 1).should.equal(error.value);
   });
 
-  test("DB", function() {
+  it("DB", function() {
     financial.DB(1000000, 100000, 6, 1).should.equal(319000);
     financial.DB(1000000, 100000, 6, 2).should.equal(217239);
     financial.DB(1000000, 100000, 6, 3).should.approximately(147939.759, 1e-9);
@@ -187,7 +187,7 @@ suite('Financial', function() {
     financial.DB(100000, 1000000, 6, 1, 6).should.equal(0);
   });
 
-  test("DDB", function() {
+  it("DDB", function() {
     financial.DDB(1000000, 100000, 6, 1).should.approximately(333333.3333333333, 1e-9);
     financial.DDB(1000000, 100000, 6, 2).should.approximately(222222.22222222225, 1e-9);
     financial.DDB(1000000, 100000, 6, 3).should.approximately(148148.14814814815, 1e-9);
@@ -217,11 +217,11 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('DISC', function() {
+  it('DISC', function() {
     financial.DISC.should.throw('DISC is not implemented');
   });
 
-  test("DOLLARDE", function() {
+  it("DOLLARDE", function() {
     financial.DOLLARDE(1.1, 1).should.approximately(1.1, 1e-9);
     financial.DOLLARDE(1.1, 2).should.approximately(1.5, 1e-9);
     financial.DOLLARDE(1.1, 4).should.approximately(1.25, 1e-9);
@@ -241,7 +241,7 @@ suite('Financial', function() {
     financial.DOLLARDE(1.1, 0.5).should.equal(error.div0);
   });
 
-  test("DOLLARFR", function() {
+  it("DOLLARFR", function() {
     financial.DOLLARFR(1.1, 1).should.approximately(1.1, 1e-9);
     financial.DOLLARFR(1.5, 2).should.approximately(1.1, 1e-9);
     financial.DOLLARFR(1.25, 4).should.approximately(1.1, 1e-9);
@@ -262,11 +262,11 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('DURATION', function() {
+  it('DURATION', function() {
     financial.DURATION.should.throw('DURATION is not implemented');
   });
 
-  test("EFFECT", function() {
+  it("EFFECT", function() {
     financial.EFFECT(0.1, 4).should.approximately(0.10381289062499977, 1e-9);
     financial.EFFECT(0.1, 4.5).should.approximately(0.10381289062499977, 1e-9);
     financial.EFFECT('Hello', 4).should.equal(error.value);
@@ -275,7 +275,7 @@ suite('Financial', function() {
     financial.EFFECT(0.1, 0.5).should.equal(error.num);
   });
 
-  test("FV", function() {
+  it("FV", function() {
     financial.FV(0.06 / 12, 10, -200, -500, 1).should.approximately(2581.4033740601185, 1e-9);
     financial.FV(0.12 / 12, 12, -1000).should.approximately(12682.503013196976, 1e-9);
     financial.FV(0.11 / 12, 35, -2000, undefined, 1).should.approximately(82846.24637190053, 1e-9);
@@ -284,17 +284,17 @@ suite('Financial', function() {
     financial.FV('invalid', 12, -100, -1000, 1).should.equal(error.value);
   });
 
-  test("FVSCHEDULE", function() {
+  it("FVSCHEDULE", function() {
     financial.FVSCHEDULE(100, [0.09, 0.1, 0.11]).should.approximately(133.08900000000003, 1e-9);
     financial.FVSCHEDULE(100, ['Hello World!', 0.1, 0.11]).should.equal(error.value);
   });
 
   //TODO: implement
-  test('INTRATE', function() {
+  it('INTRATE', function() {
     financial.INTRATE.should.throw('INTRATE is not implemented');
   });
 
-  test("IPMT", function() {
+  it("IPMT", function() {
     financial.IPMT(0.1 / 12, 6, 2 * 12, 100000, 1000000, 0).should.approximately(928.8235718400465, 1e-9);
     financial.IPMT(0.1 / 12, 6, 2 * 12, 100000, 1000000, 1).should.approximately(921.1473439736042, 1e-9);
     financial.IPMT(0.1 / 12, 1, 2 * 12, 100000, 1000000, 1).should.equal(0);
@@ -302,7 +302,7 @@ suite('Financial', function() {
     financial.IPMT('invalid', 1, 2 * 12, 100000, 1000000, 1).should.equal(error.value);
   });
 
-  test("IRR", function() {
+  it("IRR", function() {
     financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000]).should.approximately(0.05715142887178467, 1e-9);
     financial.IRR([
       [-75000, 12000],
@@ -317,22 +317,22 @@ suite('Financial', function() {
     financial.IRR([-12000, -15000, -18000, -21000, -24000], 'invalid').should.equal(error.value);
   });
 
-  test("ISPMT", function() {
+  it("ISPMT", function() {
     financial.ISPMT(0.1 / 12, 6, 2 * 12, 100000).should.equal(-625);
     financial.ISPMT('invalid', 6, 2 * 12, 100000).should.equal(error.value);
   });
 
   //TODO: implement
-  test('MDURATION', function() {
+  it('MDURATION', function() {
     financial.MDURATION.should.throw('MDURATION is not implemented');
   });
 
-  test("MIRR", function() {
+  it("MIRR", function() {
     financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, 0.12).should.approximately(0.07971710360838036, 1e-9);
     financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 'invalid', 0.12).should.equal(error.value);
   });
 
-  test("NOMINAL", function() {
+  it("NOMINAL", function() {
     financial.NOMINAL(0.1, 4).should.approximately(0.09645475633778045, 1e-9);
     financial.NOMINAL(0.1, 4.5).should.approximately(0.09645475633778045, 1e-9);
     financial.NOMINAL('Hello', 4).should.equal(error.value);
@@ -341,7 +341,7 @@ suite('Financial', function() {
     financial.NOMINAL(0.1, 0.5).should.equal(error.num);
   });
 
-  test("NPER", function() {
+  it("NPER", function() {
     financial.NPER(0.1 / 12, -100, -1000, 10000, 0).should.approximately(63.39385422740764, 1e-9);
     financial.NPER(0.1 / 12, -100, -1000, 10000, 1).should.approximately(63.016966422019685, 1e-9);
     financial.NPER(0.1 / 12, -100, -1000, 10000).should.approximately(63.39385422740764, 1e-9);
@@ -349,7 +349,7 @@ suite('Financial', function() {
     financial.NPER('invalid', -100, -1000).should.equal(error.value);
   });
 
-  test("NPV", function() {
+  it("NPV", function() {
     financial.NPV(0.1, -10000, 2000, 4000, 8000).should.approximately(1031.3503176012546, 1e-9);
     financial.NPV(0.1, [-10000, 2000, 4000, 8000]).should.approximately(1031.3503176012546, 1e-9);
     financial.NPV(0.1, [-75000]).should.approximately(-68181.81818181818, 1e-9);
@@ -358,26 +358,26 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('ODDFPRICE', function() {
+  it('ODDFPRICE', function() {
     financial.ODDFPRICE.should.throw('ODDFPRICE is not implemented');
   });
 
   //TODO: implement
-  test('ODDFYIELD', function() {
+  it('ODDFYIELD', function() {
     financial.ODDFYIELD.should.throw('ODDFYIELD is not implemented');
   });
 
   //TODO: implement
-  test('ODDLPRICE', function() {
+  it('ODDLPRICE', function() {
     financial.ODDLPRICE.should.throw('ODDLPRICE is not implemented');
   });
 
   //TODO: implement
-  test('ODDLYIELD', function() {
+  it('ODDLYIELD', function() {
     financial.ODDLYIELD.should.throw('ODDLYIELD is not implemented');
   });
 
-  test("PDURATION", function() {
+  it("PDURATION", function() {
     financial.PDURATION(0.1, 1000, 2000).should.approximately(7.272540897341714, 1e-9);
     financial.PDURATION('Hello World!', 1000, 2000).should.equal(error.value);
     financial.PDURATION(0.1, 'Hello World!', 2000).should.equal(error.value);
@@ -386,7 +386,7 @@ suite('Financial', function() {
     financial.PDURATION(-0.1, 1000, 2000).should.equal(error.num);
   });
 
-  test("PMT", function() {
+  it("PMT", function() {
     financial.PMT(0.06 / 12, 18 * 12, 0, 50000).should.approximately(-129.0811608679973, 1e-9);
     financial.PMT(0.1 / 12, 2 * 12, 100000, 1000000, 1).should.approximately(-42075.45683100995, 1e-9);
     financial.PMT(0.1 / 12, 2 * 12, 100000, 1000000).should.approximately(-42426.08563793503, 1e-9);
@@ -396,7 +396,7 @@ suite('Financial', function() {
     financial.PMT('invalid', 2 * 12, 100000).should.equal(error.value);
   });
 
-  test("PPMT", function() {
+  it("PPMT", function() {
     financial.PPMT(0.1 / 12, 1, 2 * 12, 2000).should.approximately(-75.62318600836673, 10e-9);
     financial.PPMT(0.08, 10, 10, 200000).should.approximately(-27598.05346242135, 10e-9);
     financial.PPMT(0.1 / 12, 6, 2 * 12, 100000, 1000000, 0).should.approximately(-43354.909209775076, 1e-9);
@@ -408,28 +408,28 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('PRICE', function() {
+  it('PRICE', function() {
     financial.PRICE.should.throw('PRICE is not implemented');
   });
 
   //TODO: implement
-  test('PRICEDISC', function() {
+  it('PRICEDISC', function() {
     financial.PRICEDISC.should.throw('PRICEDISC is not implemented');
   });
 
   //TODO: implement
-  test('PRICEMAT', function() {
+  it('PRICEMAT', function() {
     financial.PRICEMAT.should.throw('PRICEMAT is not implemented');
   });
 
-  test("PV", function() {
+  it("PV", function() {
     financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 0).should.approximately(-29864.950264779152, 1e-9);
     financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 1).should.approximately(-30045.54072173169, 1e-9);
     financial.PV(0, 2 * 12, 1000, 10000, 1).should.equal(-34000);
     financial.PV('invalid', 2 * 12, 1000, 10000, 1).should.equal(error.value);
   });
 
-  test("RATE", function() {
+  it("RATE", function() {
     financial.RATE(2 * 12, -1000, -10000, 100000).should.approximately(0.06517891177181546, 1e-9);
     financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.1).should.approximately(0.06517891177181533, 1e-9);
     financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.75).should.approximately(0.0651789117718154, 1e-9);
@@ -440,30 +440,30 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('RECEIVED', function() {
+  it('RECEIVED', function() {
     financial.RECEIVED.should.throw('RECEIVED is not implemented');
   });
 
-  test('RRI', function() {
+  it('RRI', function() {
     financial.RRI(8, 10000, 11000).should.approximately(0.011985024140399592, 1e-9);
     financial.RRI(NaN, 10000, 11000).should.equal(error.value);
     financial.RRI(0, 10000, 11000).should.equal(error.num);
   });
 
-  test('SLN', function() {
+  it('SLN', function() {
     financial.SLN(30000, 7500, 10).should.equal(2250);
     financial.SLN(NaN, 7500, 10).should.equal(error.value);
     financial.SLN(30000, 7500, 0).should.equal(error.num);
   });
 
-  test('SYD', function() {
+  it('SYD', function() {
     financial.SYD(30, 7, 10, 1).should.approximately(4.181818181818182, 1e-9);
     financial.SYD(NaN, 7, 10, 1).should.equal(error.value);
     financial.SYD(30, 7, 0, 1).should.equal(error.num);
     financial.SYD(30, 7, 10, 11).should.equal(error.num);
   });
 
-  test('TBILLEQ', function() {
+  it('TBILLEQ', function() {
     financial.TBILLEQ('03/31/2008', '06/01/2008', 0.0914).should.approximately(0.09412721351734614, 1e-9);
     financial.TBILLEQ('invalid date', '06/01/2008', 0.0914).should.equal(error.value);
     financial.TBILLEQ('03/31/2008', '06/01/2008', 0).should.equal(error.num);
@@ -471,7 +471,7 @@ suite('Financial', function() {
     financial.TBILLEQ('03/31/2008', '06/01/2009', 0.0914).should.equal(error.num);
   });
 
-  test('TBILLPRICE', function() {
+  it('TBILLPRICE', function() {
     financial.TBILLPRICE('03/31/2008', '06/01/2008', 0.0914).should.approximately(98.45127777777778, 1e-9);
     financial.TBILLPRICE('invalid date', '06/01/2008', 0.0914).should.equal(error.value);
     financial.TBILLPRICE('03/31/2008', '06/01/2008', 0).should.equal(error.num);
@@ -479,7 +479,7 @@ suite('Financial', function() {
     financial.TBILLPRICE('03/31/2008', '06/01/2009', 0.0914).should.equal(error.num);
   });
 
-  test('TBILLYIELD', function() {
+  it('TBILLYIELD', function() {
     financial.TBILLYIELD('03/31/2008', '06/01/2008', 98.45127777777778).should.approximately(0.09283779963354702, 1e-9);
     financial.TBILLYIELD('invalid date', '06/01/2008', 0.0914).should.equal(error.value);
     financial.TBILLYIELD('03/31/2008', '06/01/2008', 0).should.equal(error.num);
@@ -488,12 +488,14 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('VDB', function() {
+  it('VDB', function() {
     financial.VDB.should.throw('VDB is not implemented');
   });
 
-  test('XIRR', function() {
-    var values = [-10000,
+  //TODO: support for all browsers
+  xit('XIRR', function() {
+    var values = [
+      -10000,
       2750,
       4250,
       3250,
@@ -514,7 +516,7 @@ suite('Financial', function() {
     financial.XIRR(values, dates, 'invalid').should.equal(error.value);
   });
 
-  test('XNPV', function() {
+  it('XNPV', function() {
     var values = [-10000,
       2750,
       4250,
@@ -533,17 +535,17 @@ suite('Financial', function() {
   });
 
   //TODO: implement
-  test('YIELD', function() {
+  it('YIELD', function() {
     financial.YIELD.should.throw('YIELD is not implemented');
   });
 
   //TODO: implement
-  test('YIELDDISC', function() {
+  it('YIELDDISC', function() {
     financial.YIELDDISC.should.throw('YIELDDISC is not implemented');
   });
 
   //TODO: implement
-  test('YIELDMAT', function() {
+  it('YIELDMAT', function() {
     financial.YIELDMAT.should.throw('YIELDMAT is not implemented');
   });
 });
