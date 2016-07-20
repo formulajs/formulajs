@@ -184,7 +184,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.abs(utils.parseNumber(number));
+	  var result = Math.abs(number);
+
+	  return result;
 	};
 
 	exports.ACOS = function(number) {
@@ -192,7 +194,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.acos(number);
+	  var result = Math.acos(number);
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.ACOSH = function(number) {
@@ -200,7 +208,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.log(number + Math.sqrt(number * number - 1));
+	  var result = Math.log(number + Math.sqrt(number * number - 1));
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.ACOT = function(number) {
@@ -208,7 +222,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.atan(1 / number);
+	  var result = Math.atan(1 / number);
+
+	  return result;
 	};
 
 	exports.ACOTH = function(number) {
@@ -216,7 +232,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return 0.5 * Math.log((number + 1) / (number - 1));
+	  var result = 0.5 * Math.log((number + 1) / (number - 1));
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	//TODO: use options
@@ -299,7 +321,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.asin(number);
+	  var result = Math.asin(number);
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.ASINH = function(number) {
@@ -332,7 +360,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return Math.log((1 + number) / (1 - number)) / 2;
+	  var result = Math.log((1 + number) / (1 - number)) / 2;
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.BASE = function(number, radix, min_length) {
@@ -634,11 +668,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.LOG10E = function() {
-	  return Math.log10(Math.E);
+	  return Math.LOG10E;
 	};
 
 	exports.LOG2E = function() {
-	  return Math.log2(Math.E);
+	  return Math.LOG2E;
 	};
 
 	exports.LOG = function(number, base) {
@@ -1100,18 +1134,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.SUM = function() {
 	  var result = 0;
-	  var argsKeys = Object.keys(arguments);
-	  for (var i = 0; i < argsKeys.length; ++i) {
-	    var elt = arguments[argsKeys[i]];
-	    if (typeof elt === 'number') {
-	      result += elt;
-	    } else if (typeof elt === 'string') {
-	      var parsed = parseFloat(elt);
+
+	  utils.arrayEach(utils.argsToArray(arguments), function(value) {
+	    if (typeof value === 'number') {
+	      result += value;
+
+	    } else if (typeof value === 'string') {
+	      var parsed = parseFloat(value);
+
 	      !isNaN(parsed) && (result += parsed);
-	    } else if (Array.isArray(elt)) {
-	      result += exports.SUM.apply(null, elt);
+
+	    } else if (Array.isArray(value)) {
+	      result += exports.SUM.apply(null, value);
 	    }
-	  }
+	  });
+
 	  return result;
 	};
 
@@ -1284,45 +1321,63 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var error = __webpack_require__(4);
 
-	function flattenShallow(array) {
-	  if (!array || !array.reduce) { return array; }
+	exports.flattenShallow = function(array) {
+	  if (!array || !array.reduce) {
+	    return array;
+	  }
+
 	  return array.reduce(function(a, b) {
 	    var aIsArray = Array.isArray(a);
 	    var bIsArray = Array.isArray(b);
+
 	    if (aIsArray && bIsArray ) {
 	      return a.concat(b);
 	    }
 	    if (aIsArray) {
 	      a.push(b);
+
 	      return a;
 	    }
 	    if (bIsArray) {
 	      return [a].concat(b);
 	    }
+
 	    return [a, b];
 	  });
-	}
+	};
 
-	function isFlat(array) {
-	  if (!array) { return false; }
+	exports.isFlat = function(array) {
+	  if (!array) {
+	    return false;
+	  }
+
 	  for (var i = 0; i < array.length; ++i) {
 	    if (Array.isArray(array[i])) {
 	      return false;
 	    }
 	  }
+
 	  return true;
-	}
+	};
 
 	exports.flatten = function() {
 	  var result = exports.argsToArray.apply(null, arguments);
-	  while (!isFlat(result)) {
-	    result = flattenShallow(result);
+
+	  while (!exports.isFlat(result)) {
+	    result = exports.flattenShallow(result);
 	  }
+
 	  return result;
 	};
 
 	exports.argsToArray = function(args) {
-	  return Array.prototype.slice.call(args, 0);
+	  var result = [];
+
+	  exports.arrayEach(args, function(value) {
+	    result.push(value);
+	  });
+
+	  return result;
 	};
 
 	exports.numbers = function() {
@@ -1375,15 +1430,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!isNaN(string)) {
 	    return parseFloat(string);
 	  }
+
 	  return error.value;
 	};
 
 	exports.parseNumberArray = function(arr) {
 	  var len;
+
 	  if (!arr || (len = arr.length) === 0) {
 	    return error.value;
 	  }
+
 	  var parsed;
+
 	  while (len--) {
 	    parsed = exports.parseNumber(arr[len]);
 	    if (parsed === error.value) {
@@ -1391,22 +1450,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    arr[len] = parsed;
 	  }
+
 	  return arr;
 	};
 
 	exports.parseMatrix = function(matrix) {
 	  var n;
+
 	  if (!matrix || (n = matrix.length) === 0) {
 	    return error.value;
 	  }
 	  var pnarr;
+
 	  for (var i = 0; i < matrix.length; i++) {
 	    pnarr = exports.parseNumberArray(matrix[i]);
 	    matrix[i] = pnarr;
+
 	    if (pnarr instanceof Error) {
 	      return pnarr;
 	    }
 	  }
+
 	  return matrix;
 	};
 
@@ -1501,6 +1565,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return array.slice(0, array.length - idx);
 	};
 
+	exports.arrayEach = function(array, iteratee) {
+	  var index = -1, length = array.length;
+
+	  while (++index < length) {
+	    if (iteratee(array[index], index, array) === false) {
+	      break;
+	    }
+	  }
+
+	  return array;
+	};
+
+
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
@@ -1542,11 +1619,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var n = range.length;
 	  var sum = 0;
 	  var count = 0;
+	  var result;
+
 	  for (var i = 0; i < n; i++) {
 	    sum += range[i];
 	    count += 1;
 	  }
-	  return sum / count;
+	  result = sum / count;
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.AVERAGEA = function() {
@@ -1554,6 +1639,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var n = range.length;
 	  var sum = 0;
 	  var count = 0;
+	  var result;
 	  for (var i = 0; i < n; i++) {
 	    var el = range[i];
 	    if (typeof el === 'number') {
@@ -1566,10 +1652,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      count++;
 	    }
 	  }
-	  return sum / count;
+	  result = sum / count;
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.AVERAGEIF = function(range, criteria, average_range) {
+	  if (arguments.length <= 1) {
+	    return error.na;
+	  }
 	  average_range = average_range || range;
 	  range = utils.flatten(range);
 	  average_range = utils.parseNumberArray(utils.flatten(average_range));
@@ -1905,6 +2000,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.COUNTIN = function (range, value) {
 	  var result = 0;
+
+	  range = utils.flatten(range);
+
 	  for (var i = 0; i < range.length; i++) {
 	    if (range[i] === value) {
 	      result++;
@@ -2499,7 +2597,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.MEDIAN = function() {
 	  var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
-	  return jStat.median(range);
+	  var result = jStat.median(range);
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.MIN = function() {
@@ -2998,22 +3102,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.STDEV.P = function() {
 	  var v = exports.VAR.P.apply(this, arguments);
-	  return Math.sqrt(v);
+	  var result = Math.sqrt(v);
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.STDEV.S = function() {
 	  var v = exports.VAR.S.apply(this, arguments);
-	  return Math.sqrt(v);
+	  var result = Math.sqrt(v);
+
+	  return result;
 	};
 
 	exports.STDEVA = function() {
 	  var v = exports.VARA.apply(this, arguments);
-	  return Math.sqrt(v);
+	  var result = Math.sqrt(v);
+
+	  return result;
 	};
 
 	exports.STDEVPA = function() {
 	  var v = exports.VARPA.apply(this, arguments);
-	  return Math.sqrt(v);
+	  var result = Math.sqrt(v);
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 
@@ -3176,10 +3296,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var n = range.length;
 	  var sigma = 0;
 	  var mean = exports.AVERAGE(range);
+	  var result;
 	  for (var i = 0; i < n; i++) {
 	    sigma += Math.pow(range[i] - mean, 2);
 	  }
-	  return sigma / n;
+	  result = sigma / n;
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.VAR.S = function() {
@@ -3222,6 +3349,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var sigma = 0;
 	  var count = 0;
 	  var mean = exports.AVERAGEA(range);
+	  var result;
 	  for (var i = 0; i < n; i++) {
 	    var el = range[i];
 	    if (typeof el === 'number') {
@@ -3236,7 +3364,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      count++;
 	    }
 	  }
-	  return sigma / count;
+	  result = sigma / count;;
+
+	  if (isNaN(result)) {
+	    result = error.num;
+	  }
+
+	  return result;
 	};
 
 	exports.WEIBULL = {};
@@ -3300,7 +3434,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.CODE = function(text) {
 	  text = text || '';
-	  return text.charCodeAt(0);
+	  var result = text.charCodeAt(0);
+
+	  if (isNaN(result)) {
+	    result = error.na;
+	  }
+	  return result;
 	};
 
 	exports.CONCATENATE = function() {
@@ -3343,10 +3482,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.EXACT = function(text1, text2) {
+	  if (arguments.length !== 2) {
+	    return error.na;
+	  }
 	  return text1 === text2;
 	};
 
 	exports.FIND = function(find_text, within_text, position) {
+	  if (arguments.length < 2) {
+	    return error.na;
+	  }
 	  position = (position === undefined) ? 0 : position;
 	  return within_text ? within_text.indexOf(find_text, position - 1) + 1 : null;
 	};
@@ -3469,16 +3614,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.REGEXEXTRACT = function (text, regular_expression) {
+	  if (arguments.length < 2) {
+	    return error.na;
+	  }
 	  var match = text.match(new RegExp(regular_expression));
 	  return match ? (match[match.length > 1 ? match.length - 1 : 0]) : null;
 	};
 
 	exports.REGEXMATCH = function (text, regular_expression, full) {
+	  if (arguments.length < 2) {
+	    return error.na;
+	  }
 	  var match = text.match(new RegExp(regular_expression));
 	  return full ? match : !!match;
 	};
 
 	exports.REGEXREPLACE = function (text, regular_expression, replacement) {
+	  if (arguments.length < 3) {
+	    return error.na;
+	  }
 	  return text.replace(new RegExp(regular_expression), replacement);
 	};
 
@@ -3507,7 +3661,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (number instanceof Error) {
 	    return number;
 	  }
-	  return text ? text.substring(text.length - number) : null;
+	  return text ? text.substring(text.length - number) : error.na;
 	};
 
 	exports.SEARCH = function(find_text, within_text, position) {
@@ -3525,6 +3679,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.SUBSTITUTE = function(text, old_text, new_text, occurrence) {
+	  if (arguments.length < 2) {
+	    return error.na;
+	  }
 	  if (!text || !old_text || !new_text) {
 	    return text;
 	  } else if (occurrence === undefined) {
@@ -11193,6 +11350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var utils = __webpack_require__(3);
 	var numbro = __webpack_require__(7);
+	var error = __webpack_require__(4);
 
 	exports.UNIQUE = function () {
 	  var result = [];
@@ -11221,6 +11379,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.REFERENCE = function (context, reference) {
+	  if (!arguments.length) {
+	    return error.error;
+	  }
 	  try {
 	    var path = reference.split('.');
 	    var result = context;
@@ -11252,6 +11413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.NUMERAL = function (number, format) {
 	  return numbro(number).format(format);
 	};
+
 
 /***/ },
 /* 48 */
@@ -11412,7 +11574,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
-	  
+
 	  return bessel.besseli(x, n);
 	};
 
@@ -11422,7 +11584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
-	  
+
 	  return bessel.besselj(x, n);
 	};
 
@@ -11432,7 +11594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
-	  
+
 	  return bessel.besselk(x, n);
 	};
 
@@ -11442,7 +11604,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (utils.anyIsError(x, n)) {
 	    return error.value;
 	  }
-	  
+
 	  return bessel.bessely(x, n);
 	};
 
@@ -12584,6 +12746,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Initialize result
 	  var result = arguments[0];
 
+	  if (!arguments.length) {
+	    return error.value;
+	  }
+
 	  // Loop on all numbers
 	  for (var i = 1; i < arguments.length; i++) {
 	    // Lookup coefficients of two complex numbers
@@ -12810,6 +12976,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	exports.IMSUM = function() {
+	  if (!arguments.length) {
+	    return error.value;
+	  }
 	  var args = utils.flatten(arguments);
 
 	  // Initialize result
@@ -13238,18 +13407,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	];
 
 	exports.DATE = function(year, month, day) {
+	  var result;
+
 	  year = utils.parseNumber(year);
 	  month = utils.parseNumber(month);
 	  day = utils.parseNumber(day);
-	  if (utils.anyIsError(year, month, day)) {
-	    return error.value;
-	  }
-	  if (year < 0 || month < 0 || day < 0) {
-	    return error.num;
-	  }
-	  var date = new Date(year, month - 1, day);
 
-	  return date;
+	  if (utils.anyIsError(year, month, day)) {
+	    result = error.value;
+
+	  } else if (year < 0 || month < 0 || day < 0) {
+	    result = error.num;
+
+	  } else {
+	    result = new Date(year, month - 1, day);
+	  }
+
+	  return result;
 	};
 
 	exports.DATEVALUE = function(date_text) {
@@ -13257,6 +13431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return error.value;
 	  }
 	  var date = Date.parse(date_text);
+
 	  if (isNaN(date)) {
 	    return error.value;
 	  }
@@ -13630,7 +13805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.YEAR = function(serial_number) {
 	  serial_number = utils.parseDate(serial_number);
-	  
+
 	  if (serial_number instanceof Error) {
 	    return serial_number;
 	  }
@@ -13716,7 +13891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function serial(date) {
 	  var addOn = (date > -2203891200000) ? 2 : 1;
-	  
+
 	  return (date - d1900) / 86400000 + addOn;
 	}
 
@@ -13731,31 +13906,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 
 	function compact(array) {
-	  if (!array) { return array; }
 	  var result = [];
-	  
-	  for (var i = 0; i < array.length; ++i) {
-	    if (!array[i]) { continue; }
-	    result.push(array[i]);
-	  }
-	  
+
+	  utils.arrayEach(array, function(value) {
+	    if (value) {
+	      result.push(value);
+	    }
+	  });
+
 	  return result;
 	}
 
 	exports.FINDFIELD = function(database, title) {
 	  var index = null;
-	  for (var i = 0; i < database.length; i++) {
-	    if (database[i][0] === title) {
+
+	  utils.arrayEach(database, function(value, i) {
+	    if (value[0] === title) {
 	      index = i;
-	      break;
+	      return false;
 	    }
-	  }
+	  });
 
 	  // Return error if the input field title is incorrect
 	  if (index == null) {
 	    return error.value;
 	  }
-	  
+
 	  return index;
 	};
 
@@ -13802,7 +13978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      result.push(n - 1);
 	    }
 	  }
-	  
+
 	  return result;
 	}
 
@@ -13814,7 +13990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13822,10 +13998,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetFields = utils.rest(database[field]);
 	  }
 	  var sum = 0;
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    sum += targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    sum += targetFields[value];
+	  });
+
 	  return resultIndexes.length === 0 ? error.div0 : sum / resultIndexes.length;
 	};
 
@@ -13836,19 +14013,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
+
 	  return stats.COUNT(targetValues);
 	};
 
@@ -13857,22 +14035,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
-	  
+
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
+
 	  return stats.COUNTA(targetValues);
 	};
 
@@ -13881,16 +14060,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
-	  
+
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  // Return error if no record meets the criteria
 	  if (resultIndexes.length === 0) {
 	    return error.value;
@@ -13911,21 +14091,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var maxValue = targetFields[resultIndexes[0]];
-	  for (var i = 1; i < resultIndexes.length; i++) {
-	    if (maxValue < targetFields[resultIndexes[i]]) {
-	      maxValue = targetFields[resultIndexes[i]];
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    if (maxValue < targetFields[value]) {
+	      maxValue = targetFields[value];
 	    }
-	  }
-	  
+	  });
+
 	  return maxValue;
 	};
 
@@ -13934,23 +14115,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
-	  
+
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var minValue = targetFields[resultIndexes[0]];
-	  for (var i = 1; i < resultIndexes.length; i++) {
-	    if (minValue > targetFields[resultIndexes[i]]) {
-	      minValue = targetFields[resultIndexes[i]];
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    if (minValue > targetFields[value]) {
+	      minValue = targetFields[value];
 	    }
-	  }
-	  
+	  });
+
 	  return minValue;
 	};
 
@@ -13959,28 +14142,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (isNaN(field) && (typeof field !== "string")) {
 	    return error.value;
 	  }
-	  
+
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
 	  targetValues = compact(targetValues);
-	  
+
 	  var result = 1;
-	  for (i = 0; i < targetValues.length; i++) {
-	    result *= targetValues[i];
-	  }
-	  
+
+	  utils.arrayEach(targetValues, function(value) {
+	    result *= value;
+	  });
+
 	  return result;
 	};
 
@@ -13991,7 +14176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -13999,11 +14184,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetFields = utils.rest(database[field]);
 	  }
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
 	  targetValues = compact(targetValues);
-	  
+
 	  return stats.STDEV.S(targetValues);
 	};
 
@@ -14014,20 +14200,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
 	  targetValues = compact(targetValues);
-	  
+
 	  return stats.STDEV.P(targetValues);
 	};
 
@@ -14038,19 +14225,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
 	  } else {
 	    targetFields = utils.rest(database[field]);
 	  }
-	  
+
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
+
 	  return maths.SUM(targetValues);
 	};
 
@@ -14061,7 +14249,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -14069,10 +14257,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetFields = utils.rest(database[field]);
 	  }
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
+
 	  return stats.VAR.S(targetValues);
 	};
 
@@ -14083,7 +14272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var resultIndexes = findResultIndex(database, criteria);
 	  var targetFields = [];
-	  
+
 	  if (typeof field === "string") {
 	    var index = exports.FINDFIELD(database, field);
 	    targetFields = utils.rest(database[index]);
@@ -14091,10 +14280,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    targetFields = utils.rest(database[field]);
 	  }
 	  var targetValues = [];
-	  for (var i = 0; i < resultIndexes.length; i++) {
-	    targetValues[i] = targetFields[resultIndexes[i]];
-	  }
-	  
+
+	  utils.arrayEach(resultIndexes, function(value) {
+	    targetValues.push(targetFields[value]);
+	  });
+
 	  return stats.VAR.P(targetValues);
 	};
 
@@ -14186,11 +14376,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.SWITCH = function () {
 	  var result;
+
 	  if (arguments.length > 0)  {
 	    var targetValue = arguments[0];
 	    var argc = arguments.length - 1;
 	    var switchCount = Math.floor(argc / 2);
 	    var switchSatisfied = false;
+	    var hasDefaultClause = argc % 2 !== 0;
 	    var defaultClause = argc % 2 === 0 ? null : arguments[arguments.length - 1];
 
 	    if (switchCount) {
@@ -14203,9 +14395,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 
-	    if (!switchSatisfied && defaultClause) {
-	      result = defaultClause;
+	    if (!switchSatisfied) {
+	      result = hasDefaultClause ? defaultClause : error.na;
 	    }
+	  } else {
+	    result = error.value;
 	  }
 
 	  return result;
@@ -15205,76 +15399,77 @@ return /******/ (function(modules) { // webpackBootstrap
 	  throw new Error('VDB is not implemented');
 	};
 
-
-	exports.XIRR = function(values, dates, guess) {
-	  // Credits: algorithm inspired by Apache OpenOffice
-
-	  values = utils.parseNumberArray(utils.flatten(values));
-	  dates = utils.parseDateArray(utils.flatten(dates));
-	  guess = utils.parseNumber(guess);
-	  if (utils.anyIsError(values, dates, guess)) {
-	    return error.value;
-	  }
-
-	  // Calculates the resulting amount
-	  var irrResult = function(values, dates, rate) {
-	    var r = rate + 1;
-	    var result = values[0];
-	    for (var i = 1; i < values.length; i++) {
-	      result += values[i] / Math.pow(r, dateTime.DAYS(dates[i], dates[0]) / 365);
-	    }
-	    return result;
-	  };
-
-	  // Calculates the first derivation
-	  var irrResultDeriv = function(values, dates, rate) {
-	    var r = rate + 1;
-	    var result = 0;
-	    for (var i = 1; i < values.length; i++) {
-	      var frac = dateTime.DAYS(dates[i], dates[0]) / 365;
-	      result -= frac * values[i] / Math.pow(r, frac + 1);
-	    }
-	    return result;
-	  };
-
-	  // Check that values contains at least one positive value and one negative value
-	  var positive = false;
-	  var negative = false;
-	  for (var i = 0; i < values.length; i++) {
-	    if (values[i] > 0) {
-	      positive = true;
-	    }
-	    if (values[i] < 0) {
-	      negative = true;
-	    }
-	  }
-
-	  // Return error if values does not contain at least one positive value and one negative value
-	  if (!positive || !negative) {
-	    return error.num;
-	  }
-
-	  // Initialize guess and resultRate
-	  guess = guess || 0.1;
-	  var resultRate = guess;
-
-	  // Set maximum epsilon for end of iteration
-	  var epsMax = 1e-10;
-
-	  // Implement Newton's method
-	  var newRate, epsRate, resultValue;
-	  var contLoop = true;
-	  do {
-	    resultValue = irrResult(values, dates, resultRate);
-	    newRate = resultRate - resultValue / irrResultDeriv(values, dates, resultRate);
-	    epsRate = Math.abs(newRate - resultRate);
-	    resultRate = newRate;
-	    contLoop = (epsRate > epsMax) && (Math.abs(resultValue) > epsMax);
-	  } while (contLoop);
-
-	  // Return internal rate of return
-	  return resultRate;
-	};
+	// TODO needs better support for date
+	// exports.XIRR = function(values, dates, guess) {
+	//   // Credits: algorithm inspired by Apache OpenOffice
+	//
+	//   values = utils.parseNumberArray(utils.flatten(values));
+	//   dates = utils.parseDateArray(utils.flatten(dates));
+	//   guess = utils.parseNumber(guess);
+	//
+	//   if (utils.anyIsError(values, dates, guess)) {
+	//     return error.value;
+	//   }
+	//
+	//   // Calculates the resulting amount
+	//   var irrResult = function(values, dates, rate) {
+	//     var r = rate + 1;
+	//     var result = values[0];
+	//     for (var i = 1; i < values.length; i++) {
+	//       result += values[i] / Math.pow(r, dateTime.DAYS(dates[i], dates[0]) / 365);
+	//     }
+	//     return result;
+	//   };
+	//
+	//   // Calculates the first derivation
+	//   var irrResultDeriv = function(values, dates, rate) {
+	//     var r = rate + 1;
+	//     var result = 0;
+	//     for (var i = 1; i < values.length; i++) {
+	//       var frac = dateTime.DAYS(dates[i], dates[0]) / 365;
+	//       result -= frac * values[i] / Math.pow(r, frac + 1);
+	//     }
+	//     return result;
+	//   };
+	//
+	//   // Check that values contains at least one positive value and one negative value
+	//   var positive = false;
+	//   var negative = false;
+	//   for (var i = 0; i < values.length; i++) {
+	//     if (values[i] > 0) {
+	//       positive = true;
+	//     }
+	//     if (values[i] < 0) {
+	//       negative = true;
+	//     }
+	//   }
+	//
+	//   // Return error if values does not contain at least one positive value and one negative value
+	//   if (!positive || !negative) {
+	//     return error.num;
+	//   }
+	//
+	//   // Initialize guess and resultRate
+	//   guess = guess || 0.1;
+	//   var resultRate = guess;
+	//
+	//   // Set maximum epsilon for end of iteration
+	//   var epsMax = 1e-10;
+	//
+	//   // Implement Newton's method
+	//   var newRate, epsRate, resultValue;
+	//   var contLoop = true;
+	//   do {
+	//     resultValue = irrResult(values, dates, resultRate);
+	//     newRate = resultRate - resultValue / irrResultDeriv(values, dates, resultRate);
+	//     epsRate = Math.abs(newRate - resultRate);
+	//     resultRate = newRate;
+	//     contLoop = (epsRate > epsMax) && (Math.abs(resultValue) > epsMax);
+	//   } while (contLoop);
+	//
+	//   // Return internal rate of return
+	//   return resultRate;
+	// };
 
 	exports.XNPV = function(rate, values, dates) {
 	  rate = utils.parseNumber(rate);
