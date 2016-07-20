@@ -1,4 +1,4 @@
-formula.js [![Build Status](https://travis-ci.org/handsontable/formula.js.png?branch=master)](https://travis-ci.org/handsontable/formula.js)
+formula.js [![Build Status](https://travis-ci.org/handsontable/formula.js.png?branch=master)](https://travis-ci.org/handsontable/formula.js) [![Test Coverage](https://codeclimate.com/github/handsontable/formula.js/badges/coverage.svg)](https://codeclimate.com/github/handsontable/formula.js/coverage)
 ==========
 
 JavaScript implementation of most Microsoft Excel formula functions
