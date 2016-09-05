@@ -56,17 +56,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var categories = [
 	  __webpack_require__(1),
-	  __webpack_require__(52),
-	  __webpack_require__(49),
-	  __webpack_require__(53),
+	  __webpack_require__(54),
+	  __webpack_require__(51),
+	  __webpack_require__(55),
 	  __webpack_require__(2),
 	  __webpack_require__(6),
-	  __webpack_require__(51),
-	  __webpack_require__(54),
-	  __webpack_require__(48),
-	  __webpack_require__(55),
+	  __webpack_require__(53),
+	  __webpack_require__(56),
+	  __webpack_require__(50),
+	  __webpack_require__(57),
 	  __webpack_require__(5),
-	  __webpack_require__(47)
+	  __webpack_require__(49)
 	];
 
 	for (var c in categories) {
@@ -83,8 +83,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var mathTrig = __webpack_require__(2);
 	var statistical = __webpack_require__(5);
-	var engineering = __webpack_require__(49);
-	var dateTime = __webpack_require__(51);
+	var engineering = __webpack_require__(51);
+	var dateTime = __webpack_require__(53);
 
 	function set(fn, root) {
 	  if (root) {
@@ -177,7 +177,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var error = __webpack_require__(4);
 	var statistical = __webpack_require__(5);
-	var information = __webpack_require__(48);
+	var information = __webpack_require__(50);
 
 	exports.ABS = function(number) {
 	  number = utils.parseNumber(number);
@@ -1599,10 +1599,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var mathTrig = __webpack_require__(2);
 	var text = __webpack_require__(6);
-	var jStat = __webpack_require__(46).jStat;
+	var jStat = __webpack_require__(48).jStat;
 	var utils = __webpack_require__(3);
 	var error = __webpack_require__(4);
-	var misc = __webpack_require__(47);
+	var misc = __webpack_require__(49);
 
 	var SQRT2PI = 2.5066282746310002;
 
@@ -3747,7 +3747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process) {/*!
 	 * numbro.js
-	 * version : 1.8.0
+	 * version : 1.9.3
 	 * author : Företagsplatsen AB
 	 * license : MIT
 	 * http://www.foretagsplatsen.se
@@ -3761,7 +3761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ************************************/
 
 	    var numbro,
-	        VERSION = '1.8.0',
+	        VERSION = '1.9.3',
 	        binarySuffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'],
 	        decimalSuffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
 	        bytes = {
@@ -3931,7 +3931,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        // figure out what kind of format we are dealing with
 	        if (escapedFormat.indexOf('$') > -1) { // currency!!!!!
-	            output = formatCurrency(n, format, roundingFunction);
+	            output = formatCurrency(n, cultures[currentCulture].currency.symbol, format, roundingFunction);
 	        } else if (escapedFormat.indexOf('%') > -1) { // percentage
 	            output = formatPercentage(n, format, roundingFunction);
 	        } else if (escapedFormat.indexOf(':') > -1) { // time
@@ -4008,7 +4008,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return n._value;
 	    }
 
-	    function formatCurrency(n, originalFormat, roundingFunction) {
+	    function formatCurrency(n, currencySymbol, originalFormat, roundingFunction) {
 	        var format = originalFormat,
 	            symbolIndex = format.indexOf('$'),
 	            openParenIndex = format.indexOf('('),
@@ -4022,7 +4022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if(format.indexOf('$') === -1){
 	            // Use defaults instead of the format provided
 	            if (cultures[currentCulture].currency.position === 'infix') {
-	                decimalSeparator = cultures[currentCulture].currency.symbol;
+	                decimalSeparator = currencySymbol;
 	                if (cultures[currentCulture].currency.spaceSeparated) {
 	                    decimalSeparator = ' ' + decimalSeparator + ' ';
 	                }
@@ -4051,10 +4051,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                case 'postfix':
 	                    if (output.indexOf(')') > -1) {
 	                        output = output.split('');
-	                        output.splice(-1, 0, space + cultures[currentCulture].currency.symbol);
+	                        output.splice(-1, 0, space + currencySymbol);
 	                        output = output.join('');
 	                    } else {
-	                        output = output + space + cultures[currentCulture].currency.symbol;
+	                        output = output + space + currencySymbol;
 	                    }
 	                    break;
 	                case 'infix':
@@ -4064,10 +4064,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        output = output.split('');
 	                        spliceIndex = Math.max(openParenIndex, minusSignIndex) + 1;
 
-	                        output.splice(spliceIndex, 0, cultures[currentCulture].currency.symbol + space);
+	                        output.splice(spliceIndex, 0, currencySymbol + space);
 	                        output = output.join('');
 	                    } else {
-	                        output = cultures[currentCulture].currency.symbol + space + output;
+	                        output = currencySymbol + space + output;
 	                    }
 	                    break;
 	                default:
@@ -4083,23 +4083,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        // the symbol appears before the "(", "+" or "-"
 	                        spliceIndex = 0;
 	                    }
-	                    output.splice(spliceIndex, 0, cultures[currentCulture].currency.symbol + space);
+	                    output.splice(spliceIndex, 0, currencySymbol + space);
 	                    output = output.join('');
 	                } else {
-	                    output = cultures[currentCulture].currency.symbol + space + output;
+	                    output = currencySymbol + space + output;
 	                }
 	            } else {
 	                if (output.indexOf(')') > -1) {
 	                    output = output.split('');
-	                    output.splice(-1, 0, space + cultures[currentCulture].currency.symbol);
+	                    output.splice(-1, 0, space + currencySymbol);
 	                    output = output.join('');
 	                } else {
-	                    output = output + space + cultures[currentCulture].currency.symbol;
+	                    output = output + space + currencySymbol;
 	                }
 	            }
 	        }
 
 	        return output;
+	    }
+
+	    function formatForeignCurrency(n, foreignCurrencySymbol, originalFormat, roundingFunction) {
+	        return formatCurrency(n, foreignCurrencySymbol, originalFormat, roundingFunction);
 	    }
 
 	    function formatPercentage(n, format, roundingFunction) {
@@ -4666,6 +4670,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        //trim whitespaces from either sides
 	        val = val.trim();
 
+	        //replace the initial '+' or '-' sign if present
+	        val = val.replace(/^[+-]?/, '');
+
 	        //if val is just digits return true
 	        if ( !! val.match(/^\d+$/)) {
 	            return true;
@@ -4695,7 +4702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        // validating currency symbol
-	        temp = val.match(/^[^\d]+/);
+	        temp = val.match(/^[^\d\.\,]+/);
 	        if (temp !== null) {
 	            val = val.substr(1);
 	            if (temp[0] !== _currSymbol) {
@@ -4723,7 +4730,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (_valArray.length < 2) {
 	                    return ( !! _valArray[0].match(/^\d+.*\d$/) && !_valArray[0].match(_thousandRegEx));
 	                } else {
-	                    if (_valArray[0].length === 1) {
+	                    if (_valArray[0] === '') {
+	                        // for values without leading zero eg. .984
+	                        return (!_valArray[0].match(_thousandRegEx) &&
+	                            !!_valArray[1].match(/^\d+$/));
+
+	                    } else if (_valArray[0].length === 1) {
 	                        return ( !! _valArray[0].match(/^\d+$/) &&
 	                            !_valArray[0].match(_thousandRegEx) &&
 	                            !! _valArray[1].match(/^\d+$/));
@@ -4782,7 +4794,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function inNodejsRuntime() {
 	        return (typeof process !== 'undefined') &&
 	            (process.browser === undefined) &&
-	            (process.title.indexOf('node') === 0 || process.title === 'grunt' || process.title === 'gulp') &&
+	            process.title &&
+	            (
+	                process.title.indexOf('node') === 0 ||
+	                process.title.indexOf('meteor-tool') > 0 ||
+	                process.title === 'grunt' ||
+	                process.title === 'gulp'
+	            ) &&
 	            ("function" !== 'undefined');
 	    }
 
@@ -4888,6 +4906,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        formatCurrency: function(inputString, roundingFunction) {
 	            return formatCurrency(this,
+	                cultures[currentCulture].currency.symbol,
+	                inputString ? inputString : defaultCurrencyFormat,
+	                (roundingFunction !== undefined) ? roundingFunction : Math.round
+	            );
+	        },
+
+	        formatForeignCurrency: function(currencySymbol, inputString, roundingFunction) {
+	            return formatForeignCurrency(this,
+	                currencySymbol,
 	                inputString ? inputString : defaultCurrencyFormat,
 	                (roundingFunction !== undefined) ? roundingFunction : Math.round
 	            );
@@ -5017,7 +5044,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports) {
 
 	// shim for using process in browser
-
 	var process = module.exports = {};
 
 	// cached from whatever global is present so that test runners that stub it
@@ -5028,22 +5054,84 @@ return /******/ (function(modules) { // webpackBootstrap
 	var cachedSetTimeout;
 	var cachedClearTimeout;
 
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
 	(function () {
-	  try {
-	    cachedSetTimeout = setTimeout;
-	  } catch (e) {
-	    cachedSetTimeout = function () {
-	      throw new Error('setTimeout is not defined');
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
 	    }
-	  }
-	  try {
-	    cachedClearTimeout = clearTimeout;
-	  } catch (e) {
-	    cachedClearTimeout = function () {
-	      throw new Error('clearTimeout is not defined');
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
 	    }
-	  }
 	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
 	var queue = [];
 	var draining = false;
 	var currentQueue;
@@ -5068,7 +5156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (draining) {
 	        return;
 	    }
-	    var timeout = cachedSetTimeout(cleanUpNextTick);
+	    var timeout = runTimeout(cleanUpNextTick);
 	    draining = true;
 
 	    var len = queue.length;
@@ -5085,7 +5173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    currentQueue = null;
 	    draining = false;
-	    cachedClearTimeout(timeout);
+	    runClearTimeout(timeout);
 	}
 
 	process.nextTick = function (fun) {
@@ -5097,7 +5185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    queue.push(new Item(fun, args));
 	    if (queue.length === 1 && !draining) {
-	        cachedSetTimeout(drainQueue, 0);
+	        runTimeout(drainQueue);
 	    }
 	};
 
@@ -5145,38 +5233,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports['da-DK'] = __webpack_require__(11);
 	exports['de-CH'] = __webpack_require__(12);
 	exports['de-DE'] = __webpack_require__(13);
-	exports['en-GB'] = __webpack_require__(14);
-	exports['en-ZA'] = __webpack_require__(15);
-	exports['es-AR'] = __webpack_require__(16);
-	exports['es-ES'] = __webpack_require__(17);
-	exports['et-EE'] = __webpack_require__(18);
-	exports['fa-IR'] = __webpack_require__(19);
-	exports['fi-FI'] = __webpack_require__(20);
-	exports['fil-PH'] = __webpack_require__(21);
-	exports['fr-CA'] = __webpack_require__(22);
-	exports['fr-CH'] = __webpack_require__(23);
-	exports['fr-FR'] = __webpack_require__(24);
-	exports['he-IL'] = __webpack_require__(25);
-	exports['hu-HU'] = __webpack_require__(26);
-	exports['it-IT'] = __webpack_require__(27);
-	exports['ja-JP'] = __webpack_require__(28);
-	exports['ko-KR'] = __webpack_require__(29);
-	exports['lv-LV'] = __webpack_require__(30);
-	exports['nb-NO'] = __webpack_require__(31);
-	exports['nl-BE'] = __webpack_require__(32);
-	exports['nl-NL'] = __webpack_require__(33);
-	exports['pl-PL'] = __webpack_require__(34);
-	exports['pt-BR'] = __webpack_require__(35);
-	exports['pt-PT'] = __webpack_require__(36);
-	exports['ru-RU'] = __webpack_require__(37);
-	exports['ru-UA'] = __webpack_require__(38);
-	exports['sk-SK'] = __webpack_require__(39);
-	exports['sv-SE'] = __webpack_require__(40);
-	exports['th-TH'] = __webpack_require__(41);
-	exports['tr-TR'] = __webpack_require__(42);
-	exports['uk-UA'] = __webpack_require__(43);
-	exports['zh-CN'] = __webpack_require__(44);
-	exports['zh-TW'] = __webpack_require__(45);
+	exports['en-AU'] = __webpack_require__(14);
+	exports['en-GB'] = __webpack_require__(15);
+	exports['en-NZ'] = __webpack_require__(16);
+	exports['en-ZA'] = __webpack_require__(17);
+	exports['es-AR'] = __webpack_require__(18);
+	exports['es-ES'] = __webpack_require__(19);
+	exports['et-EE'] = __webpack_require__(20);
+	exports['fa-IR'] = __webpack_require__(21);
+	exports['fi-FI'] = __webpack_require__(22);
+	exports['fil-PH'] = __webpack_require__(23);
+	exports['fr-CA'] = __webpack_require__(24);
+	exports['fr-CH'] = __webpack_require__(25);
+	exports['fr-FR'] = __webpack_require__(26);
+	exports['he-IL'] = __webpack_require__(27);
+	exports['hu-HU'] = __webpack_require__(28);
+	exports['it-IT'] = __webpack_require__(29);
+	exports['ja-JP'] = __webpack_require__(30);
+	exports['ko-KR'] = __webpack_require__(31);
+	exports['lv-LV'] = __webpack_require__(32);
+	exports['nb-NO'] = __webpack_require__(33);
+	exports['nl-BE'] = __webpack_require__(34);
+	exports['nl-NL'] = __webpack_require__(35);
+	exports['pl-PL'] = __webpack_require__(36);
+	exports['pt-BR'] = __webpack_require__(37);
+	exports['pt-PT'] = __webpack_require__(38);
+	exports['ru-RU'] = __webpack_require__(39);
+	exports['ru-UA'] = __webpack_require__(40);
+	exports['sk-SK'] = __webpack_require__(41);
+	exports['sv-SE'] = __webpack_require__(42);
+	exports['th-TH'] = __webpack_require__(43);
+	exports['tr-TR'] = __webpack_require__(44);
+	exports['uk-UA'] = __webpack_require__(45);
+	exports['zh-CN'] = __webpack_require__(46);
+	exports['zh-TW'] = __webpack_require__(47);
 
 /***/ },
 /* 10 */
@@ -5305,8 +5395,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        langLocaleCode: 'de-CH',
 	        cultureCode: 'de-CH',
 	        delimiters: {
-	            thousands: ' ',
-	            decimal: ','
+	            thousands: '\'',
+	            decimal: '.'
 	        },
 	        abbreviations: {
 	            thousand: 'k',
@@ -5376,10 +5466,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        currency: {
 	            symbol: '€',
-	            position: 'postfix'
+	            position: 'postfix',
+	            spaceSeparated: true
 	        },
 	        defaults: {
-	            currencyFormat: ',4 a'
+	            currencyFormat: ',4'
 	        },
 	        formats: {
 	            fourDigits: '4 a',
@@ -5402,6 +5493,65 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 14 */
+/***/ function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : English
+	 * locale: Australia
+	 * author : Benedikt Huss : https://github.com/ben305
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'en-AU',
+	        cultureCode: 'en-AU',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (~~ (number % 100 / 10) === 1) ? 'th' :
+	                (b === 1) ? 'st' :
+	                (b === 2) ? 'nd' :
+	                (b === 3) ? 'rd' : 'th';
+	        },
+	        currency: {
+	            symbol: '$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: '$ ,0.00',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: '$ ,0'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5460,7 +5610,66 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 15 */
+/* 16 */
+/***/ function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : English
+	 * locale: New Zealand
+	 * author : Benedikt Huss : https://github.com/ben305
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'en-NZ',
+	        cultureCode: 'en-NZ',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (~~ (number % 100 / 10) === 1) ? 'th' :
+	                (b === 1) ? 'st' :
+	                (b === 2) ? 'nd' :
+	                (b === 3) ? 'rd' : 'th';
+	        },
+	        currency: {
+	            symbol: '$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: '$ ,0.00',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: '$ ,0'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5519,7 +5728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5579,7 +5788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5639,7 +5848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5697,7 +5906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5742,7 +5951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5797,7 +6006,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5846,7 +6055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5902,7 +6111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 	/*!
@@ -5957,7 +6166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6012,7 +6221,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6065,7 +6274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6120,7 +6329,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6175,7 +6384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6230,7 +6439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6275,7 +6484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6329,7 +6538,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6381,7 +6590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6437,7 +6646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6493,7 +6702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6548,7 +6757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6603,7 +6812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6658,7 +6867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6716,7 +6925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6774,7 +6983,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6829,7 +7038,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6881,7 +7090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports) {
 
 	/*!
@@ -6936,7 +7145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports) {
 
 	/*!
@@ -7026,7 +7235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports) {
 
 	/*!
@@ -7084,7 +7293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports) {
 
 	/*!
@@ -7139,7 +7348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports) {
 
 	/*!
@@ -7184,7 +7393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports) {
 
 	this.j$ = this.jStat = (function(Math, undefined) {
@@ -11345,7 +11554,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
@@ -11416,7 +11625,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
@@ -11555,14 +11764,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
-	var jStat = __webpack_require__(46).jStat;
+	var jStat = __webpack_require__(48).jStat;
 	var text = __webpack_require__(6);
 	var utils = __webpack_require__(3);
-	var bessel = __webpack_require__(50);
+	var bessel = __webpack_require__(52);
 
 	function isValidBinaryNumber(number) {
 	  return (/^[01]{1,10}$/).test(number);
@@ -13123,7 +13332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var M = Math;
@@ -13338,7 +13547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
@@ -13897,7 +14106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
@@ -14290,12 +14499,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 	var utils = __webpack_require__(3);
-	var information = __webpack_require__(48);
+	var information = __webpack_require__(50);
 
 	exports.AND = function() {
 	  var args = utils.flatten(arguments);
@@ -14407,11 +14616,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
-	var dateTime = __webpack_require__(51);
+	var dateTime = __webpack_require__(53);
 	var utils = __webpack_require__(3);
 
 	function validDate(d) {
@@ -15503,7 +15712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
