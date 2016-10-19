@@ -1584,7 +1584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.nil = new Error('#NULL!');
 	exports.div0 = new Error('#DIV/0!');
-	exports.value = new Error('#VALUE?');
+	exports.value = new Error('#VALUE!');
 	exports.ref = new Error('#REF!');
 	exports.name = new Error('#NAME?');
 	exports.num = new Error('#NUM!');
