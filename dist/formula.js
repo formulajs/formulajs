@@ -1577,6 +1577,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return array;
 	};
 
+	exports.transpose = function(matrix) {
+	  if(!matrix) { 
+	    return error.value;
+	  }
+
+	  return matrix[0].map(function(col, i) { 
+	    return matrix.map(function(row) { 
+	      return row[i];
+	    });
+	  });
+	};
+
 
 /***/ },
 /* 4 */
@@ -15716,6 +15728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
+	var utils = __webpack_require__(3);
 
 	exports.MATCH = function(lookupValue, lookupArray, matchType) {
 	  if (!lookupValue && !lookupArray) {
@@ -15775,6 +15788,46 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return index ? index : error.na;
 	};
+
+	exports.VLOOKUP = function (needle, table, index, rangeLookup) {
+	  if (!needle || !table || !index) {
+	    return error.na;
+	  }
+
+	  rangeLookup = rangeLookup || false;
+	  for (var i = 0; i < table.length; i++) {
+	    var row = table[i];
+	    if ((!rangeLookup && row[0] === needle) ||
+	      ((row[0] === needle) ||
+	        (rangeLookup && typeof row[0] === "string" && row[0].toLowerCase().indexOf(needle.toLowerCase()) !== -1))) {
+	      return (index < (row.length + 1) ? row[index - 1] : error.ref);
+	    }
+	  }
+
+	  return error.na;
+	};      
+
+	exports.HLOOKUP = function (needle, table, index, rangeLookup) {
+	  if (!needle || !table || !index) {
+	    return error.na;
+	  }
+
+	  rangeLookup = rangeLookup || false;
+
+	  var transposedTable = utils.transpose(table);
+
+	  for (var i = 0; i < transposedTable.length; i++) {
+	    var row = transposedTable[i];
+	    if ((!rangeLookup && row[0] === needle) ||
+	      ((row[0] === needle) ||
+	        (rangeLookup && typeof row[0] === "string" && row[0].toLowerCase().indexOf(needle.toLowerCase()) !== -1))) {
+	      return (index < (row.length + 1) ? row[index - 1] : error.ref);
+	    }
+	  }
+
+	  return error.na;
+	};
+
 
 /***/ }
 /******/ ])
