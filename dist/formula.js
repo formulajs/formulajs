@@ -484,7 +484,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return error.value;
 	  }
 
-
 	  return parseInt(number, radix);
 	};
 
@@ -508,12 +507,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (arguments.length < 1) {
 	    return error.na;
 	  }
-
-	  number = Math.exp(number);
-
-	  if (number instanceof Error || arguments.length > 1) {
+	  if (typeof number !== 'number' || arguments.length > 1) {
 	    return error.error;
 	  }
+
+	  number = Math.exp(number);
 
 	  return number;
 	};
