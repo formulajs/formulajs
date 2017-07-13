@@ -52,21 +52,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var categories = [
 	  __webpack_require__(1),
-	  __webpack_require__(54),
-	  __webpack_require__(51),
-	  __webpack_require__(55),
+	  __webpack_require__(76),
+	  __webpack_require__(73),
+	  __webpack_require__(77),
 	  __webpack_require__(2),
 	  __webpack_require__(6),
-	  __webpack_require__(53),
-	  __webpack_require__(56),
-	  __webpack_require__(50),
-	  __webpack_require__(57),
+	  __webpack_require__(75),
+	  __webpack_require__(78),
+	  __webpack_require__(72),
+	  __webpack_require__(79),
 	  __webpack_require__(5),
-	  __webpack_require__(49)
+	  __webpack_require__(71)
 	];
 
 	for (var c in categories) {
@@ -77,14 +77,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var mathTrig = __webpack_require__(2);
 	var statistical = __webpack_require__(5);
-	var engineering = __webpack_require__(51);
-	var dateTime = __webpack_require__(53);
+	var engineering = __webpack_require__(73);
+	var dateTime = __webpack_require__(75);
 
 	function set(fn, root) {
 	  if (root) {
@@ -170,14 +170,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.ZTEST = statistical.Z.TEST;
 
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
 	var error = __webpack_require__(4);
 	var statistical = __webpack_require__(5);
-	var information = __webpack_require__(50);
+	var information = __webpack_require__(72);
 
 	exports.ABS = function(number) {
 	  number = utils.parseNumber(number);
@@ -484,7 +484,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return error.value;
 	  }
 
-
 	  return parseInt(number, radix);
 	};
 
@@ -504,7 +503,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return exports.CEILING(number, -2, -1);
 	};
 
-	exports.EXP = Math.exp;
+	exports.EXP = function(number) {
+	  if (arguments.length < 1) {
+	    return error.na;
+	  }
+	  if (typeof number !== 'number' || arguments.length > 1) {
+	    return error.error;
+	  }
+
+	  number = Math.exp(number);
+
+	  return number;
+	};
 
 	var MEMOIZED_FACT = [];
 	exports.FACT = function(number) {
@@ -1315,9 +1325,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 
@@ -1590,9 +1600,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	exports.nil = new Error('#NULL!');
 	exports.div0 = new Error('#DIV/0!');
@@ -1605,16 +1615,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.data = new Error('#GETTING_DATA');
 
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var mathTrig = __webpack_require__(2);
 	var text = __webpack_require__(6);
-	var jStat = __webpack_require__(48).jStat;
+	var jStat = __webpack_require__(70).jStat;
 	var utils = __webpack_require__(3);
 	var error = __webpack_require__(4);
-	var misc = __webpack_require__(49);
+	var misc = __webpack_require__(71);
 
 	var SQRT2PI = 2.5066282746310002;
 
@@ -3412,9 +3422,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
 	var error = __webpack_require__(4);
@@ -3753,13 +3763,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process) {/*!
 	 * numbro.js
-	 * version : 1.9.3
+	 * version : 1.11.0
 	 * author : Företagsplatsen AB
 	 * license : MIT
 	 * http://www.foretagsplatsen.se
@@ -3773,7 +3783,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    ************************************/
 
 	    var numbro,
-	        VERSION = '1.9.3',
+	        VERSION = '1.11.0',
 	        binarySuffixes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'],
 	        decimalSuffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
 	        bytes = {
@@ -3834,6 +3844,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Numbro prototype object
 	    function Numbro(number) {
 	        this._value = number;
+	    }
+
+	    function numberLength(number) {
+	        if (number === 0) { return 1; }
+	        return Math.floor(Math.log(Math.abs(number)) / Math.LN10) + 1;
 	    }
 
 	    function zeroes(count) {
@@ -4231,7 +4246,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            forcedNeg = false,
 	            neg = false,
 	            indexOpenP,
-	            size,
 	            indexMinus,
 	            paren = '',
 	            minlen,
@@ -4257,7 +4271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            prefix = '';
 	        }
 
-	        if (format.indexOf('}') === format.length - 1) {
+	        if (format.indexOf('}') === format.length - 1 && format.length) {
 	            var start = format.indexOf('{');
 	            if (start === -1) {
 	                throw Error('Format should also contain a "{"');
@@ -4310,30 +4324,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                format = format.replace('a', '');
 	            }
 
-	            totalLength = Math.floor(Math.log(abs) / Math.LN10) + 1;
-
+	            totalLength = numberLength(value);
 	            minimumPrecision = totalLength % 3;
 	            minimumPrecision = minimumPrecision === 0 ? 3 : minimumPrecision;
 
 	            if (intPrecision && abs !== 0) {
-
-	                length = Math.floor(Math.log(abs) / Math.LN10) + 1 - intPrecision;
-
 	                pow = 3 * ~~((Math.min(intPrecision, totalLength) - minimumPrecision) / 3);
-
 	                abs = abs / Math.pow(10, pow);
-
-	                if (format.indexOf('.') === -1 && intPrecision > 3) {
-	                    format += '[.]';
-
-	                    size = length === 0 ? 0 : 3 * ~~(length / 3) - length;
-	                    size = size < 0 ? size + 3 : size;
-
-	                    format += zeroes(size);
-	                }
 	            }
 
-	            if (Math.floor(Math.log(Math.abs(value)) / Math.LN10) + 1 !== intPrecision) {
+	            if (totalLength !== intPrecision) {
 	                if (abs >= Math.pow(10, 12) && !abbrForce || abbrT) {
 	                    // trillion
 	                    abbr = abbr + cultures[currentCulture].abbreviations.trillion;
@@ -4351,6 +4351,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    abbr = abbr + cultures[currentCulture].abbreviations.thousand;
 	                    value = value / Math.pow(10, 3);
 	                }
+	            }
+
+	            length = numberLength(value);
+	            if (intPrecision && length < intPrecision && format.indexOf('.') === -1) {
+	                format += '[.]';
+	                format += zeroes(intPrecision - length);
 	            }
 	        }
 
@@ -4397,13 +4403,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	            format = format.replace('[.]', '.');
 	        }
 
-	        w = value.toString().split('.')[0];
 	        precision = format.split('.')[1];
 	        thousands = format.indexOf(',');
 
 	        if (precision) {
+	            var dSplit = [];
+
 	            if (precision.indexOf('*') !== -1) {
-	                d = toFixed(value, value.toString().split('.')[1].length, roundingFunction);
+	                d = value.toString();
+	                dSplit = d.split('.');
+	                if (dSplit.length > 1) {
+	                    d = toFixed(value, dSplit[1].length, roundingFunction);
+	                }
 	            } else {
 	                if (precision.indexOf('[') > -1) {
 	                    precision = precision.replace(']', '');
@@ -4415,11 +4426,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 
-	            w = d.split('.')[0];
+	            dSplit = d.split('.');
+	            w = dSplit[0];
 
-	            if (d.split('.')[1].length) {
+	            if (dSplit.length > 1 && dSplit[1].length) {
 	                var p = sep ? abbr + sep : cultures[currentCulture].delimiters.decimal;
-	                d = p + d.split('.')[1];
+	                d = p + dSplit[1];
 	            } else {
 	                d = '';
 	            }
@@ -4476,10 +4488,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    numbro = function(input) {
 	        if (numbro.isNumbro(input)) {
 	            input = input.value();
-	        } else if (input === 0 || typeof input === 'undefined') {
-	            input = 0;
-	        } else if (!Number(input)) {
+	        } else if (typeof input === 'string' || typeof input === 'number') {
 	            input = numbro.fn.unformat(input);
+	        } else {
+	            input = NaN;
 	        }
 
 	        return new Numbro(Number(input));
@@ -4808,7 +4820,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            (process.browser === undefined) &&
 	            process.title &&
 	            (
-	                process.title.indexOf('node') === 0 ||
+	                process.title.indexOf('node') !== -1 ||
 	                process.title.indexOf('meteor-tool') > 0 ||
 	                process.title === 'grunt' ||
 	                process.title === 'gulp'
@@ -5051,9 +5063,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// shim for using process in browser
 	var process = module.exports = {};
@@ -5225,6 +5237,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	process.removeListener = noop;
 	process.removeAllListeners = noop;
 	process.emit = noop;
+	process.prependListener = noop;
+	process.prependOnceListener = noop;
+
+	process.listeners = function (name) { return [] }
 
 	process.binding = function (name) {
 	    throw new Error('process.binding is not supported');
@@ -5237,58 +5253,125 @@ return /******/ (function(modules) { // webpackBootstrap
 	process.umask = function() { return 0; };
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	exports['cs-CZ'] = __webpack_require__(10);
-	exports['da-DK'] = __webpack_require__(11);
-	exports['de-CH'] = __webpack_require__(12);
-	exports['de-DE'] = __webpack_require__(13);
-	exports['en-AU'] = __webpack_require__(14);
-	exports['en-GB'] = __webpack_require__(15);
-	exports['en-NZ'] = __webpack_require__(16);
-	exports['en-ZA'] = __webpack_require__(17);
-	exports['es-AR'] = __webpack_require__(18);
-	exports['es-ES'] = __webpack_require__(19);
-	exports['et-EE'] = __webpack_require__(20);
-	exports['fa-IR'] = __webpack_require__(21);
-	exports['fi-FI'] = __webpack_require__(22);
-	exports['fil-PH'] = __webpack_require__(23);
-	exports['fr-CA'] = __webpack_require__(24);
-	exports['fr-CH'] = __webpack_require__(25);
-	exports['fr-FR'] = __webpack_require__(26);
-	exports['he-IL'] = __webpack_require__(27);
-	exports['hu-HU'] = __webpack_require__(28);
-	exports['it-IT'] = __webpack_require__(29);
-	exports['ja-JP'] = __webpack_require__(30);
-	exports['ko-KR'] = __webpack_require__(31);
-	exports['lv-LV'] = __webpack_require__(32);
-	exports['nb-NO'] = __webpack_require__(33);
-	exports['nl-BE'] = __webpack_require__(34);
-	exports['nl-NL'] = __webpack_require__(35);
-	exports['pl-PL'] = __webpack_require__(36);
-	exports['pt-BR'] = __webpack_require__(37);
-	exports['pt-PT'] = __webpack_require__(38);
-	exports['ru-RU'] = __webpack_require__(39);
-	exports['ru-UA'] = __webpack_require__(40);
-	exports['sk-SK'] = __webpack_require__(41);
-	exports['sv-SE'] = __webpack_require__(42);
-	exports['th-TH'] = __webpack_require__(43);
-	exports['tr-TR'] = __webpack_require__(44);
-	exports['uk-UA'] = __webpack_require__(45);
-	exports['zh-CN'] = __webpack_require__(46);
-	exports['zh-TW'] = __webpack_require__(47);
+	/* jshint sub: true */
+	exports['bg'] = __webpack_require__(10);
+	exports['cs-CZ'] = __webpack_require__(11);
+	exports['da-DK'] = __webpack_require__(12);
+	exports['de-AT'] = __webpack_require__(13);
+	exports['de-CH'] = __webpack_require__(14);
+	exports['de-DE'] = __webpack_require__(15);
+	exports['de-LI'] = __webpack_require__(16);
+	exports['el'] = __webpack_require__(17);
+	exports['en-AU'] = __webpack_require__(18);
+	exports['en-GB'] = __webpack_require__(19);
+	exports['en-IE'] = __webpack_require__(20);
+	exports['en-NZ'] = __webpack_require__(21);
+	exports['en-ZA'] = __webpack_require__(22);
+	exports['es-AR'] = __webpack_require__(23);
+	exports['es-CL'] = __webpack_require__(24);
+	exports['es-CO'] = __webpack_require__(25);
+	exports['es-CR'] = __webpack_require__(26);
+	exports['es-ES'] = __webpack_require__(27);
+	exports['es-NI'] = __webpack_require__(28);
+	exports['es-PE'] = __webpack_require__(29);
+	exports['es-PR'] = __webpack_require__(30);
+	exports['es-SV'] = __webpack_require__(31);
+	exports['et-EE'] = __webpack_require__(32);
+	exports['fa-IR'] = __webpack_require__(33);
+	exports['fi-FI'] = __webpack_require__(34);
+	exports['fil-PH'] = __webpack_require__(35);
+	exports['fr-CA'] = __webpack_require__(36);
+	exports['fr-CH'] = __webpack_require__(37);
+	exports['fr-FR'] = __webpack_require__(38);
+	exports['he-IL'] = __webpack_require__(39);
+	exports['hu-HU'] = __webpack_require__(40);
+	exports['id'] = __webpack_require__(41);
+	exports['it-CH'] = __webpack_require__(42);
+	exports['it-IT'] = __webpack_require__(43);
+	exports['ja-JP'] = __webpack_require__(44);
+	exports['ko-KR'] = __webpack_require__(45);
+	exports['lv-LV'] = __webpack_require__(46);
+	exports['nb-NO'] = __webpack_require__(47);
+	exports['nb'] = __webpack_require__(48);
+	exports['nl-BE'] = __webpack_require__(49);
+	exports['nl-NL'] = __webpack_require__(50);
+	exports['nn'] = __webpack_require__(51);
+	exports['pl-PL'] = __webpack_require__(52);
+	exports['pt-BR'] = __webpack_require__(53);
+	exports['pt-PT'] = __webpack_require__(54);
+	exports['ro-RO'] = __webpack_require__(55);
+	exports['ro'] = __webpack_require__(56);
+	exports['ru-RU'] = __webpack_require__(57);
+	exports['ru-UA'] = __webpack_require__(58);
+	exports['sk-SK'] = __webpack_require__(59);
+	exports['sl'] = __webpack_require__(60);
+	exports['sr-Cyrl-RS'] = __webpack_require__(61);
+	exports['sv-SE'] = __webpack_require__(62);
+	exports['th-TH'] = __webpack_require__(63);
+	exports['tr-TR'] = __webpack_require__(64);
+	exports['uk-UA'] = __webpack_require__(65);
+	exports['zh-CN'] = __webpack_require__(66);
+	exports['zh-MO'] = __webpack_require__(67);
+	exports['zh-SG'] = __webpack_require__(68);
+	exports['zh-TW'] = __webpack_require__(69);
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Bulgarian
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'bg',
+	        cultureCode: 'bg',
+	        delimiters: {
+	            thousands: ' ',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'И',
+	            million: 'А',
+	            billion: 'M',
+	            trillion: 'T'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'лв.'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        this.numbro.culture('bg', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
 	 * language : Czech
 	 * locale: Czech Republic
-	 * author : Anatoli Papirovski : https://github.com/apapirovski
+	 * author : Jan Pesa : https://github.com/smajl (based on work from Anatoli Papirovski : https://github.com/apapirovski)
 	 */
 	(function () {
 	    'use strict';
@@ -5297,21 +5380,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        langLocaleCode: 'cs-CZ',
 	        cultureCode: 'cs-CZ',
 	        delimiters: {
-	            thousands: ' ',
+	            thousands: '\u00a0',
 	            decimal: ','
 	        },
 	        abbreviations: {
 	            thousand: 'tis.',
 	            million: 'mil.',
-	            billion: 'b',
-	            trillion: 't'
+	            billion: 'mld.',
+	            trillion: 'bil.'
 	        },
 	        ordinal: function () {
 	            return '.';
 	        },
 	        currency: {
 	            symbol: 'Kč',
-	            position: 'postfix'
+	            position: 'postfix',
+	            spaceSeparated: true
 	        },
 	        defaults: {
 	            currencyFormat: ',4 a'
@@ -5335,9 +5419,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5390,9 +5474,54 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : German
+	 * locale: Austria
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'de-AT',
+	        cultureCode: 'de-AT',
+	        delimiters: {
+	            thousands: ' ',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: '€'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5445,9 +5574,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5503,9 +5632,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : German
+	 * locale: Liechtenstein
+	 * author : Michael Piefel : https://github.com/piefel (based on work from Marco Krage : https://github.com/sinky)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'de-LI',
+	        cultureCode: 'de-LI',
+	        delimiters: {
+	            thousands: '\'',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'CHF',
+	            position: 'postfix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Greek (el)
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'el',
+	        cultureCode: 'el',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'χ',
+	            million: 'ε',
+	            billion: 'δ',
+	            trillion: 'τ'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: '€'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('el', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5562,9 +5790,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5621,9 +5849,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+	/*!
+	+ * numbro.js language configuration
+	 * language : English
+	 * locale: Ireland
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'en-IE',
+	        cultureCode: 'en-IE',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (~~(number % 100 / 10) === 1) ? 'th' :
+	                (b === 1) ? 'st' :
+	                    (b === 2) ? 'nd' :
+	                        (b === 3) ? 'rd' : 'th';
+	        },
+	        currency: {
+	            symbol: '€'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('en-gb', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5680,9 +5957,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5697,8 +5974,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        langLocaleCode: 'en-ZA',
 	        cultureCode: 'en-ZA',
 	        delimiters: {
-	            thousands: ',',
-	            decimal: '.'
+	            thousands: ' ',
+	            decimal: ','
 	        },
 	        abbreviations: {
 	            thousand: 'k',
@@ -5739,9 +6016,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5799,9 +6076,189 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Chile
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-CL',
+	        cultureCode: 'es-CL',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: '$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: '$0,0'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Colombia
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-CO',
+	        cultureCode: 'es-CO',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: '€',
+	            position: 'postfix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Costa Rica
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-CR',
+	        cultureCode: 'es-CR',
+	        delimiters: {
+	            thousands: ' ',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: '₡',
+	            position: 'postfix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5859,9 +6316,249 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
+/***/ }),
+/* 28 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Nicaragua
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-NI',
+	        cultureCode: 'es-NI',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: 'C$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Peru
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-PE',
+	        cultureCode: 'es-PE',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: 'S/.',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: Puerto Rico
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-PR',
+	        cultureCode: 'es-PR',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: '$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Spanish
+	 * locale: El Salvador
+	 * author : Gwyn Judd : https://github.com/gwynjudd
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'es-SV',
+	        cultureCode: 'es-SV',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'k',
+	            million: 'mm',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function (number) {
+	            var b = number % 10;
+	            return (b === 1 || b === 3) ? 'er' :
+	                (b === 2) ? 'do' :
+	                    (b === 7 || b === 0) ? 'mo' :
+	                        (b === 8) ? 'vo' :
+	                            (b === 9) ? 'no' : 'to';
+	        },
+	        currency: {
+	            symbol: '$',
+	            position: 'prefix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5917,9 +6614,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 21 */
-/***/ function(module, exports) {
+/***/ }),
+/* 33 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -5962,9 +6659,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 22 */
-/***/ function(module, exports) {
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6017,9 +6714,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6066,9 +6763,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6122,9 +6819,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6139,7 +6836,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        langLocaleCode: 'fr-CH',
 	        cultureCode: 'fr-CH',
 	        delimiters: {
-	            thousands: '\'',
+	            thousands: ' ',
 	            decimal: '.'
 	        },
 	        abbreviations: {
@@ -6177,9 +6874,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 26 */
-/***/ function(module, exports) {
+/***/ }),
+/* 38 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6232,9 +6929,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
+/***/ }),
+/* 39 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6285,9 +6982,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6340,9 +7037,98 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 29 */
-/***/ function(module, exports) {
+/***/ }),
+/* 41 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Indonesian
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'id',
+	        cultureCode: 'id',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'r',
+	            million: 'j',
+	            billion: 'm',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'Rp'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('id', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Italian
+	 * locale: Switzerland
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'it-CH',
+	        cultureCode: 'it-CH',
+	        delimiters: {
+	            thousands: '\'',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: 'mila',
+	            million: 'mil',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '°';
+	        },
+	        currency: {
+	            symbol: 'CHF'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('it-CH', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6395,9 +7181,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 30 */
-/***/ function(module, exports) {
+/***/ }),
+/* 44 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6450,9 +7236,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 31 */
-/***/ function(module, exports) {
+/***/ }),
+/* 45 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6495,9 +7281,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 32 */
-/***/ function(module, exports) {
+/***/ }),
+/* 46 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6549,9 +7335,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 33 */
-/***/ function(module, exports) {
+/***/ }),
+/* 47 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6601,9 +7387,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 34 */
-/***/ function(module, exports) {
+/***/ }),
+/* 48 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Norwegian Bokmål (nb)
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'nb',
+	        cultureCode: 'nb',
+	        delimiters: {
+	            thousands: ' ',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 't',
+	            million: 'mil',
+	            billion: 'mia',
+	            trillion: 'b'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'kr'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('nb', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6657,9 +7487,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6713,9 +7543,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 36 */
-/***/ function(module, exports) {
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Norwegian Nynorsk (nn)
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'nn',
+	        cultureCode: 'nn',
+	        delimiters: {
+	            thousands: ' ',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 't',
+	            million: 'mil',
+	            billion: 'mia',
+	            trillion: 'b'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'kr'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.language) {
+	        window.numbro.language('nn', language);
+	    }
+	}());
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6768,9 +7642,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 37 */
-/***/ function(module, exports) {
+/***/ }),
+/* 53 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6823,9 +7697,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 38 */
-/***/ function(module, exports) {
+/***/ }),
+/* 54 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6878,9 +7752,107 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 39 */
-/***/ function(module, exports) {
+/***/ }),
+/* 55 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numeral.js language configuration
+	 * language : Romanian
+	 * author : Andrei Alecu https://github.com/andreialecu
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'ro-RO',
+	        cultureCode: 'ro-RO',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'mii',
+	            million: 'mil',
+	            billion: 'mld',
+	            trillion: 'bln'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: ' lei',
+	            position: 'postfix'
+	        },
+	        defaults: {
+	            currencyFormat: ',4 a'
+	        },
+	        formats: {
+	            fourDigits: '4 a',
+	            fullWithTwoDecimals: ',0.00 $',
+	            fullWithTwoDecimalsNoCurrency: ',0.00',
+	            fullWithNoDecimals: ',0 $'
+	        }
+	    };
+
+	    // CommonJS
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture(language.cultureCode, language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Romanian (ro)
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'ro',
+	        cultureCode: 'ro',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'mie',
+	            million: 'mln',
+	            billion: 'mld',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'RON'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('ro', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6936,9 +7908,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 40 */
-/***/ function(module, exports) {
+/***/ }),
+/* 58 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -6994,15 +7966,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 41 */
-/***/ function(module, exports) {
+/***/ }),
+/* 59 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
 	 * language : Slovak
 	 * locale : Slovakia
-	 * author : Ahmed Al Hafoudh : http://www.freevision.sk
+	 * author : Jan Pesa : https://github.com/smajl (based on work from Ahmed Al Hafoudh : http://www.freevision.sk)
 	 */
 	(function () {
 	    'use strict';
@@ -7011,21 +7983,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	        langLocaleCode: 'sk-SK',
 	        cultureCode: 'sk-SK',
 	        delimiters: {
-	            thousands: ' ',
+	            thousands: '\u00a0',
 	            decimal: ','
 	        },
 	        abbreviations: {
 	            thousand: 'tis.',
 	            million: 'mil.',
-	            billion: 'b',
-	            trillion: 't'
+	            billion: 'mld.',
+	            trillion: 'bil.'
 	        },
 	        ordinal: function () {
 	            return '.';
 	        },
 	        currency: {
 	            symbol: '€',
-	            position: 'postfix'
+	            position: 'postfix',
+	            spaceSeparated: true
 	        },
 	        defaults: {
 	            currencyFormat: ',4 a'
@@ -7049,9 +8022,99 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 42 */
-/***/ function(module, exports) {
+/***/ }),
+/* 60 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Slovene
+	 * locale: Slovenia
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'sl',
+	        cultureCode: 'sl',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'tis.',
+	            million: 'mil.',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: '€'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('sl', language);
+	    }
+	}());
+
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Serbian (sr)
+	 * country : Serbia (Cyrillic)
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'sr-Cyrl-RS',
+	        cultureCode: 'sr-Cyrl-RS',
+	        delimiters: {
+	            thousands: '.',
+	            decimal: ','
+	        },
+	        abbreviations: {
+	            thousand: 'тыс.',
+	            million: 'млн',
+	            billion: 'b',
+	            trillion: 't'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'RSD'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('sr-Cyrl-RS', language);
+	    }
+	}());
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7101,9 +8164,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 43 */
-/***/ function(module, exports) {
+/***/ }),
+/* 63 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7156,9 +8219,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 44 */
-/***/ function(module, exports) {
+/***/ }),
+/* 64 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7246,9 +8309,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 45 */
-/***/ function(module, exports) {
+/***/ }),
+/* 65 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7304,9 +8367,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 46 */
-/***/ function(module, exports) {
+/***/ }),
+/* 66 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7359,9 +8422,99 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 47 */
-/***/ function(module, exports) {
+/***/ }),
+/* 67 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Chinese traditional
+	 * locale: Macau
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'zh-MO',
+	        cultureCode: 'zh-MO',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: '千',
+	            million: '百萬',
+	            billion: '十億',
+	            trillion: '兆'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: 'MOP'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('zh-MO', language);
+	    }
+	}());
+
+
+/***/ }),
+/* 68 */
+/***/ (function(module, exports) {
+
+	/*!
+	 * numbro.js language configuration
+	 * language : Chinese simplified
+	 * locale: Singapore
+	 * author : Tim McIntosh (StayinFront NZ)
+	 */
+	(function () {
+	    'use strict';
+
+	    var language = {
+	        langLocaleCode: 'zh-SG',
+	        cultureCode: 'zh-SG',
+	        delimiters: {
+	            thousands: ',',
+	            decimal: '.'
+	        },
+	        abbreviations: {
+	            thousand: '千',
+	            million: '百万',
+	            billion: '十亿',
+	            trillion: '兆'
+	        },
+	        ordinal: function () {
+	            return '.';
+	        },
+	        currency: {
+	            symbol: '$'
+	        }
+	    };
+
+	    // Node
+	    if (typeof module !== 'undefined' && module.exports) {
+	        module.exports = language;
+	    }
+	    // Browser
+	    if (typeof window !== 'undefined' && window.numbro && window.numbro.culture) {
+	        window.numbro.culture('zh-SG', language);
+	    }
+	}.call(typeof window === 'undefined' ? this : window));
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports) {
 
 	/*!
 	 * numbro.js language configuration
@@ -7404,9 +8557,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.call(typeof window === 'undefined' ? this : window));
 
 
-/***/ },
-/* 48 */
-/***/ function(module, exports) {
+/***/ }),
+/* 70 */
+/***/ (function(module, exports) {
 
 	this.j$ = this.jStat = (function(Math, undefined) {
 
@@ -7797,7 +8950,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Current is assigned using a technique to compensate for IEEE error.
 	  // TODO: Needs better implementation.
 	  for (cnt = 0;
-	       current <= max;
+	       current <= max && cnt < length;
 	       cnt++, current = (min * hival + step * hival * cnt) / hival) {
 	    arr.push((func ? func(current, cnt) : current));
 	  }
@@ -8300,6 +9453,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return jStat.sumsqerr(arr) / (arr.length - (flag ? 1 : 0));
 	};
 
+	// pooled variance of an array of arrays
+	jStat.pooledvariance = function pooledvariance(arr) {
+	  var sumsqerr = arr.reduce(function (a, samples) {return a + jStat.sumsqerr(samples);}, 0);
+	  var count = arr.reduce(function (a, samples) {return a + samples.length;}, 0);
+	  return sumsqerr / (count - arr.length);
+	};
+
 	// deviation of an array
 	jStat.deviation = function (arr) {
 	  var mean = jStat.mean(arr);
@@ -8317,15 +9477,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Math.sqrt(jStat.variance(arr, flag));
 	};
 
+	// pooled standard deviation of an array of arrays
+	jStat.pooledstdev = function pooledstdev(arr) {
+	  return Math.sqrt(jStat.pooledvariance(arr));
+	};
 
 	// mean deviation (mean absolute deviation) of an array
 	jStat.meandev = function meandev(arr) {
-	  var devSum = 0;
-	  var mean = jStat.mean(arr);
-	  var i;
-	  for (var i = arr.length - 1; i >= 0; i--)
-	    devSum += Math.abs(arr[i] - mean);
-	  return devSum / arr.length;
+	  var med = jStat.median(arr);
+	  var a = [];
+	  for (var i = arr.length - 1; i >= 0; i--) {
+	    a.push(Math.abs(arr[i] - med));
+	  }
+	  return jStat.median(a);
 	};
 
 
@@ -8467,17 +9631,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	jStat.spearmancoeff =  function (arr1, arr2) {
 	  arr1 = jStat.rank(arr1);
 	  arr2 = jStat.rank(arr2);
-	  var arr1dev = jStat.deviation(arr1);
-	  var arr2dev = jStat.deviation(arr2);
-	  return jStat.sum(arr1dev.map(function (x, i) {
-	    return x * arr2dev[i];
-	  })) /
-	  Math.sqrt(jStat.sum(arr1dev.map(function (x) {
-	    return Math.pow(x, 2);
-	    })) * jStat.sum(arr2dev.map(function (x) {
-	      return Math.pow(x, 2);
-	  }))
-	  );
+	  //return pearson's correlation of the ranks:
+	  return jStat.corrcoeff(arr1, arr2);
 	}
 
 
@@ -9162,7 +10317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})((
 	  'beta centralF cauchy chisquare exponential gamma invgamma kumaraswamy ' +
 	  'laplace lognormal noncentralt normal pareto studentt weibull uniform ' +
-	  'binomial negbin hypgeom poisson triangular'
+	  'binomial negbin hypgeom poisson triangular tukey arcsine'
 	).split(' '));
 
 
@@ -10169,6 +11324,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
+
+	// extend arcsine function with static methods
+	jStat.extend(jStat.arcsine, {
+	  pdf: function pdf(x, a, b) {
+	    if (b <= a) return NaN;
+
+	    return (x <= a || x >= b) ? 0 :
+	      (2 / Math.PI) *
+	        Math.pow(Math.pow(b - a, 2) -
+	                  Math.pow(2 * x - a - b, 2), -0.5);
+	  },
+
+	  cdf: function cdf(x, a, b) {
+	    if (x < a)
+	      return 0;
+	    else if (x < b)
+	      return (2 / Math.PI) * Math.asin(Math.sqrt((x - a)/(b - a)));
+	    return 1;
+	  },
+
+	  inv: function(p, a, b) {
+	    return a + (0.5 - 0.5 * Math.cos(Math.PI * p)) * (b - a);
+	  },
+
+	  mean: function mean(a, b) {
+	    if (b <= a) return NaN;
+	    return (a + b) / 2;
+	  },
+
+	  median: function median(a, b) {
+	    if (b <= a) return NaN;
+	    return (a + b) / 2;
+	  },
+
+	  mode: function mode(a, b) {
+	    throw new Error('mode is not yet implemented');
+	  },
+
+	  sample: function sample(a, b) {
+	    return ((a + b) / 2) + ((b - a) / 2) *
+	      Math.sin(2 * Math.PI * jStat.uniform.sample(0, 1));
+	  },
+
+	  variance: function variance(a, b) {
+	    if (b <= a) return NaN;
+	    return Math.pow(b - a, 2) / 8;
+	  }
+	});
+
+
 	function laplaceSign(x) { return x / Math.abs(x); }
 
 	jStat.extend(jStat.laplace, {
@@ -10206,6 +11411,363 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var u = Math.random() - 0.5;
 
 	    return mu - (b * laplaceSign(u) * Math.log(1 - (2 * Math.abs(u))));
+	  }
+	});
+
+	function tukeyWprob(w, rr, cc) {
+	  var nleg = 12;
+	  var ihalf = 6;
+
+	  var C1 = -30;
+	  var C2 = -50;
+	  var C3 = 60;
+	  var bb   = 8;
+	  var wlar = 3;
+	  var wincr1 = 2;
+	  var wincr2 = 3;
+	  var xleg = [
+	    0.981560634246719250690549090149,
+	    0.904117256370474856678465866119,
+	    0.769902674194304687036893833213,
+	    0.587317954286617447296702418941,
+	    0.367831498998180193752691536644,
+	    0.125233408511468915472441369464
+	  ];
+	  var aleg = [
+	    0.047175336386511827194615961485,
+	    0.106939325995318430960254718194,
+	    0.160078328543346226334652529543,
+	    0.203167426723065921749064455810,
+	    0.233492536538354808760849898925,
+	    0.249147045813402785000562436043
+	  ];
+
+	  var qsqz = w * 0.5;
+
+	  // if w >= 16 then the integral lower bound (occurs for c=20)
+	  // is 0.99999999999995 so return a value of 1.
+
+	  if (qsqz >= bb)
+	    return 1.0;
+
+	  // find (f(w/2) - 1) ^ cc
+	  // (first term in integral of hartley's form).
+
+	  var pr_w = 2 * jStat.normal.cdf(qsqz, 0, 1, 1, 0) - 1; // erf(qsqz / M_SQRT2)
+	  // if pr_w ^ cc < 2e-22 then set pr_w = 0
+	  if (pr_w >= Math.exp(C2 / cc))
+	    pr_w = Math.pow(pr_w, cc);
+	  else
+	    pr_w = 0.0;
+
+	  // if w is large then the second component of the
+	  // integral is small, so fewer intervals are needed.
+
+	  var wincr;
+	  if (w > wlar)
+	    wincr = wincr1;
+	  else
+	    wincr = wincr2;
+
+	  // find the integral of second term of hartley's form
+	  // for the integral of the range for equal-length
+	  // intervals using legendre quadrature.  limits of
+	  // integration are from (w/2, 8).  two or three
+	  // equal-length intervals are used.
+
+	  // blb and bub are lower and upper limits of integration.
+
+	  var blb = qsqz;
+	  var binc = (bb - qsqz) / wincr;
+	  var bub = blb + binc;
+	  var einsum = 0.0;
+
+	  // integrate over each interval
+
+	  var cc1 = cc - 1.0;
+	  for (var wi = 1; wi <= wincr; wi++) {
+	    var elsum = 0.0;
+	    var a = 0.5 * (bub + blb);
+
+	    // legendre quadrature with order = nleg
+
+	    var b = 0.5 * (bub - blb);
+
+	    for (var jj = 1; jj <= nleg; jj++) {
+	      var j, xx;
+	      if (ihalf < jj) {
+	        j = (nleg - jj) + 1;
+	        xx = xleg[j-1];
+	      } else {
+	        j = jj;
+	        xx = -xleg[j-1];
+	      }
+	      var c = b * xx;
+	      var ac = a + c;
+
+	      // if exp(-qexpo/2) < 9e-14,
+	      // then doesn't contribute to integral
+
+	      var qexpo = ac * ac;
+	      if (qexpo > C3)
+	        break;
+
+	      var pplus = 2 * jStat.normal.cdf(ac, 0, 1, 1, 0);
+	      var pminus= 2 * jStat.normal.cdf(ac, w, 1, 1, 0);
+
+	      // if rinsum ^ (cc-1) < 9e-14,
+	      // then doesn't contribute to integral
+
+	      var rinsum = (pplus * 0.5) - (pminus * 0.5);
+	      if (rinsum >= Math.exp(C1 / cc1)) {
+	        rinsum = (aleg[j-1] * Math.exp(-(0.5 * qexpo))) * Math.pow(rinsum, cc1);
+	        elsum += rinsum;
+	      }
+	    }
+	    elsum *= (((2.0 * b) * cc) / Math.sqrt(2 * Math.PI));
+	    einsum += elsum;
+	    blb = bub;
+	    bub += binc;
+	  }
+
+	  // if pr_w ^ rr < 9e-14, then return 0
+	  pr_w += einsum;
+	  if (pr_w <= Math.exp(C1 / rr))
+	    return 0;
+
+	  pr_w = Math.pow(pr_w, rr);
+	  if (pr_w >= 1) // 1 was iMax was eps
+	    return 1;
+	  return pr_w;
+	}
+
+	function tukeyQinv(p, c, v) {
+	  var p0 = 0.322232421088;
+	  var q0 = 0.993484626060e-01;
+	  var p1 = -1.0;
+	  var q1 = 0.588581570495;
+	  var p2 = -0.342242088547;
+	  var q2 = 0.531103462366;
+	  var p3 = -0.204231210125;
+	  var q3 = 0.103537752850;
+	  var p4 = -0.453642210148e-04;
+	  var q4 = 0.38560700634e-02;
+	  var c1 = 0.8832;
+	  var c2 = 0.2368;
+	  var c3 = 1.214;
+	  var c4 = 1.208;
+	  var c5 = 1.4142;
+	  var vmax = 120.0;
+
+	  var ps = 0.5 - 0.5 * p;
+	  var yi = Math.sqrt(Math.log(1.0 / (ps * ps)));
+	  var t = yi + (((( yi * p4 + p3) * yi + p2) * yi + p1) * yi + p0)
+	     / (((( yi * q4 + q3) * yi + q2) * yi + q1) * yi + q0);
+	  if (v < vmax) t += (t * t * t + t) / v / 4.0;
+	  var q = c1 - c2 * t;
+	  if (v < vmax) q += -c3 / v + c4 * t / v;
+	  return t * (q * Math.log(c - 1.0) + c5);
+	}
+
+	jStat.extend(jStat.tukey, {
+	  cdf: function cdf(q, nmeans, df) {
+	    // Identical implementation as the R ptukey() function as of commit 68947
+	    var rr = 1;
+	    var cc = nmeans;
+
+	    var nlegq = 16;
+	    var ihalfq = 8;
+
+	    var eps1 = -30.0;
+	    var eps2 = 1.0e-14;
+	    var dhaf  = 100.0;
+	    var dquar = 800.0;
+	    var deigh = 5000.0;
+	    var dlarg = 25000.0;
+	    var ulen1 = 1.0;
+	    var ulen2 = 0.5;
+	    var ulen3 = 0.25;
+	    var ulen4 = 0.125;
+	    var xlegq = [
+	      0.989400934991649932596154173450,
+	      0.944575023073232576077988415535,
+	      0.865631202387831743880467897712,
+	      0.755404408355003033895101194847,
+	      0.617876244402643748446671764049,
+	      0.458016777657227386342419442984,
+	      0.281603550779258913230460501460,
+	      0.950125098376374401853193354250e-1
+	    ];
+	    var alegq = [
+	      0.271524594117540948517805724560e-1,
+	      0.622535239386478928628438369944e-1,
+	      0.951585116824927848099251076022e-1,
+	      0.124628971255533872052476282192,
+	      0.149595988816576732081501730547,
+	      0.169156519395002538189312079030,
+	      0.182603415044923588866763667969,
+	      0.189450610455068496285396723208
+	    ];
+
+	    if (q <= 0)
+	      return 0;
+
+	    // df must be > 1
+	    // there must be at least two values
+
+	    if (df < 2 || rr < 1 || cc < 2) return NaN;
+
+	    if (!Number.isFinite(q))
+	      return 1;
+
+	    if (df > dlarg)
+	      return tukeyWprob(q, rr, cc);
+
+	    // calculate leading constant
+
+	    var f2 = df * 0.5;
+	    var f2lf = ((f2 * Math.log(df)) - (df * Math.log(2))) - jStat.gammaln(f2);
+	    var f21 = f2 - 1.0;
+
+	    // integral is divided into unit, half-unit, quarter-unit, or
+	    // eighth-unit length intervals depending on the value of the
+	    // degrees of freedom.
+
+	    var ff4 = df * 0.25;
+	    var ulen;
+	    if      (df <= dhaf)  ulen = ulen1;
+	    else if (df <= dquar) ulen = ulen2;
+	    else if (df <= deigh) ulen = ulen3;
+	    else                  ulen = ulen4;
+
+	    f2lf += Math.log(ulen);
+
+	    // integrate over each subinterval
+
+	    var ans = 0.0;
+
+	    for (var i = 1; i <= 50; i++) {
+	      var otsum = 0.0;
+
+	      // legendre quadrature with order = nlegq
+	      // nodes (stored in xlegq) are symmetric around zero.
+
+	      var twa1 = (2 * i - 1) * ulen;
+
+	      for (var jj = 1; jj <= nlegq; jj++) {
+	        var j, t1;
+	        if (ihalfq < jj) {
+	          j = jj - ihalfq - 1;
+	          t1 = (f2lf + (f21 * Math.log(twa1 + (xlegq[j] * ulen))))
+	              - (((xlegq[j] * ulen) + twa1) * ff4);
+	        } else {
+	          j = jj - 1;
+	          t1 = (f2lf + (f21 * Math.log(twa1 - (xlegq[j] * ulen))))
+	              + (((xlegq[j] * ulen) - twa1) * ff4);
+	        }
+
+	        // if exp(t1) < 9e-14, then doesn't contribute to integral
+	        var qsqz;
+	        if (t1 >= eps1) {
+	          if (ihalfq < jj) {
+	            qsqz = q * Math.sqrt(((xlegq[j] * ulen) + twa1) * 0.5);
+	          } else {
+	            qsqz = q * Math.sqrt(((-(xlegq[j] * ulen)) + twa1) * 0.5);
+	          }
+
+	          // call wprob to find integral of range portion
+
+	          var wprb = tukeyWprob(qsqz, rr, cc);
+	          var rotsum = (wprb * alegq[j]) * Math.exp(t1);
+	          otsum += rotsum;
+	        }
+	        // end legendre integral for interval i
+	        // L200:
+	      }
+
+	      // if integral for interval i < 1e-14, then stop.
+	      // However, in order to avoid small area under left tail,
+	      // at least  1 / ulen  intervals are calculated.
+	      if (i * ulen >= 1.0 && otsum <= eps2)
+	        break;
+
+	      // end of interval i
+	      // L330:
+
+	      ans += otsum;
+	    }
+
+	    if (otsum > eps2) { // not converged
+	      throw new Error('tukey.cdf failed to converge');
+	    }
+	    if (ans > 1)
+	      ans = 1;
+	    return ans;
+	  },
+
+	  inv: function(p, nmeans, df) {
+	    // Identical implementation as the R qtukey() function as of commit 68947
+	    var rr = 1;
+	    var cc = nmeans;
+
+	    var eps = 0.0001;
+	    var maxiter = 50;
+
+	    // df must be > 1 ; there must be at least two values
+	    if (df < 2 || rr < 1 || cc < 2) return NaN;
+
+	    if (p < 0 || p > 1) return NaN;
+	    if (p === 0) return 0;
+	    if (p === 1) return Infinity;
+
+	    // Initial value
+
+	    var x0 = tukeyQinv(p, cc, df);
+
+	    // Find prob(value < x0)
+
+	    var valx0 = jStat.tukey.cdf(x0, nmeans, df) - p;
+
+	    // Find the second iterate and prob(value < x1).
+	    // If the first iterate has probability value
+	    // exceeding p then second iterate is 1 less than
+	    // first iterate; otherwise it is 1 greater.
+
+	    var x1;
+	    if (valx0 > 0.0)
+	      x1 = Math.max(0.0, x0 - 1.0);
+	    else
+	      x1 = x0 + 1.0;
+	    var valx1 = jStat.tukey.cdf(x1, nmeans, df) - p;
+
+	    // Find new iterate
+
+	    var ans;
+	    for(var iter = 1; iter < maxiter; iter++) {
+	      ans = x1 - ((valx1 * (x1 - x0)) / (valx1 - valx0));
+	      valx0 = valx1;
+
+	      // New iterate must be >= 0
+
+	      x0 = x1;
+	      if (ans < 0.0) {
+	        ans = 0.0;
+	        valx1 = -p;
+	      }
+	      // Find prob(value < new iterate)
+
+	      valx1 = jStat.tukey.cdf(ans, nmeans, df) - p;
+	      x1 = ans;
+
+	      // If the difference between two successive
+	      // iterates is less than eps, stop
+
+	      var xabs = Math.abs(x1 - x0);
+	      if (xabs < eps)
+	        return ans;
+	    }
+
+	    throw new Error('tukey.inv failed to converge');
 	  }
 	});
 
@@ -10281,6 +11843,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    return jStat.map(arr, function(value) { return value * arg; });
 	  },
+
+	  outer:function(A,B){
+	    /* outer([1,2,3],[4,5,6])
+	    ===
+	    [[1],[2],[3]] times [[4,5,6]]
+	    ->
+	    [[4,5,6],[8,10,12],[12,15,18]]
+	    */
+	    return jStat.multiply(A.map(function(t){return [t]}),[B]);
+	  },
+
 
 	  // outer([1,2,3],[4,5,6])
 	  // ===
@@ -10476,6 +12049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var m = jStat.aug(a, b),
 	    h = m.length,
 	    w = m[0].length;
+	    var c = 0;
 	    // find max pivot
 	    for (var y = 0; y < h; y++) {
 	      var maxrow = y;
@@ -10531,7 +12105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    jStat.arange(size - 1, -1, -1).forEach(function(i) {
-	      parts = jStat.arange(i + 1,size).map(function(j) {
+	      parts = jStat.arange(i + 1, size).map(function(j) {
 	        return x[j] * A[i][j];
 	      });
 	      x[i] = (b[i] - jStat.sum(parts)) / A[i][i];
@@ -10565,6 +12139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return x.map(function(i){ return [i] });
 	    return x;
 	  },
+
 
 	  // A -> [L,U]
 	  // A=LU
@@ -10617,6 +12192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	    return T;
 	  },
+
 
 	  gauss_jacobi: function gauss_jacobi(a, b, x, r) {
 	    var i = 0;
@@ -10765,9 +12341,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // find a orthogonal matrix Q st.
 	    // Qx=y
 	    // y is [||x||,0,0,...]
+
+	    // quick ref
+	    var sum   = jStat.sum;
+	    var range = jStat.arange;
+
 	    function get_Q1(x) {
 	      var size = x.length;
-	      var norm_x = jStat.norm(x,2);
+	      var norm_x = jStat.norm(x, 2);
 	      var e1 = jStat.zeros(1, size)[0];
 	      e1[0] = 1;
 	      var u = jStat.add(jStat.multiply(jStat.multiply(e1, norm_x), -1), x);
@@ -10794,8 +12375,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return [Q, R];
 	    }
 
-	    return qr;
-	  })(),
+	    function qr2(x) {
+	      // quick impletation
+	      // https://www.stat.wisc.edu/~larget/math496/qr.html
+
+	      var n = x.length;
+	      var p = x[0].length;
+
+	      x = jStat.copy(x);
+	      r = jStat.zeros(p, p);
+
+	      var i,j,k;
+	      for(j = 0; j < p; j++){
+	        r[j][j] = Math.sqrt(sum(range(n).map(function(i){
+	          return x[i][j] * x[i][j];
+	        })));
+	        for(i = 0; i < n; i++){
+	          x[i][j] = x[i][j] / r[j][j];
+	        }
+	        for(k = j+1; k < p; k++){
+	          r[j][k] = sum(range(n).map(function(i){
+	            return x[i][j] * x[i][k];
+	          }));
+	          for(i = 0; i < n; i++){
+	            x[i][k] = x[i][k] - x[i][j]*r[j][k];
+	          }
+	        }
+	      }
+	      return [x, r];
+	    }
+
+	    return qr2;
+	  }()),
 
 	  lstsq: (function(A, b) {
 	    // solve least squard problem for Ax=b as QR decomposition way if b is
@@ -10837,14 +12448,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var Q1 = jStat.slice(Q,{col:{end:attrs}});
 	      var R1 = jStat.slice(R,{row:{end:attrs}});
 	      var RI = R_I(R1);
-	      var x = jStat.multiply(jStat.multiply(RI, jStat.transpose(Q1)), b);
+		  var Q2 = jStat.transpose(Q1);
+
+		  if(Q2[0].length === undefined){
+			  Q2 = [Q2]; // The confusing jStat.multifly implementation threat nature process again.
+		  }
+
+	      var x = jStat.multiply(jStat.multiply(RI, Q2), b);
+
+		  if(x.length === undefined){
+			  x = [[x]]; // The confusing jStat.multifly implementation threat nature process again.
+		  }
+
+
 	      if (array_mode)
 	        return x.map(function(i){ return i[0] });
 	      return x;
 	    }
 
 	    return qr_solve;
-	  })(),
+	  }()),
 
 	  jacobi: function jacobi(a) {
 	    var condition = 1;
@@ -11368,6 +12991,72 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
+	// Tukey's range test
+	jStat.extend({
+	  // 2 parameter lists
+	  // (mean1, mean2, n1, n2, sd)
+	  // (array1, array2, sd)
+	  qscore: function qscore() {
+	    var args = slice.call(arguments);
+	    var mean1, mean2, n1, n2, sd;
+	    if (isNumber(args[0])) {
+	        mean1 = args[0];
+	        mean2 = args[1];
+	        n1 = args[2];
+	        n2 = args[3];
+	        sd = args[4];
+	    } else {
+	        mean1 = jStat.mean(args[0]);
+	        mean2 = jStat.mean(args[1]);
+	        n1 = args[0].length;
+	        n2 = args[1].length;
+	        sd = args[2];
+	    }
+	    return Math.abs(mean1 - mean2) / (sd * Math.sqrt((1 / n1 + 1 / n2) / 2));
+	  },
+
+	  // 3 different parameter lists:
+	  // (qscore, n, k)
+	  // (mean1, mean2, n1, n2, sd, n, k)
+	  // (array1, array2, sd, n, k)
+	  qtest: function qtest() {
+	    var args = slice.call(arguments);
+
+	    var qscore;
+	    if (args.length === 3) {
+	      qscore = args[0];
+	      args = args.slice(1);
+	    } else if (args.length === 7) {
+	      qscore = jStat.qscore(args[0], args[1], args[2], args[3], args[4]);
+	      args = args.slice(5);
+	    } else {
+	      qscore = jStat.qscore(args[0], args[1], args[2]);
+	      args = args.slice(3);
+	    }
+
+	    var n = args[0];
+	    var k = args[1];
+
+	    return 1 - jStat.tukey.cdf(qscore, k, n - k);
+	  },
+
+	  tukeyhsd: function tukeyhsd(arrays) {
+	    var sd = jStat.pooledstdev(arrays);
+	    var means = arrays.map(function (arr) {return jStat.mean(arr);});
+	    var n = arrays.reduce(function (n, arr) {return n + arr.length;}, 0);
+
+	    var results = [];
+	    for (var i = 0; i < arrays.length; ++i) {
+	        for (var j = i + 1; j < arrays.length; ++j) {
+	            var p = jStat.qtest(means[i], means[j], arrays[i].length, arrays[j].length, sd, n, arrays.length);
+	            results.push([[i, j], p]);
+	        }
+	    }
+
+	    return results;
+	  }
+	});
+
 	// Error Bounds
 	jStat.extend({
 	  // 2 different parameter setups
@@ -11565,9 +13254,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 
-/***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__(3);
 	var numbro = __webpack_require__(7);
@@ -11636,9 +13325,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 
@@ -11775,15 +13464,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
-	var jStat = __webpack_require__(48).jStat;
+	var jStat = __webpack_require__(70).jStat;
 	var text = __webpack_require__(6);
 	var utils = __webpack_require__(3);
-	var bessel = __webpack_require__(52);
+	var bessel = __webpack_require__(74);
 
 	function isValidBinaryNumber(number) {
 	  return (/^[01]{1,10}$/).test(number);
@@ -13343,9 +15032,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var M = Math;
 	function _horner(arr, v) { return arr.reduce(function(z,w){return v * z + w;},0); };
@@ -13558,9 +15247,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 	var utils = __webpack_require__(3);
@@ -14117,9 +15806,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 	var stats = __webpack_require__(5);
@@ -14510,13 +16199,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 	var utils = __webpack_require__(3);
-	var information = __webpack_require__(50);
+	var information = __webpack_require__(72);
 
 	exports.AND = function() {
 	  var args = utils.flatten(arguments);
@@ -14627,12 +16316,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
-	var dateTime = __webpack_require__(53);
+	var dateTime = __webpack_require__(75);
 	var utils = __webpack_require__(3);
 
 	function validDate(d) {
@@ -15723,9 +17412,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var error = __webpack_require__(4);
 	var utils = __webpack_require__(3);
@@ -15829,7 +17518,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;

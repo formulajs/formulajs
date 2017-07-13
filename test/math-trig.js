@@ -251,6 +251,13 @@ describe('Math & Trig', function() {
     mathTrig.EQ(1, 'string').should.equal(false);
   });
 
+  it('EXP', function() {
+    mathTrig.EXP().should.equal(error.na);
+    mathTrig.EXP('1').should.equal(error.error);
+    mathTrig.EXP(1, 1).should.equal(error.error);
+    mathTrig.EXP(1).should.equal(2.718281828459045);
+  });
+
   it('FACT', function() {
     mathTrig.FACT(6).should.equal(720);
     mathTrig.FACT('invalid').should.equal(error.value);
