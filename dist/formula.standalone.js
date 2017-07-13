@@ -3386,7 +3386,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      count++;
 	    }
 	  }
-	  result = sigma / count;;
+	  result = sigma / count;
 
 	  if (isNaN(result)) {
 	    result = error.num;
@@ -8559,9 +8559,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 70 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	this.j$ = this.jStat = (function(Math, undefined) {
+	(function (window, factory) {
+	    if (true) {
+	        module.exports = factory();
+	    } else if (typeof define === 'function' && define.amd) {
+	        define(factory);
+	    } else {
+	        window.jStat = factory();
+	    }
+	})(this, function () {
+	var jStat = (function(Math, undefined) {
 
 	// For quick reference.
 	var concat = Array.prototype.concat;
@@ -9484,23 +9493,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	// mean deviation (mean absolute deviation) of an array
 	jStat.meandev = function meandev(arr) {
-	  var med = jStat.median(arr);
+	  var mean = jStat.mean(arr);
 	  var a = [];
 	  for (var i = arr.length - 1; i >= 0; i--) {
-	    a.push(Math.abs(arr[i] - med));
+	    a.push(Math.abs(arr[i] - mean));
 	  }
-	  return jStat.median(a);
+	  return jStat.mean(a);
 	};
 
 
 	// median deviation (median absolute deviation) of an array
 	jStat.meddev = function meddev(arr) {
-	  var devSum = 0;
 	  var median = jStat.median(arr);
-	  var i;
-	  for (var i = arr.length - 1; i >= 0; i--)
-	    devSum += Math.abs(arr[i] - median);
-	  return devSum / arr.length;
+	  var a = [];
+	  for (var i = arr.length - 1; i >= 0; i--) {
+	    a.push(Math.abs(arr[i] - median));
+	  }
+	  return jStat.median(a);
 	};
 
 
@@ -9786,7 +9795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  })(funcs[i]);
 	})('quantiles percentileOfScore'.split(' '));
 
-	}(this.jStat, Math));
+	}(jStat, Math));
 	// Special functions //
 	(function(jStat, Math) {
 
@@ -10254,7 +10263,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  })(funcs[i]);
 	})('randn'.split(' '));
 
-	}(this.jStat, Math));
+	}(jStat, Math));
 	(function(jStat, Math) {
 
 	// generate all distribution instance methods
@@ -10391,9 +10400,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (x === 0 && df1 === 2) {
 	        return 1;
 	      }
-	      return Math.sqrt((Math.pow(df1 * x, df1) * Math.pow(df2, df2)) /
-	                       (Math.pow(df1 * x + df2, df1 + df2))) /
-	                       (x * jStat.betafn(df1/2, df2/2));
+	      return (1 / jStat.betafn(df1 / 2, df2 / 2)) *
+	              Math.pow(df1 / df2, df1 / 2) *
+	              Math.pow(x, (df1/2) - 1) *
+	              Math.pow((1 + (df1 / df2) * x), -(df1 + df2) / 2);
 	    }
 
 	    p = (df1 * x) / (df2 + x * df1);
@@ -11771,7 +11781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	}(this.jStat, Math));
+	}(jStat, Math));
 	/* Provides functions for the solution of linear system of equations, integration, extrapolation,
 	 * interpolation, eigenvalue problems, differential equations and PCA analysis. */
 
@@ -12792,7 +12802,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(funcs[i]));
 	}('add divide multiply subtract dot pow exp log abs norm angle'.split(' ')));
 
-	}(this.jStat, Math));
+	}(jStat, Math));
 	(function(jStat, Math) {
 
 	var slice = [].slice;
@@ -13135,8 +13145,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	}(this.jStat, Math));
-	this.jStat.models=(function(){
+	}(jStat, Math));
+	jStat.models = (function(){
 
 	  function sub_regress(endog, exog) {
 	    return ols(endog, exog);
@@ -13252,6 +13262,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return { ols: ols_wrap };
 	})();
+	  // Make it compatible with previous version.
+	  jStat.jStat = jStat;
+
+	  return jStat;
+	});
 
 
 /***/ }),
@@ -16343,7 +16358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // Return error if either rate or par are lower than or equal to zero
 	  if (rate <= 0 || par <= 0) {
-	    return error.num
+	    return error.num;
 	  }
 
 	  // Return error if frequency is neither 1, 2, or 4
