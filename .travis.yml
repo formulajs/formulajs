@@ -3,15 +3,19 @@ language: node_js
 sudo: false
 
 node_js:
-  - "stable"
+- stable
 
 before_script:
-  - "npm update -g npm"
-  - "npm install -g codeclimate-test-reporter"
-  - "export DISPLAY=:99.0"
-  - "export TZ=Europe/Warsaw"
-  - "sh -e /etc/init.d/xvfb start"
+- npm update -g npm
+- npm install -g codeclimate-test-reporter
+- export DISPLAY=:99.0
+- export TZ=Europe/Warsaw
+- sh -e /etc/init.d/xvfb start
 
 after_success:
-  - "npm run coverage"
-  - "codeclimate-test-reporter < coverage/lcov.info"
+- npm run coverage
+- codeclimate-test-reporter < coverage/lcov.info
+
+notifications:
+  slack:
+    secure: JgBXbmO2aQ+L58n8Aordox/ZB3TdDPpoM1VJC7208jYnhGRv3gvXSF3EHT9yvSaZ8BhXJrnaSCJy21uMkAwtd8IWD3a1OV6ATHfJFzdX+J94wjvopvKEvpXilLefAp3QT83S7vXq+Mx2w0cY0ru/xh2du/BeYc6DGCxlHbtMeiM=
