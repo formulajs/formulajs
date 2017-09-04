@@ -7,9 +7,7 @@ codeclimate-test-reporter = node_modules/.bin/codeclimate-test-reporter
 
 build:
 	@$(webpack)
-	@$(webpack) --standalone
-	@$(webpack) --prod
-	@$(webpack) --prod --standalone
+	@$(webpack) --config .config/production.js
 
 test:
 	@$(mocha) -u tdd -R mocha-spec-cov -r blanket

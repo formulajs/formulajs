@@ -1,12 +1,16 @@
-var filename = '[name].js';
+var webpack = require('webpack');
 const path = require('path');
+var plugins = [
+  new webpack.optimize.UglifyJsPlugin()
+];
+var filename = '[name].min.js';
 
 module.exports = {
   entry: {
     'formula': './index'
   },
   output: {
-    path: path.resolve(__dirname, './dist/'),
+    path: path.resolve(__dirname, '../dist/'),
     filename: filename,
     library: 'formulajs',
     libraryTarget: 'umd'
@@ -15,5 +19,6 @@ module.exports = {
     noParse: function(content) {
       return /numbro\/languages/.test(content);
     }
-  }
+  },
+  plugins: plugins
 };
