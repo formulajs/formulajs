@@ -1,4 +1,4 @@
-var filename = '[name].js';
+const filename = '[name].js';
 const path = require('path');
 
 module.exports = {
