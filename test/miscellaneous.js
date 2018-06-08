@@ -6,7 +6,7 @@ var should = require('should');
 describe('Miscellaneous', function() {
   it('NUMERAL', function() {
     misc.NUMERAL(10000, '0,0.0000').should.equal("10,000.0000");
-    misc.NUMERAL(10000.23, '0,0').should.equal("10,000");
+    misc.NUMERAL(10000.23, { mantissa: 0, thousandSeparated: true }).should.equal("10,000");
     misc.NUMERAL(1000.234, '$0,0.00').should.equal("$1,000.23");
     misc.NUMERAL(100, '0b').should.equal("100B");
     misc.NUMERAL(0.974878234, '0.000%').should.equal("97.488%");
