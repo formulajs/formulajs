@@ -4,14 +4,6 @@ var error = require('../lib/error');
 var should = require('should');
 
 describe('Miscellaneous', function() {
-  it('NUMERAL', function() {
-    misc.NUMERAL(10000, '0,0.0000').should.equal("10,000.0000");
-    misc.NUMERAL(10000.23, { mantissa: 0, thousandSeparated: true }).should.equal("10,000");
-    misc.NUMERAL(1000.234, '$0,0.00').should.equal("$1,000.23");
-    misc.NUMERAL(100, '0b').should.equal("100B");
-    misc.NUMERAL(0.974878234, '0.000%').should.equal("97.488%");
-  });
-
   it('UNIQUE', function() {
     misc.UNIQUE(1, 2, 3, 4, 5, 6, 6, 3).should.containDeep([1, 2, 3, 4, 5, 6]);
     misc.UNIQUE('jima', 'jimb', 'jima', 'jimc').should.containDeep(['jima', 'jimb', 'jimc']);
@@ -29,7 +21,7 @@ describe('Miscellaneous', function() {
     misc.FLATTEN([]).should.eql([]);
   });
 
-  it('GETJSON', function() {
+  xit('GETJSON', function() {
     // var type = typeof misc.GETJSON('https://api.github.com/');
     // type.should.equal('object');
   });

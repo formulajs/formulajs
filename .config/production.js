@@ -15,10 +15,5 @@ module.exports = {
     library: 'formulajs',
     libraryTarget: 'umd'
   },
-  module: {
-    noParse: function(content) {
-      return /numbro\/languages/.test(content);
-    }
-  },
   plugins: plugins
 };
