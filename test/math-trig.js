@@ -1,6 +1,6 @@
 /* global suite, test */
 var mathTrig = require('../lib/math-trig');
-var error = require('../lib/error');
+var error = require('../lib/utils/error');
 var should = require('should');
 
 describe('Math & Trig', function() {
@@ -682,6 +682,12 @@ describe('Math & Trig', function() {
       [2, 2],
       [3, 3]
     ], '>2').should.equal(6);
+    mathTrig.SUMIF([1, 2, 3], '*').should.equal(6);
+    mathTrig.SUMIF([
+      [1, 1],
+      [2, 2],
+      [3, 3]
+    ], '*').should.equal(12);
     mathTrig.SUMIF([1, 'invalid', 3], '>2').should.equal(error.value);
   });
 

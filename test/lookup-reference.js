@@ -1,5 +1,5 @@
 /* global suite, test */
-var error = require('../lib/error');
+var error = require('../lib/utils/error');
 var lookup = require('../lib/lookup-reference');
 
 describe('Lookup Reference', function() {

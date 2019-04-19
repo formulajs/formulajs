@@ -9,7 +9,8 @@ require('./math-trig');
 require('./miscellaneous');
 require('./statistical');
 require('./text');
-require('./utils');
+require('./utils/common');
+require('./utils/criteria-eval');
 
 var functions = require('./../index');
 

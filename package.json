@@ -21,8 +21,8 @@
     "release": "generate-release"
   },
   "dependencies": {
-    "bessel": "^0.2.0",
-    "jStat": "^1.7.0"
+    "@handsontable/jstat": "^1.0.0",
+    "bessel": "^0.2.0"
   },
   "devDependencies": {
     "blanket": "^1.1.6",

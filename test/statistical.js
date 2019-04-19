@@ -1,7 +1,7 @@
 /* global suite, test */
 var statistical = require('../lib/statistical');
 var mathTrig = require('../lib/math-trig');
-var error = require('../lib/error');
+var error = require('../lib/utils/error');
 var should = require('should');
 
 describe('Statistical', function() {
@@ -41,6 +41,7 @@ describe('Statistical', function() {
 
   it("AVERAGEIF", function() {
     statistical.AVERAGEIF([2, 4, 8, 16], '>5').should.equal(12);
+    statistical.AVERAGEIF([2, 4, 8, 16], '*').should.equal(7.5);
     statistical.AVERAGEIF([2, 4, 8, 16], '>5', [1, 2, 3, 4]).should.approximately(3.5, 1e-9);
     statistical.AVERAGEIF([
       [2, 4],
@@ -55,8 +56,10 @@ describe('Statistical', function() {
 
   it("AVERAGEIFS", function() {
     statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2').should.equal(12);
+    statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '*').should.equal(7.5);
     statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 2, 3, 4], '>2').should.equal(12);
     statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '>2').should.equal(0);
+    statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '*').should.equal(12);
   });
 
   it('BETA.DIST', function() {
@@ -215,6 +218,10 @@ describe('Statistical', function() {
       [1, null, 'a'],
       ['a', 4, 'c']
     ], 'a').should.equal(2);
+    statistical.COUNTIF([
+      [1, null, 'a'],
+      ['a', 4, 'c']
+    ], '*').should.equal(6);
   });
 
   it("COUNTIFS", function() {
@@ -230,6 +237,8 @@ describe('Statistical', function() {
     ], 'a').should.equal(2);
     statistical.COUNTIFS([1, null], '1', [2, null], '2').should.equal(1);
     statistical.COUNTIFS([1, null], '1', [null, 2], '2').should.equal(0);
+    statistical.COUNTIFS([1, null], '1', [null, 2], '*').should.equal(1);
+    statistical.COUNTIFS([1, null], '*', [null, 2], '*').should.equal(2);
     statistical.COUNTIFS([
       [1],
       [null]

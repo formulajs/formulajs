@@ -1,5 +1,5 @@
 /* global suite, test */
-var error    = require('../lib/error');
+var error    = require('../lib/utils/error');
 var database = require('../lib/database');
 require('should');
 

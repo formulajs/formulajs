@@ -1,6 +1,6 @@
 /* global suite, test */
 var misc = require('../lib/miscellaneous');
-var error = require('../lib/error');
+var error = require('../lib/utils/error');
 var should = require('should');
 
 describe('Miscellaneous', function() {
