@@ -1,9 +1,9 @@
 /* global suite, test */
-var utils  = require('../lib/utils');
+var utils  = require('../../lib/utils/common');
 var should = require('should');
-var error  = require('../lib/error');
+var error  = require('../../lib/utils/error');
 
-describe('Utils', function() {
+describe('Utils => common', function() {
   it('flattenShallow', function() {
     should.deepEqual(utils.flattenShallow([
       [1, 2],

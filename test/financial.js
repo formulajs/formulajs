@@ -1,6 +1,6 @@
 /* global suite, test */
 var financial = require('../lib/financial');
-var error = require('../lib/error');
+var error = require('../lib/utils/error');
 require('should');
 
 describe('Financial', function() {
