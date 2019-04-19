@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -351,12 +351,12 @@ exports.arrayEach = function(array, iteratee) {
 };
 
 exports.transpose = function(matrix) {
-  if(!matrix) { 
+  if(!matrix) {
     return error.value;
   }
 
-  return matrix[0].map(function(col, i) { 
-    return matrix.map(function(row) { 
+  return matrix[0].map(function(col, i) {
+    return matrix.map(function(row) {
       return row[i];
     });
   });
@@ -370,7 +370,8 @@ exports.transpose = function(matrix) {
 var utils = __webpack_require__(1);
 var error = __webpack_require__(0);
 var statistical = __webpack_require__(3);
-var information = __webpack_require__(5);
+var information = __webpack_require__(6);
+var evalExpression = __webpack_require__(5);
 
 exports.ABS = function(number) {
   number = utils.parseNumber(number);
@@ -1357,41 +1358,73 @@ exports.SUM = function() {
 
 exports.SUMIF = function(range, criteria) {
   range = utils.parseNumberArray(utils.flatten(range));
+
   if (range instanceof Error) {
     return range;
   }
   var result = 0;
+  var isWildcard = criteria === void 0 || criteria === '*';
+  var tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '');
+
   for (var i = 0; i < range.length; i++) {
-    result += (eval(range[i] + criteria)) ? range[i] : 0; // jshint ignore:line
+    var value = range[i];
+
+    if (isWildcard) {
+      result += value;
+    } else {
+      var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+      result += (evalExpression.compute(tokens) ? value : 0);
+    }
   }
+
   return result;
 };
 
 exports.SUMIFS = function() {
   var args = utils.argsToArray(arguments);
   var range = utils.parseNumberArray(utils.flatten(args.shift()));
+
   if (range instanceof Error) {
     return range;
   }
-  var criteria = args;
-
+  var criterias = args;
   var n_range_elements = range.length;
-  var n_criterias = criteria.length;
-
+  var criteriaLength = criterias.length;
   var result = 0;
+
   for (var i = 0; i < n_range_elements; i++) {
-    var el = range[i];
-    var condition = '';
-    for (var c = 0; c < n_criterias; c++) {
-      condition += el + criteria[c];
-      if (c !== n_criterias - 1) {
-        condition += '&&';
+    var value = range[i];
+    var isMeetCondition = false;
+
+    for (var j = 0; j < criteriaLength; j++) {
+      var criteria = criterias[j];
+      var isWildcard = criteria === void 0 || criteria === '*';
+      var computedResult = false;
+
+      if (isWildcard) {
+        computedResult = true;
+      } else {
+        var tokenizedCriteria = evalExpression.parse(criteria + '');
+        var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+        computedResult = evalExpression.compute(tokens);
       }
+
+      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
+      if (!computedResult) {
+        isMeetCondition = false;
+        break;
+      }
+
+      isMeetCondition = true;
     }
-    if (eval(condition)) { // jshint ignore:line
-      result += el;
+
+    if (isMeetCondition) {
+      result += value;
     }
   }
+
   return result;
 };
 
@@ -1524,10 +1557,11 @@ exports.TRUNC = function(number, digits) {
 
 var mathTrig = __webpack_require__(2);
 var text = __webpack_require__(4);
-var jStat = __webpack_require__(7).jStat;
+var jStat = __webpack_require__(8);
 var utils = __webpack_require__(1);
+var evalExpression = __webpack_require__(5);
 var error = __webpack_require__(0);
-var misc = __webpack_require__(8);
+var misc = __webpack_require__(9);
 
 var SQRT2PI = 2.5066282746310002;
 
@@ -1593,17 +1627,31 @@ exports.AVERAGEIF = function(range, criteria, average_range) {
   average_range = average_range || range;
   range = utils.flatten(range);
   average_range = utils.parseNumberArray(utils.flatten(average_range));
+
   if (average_range instanceof Error) {
     return average_range;
   }
   var average_count = 0;
   var result = 0;
+  var isWildcard = criteria === void 0 || criteria === '*';
+  var tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '');
+
   for (var i = 0; i < range.length; i++) {
-    if (eval(range[i] + criteria)) { // jshint ignore:line
+    var value = range[i];
+
+    if (isWildcard) {
       result += average_range[i];
       average_count++;
+    } else {
+      var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+      if (evalExpression.compute(tokens)) {
+        result += average_range[i];
+        average_count++;
+      }
     }
   }
+
   return result / average_count;
 };
 
@@ -1611,25 +1659,46 @@ exports.AVERAGEIFS = function() {
   // Does not work with multi dimensional ranges yet!
   //http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
   var args = utils.argsToArray(arguments);
-  var criteria = (args.length - 1) / 2;
+  var criteriaLength = (args.length - 1) / 2;
   var range = utils.flatten(args[0]);
   var count = 0;
   var result = 0;
+
   for (var i = 0; i < range.length; i++) {
-    var condition = '';
-    for (var j = 0; j < criteria; j++) {
-      condition += args[2 * j + 1][i] + args[2 * j + 2];
-      if (j !== criteria - 1) {
-        condition += '&&';
+    var isMeetCondition = false;
+
+    for (var j = 0; j < criteriaLength; j++) {
+      var value = args[2 * j + 1][i];
+      var criteria = args[2 * j + 2];
+      var isWildcard = criteria === void 0 || criteria === '*';
+      var computedResult = false;
+
+      if (isWildcard) {
+        computedResult = true;
+      } else {
+        var tokenizedCriteria = evalExpression.parse(criteria + '');
+        var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+        computedResult = evalExpression.compute(tokens);
       }
+
+      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
+      if (!computedResult) {
+        isMeetCondition = false;
+        break;
+      }
+
+      isMeetCondition = true;
     }
-    if (eval(condition)) { // jshint ignore:line
+
+    if (isMeetCondition) {
       result += range[i];
       count++;
     }
   }
 
   var average = result / count;
+
   if (isNaN(average)) {
     return 0;
   } else {
@@ -1952,41 +2021,48 @@ exports.COUNTBLANK = function() {
 
 exports.COUNTIF = function(range, criteria) {
   range = utils.flatten(range);
-  if (!/[<>=!]/.test(criteria)) {
-    criteria = '=="' + criteria + '"';
+
+  var isWildcard = criteria === void 0 || criteria === '*';
+
+  if (isWildcard) {
+    return range.length;
   }
+
   var matches = 0;
+  var tokenizedCriteria = evalExpression.parse(criteria + '');
+
   for (var i = 0; i < range.length; i++) {
-    if (typeof range[i] !== 'string') {
-      if (eval(range[i] + criteria)) { // jshint ignore:line
-        matches++;
-      }
-    } else {
-      if (eval('"' + range[i] + '"' + criteria)) { // jshint ignore:line
-        matches++;
-      }
+    var value = range[i];
+    var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+    if (evalExpression.compute(tokens)) {
+      matches++;
     }
   }
+
   return matches;
 };
 
 exports.COUNTIFS = function() {
   var args = utils.argsToArray(arguments);
   var results = new Array(utils.flatten(args[0]).length);
+
   for (var i = 0; i < results.length; i++) {
     results[i] = true;
   }
   for (i = 0; i < args.length; i += 2) {
     var range = utils.flatten(args[i]);
     var criteria = args[i + 1];
-    if (!/[<>=!]/.test(criteria)) {
-      criteria = '=="' + criteria + '"';
-    }
-    for (var j = 0; j < range.length; j++) {
-      if (typeof range[j] !== 'string') {
-        results[j] = results[j] && eval(range[j] + criteria); // jshint ignore:line
-      } else {
-        results[j] = results[j] && eval('"' + range[j] + '"' + criteria); // jshint ignore:line
+    var isWildcard = criteria === void 0 || criteria === '*';
+
+    if (!isWildcard) {
+      var tokenizedCriteria = evalExpression.parse(criteria + '');
+
+      for (var j = 0; j < range.length; j++) {
+        var value = range[j];
+        var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+        results[j] = results[j] && evalExpression.compute(tokens);
       }
     }
   }
@@ -1996,6 +2072,7 @@ exports.COUNTIFS = function() {
       result++;
     }
   }
+
   return result;
 };
 
@@ -3631,6 +3708,202 @@ exports.VALUE = function() {
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+var defaultOperator = '=';
+var validSymbols = ['>', '>=', '<', '<=', '=', '<>'];
+var TOKEN_TYPE_OPERATOR = 'operator';
+var TOKEN_TYPE_LITERAL = 'literal';
+var SUPPORTED_TOKENS = [TOKEN_TYPE_OPERATOR, TOKEN_TYPE_LITERAL];
+
+exports.TOKEN_TYPE_OPERATOR = TOKEN_TYPE_OPERATOR;
+exports.TOKEN_TYPE_LITERAL = TOKEN_TYPE_LITERAL;
+
+/**
+ * Create token which describe passed symbol/value.
+ *
+ * @param {String} value Value/Symbol to describe.
+ * @param {String} type Type of the token 'operator' or 'literal'.
+ * @return {Object}
+ */
+function createToken(value, type) {
+  if (SUPPORTED_TOKENS.indexOf(type) === -1) {
+    throw new Error('Unsupported token type: ' + type);
+  }
+
+  return {
+    value: value,
+    type: type,
+  };
+}
+
+/**
+ * Tries to cast numeric values to their type passed as a string.
+ *
+ * @param {*} value
+ * @return {*}
+ */
+function castValueToCorrectType(value) {
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  if (/^\d+(\.\d+)?$/.test(value)) {
+    value = value.indexOf('.') === -1 ? parseInt(value, 10) : parseFloat(value);
+  }
+
+  return value;
+}
+
+/**
+ * Generate stream of tokens from passed expression.
+ *
+ * @param {String} expression
+ * @return {String[]}
+ */
+function tokenizeExpression(expression) {
+  var expressionLength = expression.length;
+  var tokens = [];
+  var cursorIndex = 0;
+  var processedValue = '';
+  var processedSymbol = '';
+
+  while (cursorIndex < expressionLength) {
+    var char = expression.charAt(cursorIndex);
+
+    switch (char) {
+      case '>':
+      case '<':
+      case '=':
+        processedSymbol = processedSymbol + char;
+
+        if (processedValue.length > 0) {
+          tokens.push(processedValue);
+          processedValue = '';
+        }
+      break;
+      default:
+        if (processedSymbol.length > 0) {
+          tokens.push(processedSymbol);
+          processedSymbol = '';
+        }
+
+        processedValue = processedValue + char;
+      break;
+    }
+    cursorIndex++;
+  }
+
+  if (processedValue.length > 0) {
+    tokens.push(processedValue);
+  }
+  if (processedSymbol.length > 0) {
+    tokens.push(processedSymbol);
+  }
+
+  return tokens;
+};
+
+/**
+ * Analyze and convert tokens to an object which describes their meaning.
+ *
+ * @param {String[]} tokens
+ * @return {Object[]}
+ */
+function analyzeTokens(tokens) {
+  var literalValue = '';
+  var analyzedTokens = [];
+
+  for (var i = 0; i < tokens.length; i++) {
+    var token = tokens[i];
+
+    if (i === 0 && validSymbols.indexOf(token) >= 0) {
+      analyzedTokens.push(createToken(token, TOKEN_TYPE_OPERATOR));
+    } else {
+      literalValue += token;
+    }
+  }
+
+  if (literalValue.length > 0) {
+    analyzedTokens.push(createToken(castValueToCorrectType(literalValue), TOKEN_TYPE_LITERAL));
+  }
+
+  if (analyzedTokens.length > 0 && analyzedTokens[0].type !== TOKEN_TYPE_OPERATOR) {
+    analyzedTokens.unshift(createToken(defaultOperator, TOKEN_TYPE_OPERATOR));
+  }
+
+  return analyzedTokens;
+};
+
+/**
+ * Compute/Evaluate an expression passed as an array of tokens.
+ *
+ * @param {Object[]} tokens
+ * @return {Boolean}
+ */
+function computeExpression(tokens) {
+  var values = [];
+  var operator;
+
+  for (var i = 0; i < tokens.length; i++) {
+    var token = tokens[i];
+
+    switch (token.type) {
+      case TOKEN_TYPE_OPERATOR:
+        operator = token.value;
+      break;
+      case TOKEN_TYPE_LITERAL:
+        values.push(token.value);
+      break;
+    }
+  }
+
+  return evaluate(values, operator);
+};
+
+/**
+ * Evaluate values based on passed math operator.
+ *
+ * @param {*} values
+ * @param {String} operator
+ * @return {Boolean}
+ */
+function evaluate(values, operator) {
+  var result = false;
+
+  switch (operator) {
+    case '>':
+      result = values[0] > values[1];
+      break;
+    case '>=':
+      result = values[0] >= values[1];
+      break;
+    case '<':
+      result = values[0] < values[1];
+      break;
+    case '<=':
+      result = values[0] <= values[1];
+      break;
+    case '=':
+      result = values[0] == values[1];
+      break;
+    case '<>':
+      result = values[0] != values[1];
+      break;
+  }
+
+  return result;
+}
+
+exports.parse = function(expression) {
+  return analyzeTokens(tokenizeExpression(expression));
+};
+exports.createToken = createToken;
+exports.compute = computeExpression;
+
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
@@ -3769,7 +4042,7 @@ exports.TYPE = function(value) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
@@ -4333,18 +4606,20 @@ function serial(date) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (window, factory) {
     if (true) {
         module.exports = factory();
     } else if (typeof define === 'function' && define.amd) {
-        define(factory);
+        define('jstat', factory);
+    } else if(typeof exports === 'object') {
+        exports['jstat'] = factory();
     } else {
-        window.jStat = factory();
+        window['jstat'] = factory();
     }
-})(this, function () {
+})(typeof self !== 'undefined' ? self : this, function () {
 var jStat = (function(Math, undefined) {
 
 // For quick reference.
@@ -5011,8 +5286,9 @@ jProto.alter = function alter(func) {
 // Extend prototype with simple shortcut methods.
 (function(funcs) {
   for (var i = 0; i < funcs.length; i++) (function(passfunc) {
-    jProto[passfunc] = new Function(
-        'return jStat(jStat.' + passfunc + '.apply(null, arguments));');
+    jProto[passfunc] = function() {
+      return jStat(jStat[passfunc].apply(null, arguments));
+    };
   })(funcs[i]);
 })('create zeros ones rand identity'.split(' '));
 
@@ -9028,15 +9304,12 @@ jStat.models = (function(){
 
   return { ols: ols_wrap };
 })();
-  // Make it compatible with previous version.
-  jStat.jStat = jStat;
-
   return jStat;
 });
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utils = __webpack_require__(1);
@@ -9100,15 +9373,16 @@ exports.NUMBERS = function () {
   });
 };
 
+
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
-var jStat = __webpack_require__(7).jStat;
+var jStat = __webpack_require__(8);
 var text = __webpack_require__(4);
 var utils = __webpack_require__(1);
-var bessel = __webpack_require__(12);
+var bessel = __webpack_require__(13);
 
 function isValidBinaryNumber(number) {
   return (/^[01]{1,10}$/).test(number);
@@ -10669,22 +10943,22 @@ exports.OCT2HEX = function(number, places) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var categories = [
-  __webpack_require__(11),
-  __webpack_require__(13),
-  __webpack_require__(9),
+  __webpack_require__(12),
   __webpack_require__(14),
+  __webpack_require__(10),
+  __webpack_require__(15),
   __webpack_require__(2),
   __webpack_require__(4),
-  __webpack_require__(6),
-  __webpack_require__(15),
-  __webpack_require__(5),
+  __webpack_require__(7),
   __webpack_require__(16),
+  __webpack_require__(6),
+  __webpack_require__(17),
   __webpack_require__(3),
-  __webpack_require__(8)
+  __webpack_require__(9)
 ];
 
 for (var c in categories) {
@@ -10696,13 +10970,13 @@ for (var c in categories) {
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var mathTrig = __webpack_require__(2);
 var statistical = __webpack_require__(3);
-var engineering = __webpack_require__(9);
-var dateTime = __webpack_require__(6);
+var engineering = __webpack_require__(10);
+var dateTime = __webpack_require__(7);
 
 function set(fn, root) {
   if (root) {
@@ -10789,7 +11063,7 @@ exports.ZTEST = statistical.Z.TEST;
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var M = Math;
@@ -11004,13 +11278,14 @@ if(true) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
 var stats = __webpack_require__(3);
 var maths = __webpack_require__(2);
 var utils = __webpack_require__(1);
+var evalExpression = __webpack_require__(5);
 
 function compact(array) {
   var result = [];
@@ -11070,7 +11345,18 @@ function findResultIndex(database, criterias) {
         }
         hasMatchingCriteria = true;
         for (var p = 1; p < criteria.length; ++p) {
-          currentCriteriaResult = currentCriteriaResult || eval(database[k][l] + criteria[p]);  // jshint ignore:line
+          if (!currentCriteriaResult) {
+            var isWildcard = criteria[p] === void 0 || criteria[p] === '*';
+
+            if (isWildcard) {
+              currentCriteriaResult = true;
+            } else {
+              var tokenizedCriteria = evalExpression.parse(criteria[p] + '');
+              var tokens = [evalExpression.createToken(database[k][l], evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+
+              currentCriteriaResult = evalExpression.compute(tokens);
+            }
+          }
         }
       }
       if (hasMatchingCriteria) {
@@ -11397,12 +11683,12 @@ exports.DVARP = function(database, field, criteria) {
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
 var utils = __webpack_require__(1);
-var information = __webpack_require__(5);
+var information = __webpack_require__(6);
 
 exports.AND = function() {
   var args = utils.flatten(arguments);
@@ -11514,11 +11800,11 @@ exports.SWITCH = function () {
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
-var dateTime = __webpack_require__(6);
+var dateTime = __webpack_require__(7);
 var utils = __webpack_require__(1);
 
 function validDate(d) {
@@ -12610,7 +12896,7 @@ exports.YIELDMAT = function() {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var error = __webpack_require__(0);
@@ -12691,7 +12977,7 @@ exports.VLOOKUP = function (needle, table, index, rangeLookup) {
   }
 
   return error.na;
-};      
+};
 
 exports.HLOOKUP = function (needle, table, index, rangeLookup) {
   if (!needle || !table || !index) {
