@@ -2,7 +2,7 @@
   "author": "Handsoncode <hello@handsontable.com>",
   "name": "@handsontable/formulajs",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:handsontable/formula.js.git"
