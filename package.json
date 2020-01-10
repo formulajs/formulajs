@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@handsontable/jstat": "^1.0.0",
-    "bessel": "^0.2.0"
+    "bessel": "^1.0.2"
   },
   "devDependencies": {
     "blanket": "^1.1.6",
