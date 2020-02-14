@@ -3,14 +3,14 @@ var mathTrig = require('../lib/math-trig');
 var error = require('../lib/utils/error');
 var should = require('should');
 
-describe('Math & Trig', function() {
-  it('ABS', function() {
+describe('Math & Trig', function () {
+  it('ABS', function () {
     mathTrig.ABS().should.equal(error.value);
     mathTrig.ABS(-1).should.equal(1);
     mathTrig.ABS('invalid').should.equal(error.value);
   });
 
-  it('ACOS', function() {
+  it('ACOS', function () {
     mathTrig.ACOS().should.equal(error.value);
     mathTrig.ACOS(100).should.equal(error.num);
     mathTrig.ACOS(1).should.equal(0);
@@ -688,7 +688,11 @@ describe('Math & Trig', function() {
       [2, 2],
       [3, 3]
     ], '*').should.equal(12);
-    mathTrig.SUMIF([1, 'invalid', 3], '>2').should.equal(error.value);
+    mathTrig.SUMIF([1, 'invalid', 3], '>2').should.equal(3);
+    mathTrig.SUMIF([1, 2, 3], '<>2').should.equal(4);
+    mathTrig.SUMIF([1, 2, 3, 3, 4, 5], '=3').should.equal(6);
+    mathTrig.SUMIF([1, 'b', 'c', 'b', 'd'], '=b', [1, 2, 3, 4, 5]).should.equal(6);
+    mathTrig.SUMIF(['a', 'b', 'c', 'd', 'd'], '<>d', [1, 2, 3, 4, 5]).should.equal(6);
   });
 
   it("SUMIFS", function() {
