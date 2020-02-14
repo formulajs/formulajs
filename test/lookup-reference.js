@@ -61,4 +61,8 @@ describe('Lookup Reference', function() {
     lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 3, true).should.equal(error.ref);
     lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 3, false).should.equal(error.na);
   });
+
+  it('LOOKUP', function() {
+    lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('yellow');
+  });
 });
