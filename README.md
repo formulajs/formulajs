@@ -1,4 +1,4 @@
-formula.js [![Build Status](https://travis-ci.org/formulajs/formulajs.png?branch=master)](https://travis-ci.org/formulajs/formulajs)
+formula.js [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
 ==========
 
 JavaScript implementation of most Microsoft Excel formula functions
