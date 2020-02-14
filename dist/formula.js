@@ -1356,25 +1356,29 @@ exports.SUM = function() {
   return result;
 };
 
-exports.SUMIF = function(range, criteria) {
-  range = utils.parseNumberArray(utils.flatten(range));
-
+exports.SUMIF = function (range, criteria, sumRange) {
+  range = utils.flatten(range);
+  if (sumRange) {
+    sumRange = utils.flatten(sumRange);
+  } else {
+    sumRange = range;
+  }
   if (range instanceof Error) {
     return range;
   }
   var result = 0;
   var isWildcard = criteria === void 0 || criteria === '*';
   var tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '');
-
   for (var i = 0; i < range.length; i++) {
     var value = range[i];
+    var sumValue = sumRange[i];
 
     if (isWildcard) {
       result += value;
     } else {
       var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
 
-      result += (evalExpression.compute(tokens) ? value : 0);
+      result += (evalExpression.compute(tokens) ? sumValue : 0);
     }
   }
 
