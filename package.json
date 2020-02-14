@@ -1,6 +1,6 @@
 {
   "author": "Handsoncode <hello@handsontable.com>",
-  "name": "@handsontable/formulajs",
+  "name": "@formulajs/formulajs",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "version": "2.0.2",
   "repository": {

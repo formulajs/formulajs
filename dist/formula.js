@@ -13329,6 +13329,11 @@ exports.HLOOKUP = function (needle, table, index, rangeLookup) {
   return error.na;
 };
 
+exports.LOOKUP = function (searchCriterion, array, resultArray) {
+  var index = array.indexOf(searchCriterion);
+  return resultArray[index];
+};
+
 
 /***/ })
 /******/ ]);
