@@ -13,10 +13,3 @@ before_script:
 after_success:
   - npm run coverage
   - codeclimate-test-reporter < coverage/lcov.info
-
-notifications:
-  email: false
-  slack:
-    secure: JgBXbmO2aQ+L58n8Aordox/ZB3TdDPpoM1VJC7208jYnhGRv3gvXSF3EHT9yvSaZ8BhXJrnaSCJy21uMkAwtd8IWD3a1OV6ATHfJFzdX+J94wjvopvKEvpXilLefAp3QT83S7vXq+Mx2w0cY0ru/xh2du/BeYc6DGCxlHbtMeiM=
-    on_failure: always
-    on_success: change
