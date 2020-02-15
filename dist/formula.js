@@ -13335,7 +13335,11 @@ exports.HLOOKUP = function (needle, table, index, rangeLookup) {
 
 exports.LOOKUP = function (searchCriterion, array, resultArray) {
   var index = array.indexOf(searchCriterion);
-  return resultArray[index];
+  if (index > -1) {
+    return resultArray[index];
+  } else {
+    return resultArray[resultArray.length - 1];
+  }
 };
 
 
