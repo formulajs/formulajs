@@ -1,4 +1,3 @@
-/* global suite, test */
 var error = require('../lib/utils/error');
 var lookup = require('../lib/lookup-reference');
 
@@ -77,6 +76,10 @@ describe('Lookup Reference', function () {
       ['jam', 2],
       ['jim', 4]
     ], 2, false).should.equal(4);
+    lookup.VLOOKUP('john', [
+      ['john', 4],
+      ['jam', 2]
+    ], 2).should.equal(4);
     lookup.VLOOKUP('ji', [
       ['jim', 2],
       ['jam', 4]

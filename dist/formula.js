@@ -13303,8 +13303,11 @@ exports.VLOOKUP = function (needle, table, index, rangeLookup) {
   var result;
   for (var i = 0; i < table.length; i++) {
     var row = table[i];
-    if ((!rangeLookup && row[0] === needle) ||
-      (rangeLookup && row[0] <= needle) ||
+
+    if (row[0] === needle) {
+      result = (index < (row.length + 1) ? row[index - 1] : error.ref);
+      break;
+    } else if ((rangeLookup && row[0] <= needle) ||
       (rangeLookup && typeof row[0] === "string" && row[0].localeCompare(needle) < 0)) {
       result = (index < (row.length + 1) ? row[index - 1] : error.ref);
     }
