@@ -27,6 +27,13 @@ describe('Logical', function() {
     logical.IF(false, 1, 2).should.equal(2);
   });
 
+  it('IFS', function() {
+    logical.IFS(true, 1).should.equal(1);
+    logical.IFS(false, 1, true, 2).should.equal(2);
+    logical.IFS(false, 1, false, 2).should.equal(error.na);
+    logical.IFS(0, 1, true, 2).should.equal(2);
+  });
+
   it('IFERROR', function() {
     logical.IFERROR(1, 2).should.equal(1);
     logical.IFERROR(error.value, 2).should.equal(2);

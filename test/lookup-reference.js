@@ -99,14 +99,29 @@ describe('Lookup Reference', function () {
     lookup.HLOOKUP(1, [[1,2],[3,4]], 2, true).should.equal(3);
     lookup.HLOOKUP(2, [[1,2],[3,4]], 2, true).should.equal(4);
     lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 2, false).should.equal(error.na);
-    lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 2, true).should.equal(1);
-    lookup.HLOOKUP('li', [['jim', 'jam'],[1, 4]], 2, true).should.equal(error.na);
-    lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 3, true).should.equal(error.ref);
-    lookup.HLOOKUP('ji', [['jim', 'jam'],[1, 4]], 3, false).should.equal(error.na);
+    lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 2, true).should.equal(1);
+    lookup.HLOOKUP('li', [['jim', 'jam'], [1, 4]], 2, true).should.equal(error.na);
+    lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, true).should.equal(error.ref);
+    lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, false).should.equal(error.na);
   });
 
-  it('LOOKUP', function() {
+  it('LOOKUP', function () {
     lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('yellow');
     lookup.LOOKUP('Jamie', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('red');
+  });
+
+  it('INDEX', function () {
+    lookup.INDEX([
+      ['Banana', 'Apple'],
+      ['Strawberry', 'Pineapple']
+    ], 2, 1).should.equal('Strawberry');
+    lookup.INDEX([
+      ['Banana', 'Apple'],
+      ['Strawberry', 'Pineapple']
+    ], 1, 2).should.equal('Apple');
+    lookup.INDEX([
+      ['Banana', 'Apple'],
+      ['Strawberry', 'Pineapple']
+    ], 2, 5).should.equal(error.ref);
   });
 });
