@@ -12059,6 +12059,15 @@ exports.IF = function(test, then_value, otherwise_value) {
   return test ? then_value : otherwise_value;
 };
 
+exports.IFS = function() {
+  for (var i = 0; i < arguments.length / 2; i++) {
+    if (arguments[i * 2]) {
+      return arguments[i * 2 + 1];
+    }
+  }
+  return error.na;
+};
+
 exports.IFERROR = function(value, valueIfError) {
   if (information.ISERROR(value)) {
     return valueIfError;
@@ -13344,6 +13353,16 @@ exports.LOOKUP = function (searchCriterion, array, resultArray) {
   } else {
     return resultArray[resultArray.length - 1];
   }
+};
+
+exports.INDEX = function (cellRange, rowNumber, columnNumber) {
+  if (rowNumber <= cellRange.length) {
+    if (columnNumber <= cellRange[rowNumber - 1].length) {
+      return cellRange[rowNumber - 1][columnNumber - 1];
+    }
+  }
+
+  return error.ref;
 };
 
 

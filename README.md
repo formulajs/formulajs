@@ -11,7 +11,7 @@ Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latests versio
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.2.3/dist/formula.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.3.0/dist/formula.min.js"></script>
 ```
 
 ### In node
@@ -21,7 +21,7 @@ The package is not yet pushed to NPM, but you can already install it like that i
 ```json
 {
   "dependencies": {
-    "formulajs": "github:formulajs/formulajs#semver:^2.2.3",
+    "formulajs": "github:formulajs/formulajs#semver:^2.3.0",
   },
 }
 ```
