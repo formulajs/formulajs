@@ -16,15 +16,33 @@ Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latests versio
 
 ### In node
 
-The package is not yet pushed to NPM, but you can already install it like that in your package.json:
+Install the package:
 
 ```json
-{
-  "dependencies": {
-    "formulajs": "github:formulajs/formulajs#semver:^2.3.0",
-  },
-}
+npm i @formulajs/formulajs
 ```
+
+## Migration guide
+
+### From formulajs
+
+If you were previously using [formulajs from Sutoiku](https://www.npmjs.com/package/formulajs), some functions have been
+removed, due to dependency simplification.
+
+Text functions:
+
+`FIXED, TEXT, DOLLAR, VALUE`
+
+Math functions:
+
+`MDETERM, MINVERSE, MMULT, MUNIT`
+
+Otherwise the 2 packages are fully compatible. You can swap them.
+
+### From @handsontable/formulajs
+
+The code of this package is originally forked from @handsontable/formulajs version 2.0.2 (released in January 2020). The
+two packages were identical at the time. There is no regression, only fixes and new functions since the fork.
 
 ## Historic
 
