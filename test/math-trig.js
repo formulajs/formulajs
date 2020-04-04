@@ -406,6 +406,7 @@ describe('Math & Trig', function () {
     mathTrig.MOD(3, 2).should.equal(1);
     mathTrig.MOD(-3, 2).should.equal(1);
     mathTrig.MOD(3, -2).should.equal(-1);
+    mathTrig.MOD(-90, 360).should.equal(270);
     mathTrig.MOD(3, 0).should.equal(error.div0);
     mathTrig.MOD(3, 'invalid').should.equal(error.value);
   });
