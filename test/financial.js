@@ -135,6 +135,8 @@ describe('Financial', function() {
     financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 13, 24, 2).should.equal(error.num);
     financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 1, 24, 0).should.approximately(-19891.752778759568, 1e-9);
     financial.CUMIPMT('invalid', 30 * 12, 100000, 13, 24, 0).should.equal(error.value);
+    financial.CUMIPMT(0.005333, 120, 737.17, 1, 120, 0).should.approximately(-262.766924283291000, 1e-9);
+    financial.CUMIPMT(0.005333, 120, 737.17, 1, 120, 1).should.approximately(-257.462548900007000, 1e-9);
   });
 
   it("CUMPRINC", function() {
