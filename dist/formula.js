@@ -907,6 +907,7 @@ exports.MOD = function(dividend, divisor) {
     return error.div0;
   }
   var modulus = Math.abs(dividend % divisor);
+  modulus = dividend < 0 ? divisor - modulus : modulus;
   return (divisor > 0) ? modulus : -modulus;
 };
 
@@ -3657,10 +3658,10 @@ exports.SPLIT = function (text, separator) {
 };
 
 exports.SUBSTITUTE = function(text, old_text, new_text, occurrence) {
-  if (arguments.length < 2) {
+  if (arguments.length < 3) {
     return error.na;
   }
-  if (!text || !old_text || !new_text) {
+  if (!text || !old_text) {
     return text;
   } else if (occurrence === undefined) {
     return text.replace(new RegExp(old_text, 'g'), new_text);
