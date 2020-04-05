@@ -7,7 +7,7 @@ Formula.js [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch
 
 ### In browser
 
-Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latests version of Formula.js:
+Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script> 

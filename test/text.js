@@ -190,6 +190,7 @@ describe('Text', function() {
     should.not.exist(text.SUBSTITUTE(undefined, 'im', 'ames'));
     text.SUBSTITUTE('Quarter 1, 2008', '1', '2', 1).should.equal('Quarter 2, 2008');
     text.SUBSTITUTE('Quarter 1, 2008').should.equal(error.na);
+    text.SUBSTITUTE('Hello, world', ',', '').should.equal('Hello world');
     text.SUBSTITUTE().should.equal(error.na);
   });
 

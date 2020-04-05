@@ -10,7 +10,7 @@ build:
 	@$(webpack) --config .config/production.js
 
 test:
-	@$(mocha) -u tdd -R mocha-spec-cov -r blanket
+	@$(mocha) --exit
 
 test-browser:
 	@mkdir -p tmp
@@ -18,7 +18,7 @@ test-browser:
 	@$(http-server) -p 8088 -s -o
 
 test-watch:
-	@$(mocha) -u tdd -R min -w
+	@$(mocha) --watch
 
 lint:
 	@$(jshint) lib/*.js
