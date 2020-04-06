@@ -12241,10 +12241,6 @@ exports.COUPPCD = function() {
 };
 
 exports.CUMIPMT = function(rate, periods, value, start, end, type) {
-  // Credits: algorithm inspired by Apache OpenOffice
-  // Credits: Hannes Stiebitzhofer for the translations of function and variable names
-  // Requires exports.FV() and exports.PMT() from exports.js [http://stoic.com/exports/]
-
   rate = utils.parseNumber(rate);
   periods = utils.parseNumber(periods);
   value = utils.parseNumber(value);
@@ -12252,30 +12248,26 @@ exports.CUMIPMT = function(rate, periods, value, start, end, type) {
     return error.value;
   }
 
-  // Return error if either rate, periods, or value are lower than or equal to zero
   if (rate <= 0 || periods <= 0 || value <= 0) {
     return error.num;
   }
 
-  // Return error if start < 1, end < 1, or start > end
   if (start < 1 || end < 1 || start > end) {
     return error.num;
   }
 
-  // Return error if type is neither 0 nor 1
   if (type !== 0 && type !== 1) {
     return error.num;
   }
 
-  // Compute cumulative interest
   var payment = exports.PMT(rate, periods, value, 0, type);
   var interest = 0;
 
   if (start === 1) {
     if (type === 0) {
       interest = -value;
-      start++;
     }
+    start++;
   }
 
   for (var i = start; i <= end; i++) {
@@ -12287,7 +12279,6 @@ exports.CUMIPMT = function(rate, periods, value, start, end, type) {
   }
   interest *= rate;
 
-  // Return cumulative interest
   return interest;
 };
 

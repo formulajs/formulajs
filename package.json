@@ -2,7 +2,7 @@
   "author": "Formulajs",
   "name": "@formulajs/formulajs",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "repository": {
     "type": "git",
     "url": "git@github.com:formulajs/formulajs.git"
