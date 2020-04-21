@@ -13348,6 +13348,9 @@ exports.LOOKUP = function (searchCriterion, array, resultArray) {
 };
 
 exports.INDEX = function (cellRange, rowNumber, columnNumber) {
+  columnNumber = columnNumber ? columnNumber : 1;
+  rowNumber = rowNumber ? rowNumber : 1;
+
   if (rowNumber <= cellRange.length) {
     if (columnNumber <= cellRange[rowNumber - 1].length) {
       return cellRange[rowNumber - 1][columnNumber - 1];
