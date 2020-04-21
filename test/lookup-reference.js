@@ -6,6 +6,7 @@ describe('Lookup Reference', function () {
     lookup.MATCH().should.equal(error.na);
     lookup.MATCH(1).should.equal(error.na);
     lookup.MATCH(1, [0, 1, 2, 3, 4, 100, 7]).should.equal(2);
+    lookup.MATCH(1, [[0], [1], [2], [3], [4]]).should.equal(2);
     lookup.MATCH(4, [0, 1, 2, 3, 4, 100, 7], 1).should.equal(5);
     lookup.MATCH(4, [0, 1, 2, 3, 4, 100, 7], 0).should.equal(5);
     lookup.MATCH(4, [0, 1, 2, 3, 4, 100, 7], -1).should.equal(5);
@@ -107,7 +108,25 @@ describe('Lookup Reference', function () {
 
   it('LOOKUP', function () {
     lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('yellow');
+    lookup.LOOKUP('Jack', [
+      ['Jim'],
+      ['Jack'],
+      ['Franck']
+    ], [
+      ['blue'],
+      ['yellow'],
+      ['red']
+    ]).should.equal('yellow');
     lookup.LOOKUP('Jamie', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('red');
+    lookup.LOOKUP('Jamie', [
+      ['Jim'],
+      ['Jack'],
+      ['Franck']
+    ], [
+      ['blue'],
+      ['yellow'],
+      ['red']
+    ]).should.equal('red');
   });
 
   it('INDEX', function () {
