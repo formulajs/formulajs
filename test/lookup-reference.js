@@ -123,5 +123,12 @@ describe('Lookup Reference', function () {
       ['Banana', 'Apple'],
       ['Strawberry', 'Pineapple']
     ], 2, 5).should.equal(error.ref);
+    lookup.INDEX([
+      ['Banana'],
+      ['Apple']
+    ], 2).should.equal('Apple');
+    lookup.INDEX([
+      ['Banana', 'Apple']
+    ], undefined, 2).should.equal('Apple');
   });
 });
