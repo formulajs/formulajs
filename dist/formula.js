@@ -13248,6 +13248,8 @@ exports.MATCH = function(lookupValue, lookupArray, matchType) {
     return error.na;
   }
 
+  lookupArray = utils.flatten(lookupArray);
+
   if (matchType !== -1 && matchType !== 0 && matchType !== 1) {
     return error.na;
   }
@@ -13339,7 +13341,11 @@ exports.HLOOKUP = function (needle, table, index, rangeLookup) {
 };
 
 exports.LOOKUP = function (searchCriterion, array, resultArray) {
+  array = utils.flatten(array);
+  resultArray = utils.flatten(resultArray);
+
   var index = array.indexOf(searchCriterion);
+
   if (index > -1) {
     return resultArray[index];
   } else {
