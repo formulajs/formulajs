@@ -4485,7 +4485,11 @@ exports.TIMEVALUE = function (time_text) {
 };
 
 exports.TODAY = function () {
-  return new Date();
+  var today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  return today;
 };
 
 exports.WEEKDAY = function (serial_number, return_type) {
