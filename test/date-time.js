@@ -33,6 +33,7 @@ describe('Date & Time', function () {
     dateTime.DATEDIF('2007-02-01', '2009-03-01', 'md').should.equal(0);
     dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
     dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
+    dateTime.DATEDIF('1959-07-20', '2020-05-04', 'md').should.equal(14);
   });
 
   it('DATEVALUE', function () {
@@ -174,6 +175,9 @@ describe('Date & Time', function () {
 
   it('TODAY', function () {
     dateTime.TODAY().should.instanceof(Date);
+    dateTime.TODAY().getHours().should.equal(0);
+    dateTime.TODAY().getMinutes().should.equal(0);
+    dateTime.TODAY().getSeconds().should.equal(0);
   });
 
   it('WEEKDAY', function () {
