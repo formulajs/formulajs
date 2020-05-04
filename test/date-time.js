@@ -3,8 +3,8 @@ var error = require('../lib/utils/error');
 var dateTime = require('../lib/date-time');
 require('should');
 
-describe('Date & Time', function() {
-  it('DATE', function() {
+describe('Date & Time', function () {
+  it('DATE', function () {
     var date = dateTime.DATE(1900, 1, 1);
     date.getFullYear().should.equal(1900);
     date.getMonth().should.equal(1 - 1);
@@ -14,14 +14,35 @@ describe('Date & Time', function() {
     dateTime.DATE('invalid').should.equal(error.value);
   });
 
-  it('DATEVALUE', function() {
+  it('DATEDIF', function () {
+    dateTime.DATEDIF('1/1/2001', '1/1/2003', 'Y').should.equal(2);
+    dateTime.DATEDIF('1/1/2001', '3/1/2003', 'Y').should.equal(2);
+    dateTime.DATEDIF('6/1/2001', '8/15/2002', 'D').should.equal(440);
+    dateTime.DATEDIF('2007-01-01', '2007-01-10', 'd').should.equal(9);
+    dateTime.DATEDIF('2007-01-01', '2007-01-31', 'm').should.equal(0);
+    dateTime.DATEDIF('2007-01-01', '2007-02-01', 'm').should.equal(1);
+    dateTime.DATEDIF('2007-01-01', '2007-02-28', 'm').should.equal(1);
+    dateTime.DATEDIF('2007-01-01', '2007-12-31', 'd').should.equal(364);
+    dateTime.DATEDIF('2007-01-01', '2007-01-31', 'y').should.equal(0);
+    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'd').should.equal(547);
+    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'm').should.equal(18);
+    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'ym').should.equal(6);
+    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'yd').should.equal(182);
+    dateTime.DATEDIF('2008-01-01', '2009-07-01', 'yd').should.equal(181);
+    dateTime.DATEDIF('2007-01-01', '2007-01-31', 'md').should.equal(30);
+    dateTime.DATEDIF('2007-02-01', '2009-03-01', 'md').should.equal(0);
+    dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
+    dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
+  });
+
+  it('DATEVALUE', function () {
     dateTime.DATEVALUE('1/1/1900').should.equal(1);
     dateTime.DATEVALUE('12/31/9999').should.equal(2958465);
     dateTime.DATEVALUE('foo bar').should.equal(error.value);
     dateTime.DATEVALUE(1).should.equal(error.value);
   });
 
-  it('DAY', function() {
+  it('DAY', function () {
     dateTime.DAY(1).should.equal(1);
     dateTime.DAY(2958465).should.equal(31);
     dateTime.DAY('1').should.equal(1);
@@ -31,7 +52,7 @@ describe('Date & Time', function() {
     dateTime.DAY('a').should.equal(error.value);
   });
 
-  it('DAYS', function() {
+  it('DAYS', function () {
     dateTime.DAYS(2, 1).should.equal(1);
     dateTime.DAYS('1/2/1900', '1/1/1900').should.equal(1);
     dateTime.DAYS(new Date(1900, 1, 2), new Date(1900, 1, 1)).should.equal(1);
@@ -39,7 +60,7 @@ describe('Date & Time', function() {
     dateTime.DAYS(1, 'a').should.equal(error.value);
   });
 
-  it('DAYS360', function() {
+  it('DAYS360', function () {
     dateTime.DAYS360('1/1/1901', '1/2/1901', true).should.equal(1);
     dateTime.DAYS360('1/1/1901', '12/31/1901', true).should.equal(359);
     dateTime.DAYS360('1/1/1901', '1/1/1902', true).should.equal(360);
@@ -54,7 +75,7 @@ describe('Date & Time', function() {
     dateTime.DAYS360('1/1/1901', '1/2/1901', 'a').should.equal(error.value);
   });
 
-  it('EDATE', function() {
+  it('EDATE', function () {
     dateTime.EDATE('1/1/1900', 0).should.equal(1);
     dateTime.EDATE('1/1/1900', 1).should.equal(32);
     dateTime.EDATE('1/1/1900', 12).should.equal(367);
@@ -62,7 +83,7 @@ describe('Date & Time', function() {
     dateTime.EDATE('1/1/1900', 'a').should.equal(error.value);
   });
 
-  it('EOMONTH', function() {
+  it('EOMONTH', function () {
     dateTime.EOMONTH('1/1/1900', 0).should.equal(31);
     dateTime.EOMONTH('1/1/1900', 1).should.equal(59);
     dateTime.EOMONTH('1/1/1900', 12).should.equal(397);
@@ -70,7 +91,7 @@ describe('Date & Time', function() {
     dateTime.EOMONTH('1/1/1900', 'a').should.equal(error.value);
   });
 
-  it('HOUR', function() {
+  it('HOUR', function () {
     dateTime.HOUR('1/1/1900').should.equal(0);
     dateTime.HOUR('1/1/1900 1:00').should.equal(1);
     // dateTime.HOUR('1:00').should.equal(1);
@@ -78,13 +99,13 @@ describe('Date & Time', function() {
     dateTime.HOUR('a').should.equal(error.value);
   });
 
-  it('INTERVAL', function() {
+  it('INTERVAL', function () {
     dateTime.INTERVAL(undefined).should.equal(error.value);
     dateTime.INTERVAL(10000000).should.equal('P3M25DT17H46M40S');
     dateTime.INTERVAL('10000000').should.equal('P3M25DT17H46M40S');
   });
 
-  it('ISOWEEKNUM', function() {
+  it('ISOWEEKNUM', function () {
     dateTime.ISOWEEKNUM('1/1/1901').should.equal(1);
     dateTime.ISOWEEKNUM('1/8/1901').should.equal(2);
     dateTime.ISOWEEKNUM('12/29/1901').should.equal(52);
@@ -92,20 +113,20 @@ describe('Date & Time', function() {
     dateTime.ISOWEEKNUM('a').should.equal(error.value);
   });
 
-  it('MINUTE', function() {
+  it('MINUTE', function () {
     dateTime.MINUTE('1/1/1901').should.equal(0);
     dateTime.MINUTE('1/1/1901 1:01').should.equal(1);
     // dateTime.MINUTE('1:01').should.equal(1);
     dateTime.MINUTE('a').should.equal(error.value);
   });
 
-  it('MONTH', function() {
+  it('MONTH', function () {
     dateTime.MONTH('1/1/1900').should.equal(1);
     dateTime.MONTH('12/1/1900').should.equal(12);
     dateTime.MONTH('a').should.equal(error.value);
   });
 
-  it('NETWORKDAYS', function() {
+  it('NETWORKDAYS', function () {
     dateTime.NETWORKDAYS('2013-12-04', '2013-12-04').should.equal(1);
     dateTime.NETWORKDAYS('2013-12-04', '2013-12-05').should.equal(2);
     dateTime.NETWORKDAYS('2013-12-04', '2013-12-06').should.equal(3);
@@ -122,46 +143,46 @@ describe('Date & Time', function() {
     dateTime.NETWORKDAYS('1/1/1900', '2/1/1900', 'a').should.equal(error.value);
   });
 
-  it('NETWORKDAYS.INTL', function() {
+  it('NETWORKDAYS.INTL', function () {
     dateTime.NETWORKDAYS.INTL('12/4/2013', '12/5/2013').should.equal(2);
     dateTime.NETWORKDAYS.INTL('12/8/2013', '12/9/2013', 2).should.equal(0);
     dateTime.NETWORKDAYS.INTL('12/4/2013', '12/4/2013', -1).should.equal(error.value);
   });
 
-  it('NOW', function() {
+  it('NOW', function () {
     dateTime.NOW().should.instanceof(Date);
   });
 
-  it('SECOND', function() {
+  it('SECOND', function () {
     dateTime.SECOND('1/1/1900').should.equal(0);
     dateTime.SECOND('1/1/1900 1:00:01').should.equal(1);
     dateTime.SECOND('a').should.equal(error.value);
   });
 
-  it('TIME', function() {
+  it('TIME', function () {
     dateTime.TIME(0, 0, 0).should.equal(0);
     dateTime.TIME(1, 1, 1).should.approximately(0.04237268518518519, 1e-9);
     dateTime.TIME(-1, -1, -1).should.equal(error.num);
     dateTime.TIME('invalid').should.equal(error.value);
   });
 
-  it('TIMEVALUE', function() {
+  it('TIMEVALUE', function () {
     dateTime.TIMEVALUE('1/1/1900 00:00:00').should.equal(0);
     dateTime.TIMEVALUE('1/1/1900 12:00:00').should.approximately(0.5, 1e-9);
     dateTime.TIMEVALUE('a').should.equal(error.value);
   });
 
-  it('TODAY', function() {
+  it('TODAY', function () {
     dateTime.TODAY().should.instanceof(Date);
   });
 
-  it('WEEKDAY', function() {
+  it('WEEKDAY', function () {
     dateTime.WEEKDAY('1/1/1901').should.equal(3);
     dateTime.WEEKDAY('1/1/1901', 2).should.equal(2);
     dateTime.WEEKDAY('a').should.equal(error.value);
   });
 
-  it('WEEKNUM', function() {
+  it('WEEKNUM', function () {
     dateTime.WEEKNUM('1/1/1900').should.equal(1);
     dateTime.WEEKNUM('2/1/1900').should.equal(5);
     dateTime.WEEKNUM('2/1/1909', 2).should.equal(6);
@@ -169,7 +190,7 @@ describe('Date & Time', function() {
     dateTime.WEEKNUM('a').should.equal(error.value);
   });
 
-  it('WORKDAY', function() {
+  it('WORKDAY', function () {
     dateTime.WORKDAY('1/1/1900', 1).getDate().should.equal(2);
     dateTime.WORKDAY('1/1/1900', 7).getDate().should.equal(10);
     dateTime.WORKDAY('1/1/1900', 2, '1/2/1900').getDate().should.equal(4);
@@ -179,18 +200,18 @@ describe('Date & Time', function() {
     dateTime.WORKDAY('1/1/1900', -1).should.equal(error.num);
   });
 
-  it('WORKDAY.INTL', function() {
+  it('WORKDAY.INTL', function () {
     dateTime.WORKDAY.INTL('1/1/1900', 1).getDate().should.equal(2);
     dateTime.WORKDAY.INTL('1/1/1905', 1, 2).getDate().should.equal(3);
     dateTime.WORKDAY.INTL('1/1/1900', 1, 'a').should.equal(error.value);
   });
 
-  it('YEAR', function() {
+  it('YEAR', function () {
     dateTime.YEAR('1/1/1900').should.equal(1900);
     dateTime.YEAR('a').should.equal(error.value);
   });
 
-  it('YEARFRAC', function() {
+  it('YEARFRAC', function () {
     dateTime.YEARFRAC('1/1/1900', '1/2/1900').should.approximately(0.002777777777777778, 1e-3);
     dateTime.YEARFRAC('1/31/1900', '3/31/1900', 0).should.approximately(0.16666666666666666, 1e-3);
     dateTime.YEARFRAC('1/31/1900', '2/1/1900', 0).should.approximately(0.002777777777777778, 1e-3);
