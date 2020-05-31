@@ -366,6 +366,7 @@ describe('Math & Trig', function () {
 
   it('LOG', function() {
     mathTrig.LOG(10, 10).should.equal(1);
+    mathTrig.LOG(1).should.equal(0);
     mathTrig.LOG(10, 'invalid').should.equal(error.value);
   });
 
