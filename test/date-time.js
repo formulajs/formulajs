@@ -1,7 +1,25 @@
 /* global suite, test */
 var error = require('../lib/utils/error');
 var dateTime = require('../lib/date-time');
-require('should');
+var should = require('should');
+
+/**
+ * Custom assertion to test for equal js date object
+ * @see: https://github.com/shouldjs/should.js#adding-own-assertions
+ */
+should.Assertion.add('equalDate', function(year, month, day) {
+
+    var expectedDate = new Date(Date.UTC(year, month, day));
+
+    this.params = {
+        operator: 'to be',
+        expected: expectedDate,
+    };
+
+    this.obj.should.be.instanceOf(Date);
+    this.obj.getTime().should.be.equal(expectedDate.getTime());
+
+});
 
 describe('Date & Time', function () {
   it('DATE', function () {
@@ -37,8 +55,12 @@ describe('Date & Time', function () {
   });
 
   it('DATEVALUE', function () {
-    dateTime.DATEVALUE('1/1/1900').should.equal(1);
-    dateTime.DATEVALUE('12/31/9999').should.equal(2958465);
+    //dateTime.DATEVALUE('1/1/1900').should.equal(1);
+    //dateTime.DATEVALUE('12/31/9999').should.equal(2958465);
+    //dateTime.DATEVALUE('foo bar').should.equal(error.value);
+    //dateTime.DATEVALUE(1).should.equal(error.value);
+    dateTime.DATEVALUE('1/1/1900').should.equalDate(1900, 0, 1);
+    dateTime.DATEVALUE('12/31/9999').should.equalDate(9999, 11, 31);
     dateTime.DATEVALUE('foo bar').should.equal(error.value);
     dateTime.DATEVALUE(1).should.equal(error.value);
   });
@@ -77,19 +99,29 @@ describe('Date & Time', function () {
   });
 
   it('EDATE', function () {
-    dateTime.EDATE('1/1/1900', 0).should.equal(1);
-    dateTime.EDATE('1/1/1900', 1).should.equal(32);
-    dateTime.EDATE('1/1/1900', 12).should.equal(367);
+    //dateTime.EDATE('1/1/1900', 0).should.equal(1);
+    //dateTime.EDATE('1/1/1900', 1).should.equal(32);
+    //dateTime.EDATE('1/1/1900', 12).should.equal(367);
+    //dateTime.EDATE('a', 0).should.equal(error.value);
+    //dateTime.EDATE('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EDATE(dateTime.DATE(1900,1,1), 0).should.equalDate(1900, 0, 1);
+    dateTime.EDATE(dateTime.DATE(1900,1,1), 1).should.equalDate(1900, 1, 1);
+    dateTime.EDATE(dateTime.DATE(1900,1,1), 12).should.equalDate(1901, 0, 1);
     dateTime.EDATE('a', 0).should.equal(error.value);
-    dateTime.EDATE('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EDATE(dateTime.DATE(1900,1,1), 'a').should.equal(error.value);
   });
 
   it('EOMONTH', function () {
-    dateTime.EOMONTH('1/1/1900', 0).should.equal(31);
-    dateTime.EOMONTH('1/1/1900', 1).should.equal(59);
-    dateTime.EOMONTH('1/1/1900', 12).should.equal(397);
+    //dateTime.EOMONTH('1/1/1900', 0).should.equal(31);
+    //dateTime.EOMONTH('1/1/1900', 1).should.equal(59);
+    //dateTime.EOMONTH('1/1/1900', 12).should.equal(397);
+    //dateTime.EOMONTH('a', 0).should.equal(error.value);
+    //dateTime.EOMONTH('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EOMONTH(dateTime.DATE(1900,1,1), 0).should.equalDate(1900, 0, 31);
+    dateTime.EOMONTH(dateTime.DATE(1900,1,1), 1).should.equalDate(1900, 1, 28);
+    dateTime.EOMONTH(dateTime.DATE(1900,1,1), 12).should.equalDate(1901, 0, 31);
     dateTime.EOMONTH('a', 0).should.equal(error.value);
-    dateTime.EOMONTH('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EOMONTH(dateTime.DATE(1900,1,1), 'a').should.equal(error.value);
   });
 
   it('HOUR', function () {
@@ -232,4 +264,16 @@ describe('Date & Time', function () {
     dateTime.YEARFRAC('a', '1/2/1900').should.equal(error.value);
     dateTime.YEARFRAC('1/1/1900', 'a').should.equal(error.value);
   });
+
+  it('SERIAL_TO_DATE', function() {
+    dateTime.SERIAL_TO_DATE(1).should.equalDate(1900, 0, 1);
+    dateTime.SERIAL_TO_DATE('a').should.equal(error.value);
+  });
+
+  it('DATE_TO_SERIAL', function() {
+    dateTime.DATE_TO_SERIAL(new Date(Date.UTC(1900,0,1))).should.equal(1);
+    dateTime.DATE_TO_SERIAL(0).should.equal(error.value);
+    dateTime.DATE_TO_SERIAL('a').should.equal(error.value);
+  });
+
 });
