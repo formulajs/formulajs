@@ -69,6 +69,10 @@ describe('Lookup Reference', function () {
       ['hector', 2],
       ['jam', 4]
     ], 2, false).should.equal(4);
+    lookup.VLOOKUP('jam', [
+      ['hector', -1],
+      ['jam', 0]
+    ], 2, false).should.equal(0);
     lookup.VLOOKUP('james', [
       ['jam', 2],
       ['jim', 4]

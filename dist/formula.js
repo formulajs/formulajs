@@ -13368,7 +13368,7 @@ exports.VLOOKUP = function (needle, table, index, rangeLookup) {
   }
 
   rangeLookup = !(rangeLookup === 0 || rangeLookup === false);
-  var result;
+  var result = error.na;
   for (var i = 0; i < table.length; i++) {
     var row = table[i];
 
@@ -13381,7 +13381,7 @@ exports.VLOOKUP = function (needle, table, index, rangeLookup) {
     }
   }
 
-  return result ? result : error.na;
+  return result;
 };
 
 exports.HLOOKUP = function (needle, table, index, rangeLookup) {
