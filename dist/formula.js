@@ -3173,13 +3173,12 @@ exports.TRANSPOSE = function(matrix) {
 
 exports.T = text.T;
 
-exports.T.DIST = function(x, df, cumulative) {
-  x = utils.parseNumber(x);
-  df = utils.parseNumber(df);
-  if (utils.anyIsError(x, df)) {
-    return error.value;
+exports.T.DIST = function (x, df, tails) {
+  if (tails !== 1 && tails !== 2) {
+    return error.num;
   }
-  return (cumulative) ? jStat.studentt.cdf(x, df) : jStat.studentt.pdf(x, df);
+
+  return (tails === 1) ? exports.T.DIST.RT(x, df) : exports.T.DIST['2T'](x, df);
 };
 
 exports.T.DIST['2T'] = function(x, df) {
@@ -12834,14 +12833,18 @@ exports.NPER = function(rate, payment, present, future, type) {
   present = utils.parseNumber(present);
   future = utils.parseNumber(future);
   type = utils.parseNumber(type);
+
   if (utils.anyIsError(rate, payment, present, future, type)) {
     return error.value;
   }
 
-  // Return number of periods
-  var num = payment * (1 + rate * type) - future * rate;
-  var den = (present * rate + payment * (1 + rate * type));
-  return Math.log(num / den) / Math.log(1 + rate);
+  if (rate === 0) {
+    return (-(present + future) / payment);
+  } else {
+    var num = payment * (1 + rate * type) - future * rate;
+    var den = (present * rate + payment * (1 + rate * type));
+    return Math.log(num / den) / Math.log(1 + rate);
+  }
 };
 
 exports.NPV = function() {
@@ -12985,8 +12988,6 @@ exports.PV = function(rate, periods, payment, future, type) {
 };
 
 exports.RATE = function(periods, payment, present, future, type, guess) {
-  // Credits: rabugento
-
   guess = (guess === undefined) ? 0.01 : guess;
   future = (future === undefined) ? 0 : future;
   type = (type === undefined) ? 0 : type;
@@ -13001,41 +13002,36 @@ exports.RATE = function(periods, payment, present, future, type, guess) {
     return error.value;
   }
 
-  // Set maximum epsilon for end of iteration
   var epsMax = 1e-10;
-
-  // Set maximum number of iterations
-  var iterMax = 50;
-
-  // Implement Newton's method
-  var y, y0, y1, x0, x1 = 0,
-    f = 0,
-    i = 0;
+  var iterMax = 20;
   var rate = guess;
-  if (Math.abs(rate) < epsMax) {
-    y = present * (1 + periods * rate) + payment * (1 + rate * type) * periods + future;
-  } else {
-    f = Math.exp(periods * Math.log(1 + rate));
-    y = present * f + payment * (1 / rate + type) * (f - 1) + future;
-  }
-  y0 = present + payment * periods + future;
-  y1 = present * f + payment * (1 / rate + type) * (f - 1) + future;
-  i = x0 = 0;
-  x1 = rate;
-  while ((Math.abs(y0 - y1) > epsMax) && (i < iterMax)) {
-    rate = (y1 * x0 - y0 * x1) / (y1 - y0);
-    x0 = x1;
-    x1 = rate;
+
+  type = type ? 1 : 0;
+  for (var i = 0; i < iterMax; i++) {
+    if (rate <= -1) {
+      return error.num;
+    }
+    var y, f;
     if (Math.abs(rate) < epsMax) {
       y = present * (1 + periods * rate) + payment * (1 + rate * type) * periods + future;
     } else {
-      f = Math.exp(periods * Math.log(1 + rate));
+      f = Math.pow(1 + rate, periods);
       y = present * f + payment * (1 / rate + type) * (f - 1) + future;
     }
-    y0 = y1;
-    y1 = y;
-    ++i;
+    if (Math.abs(y) < epsMax) {
+      return rate;
+    }
+    var dy;
+    if (Math.abs(rate) < epsMax) {
+      dy = present * periods + payment * type * periods;
+    } else {
+      f = Math.pow(1 + rate, periods);
+      var df = periods * Math.pow(1 + rate, periods - 1);
+      dy = present * df + payment * (1 / rate + type) * df + payment * (-1 / (rate * rate)) * (f - 1);
+    }
+    rate -= y / dy;
   }
+
   return rate;
 };
 
