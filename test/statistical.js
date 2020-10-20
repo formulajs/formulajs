@@ -861,9 +861,12 @@ describe('Statistical', function() {
   });
 
   it('T.DIST', function() {
-    statistical.T.DIST(60, 1, true).should.approximately(0.9946953263673741, 1e-9);
-    statistical.T.DIST(8, 3, false).should.approximately(0.0007369065188787021, 1e-9);
-    statistical.T.DIST(8, 'invalid', false).should.equal(error.value);
+    statistical.T.DIST(1.959999998, 60, 0).should.equal(error.num);
+    statistical.T.DIST(8, 'invalid', 1).should.equal(error.value);
+    statistical.T.DIST(1.959999998, 60, 1).should.approximately(0.027322465, 1e-9);
+    statistical.T.DIST(1.959999998, 60, 2).should.approximately(0.054644930, 1e-9);
+    statistical.T.DIST(3.31, 4, 1).should.approximately(0.014827220522043, 1e-9);
+    statistical.T.DIST(3.31, 4, 2).should.approximately(0.029654441044086, 1e-9);
   });
 
   it('T.DIST.2T', function() {
@@ -874,6 +877,7 @@ describe('Statistical', function() {
     statistical.T.DIST['2T']('hello', 1).should.equal(error.value);
     statistical.T.DIST['2T'](2, 6).should.approximately(0.092426312, 1e-9);
     statistical.T.DIST['2T'](20, 2).should.approximately(0.002490664, 1e-9);
+    statistical.T.DIST['2T'](1.959999998, 60).should.approximately(0.054644930, 1e-9);
   });
 
   it('T.DIST.RT', function() {
@@ -884,6 +888,7 @@ describe('Statistical', function() {
     statistical.T.DIST.RT('hello', 1).should.equal(error.value);
     statistical.T.DIST.RT(2, 60).should.approximately(0.025016522, 1e-9);
     statistical.T.DIST.RT(2, 6).should.approximately(0.046213156, 1e-9);
+    statistical.T.DIST.RT(1.959999998, 60).should.approximately(0.027322465, 1e-9);
   });
 
   it('T.INV', function() {

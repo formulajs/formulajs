@@ -344,6 +344,7 @@ describe('Financial', function() {
   });
 
   it("NPER", function() {
+    financial.NPER(0, -100, -1000, 10000).should.equal(90);
     financial.NPER(0.1 / 12, -100, -1000, 10000, 0).should.approximately(63.39385422740764, 1e-9);
     financial.NPER(0.1 / 12, -100, -1000, 10000, 1).should.approximately(63.016966422019685, 1e-9);
     financial.NPER(0.1 / 12, -100, -1000, 10000).should.approximately(63.39385422740764, 1e-9);
@@ -437,8 +438,9 @@ describe('Financial', function() {
     financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.75).should.approximately(0.0651789117718154, 1e-9);
     financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.065).should.approximately(0.06517891177181524, 1e-9);
     financial.RATE(2 * 12, -1000, -10000, 100000, 1, 0.1).should.approximately(0.0632395800018064, 1e-9);
-    financial.RATE(2 * 12, -1000, -10000, 100000, 1, 1e-11).should.approximately(-1.3199999999735999e-20, 1e-9);
     financial.RATE('invalid', -1000, -10000, 100000, 1, 1e-11).should.equal(error.value);
+    financial.RATE(4 * 12, -200, 8000).should.approximately(0.007701472, 1e-9);
+    financial.RATE(37, -7200, -40000, 4477839, 0).should.approximately(0.10646164, 1e-9);
   });
 
   //TODO: implement
