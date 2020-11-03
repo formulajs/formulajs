@@ -22,9 +22,23 @@ Install the package:
 npm i @formulajs/formulajs
 ```
 
+## Differences between Excel functions and Formula.js
+
+### Date
+
+The functions ```DATE, DATEVALUE, EDATE, EOMONT, NOW, TODAY```return plain JS Date instead of the serial Excel number.
+
+Copying composite formula directly from Excel into JS will not work out of the box:
+
+```
+= DATE(2020,5,9) - DATE(2020,5,8) // Formula.js: 86400000 / Excel: 1
+```
+
+It is not recommended to use ```DATEVALUE``` to parse string representing a date. Formula.js uses ```new Date('YOUR STRING')``` under the hood. There are better libraries to do this job (for example Moment.js)
+
 ## Migration guide
 
-### From formulajs
+### From Formula.js
 
 If you were previously using [formulajs from Sutoiku](https://www.npmjs.com/package/formulajs), some functions have been
 removed, due to dependency simplification.
