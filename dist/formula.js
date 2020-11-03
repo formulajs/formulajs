@@ -4196,24 +4196,17 @@ exports.DATEDIF = function (start_date, end_date, unit) {
 };
 
 exports.DATEVALUE = function (date_text) {
-  var modifier = 2;
-  var date;
-
   if (typeof date_text !== 'string') {
     return error.value;
   }
 
-  date = Date.parse(date_text);
+  var date = Date.parse(date_text);
 
   if (isNaN(date)) {
     return error.value;
   }
 
-  if (date <= -2203891200000) {
-    modifier = 1;
-  }
-
-  return Math.ceil((date - d1900) / 86400000) + modifier;
+  return new Date(date_text);
 };
 
 exports.DAY = function (serial_number) {
@@ -4292,7 +4285,7 @@ exports.EDATE = function (start_date, months) {
   months = parseInt(months, 10);
   start_date.setMonth(start_date.getMonth() + months);
 
-  return serial(start_date);
+  return start_date;
 };
 
 exports.EOMONTH = function (start_date, months) {
@@ -4306,7 +4299,7 @@ exports.EOMONTH = function (start_date, months) {
   }
   months = parseInt(months, 10);
 
-  return serial(new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0));
+  return new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0);
 };
 
 exports.HOUR = function (serial_number) {
