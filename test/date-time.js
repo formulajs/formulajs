@@ -37,8 +37,8 @@ describe('Date & Time', function () {
   });
 
   it('DATEVALUE', function () {
-    dateTime.DATEVALUE('1/1/1900').should.equal(1);
-    dateTime.DATEVALUE('12/31/9999').should.equal(2958465);
+    dateTime.DATEVALUE('1/1/1900').should.deepEqual(new Date(1900, 0, 1));
+    dateTime.DATEVALUE('12/31/9999').should.deepEqual(new Date(9999, 11, 31));
     dateTime.DATEVALUE('foo bar').should.equal(error.value);
     dateTime.DATEVALUE(1).should.equal(error.value);
   });
@@ -77,19 +77,16 @@ describe('Date & Time', function () {
   });
 
   it('EDATE', function () {
-    dateTime.EDATE('1/1/1900', 0).should.equal(1);
-    dateTime.EDATE('1/1/1900', 1).should.equal(32);
-    dateTime.EDATE('1/1/1900', 12).should.equal(367);
     dateTime.EDATE('a', 0).should.equal(error.value);
     dateTime.EDATE('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EDATE(new Date(2011, 0, 23), 1).should.deepEqual(new Date(2011, 1, 23));
   });
 
   it('EOMONTH', function () {
-    dateTime.EOMONTH('1/1/1900', 0).should.equal(31);
-    dateTime.EOMONTH('1/1/1900', 1).should.equal(59);
-    dateTime.EOMONTH('1/1/1900', 12).should.equal(397);
     dateTime.EOMONTH('a', 0).should.equal(error.value);
     dateTime.EOMONTH('1/1/1900', 'a').should.equal(error.value);
+    dateTime.EOMONTH('1/1/2005', 12).should.deepEqual(new Date(2006, 0, 31));
+    dateTime.EOMONTH(new Date(2011, 0, 2), 1).should.deepEqual(new Date(2011, 1, 28));
   });
 
   it('HOUR', function () {
