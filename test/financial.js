@@ -497,7 +497,7 @@ describe('Financial', function() {
   });
 
   //TODO: support for all browsers
-  xit('XIRR', function() {
+  it('XIRR', function() {
     var values = [
       -10000,
       2750,
@@ -512,8 +512,7 @@ describe('Financial', function() {
       '15/feb/09',
       '01/apr/09'
     ];
-    financial.XIRR(values, dates, 0.1).should.approximately(0.373374019797564, 1e-4);
-
+    financial.XIRR(values, dates, 0.1).should.approximately(0.373362535, 1e-4);
     // all positive
     values[0] = -values[0];
     financial.XIRR(values, dates, 0.1).should.equal(error.num);
