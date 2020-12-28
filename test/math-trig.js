@@ -699,7 +699,7 @@ describe('Math & Trig', function () {
 
   it("SUMIFS", function() {
     mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '<9').should.equal(2);
-
+    mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '*').should.equal(5);
     mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4').should.equal(error.value);
   });
 
