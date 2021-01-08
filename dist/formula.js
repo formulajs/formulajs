@@ -1393,17 +1393,22 @@ exports.SUMIFS = function() {
   if (range instanceof Error) {
     return range;
   }
+
   var criterias = args;
-  var n_range_elements = range.length;
-  var criteriaLength = criterias.length;
+  var criteriaLength = criterias.length / 2;
+
+  for (var i = 0; i < criteriaLength; i++) {
+    criterias[i * 2] = utils.flatten(criterias[i * 2]);
+  }
+
   var result = 0;
 
-  for (var i = 0; i < n_range_elements; i++) {
-    var value = range[i];
+  for (var i = 0; i < range.length; i++) {
     var isMeetCondition = false;
 
     for (var j = 0; j < criteriaLength; j++) {
-      var criteria = criterias[j];
+      var valueToTest = criterias[j * 2][i];
+      var criteria = criterias[j * 2 + 1];
       var isWildcard = criteria === void 0 || criteria === '*';
       var computedResult = false;
 
@@ -1411,7 +1416,7 @@ exports.SUMIFS = function() {
         computedResult = true;
       } else {
         var tokenizedCriteria = evalExpression.parse(criteria + '');
-        var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
+        var tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
 
         computedResult = evalExpression.compute(tokens);
       }
@@ -1426,7 +1431,7 @@ exports.SUMIFS = function() {
     }
 
     if (isMeetCondition) {
-      result += value;
+      result += range[i];
     }
   }
 
