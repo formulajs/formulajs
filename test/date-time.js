@@ -59,6 +59,7 @@ describe('Date & Time', function () {
     dateTime.DAYS(new Date(1900, 1, 2), new Date(1900, 1, 1)).should.equal(1);
     dateTime.DAYS('a', 1).should.equal(error.value);
     dateTime.DAYS(1, 'a').should.equal(error.value);
+    dateTime.DAYS(dateTime.NOW(), dateTime.TODAY()).should.equal(0);
   });
 
   it('DAYS360', function () {
