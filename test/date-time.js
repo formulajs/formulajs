@@ -111,6 +111,7 @@ describe('Date & Time', function () {
     dateTime.ISOWEEKNUM('12/29/1901').should.equal(52);
     dateTime.ISOWEEKNUM('6/6/1902').should.equal(23);
     dateTime.ISOWEEKNUM('a').should.equal(error.value);
+    dateTime.ISOWEEKNUM(new Date('2021-02-04T00:00:00.123Z')).should.equal(5);
   });
 
   it('MINUTE', function () {
