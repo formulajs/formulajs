@@ -59,6 +59,8 @@ describe('Date & Time', function () {
     dateTime.DAYS(new Date(1900, 1, 2), new Date(1900, 1, 1)).should.equal(1);
     dateTime.DAYS('a', 1).should.equal(error.value);
     dateTime.DAYS(1, 'a').should.equal(error.value);
+    dateTime.DAYS('1/1/1900 00:20', '1/1/1900 01:30').should.equal(0);
+    dateTime.DAYS(dateTime.NOW(), dateTime.TODAY()).should.equal(0);
   });
 
   it('DAYS360', function () {
@@ -109,6 +111,7 @@ describe('Date & Time', function () {
     dateTime.ISOWEEKNUM('12/29/1901').should.equal(52);
     dateTime.ISOWEEKNUM('6/6/1902').should.equal(23);
     dateTime.ISOWEEKNUM('a').should.equal(error.value);
+    dateTime.ISOWEEKNUM(new Date('2021-02-04T00:00:00.123Z')).should.equal(5);
   });
 
   it('MINUTE', function () {
