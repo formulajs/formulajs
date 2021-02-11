@@ -4223,6 +4223,12 @@ exports.DAY = function (serial_number) {
   return date.getDate();
 };
 
+function startOfDay(date) {
+  var newDate = new Date(date);
+  newDate.setHours(0, 0, 0, 0);
+  return newDate;
+}
+
 exports.DAYS = function (end_date, start_date) {
   end_date = utils.parseDate(end_date);
   start_date = utils.parseDate(start_date);
@@ -4234,7 +4240,7 @@ exports.DAYS = function (end_date, start_date) {
     return start_date;
   }
 
-  return serial(end_date) - serial(start_date);
+  return serial(startOfDay(end_date)) - serial(startOfDay(start_date));
 };
 
 exports.DAYS360 = function (start_date, end_date, method) {
@@ -4354,7 +4360,7 @@ exports.ISOWEEKNUM = function (date) {
     return date;
   }
 
-  date.setHours(0, 0, 0);
+  date = startOfDay(date);
   date.setDate(date.getDate() + 4 - (date.getDay() || 7));
   var yearStart = new Date(date.getFullYear(), 0, 1);
 
@@ -4482,11 +4488,7 @@ exports.TIMEVALUE = function (time_text) {
 };
 
 exports.TODAY = function () {
-  var today = new Date();
-  today.setHours(0);
-  today.setMinutes(0);
-  today.setSeconds(0);
-  return today;
+  return startOfDay(new Date());
 };
 
 exports.WEEKDAY = function (serial_number, return_type) {
