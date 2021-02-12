@@ -72,6 +72,7 @@ describe('Information', function() {
     information.ISLOGICAL(false).should.equal(true);
     information.ISLOGICAL(1).should.equal(false);
     information.ISLOGICAL('true').should.equal(false);
+    information.ISLOGICAL(null).should.equal(false);
   });
 
   it('ISNA', function() {
@@ -107,6 +108,7 @@ describe('Information', function() {
     information.ISTEXT('a').should.equal(true);
     information.ISTEXT(1).should.equal(false);
     information.ISTEXT(true).should.equal(false);
+    information.ISTEXT().should.equal(false);
   });
 
   it('N', function() {
