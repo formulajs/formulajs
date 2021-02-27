@@ -89,10 +89,10 @@ describe('Text', function() {
   it('LEN', function() {
     text.LEN(true).should.equal(error.value);
     text.LEN('four').should.equal(4);
-    text.LEN([1, 2, 3, 4, 5]).should.equal(5);
+    text.LEN([1, 2, 3, 4, 5]).should.equal(error.error);
     text.LEN().should.equal(error.error);
     text.LEN(null).should.equal(0);
-    text.LEN([]).should.equal(0);
+    text.LEN([]).should.equal(error.error);
   });
 
   it("LOWER", function() {
