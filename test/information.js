@@ -59,7 +59,7 @@ describe('Information', function() {
     information.ISEVEN(2.5).should.equal(true);
     information.ISEVEN(5).should.equal(false);
     information.ISEVEN(0).should.equal(true);
-    information.ISEVEN(null).should.equal(error.error);
+    information.ISEVEN(null).should.equal(true);
   });
 
   // TODO
@@ -96,7 +96,7 @@ describe('Information', function() {
     information.ISODD(-1).should.equal(true);
     information.ISODD(5).should.equal(true);
     information.ISODD(2.5).should.equal(false);
-    information.ISODD(null).should.equal(error.error);
+    information.ISODD(null).should.equal(false);
   });
 
   // TODO
