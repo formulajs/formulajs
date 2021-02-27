@@ -3531,12 +3531,16 @@ exports.LEN = function(text) {
     return error.error;
   }
 
+  if (text === null) {
+    return 0;
+  }
+
   if (typeof text === 'string') {
     return text ? text.length : 0;
   }
 
-  if (text.length) {
-    return text.length;
+  if (Array.isArray(text)) {
+    return error.error
   }
 
   return error.value;
