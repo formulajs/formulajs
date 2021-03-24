@@ -10664,6 +10664,9 @@ exports.IMAGINARY = function(inumber) {
     return 1;
   }
 
+  // Force string type
+  inumber = inumber + '';
+
   // Normalize imaginary coefficient
   inumber = inumber.replace('+i', '+1i').replace('-i', '-1i').replace('+j', '+1j').replace('-j', '-1j');
 
@@ -10980,6 +10983,9 @@ exports.IMREAL = function(inumber) {
   if (['i', '+i', '1i', '+1i', '-i', '-1i', 'j', '+j', '1j', '+1j', '-j', '-1j'].indexOf(inumber) >= 0) {
     return 0;
   }
+
+  // Force String type
+  inumber = inumber + '';
 
   // Lookup sign
   var plus = inumber.indexOf('+');
