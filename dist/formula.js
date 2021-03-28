@@ -13317,7 +13317,7 @@ exports.YIELDMAT = function() {
 var error = __webpack_require__(0);
 var utils = __webpack_require__(1);
 
-exports.MATCH = function(lookupValue, lookupArray, matchType) {
+exports.MATCH = function (lookupValue, lookupArray, matchType) {
   if (!lookupValue && !lookupArray) {
     return error.na;
   }
@@ -13424,14 +13424,19 @@ exports.HLOOKUP = function (needle, table, index, rangeLookup) {
 exports.LOOKUP = function (searchCriterion, array, resultArray) {
   array = utils.flatten(array);
   resultArray = utils.flatten(resultArray);
+  var isNumberLookup = (typeof searchCriterion === "number");
+  var result = error.na;
 
-  var index = array.indexOf(searchCriterion);
-
-  if (index > -1) {
-    return resultArray[index];
-  } else {
-    return resultArray[resultArray.length - 1];
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === searchCriterion) {
+      return resultArray[i];
+    } else if ((isNumberLookup && array[i] <= searchCriterion) ||
+      (typeof array[i] === "string" && array[i].localeCompare(searchCriterion) < 0)) {
+      result = resultArray[i];
+    }
   }
+
+  return result;
 };
 
 exports.INDEX = function (cellRange, rowNumber, columnNumber) {
