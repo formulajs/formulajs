@@ -53,6 +53,13 @@ describe('Lookup Reference', function () {
       [1, 2],
       [3, 4]
     ], 2).should.equal(4);
+    lookup.VLOOKUP(2, [
+      [1, 'A'],
+      [2, 'B'],
+      [3, 'C'],
+      [4, 'D'],
+      [2, 'E']
+    ], 2).should.equal('B');
     lookup.VLOOKUP(5, [
       [1, 2],
       [3, 4]
@@ -147,6 +154,11 @@ describe('Lookup Reference', function () {
     ], [
       ['A', 'B', 'C', 'D']
     ]).should.equal(error.na);
+    lookup.LOOKUP(0.21, [
+      [0.1, 0.2, 0.3, 0.2]
+    ], [
+      ['A', 'B', 'C', 'D']
+    ]).should.equal('B');
   });
 
   it('INDEX', function () {
