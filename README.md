@@ -14,6 +14,14 @@ Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version
 <script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.6.8/dist/formula.min.js"></script>
 ```
 
+Then the functions can be accessed as
+
+```
+formulajs.Date(2008, 7, 8)
+formulajs.SUM([1, 2 , 3])
+...
+```
+
 ### In node
 
 Install the package:
