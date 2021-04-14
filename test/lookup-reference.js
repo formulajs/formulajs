@@ -24,6 +24,8 @@ describe('Lookup Reference', function () {
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3);
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], -1).should.equal(3);
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 1).should.equal(2);
+    lookup.MATCH(true, [false, true], 0).should.equal(2);
+    lookup.MATCH(false, [false, true], 0).should.equal(1);
   });
 
   it('VLOOKUP', function () {
@@ -96,6 +98,14 @@ describe('Lookup Reference', function () {
       ['jim', 2],
       ['jam', 4]
     ], 3, true).should.equal(error.ref);
+    lookup.VLOOKUP(true, [
+      [true, 'yes'],
+      [false, 'no']
+    ], 2).should.equal('yes');
+    lookup.VLOOKUP(false, [
+      [true, 'yes'],
+      [false, 'no']
+    ], 2).should.equal('no');
   });
 
   it('HLOOKUP', function () {
@@ -115,6 +125,8 @@ describe('Lookup Reference', function () {
     lookup.HLOOKUP('li', [['jim', 'jam'], [1, 4]], 2, true).should.equal(error.na);
     lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, true).should.equal(error.ref);
     lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, false).should.equal(error.na);
+    lookup.HLOOKUP(true, [[true, false], ['yes', 'no']], 2).should.equal('yes');
+    lookup.HLOOKUP(false, [[true, false], ['yes', 'no']], 2).should.equal('no');
   });
 
   it('LOOKUP', function () {
