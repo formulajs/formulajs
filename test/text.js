@@ -36,6 +36,14 @@ describe('Text', function() {
     text.CONCATENATE(true, 'yes').should.equal('TRUEyes');
     text.CONCATENATE(false, 'no').should.equal('FALSEno');
   });
+  
+  it('CONCAT', function() {
+    text.CONCAT('hello', ' ', 'world').should.equal('hello world');
+    text.CONCAT(['hello', ' my ', 'world']).should.equal('hello my world');
+    text.CONCAT(1, 'one').should.equal('1one');
+    text.CONCAT(true, 'yes').should.equal('TRUEyes');
+    text.CONCAT(false, 'no').should.equal('FALSEno');
+  });
 
   it('DBCS', function() {
     text.DBCS.should.throw('DBCS is not implemented');
