@@ -64,6 +64,14 @@ describe('Lookup Reference', function () {
       [1, 2],
       [3, 4]
     ], 2, true).should.equal(4);
+    lookup.VLOOKUP(1.1, [
+      [1, 2],
+      [3, 4]
+    ], 2, true).should.equal(2);
+    lookup.VLOOKUP(0, [
+      [1, 2],
+      [3, 4]
+    ], 2, true).should.equal(error.na);
     lookup.VLOOKUP('ji', [
       ['hector', 2],
       ['jam', 4]
@@ -96,6 +104,33 @@ describe('Lookup Reference', function () {
       ['jim', 2],
       ['jam', 4]
     ], 3, true).should.equal(error.ref);
+    lookup.VLOOKUP(0, [
+      [1, 'Jim'],
+      [0, 'John']
+    ], 2, false).should.equal('John');
+    lookup.VLOOKUP(0, [
+      [1, 'Jim'],
+      [0, 'John'],
+      [2, 'Jack']
+    ], 2, true).should.equal('John');
+    lookup.VLOOKUP(1.1, [
+      [0, 'A'],
+      [1, 'B'],
+      [2, 'C'],
+      [1, 'D']
+    ], 2, true).should.equal('B');
+    lookup.VLOOKUP(1, [
+      [0, 'A'],
+      [1, 'B'],
+      [2, 'C'],
+      [1, 'D']
+    ], 2).should.equal('B');
+    lookup.VLOOKUP(1.1, [
+      [0, 'A'],
+      [1, 'B'],
+      [2, 'C'],
+      [1, 'D']
+    ], 2, false).should.equal(error.na);
   });
 
   it('HLOOKUP', function () {
@@ -111,10 +146,14 @@ describe('Lookup Reference', function () {
     lookup.HLOOKUP(1, [[1, 2], [3, 4]], 2, true).should.equal(3);
     lookup.HLOOKUP(2, [[1, 2], [3, 4]], 2, true).should.equal(4);
     lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 2, false).should.equal(error.na);
-    lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 2, true).should.equal(1);
-    lookup.HLOOKUP('li', [['jim', 'jam'], [1, 4]], 2, true).should.equal(error.na);
-    lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, true).should.equal(error.ref);
+    lookup.HLOOKUP('jb', [['jam', 'jim'], [1, 4]], 2, true).should.equal(1);
+    lookup.HLOOKUP('li', [['hector', 'jim'], [1, 4]], 2, true).should.equal(4);
+    lookup.HLOOKUP('ji', [['hector', 'jam'], [1, 4]], 3, true).should.equal(error.ref);
     lookup.HLOOKUP('ji', [['jim', 'jam'], [1, 4]], 3, false).should.equal(error.na);
+    lookup.HLOOKUP(0, [[1, 0], ['jim', 'jam']], 2, false).should.equal('jam');
+    lookup.HLOOKUP(0, [[0, 1], ['jim', 'jam']], 2).should.equal('jim');
+    lookup.HLOOKUP(1.4, [[0, 1, 2, 1], ['A', 'B', 'C', 'D']], 2).should.equal('B');
+    lookup.HLOOKUP(1.4, [[0, 1, 2, 1], ['A', 'B', 'C', 'D']], 2, false).should.equal(error.na);
   });
 
   it('LOOKUP', function () {
