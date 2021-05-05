@@ -3468,6 +3468,8 @@ exports.CONCATENATE = function() {
   return args.join('');
 };
 
+exports.CONCAT = exports.CONCATENATE;
+
 //TODO
 exports.DBCS = function() {
   throw new Error('DBCS is not implemented');
@@ -13379,24 +13381,27 @@ exports.MATCH = function (lookupValue, lookupArray, matchType) {
 };
 
 exports.VLOOKUP = function (needle, table, index, rangeLookup) {
-  if (!needle || !table || !index) {
+  if (!table || !index) {
     return error.na;
   }
 
   rangeLookup = !(rangeLookup === 0 || rangeLookup === false);
   var result = error.na;
   var isNumberLookup = (typeof needle === "number");
+  var exactMatchOnly = false;
   for (var i = 0; i < table.length; i++) {
     var row = table[i];
 
     if (row[0] === needle) {
       result = (index < (row.length + 1) ? row[index - 1] : error.ref);
       break;
-    } else if ((isNumberLookup && rangeLookup && row[0] <= needle) ||
-      (rangeLookup && typeof row[0] === "string" && row[0].localeCompare(needle) < 0)) {
+    } else if (!exactMatchOnly && ((isNumberLookup && rangeLookup && row[0] <= needle) ||
+      (rangeLookup && typeof row[0] === "string" && row[0].localeCompare(needle) < 0))) {
       result = (index < (row.length + 1) ? row[index - 1] : error.ref);
-    } else if (isNumberLookup && rangeLookup && row[0] > needle) {
-      return result;
+    }
+
+    if (isNumberLookup && row[0] > needle) {
+      exactMatchOnly = true;
     }
   }
 
@@ -13404,24 +13409,7 @@ exports.VLOOKUP = function (needle, table, index, rangeLookup) {
 };
 
 exports.HLOOKUP = function (needle, table, index, rangeLookup) {
-  if (!needle || !table || !index) {
-    return error.na;
-  }
-
-  rangeLookup = rangeLookup || false;
-
-  var transposedTable = utils.transpose(table);
-
-  for (var i = 0; i < transposedTable.length; i++) {
-    var row = transposedTable[i];
-    if ((!rangeLookup && row[0] === needle) ||
-      ((row[0] === needle) ||
-        (rangeLookup && typeof row[0] === "string" && row[0].toLowerCase().indexOf(needle.toLowerCase()) !== -1))) {
-      return (index < (row.length + 1) ? row[index - 1] : error.ref);
-    }
-  }
-
-  return error.na;
+  return exports.VLOOKUP(needle, utils.transpose(table), index, rangeLookup);
 };
 
 exports.LOOKUP = function (searchCriterion, array, resultArray) {
