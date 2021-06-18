@@ -26,6 +26,7 @@ describe('Logical', function() {
     logical.IF(true, 1, 2).should.equal(1);
     logical.IF(false, 1, 2).should.equal(2);
     logical.IF(true).should.equal(true);
+    logical.IF(false).should.equal(false);
     logical.IF(true, 1).should.equal(1);
     logical.IF(false, 1).should.equal(false);
   });
