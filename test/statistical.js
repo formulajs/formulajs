@@ -486,7 +486,10 @@ describe('Statistical', function() {
   });
 
   it('LARGE', function() {
-    statistical.LARGE([3, 5, 3, 5, 4], 3).should.equal(4);
+    statistical.LARGE([1, 3, 2, 5, 4], 1).should.equal(5);
+    statistical.LARGE([1, 3, 2, 5, 4], 3).should.equal(3);
+    statistical.LARGE([3, 5, 3], -3).should.equal(error.value);
+    statistical.LARGE([3, 5, 3], 4).should.equal(error.value);
     statistical.LARGE([3, 5, 3, 'invalid', 4], 3).should.equal(error.value);
   });
 
