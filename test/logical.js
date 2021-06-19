@@ -5,6 +5,9 @@ var should = require('should');
 
 describe('Logical', function() {
   it('AND', function() {
+    logical.AND(undefined, undefined).should.equal(error.value);
+    logical.AND(undefined, true).should.equal(true);
+    logical.AND(error.na, true).should.equal(error.na);
     logical.AND(true, true).should.equal(true);
     logical.AND(true, false).should.equal(false);
   });
@@ -23,6 +26,11 @@ describe('Logical', function() {
   });
 
   it('IF', function() {
+    logical.IF(undefined, undefined, undefined).should.equal(0);
+    logical.IF(undefined, 1, 2).should.equal(2);
+    logical.IF(error.na, undefined).should.equal(error.na);
+    logical.IF(true, error.na).should.equal(error.na);
+
     logical.IF(true, 1, 2).should.equal(1);
     logical.IF(false, 1, 2).should.equal(2);
     logical.IF(true).should.equal(true);
@@ -54,6 +62,9 @@ describe('Logical', function() {
   });
 
   it('OR', function() {
+    logical.OR(undefined, undefined).should.equal(error.value);
+    logical.OR(undefined, false).should.equal(false);
+    logical.OR(error.na, false).should.equal(error.na);
     logical.OR(true).should.equal(true);
     logical.OR(false).should.equal(false);
     logical.OR(true, false).should.equal(true);

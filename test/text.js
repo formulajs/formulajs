@@ -16,28 +16,38 @@ describe('Text', function() {
     text.CHAR(65).should.equal("A");
     text.CHAR(255).should.equal("ÿ");
     text.CHAR(1000).should.equal("Ϩ");
+    text.CHAR(undefined).should.equal(error.value);
+    text.CHAR(error.na).should.equal(error.na);
     text.CHAR('invalid').should.equal(error.value);
   });
 
   it('CLEAN', function() {
+    text.CLEAN(undefined).should.equal('');
+    text.CLEAN(error.na).should.equal(error.na);
     text.CLEAN('Monthly Report').should.equal('Monthly Report');
   });
 
   it('CODE', function() {
-    text.CODE().should.equal(error.na);
+    text.CODE().should.equal(error.value);
+    text.CODE(undefined).should.equal(error.value);
+    text.CODE(error.na).should.equal(error.na);
     text.CODE('A').should.equal(65);
     text.CODE("Ϩ").should.equal(1000);
   });
 
   it('CONCATENATE', function() {
+    text.CONCATENATE('a', undefined, 'b').should.equal('ab');
+    text.CONCATENATE('a', error.na, 'b').should.equal(error.na);
     text.CONCATENATE('hello', ' ', 'world').should.equal('hello world');
     text.CONCATENATE(['hello', ' my ', 'world']).should.equal('hello my world');
     text.CONCATENATE(1, 'one').should.equal('1one');
     text.CONCATENATE(true, 'yes').should.equal('TRUEyes');
     text.CONCATENATE(false, 'no').should.equal('FALSEno');
   });
-  
+
   it('CONCAT', function() {
+    text.CONCAT('a', undefined, 'b').should.equal('ab');
+    text.CONCAT('a', error.na, 'b').should.equal(error.na);
     text.CONCAT('hello', ' ', 'world').should.equal('hello world');
     text.CONCAT(['hello', ' my ', 'world']).should.equal('hello my world');
     text.CONCAT(1, 'one').should.equal('1one');
@@ -59,6 +69,10 @@ describe('Text', function() {
   });
 
   it('EXACT', function() {
+    text.EXACT(undefined, undefined).should.equal(true);
+    text.EXACT(undefined, null).should.equal(true);
+    text.EXACT(undefined, "").should.equal(true);
+    text.EXACT(error.na, error.na).should.equal(error.na);
     text.EXACT('yes', 'yes').should.equal(true);
     text.EXACT('yes', 'yes', 'yes').should.equal(error.na);
     text.EXACT().should.equal(error.na);
@@ -66,10 +80,11 @@ describe('Text', function() {
 
   it('FIND', function() {
     var data = 'Miriam McGovern';
+    text.FIND(undefined, undefined).should.equal(1);
     text.FIND('M', data).should.equal(1);
     text.FIND('m', data).should.equal(6);
     text.FIND('M', data, 3).should.equal(8);
-    text.FIND('M').should.equal(error.na);
+    text.FIND('M', undefined).should.equal(error.value);
     text.FIND().should.equal(error.na);
   });
 
@@ -83,27 +98,38 @@ describe('Text', function() {
 
   it('HTML2TEXT', function() {
     text.HTML2TEXT().should.equal("");
+    text.HTML2TEXT(undefined).should.equal("");
+    text.HTML2TEXT(error.na).should.equal(error.na);
     text.HTML2TEXT('').should.equal("");
     text.HTML2TEXT('<i>Hello</i>').should.equal("Hello");
     text.HTML2TEXT(['<i>Hello</i>', '<b>Jim</b>']).should.equal("Hello\nJim");
   });
 
   it('LEFT', function() {
+    text.LEFT(error.na, 2).should.equal(error.na);
+    text.LEFT('text', error.na).should.equal(error.na);
+    text.LEFT(undefined, undefined).should.equal('');
+    text.LEFT(undefined, 3).should.equal('');
     text.LEFT('Sale Price', 4).should.equal('Sale');
     text.LEFT('Sweeden').should.equal('S');
     text.LEFT(3).should.equal(error.value);
   });
 
   it('LEN', function() {
-    text.LEN(true).should.equal(error.value);
+    text.LEN(undefined).should.equal(0);
+    text.LEN(error.na).should.equal(error.na);
+    text.LEN(true).should.equal(4);
     text.LEN('four').should.equal(4);
-    text.LEN([1, 2, 3, 4, 5]).should.equal(error.error);
+    text.LEN([1, 2, 3, 4, 5]).should.equal(error.value);
     text.LEN().should.equal(error.error);
     text.LEN(null).should.equal(0);
-    text.LEN([]).should.equal(error.error);
+    text.LEN([]).should.equal(error.value);
+    text.LEN(123).should.equal(3);
   });
 
   it("LOWER", function() {
+    text.LOWER(undefined).should.equal("");
+    text.LOWER(error.na).should.equal(error.na);
     text.LOWER('abcd').should.equal("abcd");
     text.LOWER('ABcd').should.equal("abcd");
     text.LOWER('ABCD').should.equal("abcd");
@@ -130,12 +156,14 @@ describe('Text', function() {
   });
 
   it('PROPER', function() {
+    text.PROPER(undefined).should.equal('');
+    text.PROPER(null).should.equal('');
+    text.PROPER(error.na).should.equal(error.na);
     text.PROPER('a title case').should.equal('A Title Case');
     text.PROPER(true).should.equal('True');
     text.PROPER(false).should.equal('False');
     text.PROPER(90).should.equal('90');
     text.PROPER(NaN).should.equal(error.value);
-    text.PROPER().should.equal(error.value);
   });
 
   it('REGEXEXTRACT', function() {
@@ -168,15 +196,22 @@ describe('Text', function() {
   });
 
   it('REPT', function() {
+    text.REPT(undefined, undefined).should.equal('');
+    text.REPT('text', undefined).should.equal('');
+    text.REPT(undefined, 3).should.equal('');
+    text.REPT(error.na, 3).should.equal(error.na);
     text.REPT('multiple ', 3).should.equal('multiple multiple multiple ');
-    text.REPT('m').should.equal(error.value);
+    text.REPT('m').should.equal('');
   });
 
   it('RIGHT', function() {
+    text.RIGHT(error.na, 2).should.equal(error.na);
+    text.RIGHT('text', error.na).should.equal(error.na);
+    text.RIGHT(undefined, undefined).should.equal('');
+    text.RIGHT(undefined, 3).should.equal('');
     text.RIGHT('Sale Price', 5).should.equal('Price');
     text.RIGHT('Stock Number').should.equal('r');
     text.RIGHT('something', 'invalid').should.equal(error.value);
-    text.RIGHT().should.equal(error.na);
   });
 
   it('SEARCH', function() {
@@ -205,6 +240,8 @@ describe('Text', function() {
   });
 
   it('T', function() {
+    text.T(undefined).should.equal('');
+    text.T(error.na).should.equal(error.na);
     text.T('Rainfall').should.equal('Rainfall');
     text.T(19).should.equal('');
     text.T(true).should.equal('');
@@ -218,11 +255,15 @@ describe('Text', function() {
   });
 
   it('TRIM', function() {
+    text.TRIM(undefined).should.equal('');
+    text.TRIM(error.na).should.equal(error.na);
     text.TRIM(' more  spaces ').should.equal('more spaces');
     text.TRIM(true).should.equal(error.value);
   });
 
   it('UNICHAR', function() {
+    text.UNICHAR(undefined).should.equal(error.value);
+    text.UNICHAR(error.na).should.equal(error.na);
     text.UNICHAR(65).should.equal("A");
     text.UNICHAR(255).should.equal("ÿ");
     text.UNICHAR(1000).should.equal("Ϩ");
@@ -233,11 +274,15 @@ describe('Text', function() {
   });
 
   it('UNICODE', function() {
+    text.UNICODE(undefined).should.equal(error.value);
+    text.UNICODE(error.na).should.equal(error.na);
     text.UNICODE('A').should.equal(65);
     text.UNICODE("Ϩ").should.equal(1000);
   });
 
   it('UPPER', function() {
+    text.UPPER(undefined).should.equal('');
+    text.UPPER(error.na).should.equal(error.na);
     text.UPPER('to upper case please').should.equal('TO UPPER CASE PLEASE');
     text.UPPER(true).should.equal(error.value);
   });
