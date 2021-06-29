@@ -67,6 +67,8 @@ describe('Logical', function() {
   it('NOT', function() {
     logical.NOT(true).should.equal(false);
     logical.NOT(false).should.equal(true);
+    logical.NOT("text").should.equal(error.value);
+    logical.NOT(error.na).should.equal(error.na);
   });
 
   it('OR', function() {
