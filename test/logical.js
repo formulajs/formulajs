@@ -90,10 +90,23 @@ describe('Logical', function() {
   });
 
   it('XOR', function() {
+    logical.XOR(undefined, undefined).should.equal(error.value);
+    logical.XOR("", undefined).should.equal(error.value);
+    logical.XOR("text", undefined).should.equal(error.value);
+    logical.XOR(undefined, false).should.equal(false);
+    logical.XOR(false, undefined).should.equal(false);
+    logical.XOR(undefined, true).should.equal(true);
+    logical.XOR(true, undefined).should.equal(true);
+    logical.XOR(error.na, false).should.equal(error.na);
+    logical.XOR(true).should.equal(true);
+    logical.XOR(false).should.equal(false);
     logical.XOR(false, false).should.equal(false);
     logical.XOR(false, true).should.equal(true);
     logical.XOR(true, false).should.equal(true);
     logical.XOR(true, true).should.equal(false);
+    logical.XOR(1).should.equal(true);
+    logical.XOR(0, false).should.equal(false);
+    logical.XOR(2, false).should.equal(true);
   });
 
   it('SWITCH', function() {
