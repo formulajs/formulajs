@@ -6,10 +6,18 @@ var should = require('should');
 describe('Logical', function() {
   it('AND', function() {
     logical.AND(undefined, undefined).should.equal(error.value);
+    logical.AND("", undefined).should.equal(error.value);
+    logical.AND("text", undefined).should.equal(error.value);
     logical.AND(undefined, true).should.equal(true);
+    logical.AND(true, undefined).should.equal(true);
+    logical.AND(undefined, false).should.equal(false);
+    logical.AND(false, undefined).should.equal(false);
     logical.AND(error.na, true).should.equal(error.na);
     logical.AND(true, true).should.equal(true);
     logical.AND(true, false).should.equal(false);
+    logical.AND(false, true).should.equal(false);
+    logical.AND(42, true).should.equal(true);
+    logical.AND(0, true).should.equal(false);
   });
 
   it('CHOOSE', function() {
@@ -63,11 +71,18 @@ describe('Logical', function() {
 
   it('OR', function() {
     logical.OR(undefined, undefined).should.equal(error.value);
+    logical.OR("", undefined).should.equal(error.value);
+    logical.OR("text", undefined).should.equal(error.value);
     logical.OR(undefined, false).should.equal(false);
+    logical.OR(false, undefined).should.equal(false);
+    logical.OR(undefined, true).should.equal(true);
+    logical.OR(true, undefined).should.equal(true);
     logical.OR(error.na, false).should.equal(error.na);
     logical.OR(true).should.equal(true);
     logical.OR(false).should.equal(false);
     logical.OR(true, false).should.equal(true);
+    logical.OR(1).should.equal(true);
+    logical.OR(0, false).should.equal(false);
   });
 
   it('TRUE', function() {
