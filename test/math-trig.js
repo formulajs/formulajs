@@ -434,8 +434,11 @@ describe('Math & Trig', function () {
     mathTrig.GTE(0, undefined).should.equal(true);
     mathTrig.GTE(-1, undefined).should.equal(false);
     mathTrig.GTE(error.na).should.equal(error.na);
-    mathTrig.GTE(1, 'string').should.equal(error.error);
-    mathTrig.GTE('string', 2).should.equal(error.error);
+    mathTrig.GTE(1, 'string').should.equal(false);
+    mathTrig.GTE('string', 2).should.equal(true);
+    mathTrig.GTE('a', 'a').should.equal(true);
+    mathTrig.GTE('a', 'ab').should.equal(false);
+    mathTrig.GTE('ab', 'a').should.equal(true);
   });
 
   it('INT', function() {
@@ -517,8 +520,11 @@ describe('Math & Trig', function () {
     mathTrig.LT(0, undefined).should.equal(false);
     mathTrig.LT(-1, undefined).should.equal(true);
     mathTrig.LT(error.na).should.equal(error.na);
-    mathTrig.LT(1, 'string').should.equal(error.error);
-    mathTrig.LT('string', 2).should.equal(error.error);
+    mathTrig.LT(1, 'string').should.equal(true);
+    mathTrig.LT('string', 2).should.equal(false);
+    mathTrig.LT('a', 'a').should.equal(false);
+    mathTrig.LT('a', 'ab').should.equal(true);
+    mathTrig.LT('ab', 'a').should.equal(false);
   });
 
   it('LTE', function() {
@@ -531,8 +537,11 @@ describe('Math & Trig', function () {
     mathTrig.LTE(0, undefined).should.equal(true);
     mathTrig.LTE(-1, undefined).should.equal(true);
     mathTrig.LTE(error.na).should.equal(error.na);
-    mathTrig.LTE(1, 'string').should.equal(error.error);
-    mathTrig.LTE('string', 2).should.equal(error.error);
+    mathTrig.LTE(1, 'string').should.equal(true);
+    mathTrig.LTE('string', 2).should.equal(false);
+    mathTrig.LTE('a', 'a').should.equal(true);
+    mathTrig.LTE('a', 'ab').should.equal(true);
+    mathTrig.LTE('ab', 'a').should.equal(false);
   });
 
   it('MINUS', function() {
