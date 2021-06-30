@@ -149,6 +149,7 @@ describe('Math & Trig', function () {
   it('CEILING', function() {
     mathTrig.CEILING(undefined).should.equal(0);
     mathTrig.CEILING(error.na).should.equal(error.na);
+    mathTrig.CEILING(1, error.na).should.equal(error.na);
     mathTrig.CEILING(4.1).should.equal(5);
     mathTrig.CEILING(4.9).should.equal(5);
     mathTrig.CEILING(-4.1).should.equal(-4);
