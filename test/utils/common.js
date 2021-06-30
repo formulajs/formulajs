@@ -58,8 +58,29 @@ describe('Utils => common', function() {
     utils.parseBool(err).should.equal(err);
   });
 
+  it('parseNumber', function() {
+    utils.parseNumber().should.equal(0);
+    utils.parseNumber(null).should.equal(0);
+    utils.parseNumber('').should.equal(0);
+    utils.parseNumber(2).should.equal(2);
+    utils.parseNumber(error.na).should.equal(error.na);
+    utils.parseNumber('text').should.equal(error.value);
+  });
+
   it('parseNumberArray', function() {
     utils.parseNumberArray().should.equal(error.value);
+    utils.parseNumberArray([2, 0, '', null, undefined]).should.eql([2, 0, 0, 0, 0]);
+    utils.parseNumberArray([2, 'a', 1, error.na]).should.equal(error.na);
+    utils.parseNumberArray([2, 'a', 1]).should.equal(error.value);
+  });
+
+  it('parseString', function() {
+    utils.parseString().should.equal('');
+    utils.parseString(null).should.equal('');
+    utils.parseString('').should.equal('');
+    utils.parseString('text').should.equal('text');
+    utils.parseString(2).should.equal('2');
+    utils.parseString(error.na).should.equal(error.na);
   });
 
   it('parseMatrix', function() {
