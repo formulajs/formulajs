@@ -281,8 +281,8 @@ describe('Math & Trig', function () {
     mathTrig.DECIMAL('1', 2).should.equal(1);
     mathTrig.DECIMAL('10', 2).should.equal(2);
     mathTrig.DECIMAL('10', 10).should.equal(10);
-    mathTrig.DECIMAL('FF', 16).should.equal(255);
-    mathTrig.DECIMAL('ZZ', 36).should.equal(1295);
+    mathTrig.DECIMAL('FF', 16).should.equal(error.value); // Excel: error.num
+    mathTrig.DECIMAL('ZZ', 36).should.equal(error.value); // Excel: error.num
     mathTrig.DECIMAL('invalid').should.equal.NaN;
   });
 
