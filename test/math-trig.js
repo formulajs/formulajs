@@ -424,6 +424,24 @@ describe('Math & Trig', function () {
     mathTrig.GCD(5, 'invalid').should.equal(error.value);
   });
 
+  it('GT', function() {
+    mathTrig.GT(10, 4).should.equal(true);
+    mathTrig.GT(10, 10).should.equal(false);
+    mathTrig.GT(10, 12).should.equal(false);
+    mathTrig.GT().should.equal(error.na);
+    mathTrig.GT(undefined, undefined).should.equal(false);
+    mathTrig.GT(1, undefined).should.equal(true);
+    mathTrig.GT(0, undefined).should.equal(false);
+    mathTrig.GT(-1, undefined).should.equal(false);
+    mathTrig.GT(error.na).should.equal(error.na);
+    mathTrig.GT(1, 'string').should.equal(false);
+    mathTrig.GT('string', 2).should.equal(true);
+    mathTrig.GT('a', 'a').should.equal(false);
+    mathTrig.GT('a', 'ab').should.equal(false);
+    mathTrig.GT('ab', 'a').should.equal(true);
+  });
+
+
   it('GTE', function() {
     mathTrig.GTE(10, 4).should.equal(true);
     mathTrig.GTE(10, 10).should.equal(true);
