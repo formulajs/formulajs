@@ -74,6 +74,15 @@ describe('Utils => common', function() {
     utils.parseNumberArray([2, 'a', 1]).should.equal(error.value);
   });
 
+  it('parseString', function() {
+    utils.parseString().should.equal('');
+    utils.parseString(null).should.equal('');
+    utils.parseString('').should.equal('');
+    utils.parseString('text').should.equal('text');
+    utils.parseString(2).should.equal('2');
+    utils.parseString(error.na).should.equal(error.na);
+  });
+
   it('parseMatrix', function() {
     utils.parseMatrix().should.equal(error.value);
     utils.parseMatrix([[1, 2, 3], [4, 5, 6]]).should.deepEqual([[1, 2, 3], [4, 5, 6]]);
