@@ -150,10 +150,9 @@ describe('Math & Trig', function () {
     mathTrig.CEILING(undefined).should.equal(0);
     mathTrig.CEILING(error.na).should.equal(error.na);
     mathTrig.CEILING(1, error.na).should.equal(error.na);
-    mathTrig.CEILING(4.1).should.equal(5);
-    mathTrig.CEILING(4.9).should.equal(5);
-    mathTrig.CEILING(-4.1).should.equal(-4);
-    mathTrig.CEILING(-4.9).should.equal(-4);
+    mathTrig.CEILING(4.1).should.equal(0);
+    mathTrig.CEILING(4.1, 1).should.equal(5);
+    mathTrig.CEILING(-4.1, 1).should.equal(-4);
     mathTrig.CEILING(4.1, 0).should.equal(0);
     mathTrig.CEILING(4.1, 1).should.equal(5);
     mathTrig.CEILING(4.1, 2).should.equal(6);
@@ -175,7 +174,8 @@ describe('Math & Trig', function () {
     mathTrig.CEILING.MATH(undefined).should.equal(0);
     mathTrig.CEILING.MATH(error.na).should.equal(error.na);
     mathTrig.CEILING.MATH(24.3, 5).should.equal(25);
-    mathTrig.CEILING.MATH(6.7).should.equal(7);
+    mathTrig.CEILING.MATH(6.7).should.equal(0);
+    mathTrig.CEILING.MATH(6.7, 1).should.equal(7);
     mathTrig.CEILING.MATH(-8.1, 2).should.equal(-8);
     mathTrig.CEILING.MATH(-5.5, 2, -1).should.equal(-6);
     mathTrig.CEILING.MATH(-5.5, 2, 'invalid').should.equal(error.value);
@@ -184,8 +184,9 @@ describe('Math & Trig', function () {
   it('CEILING.PRECISE', function() {
     mathTrig.CEILING.PRECISE(undefined).should.equal(0);
     mathTrig.CEILING.PRECISE(error.na).should.equal(error.na);
-    mathTrig.CEILING.PRECISE(4.3).should.equal(5);
-    mathTrig.CEILING.PRECISE(-4.3).should.equal(-4);
+    mathTrig.CEILING.PRECISE(4.3).should.equal(0);
+    mathTrig.CEILING.PRECISE(4.3, 1).should.equal(5);
+    mathTrig.CEILING.PRECISE(-4.3, 1).should.equal(-4);
     mathTrig.CEILING.PRECISE(4.3, 2).should.equal(6);
     mathTrig.CEILING.PRECISE(4.3, -2).should.equal(6);
     mathTrig.CEILING.PRECISE(-4.3, 2).should.equal(-4);
@@ -470,8 +471,9 @@ describe('Math & Trig', function () {
   it('ISO.CEILING', function() {
     mathTrig.ISO.CEILING(undefined).should.equal(0);
     mathTrig.ISO.CEILING(error.na).should.equal(error.na);
-    mathTrig.ISO.CEILING(4.3).should.equal(5);
-    mathTrig.ISO.CEILING(-4.3).should.equal(-4);
+    mathTrig.ISO.CEILING(4.3).should.equal(0);
+    mathTrig.ISO.CEILING(4.3, 1).should.equal(5);
+    mathTrig.ISO.CEILING(-4.3, 1).should.equal(-4);
     mathTrig.ISO.CEILING(4.3, 2).should.equal(6);
     mathTrig.ISO.CEILING(4.3, -2).should.equal(6);
     mathTrig.ISO.CEILING(-4.3, 2).should.equal(-4);
