@@ -415,7 +415,7 @@ describe('Math & Trig', function () {
   });
 
   it('GCD', function() {
-    mathTrig.GCD(undefined, undefined).should.equal(error.value);
+    mathTrig.GCD(undefined, undefined).should.equal(0);
     mathTrig.GCD(2, undefined).should.equal(2);
     mathTrig.GCD(undefined, 1).should.equal(1);
     mathTrig.GCD(error.na).should.equal(error.na);
@@ -482,10 +482,12 @@ describe('Math & Trig', function () {
   });
 
   it('LCM', function() {
-    mathTrig.LCM(undefined, undefined).should.equal(error.value);
+    mathTrig.LCM(undefined, undefined).should.equal(0);
     mathTrig.LCM(error.na, 36).should.equal(error.na);
     mathTrig.LCM(24, error.na).should.equal(error.na);
-    mathTrig.LCM(5, undefined, 2).should.equal(10);
+    mathTrig.LCM(5, undefined, 2).should.equal(0);
+    mathTrig.LCM(5, 0, 2).should.equal(0);
+    mathTrig.LCM(5, 1, 2).should.equal(10);
     mathTrig.LCM(24, 36).should.equal(72);
     mathTrig.LCM(24, 'invalid').should.equal(error.value);
   });
@@ -614,7 +616,7 @@ describe('Math & Trig', function () {
   });
 
   it('MULTINOMIAL', function() {
-    mathTrig.MULTINOMIAL(undefined).should.equal(error.value);
+    mathTrig.MULTINOMIAL(undefined).should.equal(1);
     mathTrig.MULTINOMIAL(error.na).should.equal(error.na);
     mathTrig.MULTINOMIAL(2, 3, 4).should.equal(1260);
     mathTrig.MULTINOMIAL([2, 3, 4]).should.equal(1260);
