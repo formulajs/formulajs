@@ -492,6 +492,7 @@ describe('Math & Trig', function () {
 
   it('LN', function() {
     mathTrig.LN(undefined).should.equal(error.num);
+    mathTrig.LN(0).should.equal(error.num);
     mathTrig.LN(error.na).should.equal(error.na);
     mathTrig.LN(Math.E).should.equal(1);
     mathTrig.LN('invalid').should.equal(error.value);
