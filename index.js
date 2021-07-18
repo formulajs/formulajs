@@ -1,16 +1,16 @@
 var categories = [
-  { require('./lib/compatibility')    ,"compatibility" }
-, { require('./lib/database')         ,"database" }
-, { require('./lib/engineering')      ,"engineering" }
-, { require('./lib/logical')          ,"logical" }
-, { require('./lib/math-trig')        ,"math-trig" }
-, { require('./lib/text')             ,"text" }
-, { require('./lib/date-time')        ,"date-time" }
-, { require('./lib/financial')        ,"financial" }
-, { require('./lib/information')      ,"information" }
-, { require('./lib/lookup-reference') ,"lookup-reference" }
-, { require('./lib/statistical')      ,"statistical" }
-, { require('./lib/miscellaneous')     "miscellaneous" }
+  { fun: require('./lib/compatibility')    ,cat: "compatibility" }
+, { fun: require('./lib/database')         ,cat: "database" }
+, { fun: require('./lib/engineering')      ,cat: "engineering" }
+, { fun: require('./lib/logical')          ,cat: "logical" }
+, { fun: require('./lib/math-trig')        ,cat: "math-trig" }
+, { fun: require('./lib/text')             ,cat: "text" }
+, { fun: require('./lib/date-time')        ,cat: "date-time" }
+, { fun: require('./lib/financial')        ,cat: "financial" }
+, { fun: require('./lib/information')      ,cat: "information" }
+, { fun: require('./lib/lookup-reference') ,cat: "lookup-reference" }
+, { fun: require('./lib/statistical')      ,cat: "statistical" }
+, { fun: require('./lib/miscellaneous')    ,cat: "miscellaneous" }
 ];
 
 for (var c in categories) {
