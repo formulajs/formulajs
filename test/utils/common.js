@@ -117,4 +117,27 @@ describe('Utils => common', function() {
     utils.transpose([[1,2,3,4],[5,6,7,8], [9,10,11,12]])
       .should.deepEqual([[1,5,9],[2,6,10], [3,7,11], [4,8,12]]);
   });
+
+  it('anyError', function() {
+    should(utils.anyError()).be.undefined;
+    should(utils.anyError(undefined, null, 1, "", "text")).be.undefined;
+    utils.anyError(error.na).should.be.equal(error.na);
+    utils.anyError(1, error.na).should.be.equal(error.na);
+    utils.anyError(error.value, error.na).should.be.equal(error.value);
+  });
+
+  it('anyIsError', function() {
+    utils.anyIsError().should.be.false;
+    utils.anyIsError(undefined, null, 1, "", "text").should.be.false;
+    utils.anyIsError(error.na).should.be.true;
+    utils.anyIsError(1, error.na).should.be.true;
+    utils.anyIsError(error.value, error.na).should.be.true;
+  });
+
+  it('anyIsString', function() {
+    utils.anyIsString().should.be.false;
+    utils.anyIsString(undefined, null, 1, 2.5).should.be.false;
+    utils.anyIsString(1, '').should.be.true;
+    utils.anyIsString(1, 'text').should.be.true;
+  });
 });
