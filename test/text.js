@@ -36,7 +36,7 @@ describe('Text', function() {
     text.CONCATENATE(true, 'yes').should.equal('TRUEyes');
     text.CONCATENATE(false, 'no').should.equal('FALSEno');
   });
-  
+
   it('CONCAT', function() {
     text.CONCAT('hello', ' ', 'world').should.equal('hello world');
     text.CONCAT(['hello', ' my ', 'world']).should.equal('hello my world');
@@ -169,7 +169,7 @@ describe('Text', function() {
 
   it('REPT', function() {
     text.REPT('multiple ', 3).should.equal('multiple multiple multiple ');
-    text.REPT('m').should.equal(error.value);
+    text.REPT('m').should.equal('');
   });
 
   it('RIGHT', function() {
