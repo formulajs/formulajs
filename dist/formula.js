@@ -197,14 +197,28 @@ exports.parseBool = function(bool) {
 };
 
 exports.parseNumber = function(string) {
-  if (string === undefined || string === '') {
-    return error.value;
+  if (string instanceof Error) {
+    return string;
+  }
+  if (string === undefined || string === null || string === '') {
+    return 0;
   }
   if (!isNaN(string)) {
     return parseFloat(string);
   }
 
   return error.value;
+};
+
+exports.parseString = function(string) {
+  if (string instanceof Error) {
+    return string;
+  }
+  if (string === undefined || string === null) {
+    return '';
+  }
+
+  return string.toString();
 };
 
 exports.parseNumberArray = function(arr) {
@@ -217,8 +231,11 @@ exports.parseNumberArray = function(arr) {
   var parsed;
 
   while (len--) {
+    if (arr[len] instanceof Error) {
+      return arr[len];
+    }
     parsed = exports.parseNumber(arr[len]);
-    if (parsed === error.value) {
+    if (parsed instanceof Error) {
       return parsed;
     }
     arr[len] = parsed;
@@ -284,10 +301,29 @@ exports.parseDateArray = function(arr) {
   return arr;
 };
 
+exports.anyError = function() {
+  for (var n = 0; n < arguments.length; n++) {
+    if (arguments[n] instanceof Error) {
+      return arguments[n];
+    }
+  }
+  return undefined;
+};
+
 exports.anyIsError = function() {
   var n = arguments.length;
   while (n--) {
     if (arguments[n] instanceof Error) {
+      return true;
+    }
+  }
+  return false;
+};
+
+exports.anyIsString = function() {
+  var n = arguments.length;
+  while (n--) {
+    if (typeof arguments[n] === 'string') {
       return true;
     }
   }
@@ -485,6 +521,12 @@ exports.AGGREGATE = function(function_num, options, ref1, ref2) {
 };
 
 exports.ARABIC = function(text) {
+  if (text === undefined || text === null) {
+    return 0;
+  }
+  if (text instanceof Error) {
+    return text;
+  }
   // Credits: Rafa? Kukawski
   if (!/^M*(?:D?C{0,3}|C[MD])(?:L?X{0,3}|X[CL])(?:V?I{0,3}|I[XV])$/.test(text)) {
     return error.value;
@@ -543,8 +585,9 @@ exports.ATAN = function(number) {
 exports.ATAN2 = function(number_x, number_y) {
   number_x = utils.parseNumber(number_x);
   number_y = utils.parseNumber(number_y);
-  if (utils.anyIsError(number_x, number_y)) {
-    return error.value;
+  var anyError = utils.anyError(number_x, number_y);
+  if (anyError) {
+    return anyError;
   }
   return Math.atan2(number_x, number_y);
 };
@@ -564,32 +607,32 @@ exports.ATANH = function(number) {
 };
 
 exports.BASE = function(number, radix, min_length) {
-  min_length = min_length || 0;
-
   number = utils.parseNumber(number);
   radix = utils.parseNumber(radix);
   min_length = utils.parseNumber(min_length);
-  if (utils.anyIsError(number, radix, min_length)) {
-    return error.value;
+  var anyError = utils.anyError(number, radix, min_length);
+  if (anyError) {
+    return anyError;
   }
-  min_length = (min_length === undefined) ? 0 : min_length;
+  if (radix === 0) {
+    return error.num;
+  }
   var result = number.toString(radix);
   return new Array(Math.max(min_length + 1 - result.length, 0)).join('0') + result;
 };
 
 exports.CEILING = function(number, significance, mode) {
-  significance = (significance === undefined) ? 1 : Math.abs(significance);
-  mode = mode || 0;
-
   number = utils.parseNumber(number);
   significance = utils.parseNumber(significance);
   mode = utils.parseNumber(mode);
-  if (utils.anyIsError(number, significance, mode)) {
-    return error.value;
+  var anyError = utils.anyError(number, significance, mode);
+  if (anyError) {
+    return anyError;
   }
   if (significance === 0) {
     return 0;
   }
+  significance = Math.abs(significance);
   var precision = -Math.floor(Math.log(significance) / Math.log(10));
   if (number >= 0) {
     return exports.ROUND(Math.ceil(number / significance) * significance, precision);
@@ -609,8 +652,12 @@ exports.CEILING.PRECISE = exports.CEILING;
 exports.COMBIN = function(number, number_chosen) {
   number = utils.parseNumber(number);
   number_chosen = utils.parseNumber(number_chosen);
-  if (utils.anyIsError(number, number_chosen)) {
-    return error.value;
+  var anyError = utils.anyError(number, number_chosen);
+  if (anyError) {
+    return anyError;
+  }
+  if (number < number_chosen) {
+    return error.num;
   }
   return exports.FACT(number) / (exports.FACT(number_chosen) * exports.FACT(number - number_chosen));
 };
@@ -618,8 +665,12 @@ exports.COMBIN = function(number, number_chosen) {
 exports.COMBINA = function(number, number_chosen) {
   number = utils.parseNumber(number);
   number_chosen = utils.parseNumber(number_chosen);
-  if (utils.anyIsError(number, number_chosen)) {
-    return error.value;
+  var anyError = utils.anyError(number, number_chosen);
+  if (anyError) {
+    return anyError;
+  }
+  if (number < number_chosen) {
+    return error.num;
   }
   return (number === 0 && number_chosen === 0) ? 1 : exports.COMBIN(number + number_chosen - 1, number - 1);
 };
@@ -645,6 +696,9 @@ exports.COT = function(number) {
   if (number instanceof Error) {
     return number;
   }
+  if (number === 0) {
+    return error.div0;
+  }
   return 1 / Math.tan(number);
 };
 
@@ -652,6 +706,9 @@ exports.COTH = function(number) {
   number = utils.parseNumber(number);
   if (number instanceof Error) {
     return number;
+  }
+  if (number === 0) {
+    return error.div0;
   }
   var e2 = Math.exp(2 * number);
   return (e2 + 1) / (e2 - 1);
@@ -662,6 +719,9 @@ exports.CSC = function(number) {
   if (number instanceof Error) {
     return number;
   }
+  if (number === 0) {
+    return error.div0;
+  }
   return 1 / Math.sin(number);
 };
 
@@ -670,12 +730,25 @@ exports.CSCH = function(number) {
   if (number instanceof Error) {
     return number;
   }
+  if (number === 0) {
+    return error.div0;
+  }
   return 2 / (Math.exp(number) - Math.exp(-number));
 };
 
 exports.DECIMAL = function(number, radix) {
   if (arguments.length < 1) {
     return error.value;
+  }
+
+  number = utils.parseNumber(number);
+  radix = utils.parseNumber(radix);
+  var anyError = utils.anyError(number, radix);
+  if (anyError) {
+    return anyError;
+  }
+  if (radix === 0) {
+    return error.num;
   }
 
   return parseInt(number, radix);
@@ -701,8 +774,13 @@ exports.EXP = function(number) {
   if (arguments.length < 1) {
     return error.na;
   }
-  if (typeof number !== 'number' || arguments.length > 1) {
+  if (arguments.length > 1) {
     return error.error;
+  }
+
+  number = utils.parseNumber(number);
+  if (number instanceof Error) {
+    return number;
   }
 
   number = Math.exp(number);
@@ -743,14 +821,15 @@ exports.FACTDOUBLE = function(number) {
 exports.FLOOR = function(number, significance) {
   number = utils.parseNumber(number);
   significance = utils.parseNumber(significance);
-  if (utils.anyIsError(number, significance)) {
-    return error.value;
+  var anyError = utils.anyError(number, significance);
+  if (anyError) {
+    return anyError;
   }
   if (significance === 0) {
     return 0;
   }
 
-  if (!(number > 0 && significance > 0) && !(number < 0 && significance < 0)) {
+  if (!(number >= 0 && significance > 0) && !(number <= 0 && significance < 0)) {
     return error.num;
   }
 
@@ -765,14 +844,17 @@ exports.FLOOR = function(number, significance) {
 
 //TODO: Verify
 exports.FLOOR.MATH = function(number, significance, mode) {
-  significance = (significance === undefined) ? 1 : significance;
-  mode = (mode === undefined) ? 0 : mode;
+  if (significance instanceof Error) {
+    return significance;
+  }
+  significance = (significance === undefined) ? 0 : significance;
 
   number = utils.parseNumber(number);
   significance = utils.parseNumber(significance);
   mode = utils.parseNumber(mode);
-  if (utils.anyIsError(number, significance, mode)) {
-    return error.value;
+  var anyError = utils.anyError(number, significance, mode);
+  if (anyError) {
+    return anyError;
   }
   if (significance === 0) {
     return 0;
@@ -837,6 +919,9 @@ exports.LCM = function() {
   }
   for (var i, j, n, d, r = 1;
        (n = o.pop()) !== undefined;) {
+    if (n === 0) {
+      return 0;
+    }
     while (n > 1) {
       if (n % 2) {
         for (i = 3, j = Math.floor(Math.sqrt(n)); i <= j && n % i; i += 2) {
@@ -860,6 +945,9 @@ exports.LN = function(number) {
   if (number instanceof Error) {
     return number;
   }
+  if (number === 0) {
+    return error.num;
+  }
   return Math.log(number);
 };
 
@@ -881,11 +969,14 @@ exports.LOG2E = function() {
 
 exports.LOG = function(number, base) {
   number = utils.parseNumber(number);
-  base = base ? utils.parseNumber(base) : 10;
-  if (utils.anyIsError(number, base)) {
-    return error.value;
+  base = utils.parseNumber(base);
+  var anyError = utils.anyError(number, base);
+  if (anyError) {
+    return anyError;
   }
-  base = (base === undefined) ? 10 : base;
+  if (number === 0 || base === 0) {
+    return error.num;
+  }
   return Math.log(number) / Math.log(base);
 };
 
@@ -894,14 +985,18 @@ exports.LOG10 = function(number) {
   if (number instanceof Error) {
     return number;
   }
+  if (number === 0) {
+    return error.num;
+  }
   return Math.log(number) / Math.log(10);
 };
 
 exports.MOD = function(dividend, divisor) {
   dividend = utils.parseNumber(dividend);
   divisor = utils.parseNumber(divisor);
-  if (utils.anyIsError(dividend, divisor)) {
-    return error.value;
+  var anyError = utils.anyError(dividend, divisor);
+  if (anyError) {
+    return anyError;
   }
   if (divisor === 0) {
     return error.div0;
@@ -914,8 +1009,12 @@ exports.MOD = function(dividend, divisor) {
 exports.MROUND = function(number, multiple) {
   number = utils.parseNumber(number);
   multiple = utils.parseNumber(multiple);
-  if (utils.anyIsError(number, multiple)) {
-    return error.value;
+  var anyError = utils.anyError(number, multiple);
+  if (anyError) {
+    return anyError;
+  }
+  if (number * multiple === 0) {
+    return 0;
   }
   if (number * multiple < 0) {
     return error.num;
@@ -945,7 +1044,7 @@ exports.ODD = function(number) {
   }
   var temp = Math.ceil(Math.abs(number));
   temp = (temp & 1) ? temp : temp + 1;
-  return (number > 0) ? temp : -temp;
+  return (number >= 0) ? temp : -temp;
 };
 
 exports.PI = function() {
@@ -959,8 +1058,12 @@ exports.E = function() {
 exports.POWER = function(number, power) {
   number = utils.parseNumber(number);
   power = utils.parseNumber(power);
-  if (utils.anyIsError(number, power)) {
-    return error.value;
+  var anyError = utils.anyError(number, power);
+  if (anyError) {
+    return anyError;
+  }
+  if (number === 0 && power === 0) {
+    return error.num;
   }
   var result = Math.pow(number, power);
   if (isNaN(result)) {
@@ -971,7 +1074,12 @@ exports.POWER = function(number, power) {
 };
 
 exports.PRODUCT = function() {
-  var args = utils.parseNumberArray(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var flatArgumentsDefined = flatArguments.filter(function (arg) { return arg !== undefined && arg !== null; });
+  if (flatArgumentsDefined.length === 0) {
+    return 0;
+  }
+  var args = utils.parseNumberArray(flatArgumentsDefined);
   if (args instanceof Error) {
     return args;
   }
@@ -985,8 +1093,9 @@ exports.PRODUCT = function() {
 exports.QUOTIENT = function(numerator, denominator) {
   numerator = utils.parseNumber(numerator);
   denominator = utils.parseNumber(denominator);
-  if (utils.anyIsError(numerator, denominator)) {
-    return error.value;
+  var anyError = utils.anyError(numerator, denominator);
+  if (anyError) {
+    return anyError;
   }
   return parseInt(numerator / denominator, 10);
 };
@@ -1006,8 +1115,9 @@ exports.RAND = function() {
 exports.RANDBETWEEN = function(bottom, top) {
   bottom = utils.parseNumber(bottom);
   top = utils.parseNumber(top);
-  if (utils.anyIsError(bottom, top)) {
-    return error.value;
+  var anyError = utils.anyError(bottom, top);
+  if (anyError) {
+    return anyError;
   }
   // Creative Commons Attribution 3.0 License
   // Copyright (c) 2012 eqcode
@@ -1035,8 +1145,9 @@ exports.ROMAN = function(number) {
 exports.ROUND = function(number, digits) {
   number = utils.parseNumber(number);
   digits = utils.parseNumber(digits);
-  if (utils.anyIsError(number, digits)) {
-    return error.value;
+  var anyError = utils.anyError(number, digits);
+  if (anyError) {
+    return anyError;
   }
   return Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits);
 };
@@ -1044,8 +1155,9 @@ exports.ROUND = function(number, digits) {
 exports.ROUNDDOWN = function(number, digits) {
   number = utils.parseNumber(number);
   digits = utils.parseNumber(digits);
-  if (utils.anyIsError(number, digits)) {
-    return error.value;
+  var anyError = utils.anyError(number, digits);
+  if (anyError) {
+    return anyError;
   }
   var sign = (number > 0) ? 1 : -1;
   return sign * (Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits);
@@ -1054,8 +1166,9 @@ exports.ROUNDDOWN = function(number, digits) {
 exports.ROUNDUP = function(number, digits) {
   number = utils.parseNumber(number);
   digits = utils.parseNumber(digits);
-  if (utils.anyIsError(number, digits)) {
-    return error.value;
+  var anyError = utils.anyError(number, digits);
+  if (anyError) {
+    return anyError;
   }
   var sign = (number > 0) ? 1 : -1;
   return sign * (Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits);
@@ -1211,8 +1324,9 @@ exports.ADD = function (num1, num2) {
 
   num1 = utils.parseNumber(num1);
   num2 = utils.parseNumber(num2);
-  if (utils.anyIsError(num1, num2)) {
-    return error.value;
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
   }
 
   return num1 + num2;
@@ -1225,8 +1339,9 @@ exports.MINUS = function (num1, num2) {
 
   num1 = utils.parseNumber(num1);
   num2 = utils.parseNumber(num2);
-  if (utils.anyIsError(num1, num2)) {
-    return error.value;
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
   }
 
   return num1 - num2;
@@ -1239,8 +1354,9 @@ exports.DIVIDE = function (dividend, divisor) {
 
   dividend = utils.parseNumber(dividend);
   divisor = utils.parseNumber(divisor);
-  if (utils.anyIsError(dividend, divisor)) {
-    return error.value;
+  var anyError = utils.anyError(dividend, divisor);
+  if (anyError) {
+    return anyError;
   }
 
   if (divisor === 0) {
@@ -1257,11 +1373,38 @@ exports.MULTIPLY = function (factor1, factor2) {
 
   factor1 = utils.parseNumber(factor1);
   factor2 = utils.parseNumber(factor2);
-  if (utils.anyIsError(factor1, factor2)) {
-    return error.value;
+  var anyError = utils.anyError(factor1, factor2);
+  if (anyError) {
+    return anyError;
   }
 
   return factor1 * factor2;
+};
+
+exports.GT = function (num1, num2) {
+  if (arguments.length !== 2) {
+    return error.na;
+  }
+  if (num1 instanceof Error) {
+    return num1;
+  }
+  if (num2 instanceof Error) {
+    return num2;
+  }
+
+  if (utils.anyIsString(num1, num2)) {
+    num1 = utils.parseString(num1);
+    num2 = utils.parseString(num2);
+  } else {
+    num1 = utils.parseNumber(num1);
+    num2 = utils.parseNumber(num2);
+  }
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
+  }
+
+  return num1 > num2;
 };
 
 exports.GTE = function (num1, num2) {
@@ -1269,10 +1412,16 @@ exports.GTE = function (num1, num2) {
     return error.na;
   }
 
-  num1 = utils.parseNumber(num1);
-  num2 = utils.parseNumber(num2);
-  if (utils.anyIsError(num1, num2)) {
-    return error.error;
+  if (utils.anyIsString(num1, num2)) {
+    num1 = utils.parseString(num1);
+    num2 = utils.parseString(num2);
+  } else {
+    num1 = utils.parseNumber(num1);
+    num2 = utils.parseNumber(num2);
+  }
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
   }
 
   return num1 >= num2;
@@ -1283,10 +1432,16 @@ exports.LT = function (num1, num2) {
     return error.na;
   }
 
-  num1 = utils.parseNumber(num1);
-  num2 = utils.parseNumber(num2);
-  if (utils.anyIsError(num1, num2)) {
-    return error.error;
+  if (utils.anyIsString(num1, num2)) {
+    num1 = utils.parseString(num1);
+    num2 = utils.parseString(num2);
+  } else {
+    num1 = utils.parseNumber(num1);
+    num2 = utils.parseNumber(num2);
+  }
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
   }
 
   return num1 < num2;
@@ -1298,10 +1453,16 @@ exports.LTE = function (num1, num2) {
     return error.na;
   }
 
-  num1 = utils.parseNumber(num1);
-  num2 = utils.parseNumber(num2);
-  if (utils.anyIsError(num1, num2)) {
-    return error.error;
+  if (utils.anyIsString(num1, num2)) {
+    num1 = utils.parseString(num1);
+    num2 = utils.parseString(num2);
+  } else {
+    num1 = utils.parseNumber(num1);
+    num2 = utils.parseNumber(num2);
+  }
+  var anyError = utils.anyError(num1, num2);
+  if (anyError) {
+    return anyError;
   }
 
   return num1 <= num2;
@@ -1311,6 +1472,18 @@ exports.EQ = function (value1, value2) {
   if (arguments.length !== 2) {
     return error.na;
   }
+  if (value1 instanceof Error) {
+    return value1;
+  }
+  if (value2 instanceof Error) {
+    return value2;
+  }
+  if (value1 === null) {
+    value1 = undefined;
+  }
+  if (value2 === null) {
+    value2 = undefined;
+  }
 
   return value1 === value2;
 };
@@ -1318,6 +1491,18 @@ exports.EQ = function (value1, value2) {
 exports.NE = function (value1, value2) {
   if (arguments.length !== 2) {
     return error.na;
+  }
+  if (value1 instanceof Error) {
+    return value1;
+  }
+  if (value2 instanceof Error) {
+    return value2;
+  }
+  if (value1 === null) {
+    value1 = undefined;
+  }
+  if (value2 === null) {
+    value2 = undefined;
   }
 
   return value1 !== value2;
@@ -1328,12 +1513,6 @@ exports.POW = function (base, exponent) {
     return error.na;
   }
 
-  base = utils.parseNumber(base);
-  exponent = utils.parseNumber(exponent);
-  if (utils.anyIsError(base, exponent)) {
-    return error.error;
-  }
-
   return exports.POWER(base, exponent);
 };
 
@@ -1341,6 +1520,12 @@ exports.SUM = function() {
   var result = 0;
 
   utils.arrayEach(utils.argsToArray(arguments), function(value) {
+    if (result instanceof Error) {
+      return;
+    }
+    if (value instanceof Error) {
+      result = value;
+    }
     if (typeof value === 'number') {
       result += value;
 
@@ -1367,8 +1552,11 @@ exports.SUMIF = function (range, criteria, sumRange) {
   if (range instanceof Error) {
     return range;
   }
+  if (criteria === undefined || criteria === null || criteria instanceof Error) {
+    return 0;
+  }
   var result = 0;
-  var isWildcard = criteria === void 0 || criteria === '*';
+  var isWildcard = criteria === '*';
   var tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '');
   for (var i = 0; i < range.length; i++) {
     var value = range[i];
@@ -1379,7 +1567,7 @@ exports.SUMIF = function (range, criteria, sumRange) {
     } else {
       var tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria);
 
-      result += (evalExpression.compute(tokens) ? sumValue : 0);
+      result += evalExpression.compute(tokens) ? sumValue : 0;
     }
   }
 
@@ -1452,7 +1640,11 @@ exports.SUMPRODUCT = function() {
     if (!(arguments[0][i] instanceof Array)) {
       product = 1;
       for (k = 1; k < arrays; k++) {
-        _i = utils.parseNumber(arguments[k - 1][i]);
+        var _i_arg = arguments[k - 1][i];
+        if (_i_arg instanceof Error) {
+          return _i_arg;
+        }
+        _i = utils.parseNumber(_i_arg);
         if (_i instanceof Error) {
           return _i;
         }
@@ -1463,7 +1655,11 @@ exports.SUMPRODUCT = function() {
       for (var j = 0; j < arguments[0][i].length; j++) {
         product = 1;
         for (k = 1; k < arrays; k++) {
-          _ij = utils.parseNumber(arguments[k - 1][i][j]);
+          var _ij_arg = arguments[k - 1][i][j];
+          if (_ij_arg instanceof Error) {
+            return _ij_arg;
+          }
+          _ij = utils.parseNumber(_ij_arg);
           if (_ij instanceof Error) {
             return _ij;
           }
@@ -1550,11 +1746,11 @@ exports.TANH = function(number) {
 };
 
 exports.TRUNC = function(number, digits) {
-  digits = (digits === undefined) ? 0 : digits;
   number = utils.parseNumber(number);
   digits = utils.parseNumber(digits);
-  if (utils.anyIsError(number, digits)) {
-    return error.value;
+  var anyError = utils.anyError(number, digits);
+  if (anyError) {
+    return anyError;
   }
   var sign = (number > 0) ? 1 : -1;
   return sign * (Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits);
@@ -2530,6 +2726,11 @@ exports.LARGE = function(range, k) {
   if (utils.anyIsError(range, k)) {
     return range;
   }
+
+  if(k < 0 || range.length < k){
+    return error.value;
+  }
+
   return range.sort(function(a, b) {
     return b - a;
   })[k - 1];
@@ -3556,6 +3757,9 @@ exports.LOWER = function(text) {
 };
 
 exports.MID = function(text, start, number) {
+  if (start === undefined || start === null) {
+    return error.value;
+  }
   start = utils.parseNumber(start);
   number = utils.parseNumber(number);
   if (utils.anyIsError(start, number) || typeof text !== 'string') {
@@ -12113,8 +12317,17 @@ var information = __webpack_require__(6);
 
 exports.AND = function() {
   var args = utils.flatten(arguments);
-  var result = true;
+  var result = error.value;
   for (var i = 0; i < args.length; i++) {
+    if (args[i] instanceof Error) {
+      return args[i];
+    }
+    if (args[i] === undefined || args[i] === null || typeof args[i] === "string") {
+      continue;
+    }
+    if (result === error.value) {
+      result = true;
+    }
     if (!args[i]) {
       result = false;
     }
@@ -12144,8 +12357,17 @@ exports.FALSE = function() {
 };
 
 exports.IF = function(test, then_value, otherwise_value) {
+  if (test instanceof Error) {
+    return test;
+  }
   then_value = arguments.length >= 2 ? then_value : true;
-  otherwise_value = arguments.length === 3 ? otherwise_value : false
+  if (then_value === undefined || then_value === null) {
+    then_value = 0;
+  }
+  otherwise_value = arguments.length === 3 ? otherwise_value : false;
+  if (otherwise_value === undefined || otherwise_value === null) {
+    otherwise_value = 0;
+  }
   return test ? then_value : otherwise_value;
 };
 
@@ -12170,13 +12392,28 @@ exports.IFNA = function(value, value_if_na) {
 };
 
 exports.NOT = function(logical) {
+  if (typeof logical === "string") {
+    return error.value;
+  }
+  if (logical instanceof Error) {
+    return logical;
+  }
   return !logical;
 };
 
 exports.OR = function() {
   var args = utils.flatten(arguments);
-  var result = false;
+  var result = error.value;
   for (var i = 0; i < args.length; i++) {
+    if (args[i] instanceof Error) {
+      return args[i];
+    }
+    if (args[i] === undefined || args[i] === null || typeof args[i] === "string") {
+      continue;
+    }
+    if (result === error.value) {
+      result = false;
+    }
     if (args[i]) {
       result = true;
     }
@@ -12190,11 +12427,23 @@ exports.TRUE = function() {
 
 exports.XOR = function() {
   var args = utils.flatten(arguments);
-  var result = 0;
+  var result = error.value;
   for (var i = 0; i < args.length; i++) {
+    if (args[i] instanceof Error) {
+      return args[i];
+    }
+    if (args[i] === undefined || args[i] === null || typeof args[i] === "string") {
+      continue;
+    }
+    if (result === error.value) {
+      result = 0;
+    }
     if (args[i]) {
       result++;
     }
+  }
+  if (result === error.value) {
+    return result;
   }
   return (Math.floor(Math.abs(result)) & 1) ? true : false;
 };
