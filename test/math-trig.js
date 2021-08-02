@@ -902,7 +902,11 @@ describe('Math & Trig', function () {
   it("SUM", function() {
     mathTrig.SUM(undefined, 1).should.equal(1);
     mathTrig.SUM(1, 2, error.na).should.equal(error.na);
+    mathTrig.SUM(1, error.na, 2).should.equal(error.na);
+    mathTrig.SUM(1, [error.na], 2).should.equal(error.na);
     mathTrig.SUM([1], [2], [error.na]).should.equal(error.na);
+    mathTrig.SUM([1], [error.na], [2]).should.equal(error.na);
+    mathTrig.SUM([1], error.na, [2]).should.equal(error.na);
     mathTrig.SUM(1, 2, 3).should.equal(6);
     mathTrig.SUM([1, 2, 3]).should.equal(6);
     mathTrig.SUM([1, 2, 3], 1, 2).should.equal(9);
