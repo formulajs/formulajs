@@ -712,6 +712,7 @@ describe('Math & Trig', function () {
     mathTrig.PRODUCT(undefined).should.equal(0);
     mathTrig.PRODUCT(undefined, 1).should.equal(1);
     mathTrig.PRODUCT(1, 2, error.na).should.equal(error.na);
+    mathTrig.PRODUCT([1], [2], [error.na]).should.equal(error.na);
     mathTrig.PRODUCT([5, 15, 30]).should.equal(2250);
     mathTrig.PRODUCT([5, 'invalid', 30]).should.equal(error.value);
   });
@@ -901,6 +902,11 @@ describe('Math & Trig', function () {
   it("SUM", function() {
     mathTrig.SUM(undefined, 1).should.equal(1);
     mathTrig.SUM(1, 2, error.na).should.equal(error.na);
+    mathTrig.SUM(1, error.na, 2).should.equal(error.na);
+    mathTrig.SUM(1, [error.na], 2).should.equal(error.na);
+    mathTrig.SUM([1], [2], [error.na]).should.equal(error.na);
+    mathTrig.SUM([1], [error.na], [2]).should.equal(error.na);
+    mathTrig.SUM([1], error.na, [2]).should.equal(error.na);
     mathTrig.SUM(1, 2, 3).should.equal(6);
     mathTrig.SUM([1, 2, 3]).should.equal(6);
     mathTrig.SUM([1, 2, 3], 1, 2).should.equal(9);
