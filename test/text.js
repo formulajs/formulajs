@@ -301,9 +301,13 @@ describe('Text', function() {
     text.UPPER(1).should.equal('1');
   });
 
-  xit('VALUE', function() {
+  it('VALUE', function() {
     text.VALUE('$1,000').should.equal(1000);
-    text.VALUE('16:48:00').should.equal(60480);
+    text.VALUE('10E3').should.equal(10000);
+    text.VALUE('12%').should.equal(0.12);
+    text.VALUE(error.na).should.equal(error.na);
     text.VALUE(true).should.equal(error.value);
+    text.VALUE(null).should.equal(0);
+    text.VALUE().should.equal(0);
   });
 });
