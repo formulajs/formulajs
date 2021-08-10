@@ -19,3 +19,6 @@ for (var c in categories) {
     exports[f] = exports[f] || category[f];
   }
 }
+exports.utils = {
+  errors: require('./lib/utils/error')
+};
