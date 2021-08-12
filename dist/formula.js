@@ -310,6 +310,10 @@ exports.anyError = function() {
   return undefined;
 };
 
+exports.isDefined = function (arg) {
+  return arg !== undefined && arg !== null;
+};
+
 exports.anyIsError = function() {
   var n = arguments.length;
   while (n--) {
@@ -1521,12 +1525,10 @@ exports.SUM = function() {
 
   utils.arrayEach(utils.argsToArray(arguments), function(value) {
     if (result instanceof Error) {
-      return;
-    }
-    if (value instanceof Error) {
+      return false;
+    } else if (value instanceof Error) {
       result = value;
-    }
-    if (typeof value === 'number') {
+    } else if (typeof value === 'number') {
       result += value;
 
     } else if (typeof value === 'string') {
@@ -1535,7 +1537,12 @@ exports.SUM = function() {
       !isNaN(parsed) && (result += parsed);
 
     } else if (Array.isArray(value)) {
-      result += exports.SUM.apply(null, value);
+      var inner_result = exports.SUM.apply(null, value);
+      if (inner_result instanceof Error) {
+        result = inner_result;
+      } else {
+        result += inner_result;
+      }
     }
   });
 
@@ -1772,7 +1779,12 @@ var misc = __webpack_require__(9);
 var SQRT2PI = 2.5066282746310002;
 
 exports.AVEDEV = function() {
-  var range = utils.parseNumberArray(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var flatArgumentsDefined = flatArguments.filter(utils.isDefined);
+  if (flatArgumentsDefined.length === 0) {
+    return error.num;
+  }
+  var range = utils.parseNumberArray(flatArgumentsDefined);
   if (range instanceof Error) {
     return range;
   }
@@ -1780,7 +1792,16 @@ exports.AVEDEV = function() {
 };
 
 exports.AVERAGE = function() {
-  var range = utils.numbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var flatArgumentsDefined = flatArguments.filter(utils.isDefined);
+  if (flatArgumentsDefined.length === 0) {
+    return error.div0;
+  }
+  var someError = utils.anyError.apply(undefined, flatArgumentsDefined);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.numbers(flatArgumentsDefined);
   var n = range.length;
   var sum = 0;
   var count = 0;
@@ -1800,7 +1821,16 @@ exports.AVERAGE = function() {
 };
 
 exports.AVERAGEA = function() {
-  var range = utils.flatten(arguments);
+  var flatArguments = utils.flatten(arguments);
+  var flatArgumentsDefined = flatArguments.filter(utils.isDefined);
+  if (flatArgumentsDefined.length === 0) {
+    return error.div0;
+  }
+  var someError = utils.anyError.apply(undefined, flatArgumentsDefined);
+  if (someError) {
+    return someError;
+  }
+  var range = flatArgumentsDefined;
   var n = range.length;
   var sum = 0;
   var count = 0;
@@ -1831,8 +1861,11 @@ exports.AVERAGEIF = function(range, criteria, average_range) {
     return error.na;
   }
   average_range = average_range || range;
+  var flatAverageRange = utils.flatten(average_range);
+  var flatAverageRangeDefined = flatAverageRange.filter(utils.isDefined);
+  average_range = utils.parseNumberArray(flatAverageRangeDefined);
+
   range = utils.flatten(range);
-  average_range = utils.parseNumberArray(utils.flatten(average_range));
 
   if (average_range instanceof Error) {
     return average_range;
@@ -1863,7 +1896,7 @@ exports.AVERAGEIF = function(range, criteria, average_range) {
 
 exports.AVERAGEIFS = function() {
   // Does not work with multi dimensional ranges yet!
-  //http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
+  // http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
   var args = utils.argsToArray(arguments);
   var criteriaLength = (args.length - 1) / 2;
   var range = utils.flatten(args[0]);
@@ -2190,12 +2223,21 @@ exports.CORREL = function(array1, array2) {
 };
 
 exports.COUNT = function() {
-  return utils.numbers(utils.flatten(arguments)).length;
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  return utils.numbers(flatArguments).length;
 };
 
 exports.COUNTA = function() {
-  var range = utils.flatten(arguments);
-  return range.length - exports.COUNTBLANK(range);
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  return flatArguments.length - exports.COUNTBLANK(flatArguments);
 };
 
 exports.COUNTIN = function (range, value) {
@@ -2214,11 +2256,15 @@ exports.COUNTIN = function (range, value) {
 
 exports.COUNTBLANK = function() {
   var range = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, range);
+  if (someError) {
+    return someError;
+  }
   var blanks = 0;
   var element;
   for (var i = 0; i < range.length; i++) {
     element = range[i];
-    if (element === null || element === '') {
+    if (element === undefined || element === null || element === '') {
       blanks++;
     }
   }
@@ -2227,6 +2273,10 @@ exports.COUNTBLANK = function() {
 
 exports.COUNTIF = function(range, criteria) {
   range = utils.flatten(range);
+  var someError = utils.anyError.apply(undefined, range);
+  if (someError) {
+    return someError;
+  }
 
   var isWildcard = criteria === void 0 || criteria === '*';
 
@@ -2258,6 +2308,10 @@ exports.COUNTIFS = function() {
   }
   for (i = 0; i < args.length; i += 2) {
     var range = utils.flatten(args[i]);
+    var someError = utils.anyError.apply(undefined, range);
+    if (someError) {
+      return someError;
+    }
     var criteria = args[i + 1];
     var isWildcard = criteria === void 0 || criteria === '*';
 
@@ -2799,17 +2853,33 @@ exports.LOGNORM.INV = function(probability, mean, sd) {
 };
 
 exports.MAX = function() {
-  var range = utils.numbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.numbers(flatArguments);
   return (range.length === 0) ? 0 : Math.max.apply(Math, range);
 };
 
 exports.MAXA = function() {
-  var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.arrayValuesToNumbers(flatArguments);
+  range = range.map(function (value) { return (value === undefined || value === null) ? 0 : value; });
   return (range.length === 0) ? 0 : Math.max.apply(Math, range);
 };
 
 exports.MEDIAN = function() {
-  var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.arrayValuesToNumbers(flatArguments);
   var result = jStat.median(range);
 
   if (isNaN(result)) {
@@ -2820,12 +2890,23 @@ exports.MEDIAN = function() {
 };
 
 exports.MIN = function() {
-  var range = utils.numbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.numbers(flatArguments);
   return (range.length === 0) ? 0 : Math.min.apply(Math, range);
 };
 
 exports.MINA = function() {
-  var range = utils.arrayValuesToNumbers(utils.flatten(arguments));
+  var flatArguments = utils.flatten(arguments);
+  var someError = utils.anyError.apply(undefined, flatArguments);
+  if (someError) {
+    return someError;
+  }
+  var range = utils.arrayValuesToNumbers(flatArguments);
+  range = range.map(function (value) { return (value === undefined || value === null) ? 0 : value; });
   return (range.length === 0) ? 0 : Math.min.apply(Math, range);
 };
 
@@ -11555,6 +11636,9 @@ for (var c in categories) {
     exports[f] = exports[f] || category[f];
   }
 }
+exports.utils = {
+  errors: __webpack_require__(0)
+};
 
 
 /***/ }),
