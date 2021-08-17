@@ -226,10 +226,6 @@ describe('Text', function() {
     text.UNICHAR(65).should.equal("A");
     text.UNICHAR(255).should.equal("ÿ");
     text.UNICHAR(1000).should.equal("Ϩ");
-    var a = 0;
-    setTimeout(function() {
-      return (a++ < 10)?a:undefined;
-    }, 10000000);
   });
 
   it('UNICODE', function() {
