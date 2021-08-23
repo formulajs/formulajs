@@ -177,8 +177,9 @@ describe('Statistical', function() {
   it("COUNT", function() {
     statistical.COUNT().should.equal(0);
     statistical.COUNT(undefined).should.equal(0);
-    statistical.COUNT(error.na).should.equal(error.na);
+    statistical.COUNT(error.na).should.equal(0);
     statistical.COUNT(1, 2, 3, 4).should.equal(4);
+    statistical.COUNT(1, 2, error.div0, 4).should.equal(3);
     statistical.COUNT([1, 2, 3, 4]).should.equal(4);
     statistical.COUNT([1, 2], [3, 4]).should.equal(4);
     statistical.COUNT([
@@ -200,7 +201,8 @@ describe('Statistical', function() {
   it("COUNTA", function() {
     statistical.COUNTA().should.equal(0);
     statistical.COUNTA(undefined).should.equal(0);
-    statistical.COUNTA(error.na).should.equal(error.na);
+    statistical.COUNTA(error.na).should.equal(1);
+    statistical.COUNTA(1, 2, error.div0).should.equal(3);
     statistical.COUNTA(1, null, 3, 'a', '', 'c').should.equal(4);
     statistical.COUNTA([1, null, 3, 'a', '', 'c']).should.equal(4);
     statistical.COUNTA([1, null, 3], ['a', '', 'c']).should.equal(4);
@@ -213,7 +215,8 @@ describe('Statistical', function() {
   it("COUNTBLANK", function() {
     statistical.COUNTBLANK().should.equal(0);
     statistical.COUNTBLANK(undefined).should.equal(1);
-    statistical.COUNTBLANK(error.na).should.equal(error.na);
+    statistical.COUNTBLANK(error.na).should.equal(0);
+    statistical.COUNTBLANK(1, 2, error.div0).should.equal(0);
     statistical.COUNTBLANK(1, null, 3, 'a', '', 'c').should.equal(2);
     statistical.COUNTBLANK([1, null, 3, 'a', '', 'c']).should.equal(2);
     statistical.COUNTBLANK([1, null, 3], ['a', '', 'c']).should.equal(2);
@@ -225,7 +228,7 @@ describe('Statistical', function() {
 
   it("COUNTIF", function() {
     statistical.COUNTIF([undefined], '>1').should.equal(0);
-    statistical.COUNTIF([error.na], '>1').should.equal(error.na);
+    statistical.COUNTIF([error.na], '>1').should.equal(0);
     statistical.COUNTIF([1, null, 3, 'a', ''], '>1').should.equal(1);
     statistical.COUNTIF([1, null, 'c', 'a', ''], '>1').should.equal(0);
     statistical.COUNTIF([
@@ -244,7 +247,7 @@ describe('Statistical', function() {
 
   it("COUNTIFS", function() {
     statistical.COUNTIFS([undefined], '>1').should.equal(0);
-    statistical.COUNTIFS([error.na], '>1').should.equal(error.na);
+    statistical.COUNTIFS([error.na], '>1').should.equal(0);
     statistical.COUNTIFS([1, null, 3, 'a', ''], '>1').should.equal(1);
     statistical.COUNTIFS([1, null, 'c', 'a', ''], '>1').should.equal(0);
     statistical.COUNTIFS([
