@@ -151,6 +151,7 @@ describe('Date & Time', function () {
     dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', 'smlkml').should.equal(error.value);
     dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '00011').should.equal(error.value);
     dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '0001101').should.equal(32);
+    dateTime.NETWORKDAYS.INTL('11/01/2021', '11/30/2021', '1110111').should.equal(4);
   });
 
   it('NOW', function () {
