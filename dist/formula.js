@@ -2224,19 +2224,11 @@ exports.CORREL = function(array1, array2) {
 
 exports.COUNT = function() {
   var flatArguments = utils.flatten(arguments);
-  var someError = utils.anyError.apply(undefined, flatArguments);
-  if (someError) {
-    return someError;
-  }
   return utils.numbers(flatArguments).length;
 };
 
 exports.COUNTA = function() {
   var flatArguments = utils.flatten(arguments);
-  var someError = utils.anyError.apply(undefined, flatArguments);
-  if (someError) {
-    return someError;
-  }
   return flatArguments.length - exports.COUNTBLANK(flatArguments);
 };
 
@@ -2256,10 +2248,6 @@ exports.COUNTIN = function (range, value) {
 
 exports.COUNTBLANK = function() {
   var range = utils.flatten(arguments);
-  var someError = utils.anyError.apply(undefined, range);
-  if (someError) {
-    return someError;
-  }
   var blanks = 0;
   var element;
   for (var i = 0; i < range.length; i++) {
@@ -2273,10 +2261,6 @@ exports.COUNTBLANK = function() {
 
 exports.COUNTIF = function(range, criteria) {
   range = utils.flatten(range);
-  var someError = utils.anyError.apply(undefined, range);
-  if (someError) {
-    return someError;
-  }
 
   var isWildcard = criteria === void 0 || criteria === '*';
 
@@ -2308,10 +2292,6 @@ exports.COUNTIFS = function() {
   }
   for (i = 0; i < args.length; i += 2) {
     var range = utils.flatten(args[i]);
-    var someError = utils.anyError.apply(undefined, range);
-    if (someError) {
-      return someError;
-    }
     var criteria = args[i + 1];
     var isWildcard = criteria === void 0 || criteria === '*';
 
@@ -3712,6 +3692,9 @@ exports.BAHTTEXT = function() {
 
 exports.CHAR = function(number) {
   number = utils.parseNumber(number);
+  if (number === 0) {
+    return error.value;
+  }
   if (number instanceof Error) {
     return number;
   }
@@ -3719,24 +3702,33 @@ exports.CHAR = function(number) {
 };
 
 exports.CLEAN = function(text) {
+  if (utils.anyIsError(text)) {
+    return text;
+  }
   text = text || '';
   var re = /[\0-\x1F]/g;
   return text.replace(re, "");
 };
 
 exports.CODE = function(text) {
+  if (utils.anyIsError(text)) {
+    return text;
+  }
   text = text || '';
   var result = text.charCodeAt(0);
 
   if (isNaN(result)) {
-    result = error.na;
+    result = error.value;
   }
   return result;
 };
 
 exports.CONCATENATE = function() {
   var args = utils.flatten(arguments);
-
+  var someError = utils.anyError.apply(undefined, args);
+  if (someError) {
+    return someError;
+  }
   var trueFound = 0;
   while ((trueFound = args.indexOf(true)) > -1) {
     args[trueFound] = 'TRUE';
@@ -3766,6 +3758,12 @@ exports.EXACT = function(text1, text2) {
   if (arguments.length !== 2) {
     return error.na;
   }
+  var someError = utils.anyError(text1, text1);
+  if (someError) {
+    return someError;
+  }
+  text1 = utils.toString(text1);
+  text2 = utils.toString(text2);
   return text1 === text2;
 };
 
@@ -3773,8 +3771,14 @@ exports.FIND = function(find_text, within_text, position) {
   if (arguments.length < 2) {
     return error.na;
   }
+  find_text = utils.parseString(find_text);
+  within_text = utils.parseString(within_text);
   position = (position === undefined) ? 0 : position;
-  return within_text ? within_text.indexOf(find_text, position - 1) + 1 : null;
+  var found_index = within_text.indexOf(find_text, position - 1);
+  if (found_index === -1) {
+    return error.value;
+  }
+  return found_index + 1;
 };
 
 //TODO
@@ -3783,6 +3787,9 @@ exports.FIXED = function() {
 };
 
 exports.HTML2TEXT = function (value) {
+  if (utils.anyIsError(value)) {
+    return value;
+  }
   var result = '';
 
   if (value) {
@@ -3802,12 +3809,17 @@ exports.HTML2TEXT = function (value) {
 };
 
 exports.LEFT = function(text, number) {
+  var someError = utils.anyError(text, number);
+  if (someError) {
+    return someError;
+  }
+  text = utils.parseString(text);
   number = (number === undefined) ? 1 : number;
   number = utils.parseNumber(number);
   if (number instanceof Error || typeof text !== 'string') {
     return error.value;
   }
-  return text ? text.substring(0, number) : null;
+  return text.substring(0, number);
 };
 
 exports.LEN = function(text) {
@@ -3815,26 +3827,27 @@ exports.LEN = function(text) {
     return error.error;
   }
 
-  if (text === null) {
-    return 0;
-  }
-
-  if (typeof text === 'string') {
-    return text ? text.length : 0;
+  if (text instanceof Error) {
+    return text;
   }
 
   if (Array.isArray(text)) {
-    return error.error
+    return error.value;
   }
 
-  return error.value;
+  var textAsString = utils.parseString(text);
+  return textAsString.length;
 };
 
 exports.LOWER = function(text) {
-  if (typeof text !== 'string') {
+  if (arguments.length !== 1) {
     return error.value;
   }
-  return text ? text.toLowerCase() : text;
+  text = utils.parseString(text);
+  if (utils.anyIsError(text)) {
+    return text;
+  }
+  return text.toLowerCase();
 };
 
 exports.MID = function(text, start, number) {
@@ -3866,21 +3879,13 @@ exports.PRONETIC = function() {
 };
 
 exports.PROPER = function(text) {
-  if (text === undefined || text.length === 0) {
-    return error.value;
-  }
-  if (text === true) {
-    text = 'TRUE';
-  }
-  if (text === false) {
-    text = 'FALSE';
+  if (utils.anyIsError(text)) {
+    return text;
   }
   if (isNaN(text) && typeof text === 'number') {
     return error.value;
   }
-  if (typeof text === 'number') {
-    text = '' + text;
-  }
+  text = utils.parseString(text);
 
   return text.replace(/\w\S*/g, function(txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -3922,6 +3927,11 @@ exports.REPLACE = function(text, position, length, new_text) {
 };
 
 exports.REPT = function(text, number) {
+  var someError = utils.anyError(text, number);
+  if (someError) {
+    return someError;
+  }
+  text = utils.parseString(text);
   number = utils.parseNumber(number);
   if (number instanceof Error) {
     return number;
@@ -3930,12 +3940,17 @@ exports.REPT = function(text, number) {
 };
 
 exports.RIGHT = function(text, number) {
+  var someError = utils.anyError(text, number);
+  if (someError) {
+    return someError;
+  }
+  text = utils.parseString(text);
   number = (number === undefined) ? 1 : number;
   number = utils.parseNumber(number);
   if (number instanceof Error) {
     return number;
   }
-  return text ? text.substring(text.length - number) : error.na;
+  return text.substring(text.length - number);
 };
 
 exports.SEARCH = function(find_text, within_text, position) {
@@ -3974,6 +3989,9 @@ exports.SUBSTITUTE = function(text, old_text, new_text, occurrence) {
 };
 
 exports.T = function(value) {
+  if (value instanceof Error) {
+    return value;
+  }
   return (typeof value === "string") ? value : '';
 };
 
@@ -3983,8 +4001,9 @@ exports.TEXT = function() {
 };
 
 exports.TRIM = function(text) {
-  if (typeof text !== 'string') {
-    return error.value;
+  text = utils.parseString(text);
+  if (text instanceof Error) {
+    return text;
   }
   return text.replace(/ +/g, ' ').trim();
 };
@@ -3994,8 +4013,9 @@ exports.UNICHAR = exports.CHAR;
 exports.UNICODE = exports.CODE;
 
 exports.UPPER = function(text) {
-  if (typeof text !== 'string') {
-    return error.value;
+  text = utils.parseString(text);
+  if (text instanceof Error) {
+    return text;
   }
   return text.toUpperCase();
 };
@@ -4693,19 +4713,19 @@ exports.NETWORKDAYS.INTL = function (start_date, end_date, weekend, holidays) {
   if (end_date instanceof Error) {
     return end_date;
   }
-  
+
   var isMask = false;
   var maskDays = [];
-  var maskIndex = [1, 2, 3, 4, 5, 6, 0]
+  var maskIndex = [1, 2, 3, 4, 5, 6, 0];
   var maskRegex = new RegExp('^[0|1]{7}$');
-  
+
   if (weekend === undefined) {
     weekend = WEEKEND_TYPES[1];
   } else if (typeof weekend === 'string' && maskRegex.test(weekend)) {
     isMask = true;
     weekend = weekend.split('');
     for (i = 0; i < weekend.length; i++) {
-      if (weekend[i] == 1) {
+      if (weekend[i] === '1') {
         maskDays.push(maskIndex[i]);
       }
     }
@@ -4728,7 +4748,7 @@ exports.NETWORKDAYS.INTL = function (start_date, end_date, weekend, holidays) {
     }
     holidays[i] = h;
   }
-  var days = (end_date - start_date) / (1000 * 60 * 60 * 24) + 1;
+  var days = Math.round((end_date - start_date) / (1000 * 60 * 60 * 24)) + 1;
   var total = days;
   var day = start_date;
   for (i = 0; i < days; i++) {
