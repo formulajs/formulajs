@@ -63,6 +63,7 @@ describe('Math & Trig', function () {
     mathTrig.ADD(error.na, undefined).should.equal(error.na);
     mathTrig.ADD(error.na, null).should.equal(error.na);
     mathTrig.ADD(error.na, 1).should.equal(error.na);
+    mathTrig.ADD(true, false).should.equal(1);
   });
 
 
@@ -313,6 +314,7 @@ describe('Math & Trig', function () {
     mathTrig.DIVIDE(error.na, undefined).should.equal(error.na);
     mathTrig.DIVIDE(error.na, null).should.equal(error.na);
     mathTrig.DIVIDE(error.na, 1).should.equal(error.na);
+    mathTrig.DIVIDE(false, true).should.equal(0);
   });
 
   it('EVEN', function() {
@@ -584,6 +586,7 @@ describe('Math & Trig', function () {
     mathTrig.MINUS(error.na, undefined).should.equal(error.na);
     mathTrig.MINUS(error.na, null).should.equal(error.na);
     mathTrig.MINUS(error.na, 1).should.equal(error.na);
+    mathTrig.MINUS(false, true).should.equal(-1);
   });
 
   it('MOD', function() {
@@ -642,6 +645,7 @@ describe('Math & Trig', function () {
     mathTrig.MULTIPLY(error.na, undefined).should.equal(error.na);
     mathTrig.MULTIPLY(error.na, null).should.equal(error.na);
     mathTrig.MULTIPLY(error.na, 1).should.equal(error.na);
+    mathTrig.MULTIPLY(true, false).should.equal(0);
   });
 
   it('NE', function() {
@@ -692,6 +696,7 @@ describe('Math & Trig', function () {
     mathTrig.POWER(4, 5 / 4).should.approximately(5.656854249492381, 1e-9);
     mathTrig.POWER(-1, 0.5).should.equal(error.num);
     mathTrig.POWER(-1, 'invalid').should.equal(error.value);
+    mathTrig.POWER(true, false).should.equal(1);
   });
 
   it('POW', function() {
