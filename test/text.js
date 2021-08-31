@@ -338,6 +338,8 @@ describe('Text', function() {
     it('should parse a number as string', function(){
       text.VALUE('123.45').should.equal(123.45);
       text.VALUE('10,000').should.equal(10000);
+      text.VALUE('1,210,000').should.equal(1210000);
+      text.VALUE('11 000').should.equal(11000);
       text.VALUE('-3.14').should.equal(-3.14);
     });
 
