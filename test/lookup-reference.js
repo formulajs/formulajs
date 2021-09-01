@@ -200,25 +200,52 @@ describe('Lookup Reference', function () {
     ]).should.equal('B');
   });
 
-  it('INDEX', function () {
-    lookup.INDEX([
-      ['Banana', 'Apple'],
-      ['Strawberry', 'Pineapple']
-    ], 2, 1).should.equal('Strawberry');
-    lookup.INDEX([
-      ['Banana', 'Apple'],
-      ['Strawberry', 'Pineapple']
-    ], 1, 2).should.equal('Apple');
-    lookup.INDEX([
-      ['Banana', 'Apple'],
-      ['Strawberry', 'Pineapple']
-    ], 2, 5).should.equal(error.ref);
-    lookup.INDEX([
-      ['Banana'],
-      ['Apple']
-    ], 2).should.equal('Apple');
-    lookup.INDEX([
-      ['Banana', 'Apple']
-    ], undefined, 2).should.equal('Apple');
+  describe.only('INDEX', function () {
+    describe('Array form', function () {
+      describe('and a one dimension Range', function () {
+        it('should return the value', function () {
+          lookup.INDEX([1, 2, 3, 5, 8], 1, 4).should.equal(5);
+          lookup.INDEX(["1", "2", "3", "5", "8"], 1, 5).should.equal("8");
+        });
+
+        it('should return the correct value in case second parameter is omitted', function () {
+          lookup.INDEX([1, 2, 3, 5, 8], 4).should.equal(5);
+        });
+
+        it('should throw an error if row or column number is out of range', function(){
+          lookup.INDEX([1, 2, 3, 5, 8], 2, 4).should.equal(error.ref);
+          lookup.INDEX([1, 2, 3, 5, 8], 1, 12).should.equal(error.ref);
+          lookup.INDEX([1, 2, 3, 5, 8], 6).should.equal(error.ref);
+        });
+      });
+
+      describe('and two dimensions Range', function(){
+        it('should return the correct value', function(){
+          lookup.INDEX([
+            ['Banana', 'Apple'],
+            ['Strawberry', 'Pineapple']
+          ], 2, 1).should.equal('Strawberry');
+          lookup.INDEX([
+            ['Banana', 'Apple'],
+            ['Strawberry', 'Pineapple']
+          ], 1, 2).should.equal('Apple');
+          lookup.INDEX([
+            ['Banana'],
+            ['Apple']
+          ], 2).should.equal('Apple');
+        });
+
+        it('should throw an error if row or column number is out of range', function(){
+          lookup.INDEX([
+            ['Banana', 'Apple'],
+            ['Strawberry', 'Pineapple']
+          ], 2, 5).should.equal(error.ref);
+          lookup.INDEX([
+            ['Banana', 'Apple'],
+            ['Strawberry', 'Pineapple']
+          ], 2, 5).should.equal(error.ref);
+        });
+      });
+    });
   });
 });
