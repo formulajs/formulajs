@@ -200,9 +200,8 @@ describe('Lookup Reference', function () {
     ]).should.equal('B');
   });
 
-  describe.only('INDEX', function () {
+  describe('INDEX', function () {
     describe('Array form', function () {
-
       var oneDimensionRange = [1, 2, 3, 5, 8];
       describe('and a one dimension Range', function () {
         it('should return the value', function () {
@@ -214,10 +213,17 @@ describe('Lookup Reference', function () {
           lookup.INDEX(oneDimensionRange, 4).should.equal(5);
         });
 
-        it('should throw an error if row or column number is out of range', function(){
+        it('should throw an error if row or column number is out of range', function () {
           lookup.INDEX(oneDimensionRange, 2, 4).should.equal(error.ref);
           lookup.INDEX(oneDimensionRange, 1, 12).should.equal(error.ref);
           lookup.INDEX(oneDimensionRange, 6).should.equal(error.ref);
+          lookup.INDEX(oneDimensionRange, -6).should.equal(error.value);
+        });
+
+        it('should throw an error in case of error or empty inputs', function () {
+          lookup.INDEX(undefined, 2, 4).should.equal(error.value);
+          lookup.INDEX(error.ref, 2, 4).should.equal(error.ref);
+          lookup.INDEX(oneDimensionRange, error.na).should.equal(error.na);
         });
       });
 
@@ -225,8 +231,8 @@ describe('Lookup Reference', function () {
         ['Banana', 'Apple'],
         ['Strawberry', 'Pineapple']
       ];
-      describe('and two dimensions Range', function(){
-        it('should return the correct value', function(){
+      describe('and two dimensions Range', function () {
+        it('should return the correct value', function () {
           lookup.INDEX(twoDimensionRange, 2, 1).should.equal('Strawberry');
           lookup.INDEX(twoDimensionRange, 1, 2).should.equal('Apple');
           lookup.INDEX([
@@ -235,7 +241,7 @@ describe('Lookup Reference', function () {
           ], 2).should.equal('Apple');
         });
 
-        it('should throw an error if row or column number is out of range', function(){
+        it('should throw an error if row or column number is out of range', function () {
           lookup.INDEX(twoDimensionRange, 2, 5).should.equal(error.ref);
           lookup.INDEX(twoDimensionRange, 2, 5).should.equal(error.ref);
           lookup.INDEX(twoDimensionRange, -2, 5).should.equal(error.value);
