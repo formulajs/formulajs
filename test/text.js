@@ -326,6 +326,7 @@ describe('Text', function() {
     });
 
     it('should parse percentage string', function(){
+      text.VALUE('%12').should.equal(0.12);
       text.VALUE('12%').should.equal(0.12);
     });
 
