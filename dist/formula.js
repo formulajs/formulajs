@@ -203,6 +203,9 @@ exports.parseNumber = function(string) {
   if (string === undefined || string === null || string === '') {
     return 0;
   }
+  if (typeof string === "boolean") {
+    string = +string;
+  }
   if (!isNaN(string)) {
     return parseFloat(string);
   }
@@ -4020,9 +4023,38 @@ exports.UPPER = function(text) {
   return text.toUpperCase();
 };
 
-//TODO
-exports.VALUE = function() {
-  throw new Error('VALUE is not implemented');
+exports.VALUE = function(num) {
+  var anyError = utils.anyError(num);
+  if (anyError) {
+    return anyError;
+  }
+
+  if (typeof num !== 'string') {
+    return error.value;
+  }
+
+  var isPercent = /(%)$/.test(num) || /^(%)/.test(num);
+  num = num.replace(/^[^0-9-]{0,3}/, '');
+  num = num.replace(/[^0-9]{0,3}$/, '');
+  num = num.replace(/[\ ,]/g,'');
+
+  if(num ===''){
+    return error.value;
+  }
+
+  var output =  Number(num);
+
+  if(isNaN(output)){
+    return error.value;
+  }
+
+  output = output || 0;
+
+  if(isPercent) {
+    output = output * 0.01;
+  }
+
+  return output;
 };
 
 
