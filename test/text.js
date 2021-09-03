@@ -301,9 +301,59 @@ describe('Text', function() {
     text.UPPER(1).should.equal('1');
   });
 
-  xit('VALUE', function() {
-    text.VALUE('$1,000').should.equal(1000);
-    text.VALUE('16:48:00').should.equal(60480);
-    text.VALUE(true).should.equal(error.value);
+  describe('VALUE', function(){
+    it('should thrown an error in case of null, empty, error input', function(){
+      text.VALUE(error.na).should.equal(error.na);
+      text.VALUE('').should.equal(error.value);
+      text.VALUE(null).should.equal(error.value);
+      text.VALUE().should.equal(error.value);
+    });
+
+    it('should thrown an error in case of boolean input', function(){
+      text.VALUE(true).should.equal(error.value);
+    });
+
+    it('should thrown an error in case of malformed input', function(){
+      text.VALUE('SOMETEXT').should.equal(error.value);
+      text.VALUE('2+2').should.equal(error.value);
+      text.VALUE('3%22').should.equal(error.value);
+      text.VALUE('3D22').should.equal(error.value);
+      text.VALUE('SOMETEXT 42').should.equal(error.value);
+    });
+
+    it('should parse scientific notation string', function(){
+      text.VALUE('10E3').should.equal(10000);
+    });
+
+    it('should parse percentage string', function(){
+      text.VALUE('%12').should.equal(0.12);
+      text.VALUE('12%').should.equal(0.12);
+    });
+
+    /**
+     * Only supports thousands separator "," and decimal separator "."
+     * 
+     * These separators are not yet configurable. But the aim is not be as extensive as dedicated parsing library
+     * such as Numeral.js or Numbro.
+     */
+    it('should parse a number as string', function(){
+      text.VALUE('123.45').should.equal(123.45);
+      text.VALUE('10,000').should.equal(10000);
+      text.VALUE('1,210,000').should.equal(1210000);
+      text.VALUE('11 000').should.equal(11000);
+      text.VALUE('-3.14').should.equal(-3.14);
+    });
+
+    it('should parse dollar monetary string', function(){
+      text.VALUE('$1000').should.equal(1000);
+      text.VALUE('$11,000').should.equal(11000);
+    });
+
+    /**
+     * These test cases illustrate permissive input cases. They do not mirror exactly Excel behaviors.
+     */
+    it('could be less permissive', function(){
+      text.VALUE('EUR1000').should.equal(1000);
+    });
   });
 });
