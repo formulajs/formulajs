@@ -243,17 +243,45 @@ describe('Text', function() {
     (text.SPLIT('123242', '2') instanceof Array).should.equal(true);
   });
 
-  it("SUBSTITUTE", function() {
-    text.SUBSTITUTE('Jim Alateras', 'im', 'ames').should.equal("James Alateras");
-    text.SUBSTITUTE('Jim Alateras', '', 'ames').should.equal("Jim Alateras");
-    text.SUBSTITUTE('J. Alateras', '.', 'ames').should.equal("James Alateras");
-    text.SUBSTITUTE('Jim Alateras', undefined, 'ames').should.equal("Jim Alateras");
-    text.SUBSTITUTE('', 'im', 'ames').should.equal("");
-    should.not.exist(text.SUBSTITUTE(undefined, 'im', 'ames'));
-    text.SUBSTITUTE('Quarter 1, 2008', '1', '2', 1).should.equal('Quarter 2, 2008');
-    text.SUBSTITUTE('Quarter 1, 2008').should.equal(error.na);
-    text.SUBSTITUTE('Hello, world', ',', '').should.equal('Hello world');
-    text.SUBSTITUTE().should.equal(error.na);
+  describe('SUBSTITUTE', function() {
+    it('should substitute all occurrences of a string for another string', function() {
+      text.SUBSTITUTE('Jim Alateras', 'Jim', 'James').should.equal("James Alateras");
+      text.SUBSTITUTE('Jim Alateras', 'im', 'ames').should.equal("James Alateras");
+      text.SUBSTITUTE('Jim Alateras', '', 'ames').should.equal("Jim Alateras");
+      text.SUBSTITUTE('Jim Alateras', undefined, 'ames').should.equal("Jim Alateras");
+      text.SUBSTITUTE('Jim, Alateras, Sr.', ',', '').should.equal('Jim Alateras Sr.');
+      text.SUBSTITUTE('', 'im', 'ames').should.equal("");
+      should.not.exist(text.SUBSTITUTE(undefined, 'im', 'ames'));
+    });
+
+    it('should substitute regex meta-characters without interpretation', function() {
+      text.SUBSTITUTE('J. Alateras', '.', 'ames').should.equal("James Alateras");
+    });
+
+    it('should return an #N/A error if not enough inputs', function() {
+      text.SUBSTITUTE('Jim Alateras').should.equal(error.na);
+      text.SUBSTITUTE().should.equal(error.na);
+    });
+
+    it('should substitute the nth occurrence of a string for another string', function() {
+      text.SUBSTITUTE('a-a-a', ':', '', 1).should.equal('a-a-a');
+      text.SUBSTITUTE('a-a-a', '-', ':', '2').should.equal('a-a:a');
+      text.SUBSTITUTE('a-a-a', '-', ':', '2.5').should.equal('a-a:a');
+      text.SUBSTITUTE('a-a-a', '-', ':', '3').should.equal('a-a-a');
+      text.SUBSTITUTE('a-a-a', '-', ':', 2).should.equal('a-a:a');
+      text.SUBSTITUTE('a-a-a', '-', ':', 2.5).should.equal('a-a:a');
+      text.SUBSTITUTE('a-a-a', '-', ':', 3).should.equal('a-a-a');
+    });
+
+    it('should return a #VALUE! error if occurrence is not a number greater than or equal to 1', function() {
+      text.SUBSTITUTE('a-a-a', '-', ':', '').should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', 'x').should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', '-1').should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', '-0.5').should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', -1).should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', 0).should.equal(error.value);
+      text.SUBSTITUTE('a-a-a', '-', ':', 0.5).should.equal(error.value);
+    });
   });
 
   it('T', function() {
