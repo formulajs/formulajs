@@ -1,11 +1,11 @@
 {
   "author": "Formulajs",
-  "name": "@formulajs/formulajs",
+  "name": "@startinfinity/formulajs",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "version": "2.6.3",
   "repository": {
     "type": "git",
-    "url": "git@github.com:formulajs/formulajs.git"
+    "url": "git@github.com:jhkcia/formulajs.git"
   },
   "main": "index.js",
   "bin": {
