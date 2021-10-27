@@ -59,6 +59,7 @@ describe('Information', function() {
     information.ISEVEN(2.5).should.equal(true);
     information.ISEVEN(5).should.equal(false);
     information.ISEVEN(0).should.equal(true);
+    information.ISEVEN(null).should.equal(true);
   });
 
   // TODO
@@ -71,6 +72,7 @@ describe('Information', function() {
     information.ISLOGICAL(false).should.equal(true);
     information.ISLOGICAL(1).should.equal(false);
     information.ISLOGICAL('true').should.equal(false);
+    information.ISLOGICAL(null).should.equal(false);
   });
 
   it('ISNA', function() {
@@ -94,6 +96,7 @@ describe('Information', function() {
     information.ISODD(-1).should.equal(true);
     information.ISODD(5).should.equal(true);
     information.ISODD(2.5).should.equal(false);
+    information.ISODD(null).should.equal(false);
   });
 
   // TODO
@@ -105,6 +108,7 @@ describe('Information', function() {
     information.ISTEXT('a').should.equal(true);
     information.ISTEXT(1).should.equal(false);
     information.ISTEXT(true).should.equal(false);
+    information.ISTEXT().should.equal(false);
   });
 
   it('N', function() {
