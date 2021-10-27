@@ -96,4 +96,14 @@ describe('Utils => common', function() {
     utils.transpose([[1,2,3,4],[5,6,7,8], [9,10,11,12]])
       .should.deepEqual([[1,5,9],[2,6,10], [3,7,11], [4,8,12]]);
   });
+
+  it('parseDate', function(){
+    utils.parseDate(1).getTime().should.equal(new Date('1/1/1900').getTime());
+    utils.parseDate(40729).getTime().should.equal(new Date('7/5/2011').getTime());
+    utils.parseDate(40729.1805555556).getTime().should.equal(new Date('7/5/2011 04:20:00').getTime());
+    utils.parseDate(60.05).getTime().should.equal(new Date('2/29/1900 01:12:00').getTime());
+    utils.parseDate(61).getTime().should.equal(new Date('3/1/1900').getTime());
+    utils.parseDate(-1).should.equal(error.num);
+    utils.parseDate('a').should.equal(error.value);
+  });
 });
