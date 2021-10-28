@@ -6,6 +6,9 @@ var should = require('should');
 
 describe('Statistical', function() {
   it("AVEDEV", function() {
+    statistical.AVEDEV(undefined).should.equal(error.num);
+    statistical.AVEDEV(2, undefined, undefined).should.equal(0);
+    statistical.AVEDEV(error.na).should.equal(error.na);
     statistical.AVEDEV(2, 4, 8, 16).should.approximately(4.5, 1e-9);
     statistical.AVEDEV([2, 4, 8, 16]).should.approximately(4.5, 1e-9);
     statistical.AVEDEV([2, 4], [8, 16]).should.approximately(4.5, 1e-9);
@@ -17,6 +20,9 @@ describe('Statistical', function() {
   });
 
   it("AVERAGE", function() {
+    statistical.AVERAGE(undefined).should.equal(error.div0);
+    statistical.AVERAGE(2, undefined, undefined).should.equal(2);
+    statistical.AVERAGE(error.na).should.equal(error.na);
     statistical.AVERAGE(2, 4, 8, 16).should.approximately(7.5, 1e-9);
     statistical.AVERAGE([2, 4, 8, 16]).should.approximately(7.5, 1e-9);
     statistical.AVERAGE([2, 4], [8, 16]).should.approximately(7.5, 1e-9);
@@ -32,6 +38,9 @@ describe('Statistical', function() {
   });
 
   it("AVERAGEA", function() {
+    statistical.AVERAGEA(undefined).should.equal(error.div0);
+    statistical.AVERAGEA(2, undefined, undefined).should.equal(2);
+    statistical.AVERAGEA(error.na).should.equal(error.na);
     statistical.AVERAGEA(2, 4, 8, 16).should.approximately(7.5, 1e-9);
     statistical.AVERAGEA([2, 4, 8, 16]).should.approximately(7.5, 1e-9);
     statistical.AVERAGEA([2, 4], [8, 16]).should.approximately(7.5, 1e-9);
@@ -40,6 +49,7 @@ describe('Statistical', function() {
   });
 
   it("AVERAGEIF", function() {
+    statistical.AVERAGEIF([undefined], '>5').should.equal(error.value); // different than Excel
     statistical.AVERAGEIF([2, 4, 8, 16], '>5').should.equal(12);
     statistical.AVERAGEIF([2, 4, 8, 16], '*').should.equal(7.5);
     statistical.AVERAGEIF([2, 4, 8, 16], '>5', [1, 2, 3, 4]).should.approximately(3.5, 1e-9);
@@ -166,7 +176,10 @@ describe('Statistical', function() {
 
   it("COUNT", function() {
     statistical.COUNT().should.equal(0);
+    statistical.COUNT(undefined).should.equal(0);
+    statistical.COUNT(error.na).should.equal(0);
     statistical.COUNT(1, 2, 3, 4).should.equal(4);
+    statistical.COUNT(1, 2, error.div0, 4).should.equal(3);
     statistical.COUNT([1, 2, 3, 4]).should.equal(4);
     statistical.COUNT([1, 2], [3, 4]).should.equal(4);
     statistical.COUNT([
@@ -187,6 +200,9 @@ describe('Statistical', function() {
 
   it("COUNTA", function() {
     statistical.COUNTA().should.equal(0);
+    statistical.COUNTA(undefined).should.equal(0);
+    statistical.COUNTA(error.na).should.equal(1);
+    statistical.COUNTA(1, 2, error.div0).should.equal(3);
     statistical.COUNTA(1, null, 3, 'a', '', 'c').should.equal(4);
     statistical.COUNTA([1, null, 3, 'a', '', 'c']).should.equal(4);
     statistical.COUNTA([1, null, 3], ['a', '', 'c']).should.equal(4);
@@ -198,6 +214,9 @@ describe('Statistical', function() {
 
   it("COUNTBLANK", function() {
     statistical.COUNTBLANK().should.equal(0);
+    statistical.COUNTBLANK(undefined).should.equal(1);
+    statistical.COUNTBLANK(error.na).should.equal(0);
+    statistical.COUNTBLANK(1, 2, error.div0).should.equal(0);
     statistical.COUNTBLANK(1, null, 3, 'a', '', 'c').should.equal(2);
     statistical.COUNTBLANK([1, null, 3, 'a', '', 'c']).should.equal(2);
     statistical.COUNTBLANK([1, null, 3], ['a', '', 'c']).should.equal(2);
@@ -208,6 +227,8 @@ describe('Statistical', function() {
   });
 
   it("COUNTIF", function() {
+    statistical.COUNTIF([undefined], '>1').should.equal(0);
+    statistical.COUNTIF([error.na], '>1').should.equal(0);
     statistical.COUNTIF([1, null, 3, 'a', ''], '>1').should.equal(1);
     statistical.COUNTIF([1, null, 'c', 'a', ''], '>1').should.equal(0);
     statistical.COUNTIF([
@@ -225,6 +246,8 @@ describe('Statistical', function() {
   });
 
   it("COUNTIFS", function() {
+    statistical.COUNTIFS([undefined], '>1').should.equal(0);
+    statistical.COUNTIFS([error.na], '>1').should.equal(0);
     statistical.COUNTIFS([1, null, 3, 'a', ''], '>1').should.equal(1);
     statistical.COUNTIFS([1, null, 'c', 'a', ''], '>1').should.equal(0);
     statistical.COUNTIFS([
@@ -486,7 +509,10 @@ describe('Statistical', function() {
   });
 
   it('LARGE', function() {
-    statistical.LARGE([3, 5, 3, 5, 4], 3).should.equal(4);
+    statistical.LARGE([1, 3, 2, 5, 4], 1).should.equal(5);
+    statistical.LARGE([1, 3, 2, 5, 4], 3).should.equal(3);
+    statistical.LARGE([3, 5, 3], -3).should.equal(error.value);
+    statistical.LARGE([3, 5, 3], 4).should.equal(error.value);
     statistical.LARGE([3, 5, 3, 'invalid', 4], 3).should.equal(error.value);
   });
 
@@ -523,6 +549,8 @@ describe('Statistical', function() {
 
   it("MAX", function() {
     statistical.MAX().should.equal(0);
+    statistical.MAX(undefined).should.equal(0);
+    statistical.MAX(error.na).should.equal(error.na);
     statistical.MAX([0.1, 0.2], [0.4, 0.8], [true, false]).should.approximately(0.8, 1e-9);
     statistical.MAX([
       [0, 0.1, 0.2],
@@ -533,6 +561,8 @@ describe('Statistical', function() {
 
   it("MAXA", function() {
     statistical.MAXA().should.equal(0);
+    statistical.MAXA(undefined).should.equal(0);
+    statistical.MAXA(error.na).should.equal(error.na);
     statistical.MAXA([0.1, 0.2], [0.4, 0.8], [true, false]).should.equal(1);
     statistical.MAXA([
       [0.1, 0.2],
@@ -543,12 +573,16 @@ describe('Statistical', function() {
 
   it('MEDIAN', function() {
     statistical.MEDIAN().should.equal(error.num);
+    statistical.MEDIAN(undefined).should.equal(error.num);
+    statistical.MEDIAN(error.na).should.equal(error.na);
     statistical.MEDIAN(1, 2, 3, 4, 5).should.equal(3);
     statistical.MEDIAN(1, 2, 3, 4, 5, 6).should.approximately(3.5, 1e-9);
   });
 
   it("MIN", function() {
     statistical.MIN().should.equal(0);
+    statistical.MIN(undefined).should.equal(0);
+    statistical.MIN(error.na).should.equal(error.na);
     statistical.MIN([0.1, 0.2], [0.4, 0.8], [true, false]).should.approximately(0.1, 1e-9);
     statistical.MIN([0, 0.1, 0.2], [0.4, 0.8, 1], [true, false]).should.equal(0);
     statistical.MIN([
@@ -565,6 +599,8 @@ describe('Statistical', function() {
 
   it("MINA", function() {
     statistical.MINA().should.equal(0);
+    statistical.MINA(undefined).should.equal(0);
+    statistical.MINA(error.na).should.equal(error.na);
     statistical.MINA([0.1, 0.2], [0.4, 0.8], [true, false]).should.equal(0);
     statistical.MINA([
       [10, 0],

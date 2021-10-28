@@ -11,7 +11,15 @@ Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.6.3/dist/formula.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.9.1/dist/formula.min.js"></script>
+```
+
+Then the functions can be accessed as
+
+```
+formulajs.Date(2008, 7, 8)
+formulajs.SUM([1, 2 , 3])
+...
 ```
 
 ### In node

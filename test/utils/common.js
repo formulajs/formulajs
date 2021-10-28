@@ -58,8 +58,29 @@ describe('Utils => common', function() {
     utils.parseBool(err).should.equal(err);
   });
 
+  it('parseNumber', function() {
+    utils.parseNumber().should.equal(0);
+    utils.parseNumber(null).should.equal(0);
+    utils.parseNumber('').should.equal(0);
+    utils.parseNumber(2).should.equal(2);
+    utils.parseNumber(error.na).should.equal(error.na);
+    utils.parseNumber('text').should.equal(error.value);
+  });
+
   it('parseNumberArray', function() {
     utils.parseNumberArray().should.equal(error.value);
+    utils.parseNumberArray([2, 0, '', null, undefined]).should.eql([2, 0, 0, 0, 0]);
+    utils.parseNumberArray([2, 'a', 1, error.na]).should.equal(error.na);
+    utils.parseNumberArray([2, 'a', 1]).should.equal(error.value);
+  });
+
+  it('parseString', function() {
+    utils.parseString().should.equal('');
+    utils.parseString(null).should.equal('');
+    utils.parseString('').should.equal('');
+    utils.parseString('text').should.equal('text');
+    utils.parseString(2).should.equal('2');
+    utils.parseString(error.na).should.equal(error.na);
   });
 
   it('parseMatrix', function() {
@@ -105,5 +126,28 @@ describe('Utils => common', function() {
     utils.parseDate(61).getTime().should.equal(new Date('3/1/1900').getTime());
     utils.parseDate(-1).should.equal(error.num);
     utils.parseDate('a').should.equal(error.value);
+  });
+  
+  it('anyError', function() {
+    should(utils.anyError()).be.undefined;
+    should(utils.anyError(undefined, null, 1, "", "text")).be.undefined;
+    utils.anyError(error.na).should.be.equal(error.na);
+    utils.anyError(1, error.na).should.be.equal(error.na);
+    utils.anyError(error.value, error.na).should.be.equal(error.value);
+  });
+
+  it('anyIsError', function() {
+    utils.anyIsError().should.be.false;
+    utils.anyIsError(undefined, null, 1, "", "text").should.be.false;
+    utils.anyIsError(error.na).should.be.true;
+    utils.anyIsError(1, error.na).should.be.true;
+    utils.anyIsError(error.value, error.na).should.be.true;
+  });
+
+  it('anyIsString', function() {
+    utils.anyIsString().should.be.false;
+    utils.anyIsString(undefined, null, 1, 2.5).should.be.false;
+    utils.anyIsString(1, '').should.be.true;
+    utils.anyIsString(1, 'text').should.be.true;
   });
 });

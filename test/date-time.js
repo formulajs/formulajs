@@ -148,6 +148,10 @@ describe('Date & Time', function () {
     dateTime.NETWORKDAYS.INTL('12/4/2013', '12/5/2013').should.equal(2);
     dateTime.NETWORKDAYS.INTL('12/8/2013', '12/9/2013', 2).should.equal(0);
     dateTime.NETWORKDAYS.INTL('12/4/2013', '12/4/2013', -1).should.equal(error.value);
+    dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', 'smlkml').should.equal(error.value);
+    dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '00011').should.equal(error.value);
+    dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '0001101').should.equal(32);
+    dateTime.NETWORKDAYS.INTL('11/01/2021', '11/30/2021', '1110111').should.equal(4);
   });
 
   it('NOW', function () {

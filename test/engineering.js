@@ -260,6 +260,7 @@ describe('Engineering', function() {
     engineering.IMAGINARY('-j').should.equal('-1');
     engineering.IMAGINARY('0-j').should.equal(-1);
     engineering.IMAGINARY('4').should.equal(0);
+    engineering.IMAGINARY(4).should.equal(0);
     engineering.IMAGINARY(0).should.equal(0);
     engineering.IMAGINARY('1+k').should.equal(error.num);
   });
@@ -365,6 +366,7 @@ describe('Engineering', function() {
 
   it('IMPRODUCT', function() {
     engineering.IMPRODUCT('3+4i', '5-3i').should.equal('27+11i');
+    engineering.IMPRODUCT('3+4i', 3).should.equal('9+12i');
     engineering.IMPRODUCT('1+2i', '30+0i').should.equal('30+60i');
     engineering.IMPRODUCT('a', '1').should.equal(error.value);
     engineering.IMPRODUCT().should.equal(error.value);
@@ -377,6 +379,7 @@ describe('Engineering', function() {
     engineering.IMREAL('-j').should.equal(0);
     engineering.IMREAL('0-j').should.equal(0);
     engineering.IMREAL('4').should.equal('4');
+    engineering.IMREAL(4).should.equal('4');
     engineering.IMREAL(0).should.equal(0);
     engineering.IMREAL('1+k').should.equal(error.num);
     engineering.IMREAL('+1+j').should.equal(1);
