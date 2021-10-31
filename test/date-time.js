@@ -8,9 +8,21 @@ describe('Date & Time', function () {
     var date = dateTime.DATE(1900, 1, 1);
     date.getFullYear().should.equal(1900);
     date.getMonth().should.equal(1 - 1);
-    date.getDay().should.equal(1);
+    date.getDate().should.equal(1);
 
-    dateTime.DATE(1900, 1, -1).should.equal(error.num);
+    date = dateTime.DATE(1900, 1, -1);
+    date.getFullYear().should.equal(1899);
+    date.getMonth().should.equal(12 - 1);
+    date.getDate().should.equal(30);
+
+    date = dateTime.DATE(2000, -36, 1);
+    date.getFullYear().should.equal(1996);
+    date.getMonth().should.equal(12 - 1);
+    date.getDate().should.equal(1);
+
+    dateTime.DATE(10, 1, 1).getFullYear().should.equal(1910);
+    dateTime.DATE(-1, 1, 1).should.equal(error.num);
+    // dateTime.DATE(1899, 1, 1).getFullYear().should.equal(3799);
     dateTime.DATE('invalid').should.equal(error.value);
   });
 
