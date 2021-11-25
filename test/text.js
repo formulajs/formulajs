@@ -28,7 +28,7 @@ describe('Text', function() {
   });
 
   it('CODE', function() {
-    text.CODE().should.equal(error.value);
+    text.CODE().should.equal(error.na);
     text.CODE(undefined).should.equal(error.value);
     text.CODE(error.na).should.equal(error.na);
     text.CODE('A').should.equal(65);
@@ -78,6 +78,8 @@ describe('Text', function() {
     text.EXACT().should.equal(error.na);
     text.EXACT('true', true).should.equal(true);
     text.EXACT('12', 12).should.equal(true);
+    text.EXACT('a', 'b').should.equal(false);
+    text.EXACT(1100, -2).should.equal(false);
   });
 
   it('FIND', function() {
@@ -92,6 +94,8 @@ describe('Text', function() {
     text.FIND(true, '12true').should.equal(3);
     text.FIND(12, '312').should.equal(2);
     text.FIND(12, 312).should.equal(2);
+    text.FIND('a', 'b','c').should.equal(error.value);
+
   });
 
   xit('FIXED', function() {
@@ -128,7 +132,7 @@ describe('Text', function() {
     text.LEN(true).should.equal(4);
     text.LEN('four').should.equal(4);
     text.LEN([1, 2, 3, 4, 5]).should.equal(error.value);
-    text.LEN().should.equal(error.error);
+    text.LEN().should.equal(error.na);
     text.LEN(null).should.equal(0);
     text.LEN([]).should.equal(error.value);
     text.LEN(123).should.equal(3);
@@ -143,7 +147,7 @@ describe('Text', function() {
     text.LOWER('').should.equal("");
     text.LOWER(true).should.equal('true');
     text.LOWER(1).should.equal('1');
-    text.LOWER().should.equal(error.value);
+    text.LOWER().should.equal(error.na);
   });
 
   it('MID', function() {
@@ -151,7 +155,9 @@ describe('Text', function() {
     text.MID(data, 1, 5).should.equal('Fluid');
     text.MID(data, 7, 20).should.equal('Flow');
     text.MID(data, 20, 50).should.equal('');
-    text.MID(0).should.equal(error.value);
+    text.MID(0).should.equal(error.na);
+    text.MID().should.equal(error.na);
+    text.MID(data, 1, 1, 3).should.equal(error.na);
   });
 
   it('NUMBERVALUE', function() {
@@ -173,7 +179,7 @@ describe('Text', function() {
     text.PROPER(false).should.equal('False');
     text.PROPER(90).should.equal('90');
     text.PROPER(NaN).should.equal(error.value);
-    text.PROPER().should.equal('');
+    text.PROPER().should.equal(error.na);
   });
 
   it('REGEXEXTRACT', function() {
@@ -202,7 +208,7 @@ describe('Text', function() {
     text.REPLACE('abcdefghijk', 6, 5, '*').should.equal('abcde*k');
     text.REPLACE('2009', 3, 2, '10').should.equal('2010');
     text.REPLACE('123456', 1, 3, '@').should.equal('@456');
-    text.REPLACE().should.equal(error.value);
+    text.REPLACE().should.equal(error.na);
   });
 
   it('REPT', function() {
@@ -211,8 +217,8 @@ describe('Text', function() {
     text.REPT(undefined, 3).should.equal('');
     text.REPT(error.na, 3).should.equal(error.na);
     text.REPT('multiple ', 3).should.equal('multiple multiple multiple ');
-    text.REPT('m').should.equal('');
-    text.REPT().should.equal('');
+    text.REPT('m').should.equal(error.na);
+    text.REPT().should.equal(error.na);
     text.REPT(true, 2).should.equal('truetrue');
     text.REPT(12, 2).should.equal('1212');
   });
@@ -225,7 +231,7 @@ describe('Text', function() {
     text.RIGHT('Sale Price', 5).should.equal('Price');
     text.RIGHT('Stock Number').should.equal('r');
     text.RIGHT('something', 'invalid').should.equal(error.value);
-    text.RIGHT().should.equal('');
+    text.RIGHT().should.equal(error.na);
     text.RIGHT(42).should.equal('2');
     text.RIGHT(true).should.equal('e');
   });
@@ -236,6 +242,8 @@ describe('Text', function() {
     text.SEARCH(true, 'bool').should.equal(error.value);
     text.SEARCH("foo", "bar").should.equal(error.value);
     text.SEARCH("ba", "bar").should.equal(1);
+    text.SEARCH("foo", "foo bar", 3).should.equal(error.value);
+    text.SEARCH("foo", "foo bar").should.equal(1);
   });
 
   it('SPLIT', function() {
@@ -335,7 +343,7 @@ describe('Text', function() {
       text.VALUE(error.na).should.equal(error.na);
       text.VALUE('').should.equal(error.value);
       text.VALUE(null).should.equal(error.value);
-      text.VALUE().should.equal(error.value);
+      text.VALUE().should.equal(error.na);
     });
 
     it('should thrown an error in case of boolean input', function(){

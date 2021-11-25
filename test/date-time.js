@@ -11,7 +11,15 @@ describe('Date & Time', function () {
     date.getDay().should.equal(1);
 
     dateTime.DATE(1900, 1, -1).should.equal(error.num);
-    dateTime.DATE('invalid').should.equal(error.value);
+    dateTime.DATE('invalid').should.equal(error.na);
+
+
+    dateTime.DATE(2000, 1, 'invalid').should.equal(error.value);
+
+    dateTime.DATE().should.equal(error.na);
+    dateTime.DATE(2000).should.equal(error.na);
+    dateTime.DATE(2000, 1).should.equal(error.na);
+    dateTime.DATE(2000, 1, 1, 1).should.equal(error.na);
   });
 
   it('DATEDIF', function () {
