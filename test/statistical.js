@@ -76,7 +76,7 @@ describe('Statistical', function() {
     statistical.BETA.DIST(2, 8, 10, true, 1, 3).should.approximately(0.6854705810117458, 1e-9);
     statistical.BETA.DIST(1/52, 0.4, 9.6, false).should.approximately(9.966606842186748, 1e-9);
     statistical.BETA.DIST(1/52, 0.4, 9.6, true).should.approximately(0.5406016379941343, 1e-9);
-    statistical.BETA.DIST(2, 8, 10).should.equal(error.value);
+    statistical.BETA.DIST(2, 8, 10).should.equal(error.na);
     statistical.BETA.DIST(2, 8, 'invalid', 1, 3).should.equal(error.value);
   });
 
@@ -175,7 +175,7 @@ describe('Statistical', function() {
   });
 
   it("COUNT", function() {
-    statistical.COUNT().should.equal(0);
+    statistical.COUNT().should.equal(error.na);
     statistical.COUNT(undefined).should.equal(0);
     statistical.COUNT(error.na).should.equal(0);
     statistical.COUNT(1, 2, 3, 4).should.equal(4);
@@ -199,7 +199,7 @@ describe('Statistical', function() {
   });
 
   it("COUNTA", function() {
-    statistical.COUNTA().should.equal(0);
+    statistical.COUNTA().should.equal(error.na);
     statistical.COUNTA(undefined).should.equal(0);
     statistical.COUNTA(error.na).should.equal(1);
     statistical.COUNTA(1, 2, error.div0).should.equal(3);
@@ -548,7 +548,7 @@ describe('Statistical', function() {
   });
 
   it("MAX", function() {
-    statistical.MAX().should.equal(0);
+    statistical.MAX().should.equal(error.na);
     statistical.MAX(undefined).should.equal(0);
     statistical.MAX(error.na).should.equal(error.na);
     statistical.MAX([0.1, 0.2], [0.4, 0.8], [true, false]).should.approximately(0.8, 1e-9);
@@ -560,7 +560,7 @@ describe('Statistical', function() {
   });
 
   it("MAXA", function() {
-    statistical.MAXA().should.equal(0);
+    statistical.MAXA().should.equal(error.na);
     statistical.MAXA(undefined).should.equal(0);
     statistical.MAXA(error.na).should.equal(error.na);
     statistical.MAXA([0.1, 0.2], [0.4, 0.8], [true, false]).should.equal(1);
@@ -572,7 +572,7 @@ describe('Statistical', function() {
   });
 
   it('MEDIAN', function() {
-    statistical.MEDIAN().should.equal(error.num);
+    statistical.MEDIAN().should.equal(error.na);
     statistical.MEDIAN(undefined).should.equal(error.num);
     statistical.MEDIAN(error.na).should.equal(error.na);
     statistical.MEDIAN(1, 2, 3, 4, 5).should.equal(3);
@@ -580,7 +580,7 @@ describe('Statistical', function() {
   });
 
   it("MIN", function() {
-    statistical.MIN().should.equal(0);
+    statistical.MIN().should.equal(error.na);
     statistical.MIN(undefined).should.equal(0);
     statistical.MIN(error.na).should.equal(error.na);
     statistical.MIN([0.1, 0.2], [0.4, 0.8], [true, false]).should.approximately(0.1, 1e-9);
@@ -598,7 +598,7 @@ describe('Statistical', function() {
   });
 
   it("MINA", function() {
-    statistical.MINA().should.equal(0);
+    statistical.MINA().should.equal(error.na);
     statistical.MINA(undefined).should.equal(0);
     statistical.MINA(error.na).should.equal(error.na);
     statistical.MINA([0.1, 0.2], [0.4, 0.8], [true, false]).should.equal(0);
@@ -759,7 +759,7 @@ describe('Statistical', function() {
     var prob = [0.2, 0.3, 0.1, 0.4];
     statistical.PROB(x, prob, 2).should.approximately(0.1, 1e-9);
     statistical.PROB(x, prob, 1, 3).should.approximately(0.8, 1e-9);
-    statistical.PROB(x, prob).should.equal(0);
+    statistical.PROB(x, prob).should.equal(error.na);
     x.push('invalid');
     statistical.PROB(x, prob, 1, 3).should.equal(error.value);
   });
@@ -974,7 +974,7 @@ describe('Statistical', function() {
     statistical.VAR.P(1, 2, 3, 4, 10, 10).should.approximately(13.333333333333334, 1e-9);
     statistical.VAR.P(1, 2, 3, 4, false, true).should.approximately(1.25, 1e-9);
     statistical.VAR.P(1, 2, 3, 4, 'count as zero', false, true).should.approximately(1.25, 1e-9);
-    statistical.VAR.P().should.equal(error.num);
+    statistical.VAR.P().should.equal(error.na);
   });
 
   it('VAR.S', function() {
@@ -993,7 +993,7 @@ describe('Statistical', function() {
     statistical.VARPA(1, 2, 3, 4, 10, 10).should.approximately(13.333333333333334, 1e-9);
     statistical.VARPA(1, 2, 3, 4, false, true).should.approximately(1.8055555555555556, 1e-9);
     statistical.VARPA(1, 2, 3, 4, 'count as zero', false, true).should.approximately(1.959183673469388, 1e-9);
-    statistical.VARPA().should.equal(error.num);
+    statistical.VARPA().should.equal(error.na);
   });
 
   it('WEIBULL.DIST', function() {
