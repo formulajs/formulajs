@@ -108,7 +108,7 @@ describe('Information', function() {
     information.ISTEXT('a').should.equal(true);
     information.ISTEXT(1).should.equal(false);
     information.ISTEXT(true).should.equal(false);
-    information.ISTEXT().should.equal(false);
+    information.ISTEXT().should.equal(error.na);
   });
 
   it('N', function() {
