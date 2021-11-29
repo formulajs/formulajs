@@ -4,27 +4,39 @@ var dateTime = require('../lib/date-time');
 require('should');
 
 describe('Date & Time', function () {
-  it('DATE', function () {
-    var date = dateTime.DATE(1900, 1, 1);
-    date.getFullYear().should.equal(1900);
-    date.getMonth().should.equal(1 - 1);
-    date.getDate().should.equal(1);
 
-    date = dateTime.DATE(1900, 1, -1);
-    date.getFullYear().should.equal(1899);
-    date.getMonth().should.equal(12 - 1);
-    date.getDate().should.equal(30);
+  describe('DATE', function(){
+    it('should thrown an error in case of malformed input', function () {
+      dateTime.DATE(10, 1, 1).getFullYear().should.equal(1910);
+      dateTime.DATE(-1, 1, 1).should.equal(error.num);
+      dateTime.DATE('invalid').should.equal(error.value);
+    });
 
-    date = dateTime.DATE(2000, -36, 1);
-    date.getFullYear().should.equal(1996);
-    date.getMonth().should.equal(12 - 1);
-    date.getDate().should.equal(1);
+    it('should create date', function () {
+      var date = dateTime.DATE(1900, 1, 1);
+      date.getFullYear().should.equal(1900);
+      date.getMonth().should.equal(1 - 1);
+      date.getDate().should.equal(1);
+    })
 
-    dateTime.DATE(10, 1, 1).getFullYear().should.equal(1910);
-    dateTime.DATE(-1, 1, 1).should.equal(error.num);
-    // dateTime.DATE(1899, 1, 1).getFullYear().should.equal(3799);
-    dateTime.DATE('invalid').should.equal(error.value);
-  });
+    it('should accept negative day number', function () {
+      var date = dateTime.DATE(1900, 1, -1);
+      date.getFullYear().should.equal(1899);
+      date.getMonth().should.equal(12 - 1);
+      date.getDate().should.equal(30);
+    });
+
+    it('should accept negative month number', function () {
+      date = dateTime.DATE(2000, -36, 1);
+      date.getFullYear().should.equal(1996);
+      date.getMonth().should.equal(12 - 1);
+      date.getDate().should.equal(1);
+    });
+
+    xit('should be Excel behaviour, but we do not want to recreate it', function () {
+      dateTime.DATE(1899, 1, 1).getFullYear().should.equal(3799);
+    });
+  })
 
   it('DATEDIF', function () {
     dateTime.DATEDIF('1/1/2001', '1/1/2003', 'Y').should.equal(2);
