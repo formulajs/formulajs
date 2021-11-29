@@ -1056,7 +1056,7 @@ describe('Math & Trig', function () {
     ]).should.equal(error.value);
 
     mathTrig.SUMPRODUCT([8, 'invalid'], [5, 3]).should.equal(error.value);
-    mathTrig.SUMPRODUCT().should.equal(error.value);
+    mathTrig.SUMPRODUCT().should.equal(error.na);
   });
 
   it("SUMSQ", function() {
