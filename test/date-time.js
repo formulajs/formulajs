@@ -164,6 +164,7 @@ describe('Date & Time', function () {
 
   it('NOW', function () {
     dateTime.NOW().should.instanceof(Date);
+    dateTime.NOW('').should.equal(error.na);
   });
 
   it('SECOND', function () {
@@ -176,7 +177,8 @@ describe('Date & Time', function () {
     dateTime.TIME(0, 0, 0).should.equal(0);
     dateTime.TIME(1, 1, 1).should.approximately(0.04237268518518519, 1e-9);
     dateTime.TIME(-1, -1, -1).should.equal(error.num);
-    dateTime.TIME('invalid').should.equal(error.value);
+    dateTime.TIME(1, 1, 'invalid').should.equal(error.value);
+    dateTime.TIME('invalid').should.equal(error.na);
   });
 
   it('TIMEVALUE', function () {
@@ -190,6 +192,8 @@ describe('Date & Time', function () {
     dateTime.TODAY().getHours().should.equal(0);
     dateTime.TODAY().getMinutes().should.equal(0);
     dateTime.TODAY().getSeconds().should.equal(0);
+    dateTime.TODAY('').should.equal(error.na);
+
   });
 
   it('WEEKDAY', function () {
