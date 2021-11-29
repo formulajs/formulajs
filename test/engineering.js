@@ -6,22 +6,26 @@ describe('Engineering', function() {
   it('BESSELI', function() {
     engineering.BESSELI(1.5, 1).should.approximately(0.981666, 10e-6);
     engineering.BESSELI(1.5, 2).should.approximately(0.337835, 10e-6);
-    engineering.BESSELI('invalid').should.equal(error.value);
+    engineering.BESSELI(1, 'invalid').should.equal(error.value);
+    engineering.BESSELI('invalid').should.equal(error.na);
   });
 
   it('BESSELJ', function() {
     engineering.BESSELJ(1.9, 2).should.approximately(0.329926, 10e-6);
-    engineering.BESSELJ('invalid').should.equal(error.value);
+    engineering.BESSELJ(1, 'invalid').should.equal(error.value);
+    engineering.BESSELJ('invalid').should.equal(error.na);
   });
 
   it('BESSELK', function() {
     engineering.BESSELK(1.5, 1).should.approximately(0.277388, 10e-6);
-    engineering.BESSELK('invalid').should.equal(error.value);
+    engineering.BESSELK(1, 'invalid').should.equal(error.value);
+    engineering.BESSELK('invalid').should.equal(error.na);
   });
 
   it('BESSELY', function() {
     engineering.BESSELY(2.5, 1).should.approximately(0.145918, 10e-6);
-    engineering.BESSELY('invalid').should.equal(error.value);
+    engineering.BESSELY(1, 'invalid').should.equal(error.value);
+    engineering.BESSELY('invalid').should.equal(error.na);
   });
 
   it('BIN2DEC', function() {
@@ -133,7 +137,7 @@ describe('Engineering', function() {
     // engineering.CONVERT(68, 'F', 'C').should.equal(20);
     engineering.CONVERT(2.5, 'ft', 'sec').should.equal(error.na);
     engineering.CONVERT(engineering.CONVERT(100, 'ft', 'm'), 'ft', 'm').should.approximately(9.290304, 1e-9);
-    engineering.CONVERT('a', 1).should.equal(error.value);
+    engineering.CONVERT('a', 1).should.equal(error.na);
     engineering.CONVERT(1, 'invalid', 'invalid').should.equal(error.na);
     engineering.CONVERT(1, 'da', 'invalid').should.equal(error.na);
     engineering.CONVERT(1, 'ki', 'invalid').should.equal(error.na);
@@ -369,7 +373,7 @@ describe('Engineering', function() {
     engineering.IMPRODUCT('3+4i', 3).should.equal('9+12i');
     engineering.IMPRODUCT('1+2i', '30+0i').should.equal('30+60i');
     engineering.IMPRODUCT('a', '1').should.equal(error.value);
-    engineering.IMPRODUCT().should.equal(error.value);
+    engineering.IMPRODUCT().should.equal(error.na);
   });
 
   it('IMREAL', function() {
@@ -435,7 +439,7 @@ describe('Engineering', function() {
   it('IMSUM', function() {
     engineering.IMSUM('3+4i', '5-3i').should.equal('8+i');
     engineering.IMSUM('a', '5+3i').should.equal(error.value);
-    engineering.IMSUM().should.equal(error.value);
+    engineering.IMSUM().should.equal(error.na);
   });
 
   it('IMTAN', function() {
