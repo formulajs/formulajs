@@ -78,6 +78,17 @@ describe('Statistical', function() {
     statistical.BETA.DIST(1/52, 0.4, 9.6, true).should.approximately(0.5406016379941343, 1e-9);
     statistical.BETA.DIST(2, 8, 10).should.equal(error.na);
     statistical.BETA.DIST(2, 8, 'invalid', 1, 3).should.equal(error.value);
+    statistical.BETA.DIST(2, 8, 10, true, 1, 3).should.approximately(0.6854705810117458, 1e-9);
+    // statistical.BETA.DIST(2, 8, 10, true).should.equal(error.num);
+  });
+
+  it('BETADIST', function() {
+    statistical.BETADIST(2, 8, 10, 1, 3).should.approximately(0.6854705810117458, 1e-9);
+    statistical.BETADIST(1/52, 0.4, 9.6).should.approximately(0.5406016379941343, 1e-9);
+    statistical.BETADIST(2, 8, 'invalid', 1, 3).should.equal(error.value);
+    // statistical.BETADIST(2, 8, 10).should.equal(error.num);
+    statistical.BETADIST(2, 8).should.equal(error.na);
+    
   });
 
   it('BETA.INV', function() {
@@ -113,6 +124,7 @@ describe('Statistical', function() {
     statistical.CHISQ.DIST.RT(4, 1.01 * Math.pow(10, 10)).should.equal(error.num);
     statistical.CHISQ.DIST.RT('hello', 4).should.equal(error.value);
     statistical.CHISQ.DIST.RT(3, 4).should.approximately(0.5578254, 1e-06);
+    // statistical.CHISQ.DIST.RT(0.5, 1).should.approximately(0.479500122, 1e-06);
   });
 
   it('CHISQ.INV', function() {
