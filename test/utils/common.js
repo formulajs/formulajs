@@ -140,4 +140,54 @@ describe('Utils => common', function() {
     utils.anyIsString(1, '').should.be.true;
     utils.anyIsString(1, 'text').should.be.true;
   });
+
+  describe('parseDate', function () {
+    it('should thrown an error in case of malformed input', function () {
+      utils.parseDate('a').should.equal(error.value);
+      utils.parseDate('2009 -07-01').should.equal(error.value);
+      utils.parseDate('31/12/2009').should.equal(error.value);
+      utils.parseDate('2009-31-12').should.equal(error.value);
+    })
+
+    it('should thrown an error in case of out of range input', function () {
+      utils.parseDate(-1).should.equal(error.num);
+      utils.parseDate(2958466).should.equal(error.num);
+    })
+
+    it('should parse date from serial number', function () {
+      utils.parseDate(1).getTime().should.equal(new Date('1/1/1900').getTime());
+      utils.parseDate(61).getTime().should.equal(new Date('3/1/1900').getTime());
+      utils.parseDate(60.05).getTime().should.equal(new Date('2/29/1900 01:12:00').getTime());
+      utils.parseDate(40729).getTime().should.equal(new Date('7/5/2011').getTime());
+      utils.parseDate(40729.1805555556).getTime().should.equal(new Date('7/5/2011 04:20:00').getTime());
+    });
+
+    it('should parse date from string', function () {
+      utils.parseDate('2009-7-1').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+      utils.parseDate('7/1/2009').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+      utils.parseDate('07/01/2009').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+      utils.parseDate('2009/07-01').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+
+    });
+
+    it('should parse date with time from string', function () {
+      utils.parseDate('2009-12-31  12:13').getTime().should.equal(new Date(2009, 12 - 1, 31, 12, 13).getTime());
+      utils.parseDate('2009-7-1 11:11').getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime());
+      utils.parseDate('7/1/2009 11:11:11').getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime());
+      utils.parseDate('2009-07-01 11:11').getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime());
+      utils.parseDate('07/01/2009 11:11:11').getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime());
+      utils.parseDate('07/01/2009 11:11:11').getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime());
+      utils.parseDate('11/11/11 12:12:12').getTime().should.equal(new Date(2011, 11 - 1, 11, 12, 12, 12).getTime());
+    });
+
+    it('should parse date from Date', function () {
+      utils.parseDate(new Date(2009, 7 - 1, 1)).getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+      utils.parseDate(new Date(2009, 7 - 1, 1, 11, 11, 11)).getTime().should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime());
+    });
+
+    xit('should parse date when day start with zero', function () {
+      utils.parseDate('2009-07-01').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
+      utils.parseDate('2020-05-02').getTime().should.equal(new Date(2020, 5 - 1, 2).getTime());
+    });
+  });
 });
