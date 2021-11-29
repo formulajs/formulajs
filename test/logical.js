@@ -41,8 +41,8 @@ describe('Logical', function() {
 
     logical.IF(true, 1, 2).should.equal(1);
     logical.IF(false, 1, 2).should.equal(2);
-    logical.IF(true).should.equal(true);
-    logical.IF(false).should.equal(false);
+    logical.IF(true).should.equal(error.na);
+    logical.IF(false).should.equal(error.na);
     logical.IF(true, 1).should.equal(1);
     logical.IF(false, 1).should.equal(false);
   });
@@ -112,9 +112,10 @@ describe('Logical', function() {
   });
 
   it('SWITCH', function() {
-    logical.SWITCH().should.equal(error.value);
+    logical.SWITCH().should.equal(error.na);
     logical.SWITCH(7).should.equal(error.na);
-    logical.SWITCH(7, "Default Expression").should.equal("Default Expression");
+    logical.SWITCH(7, "Default Expression").should.equal(error.na);
+    logical.SWITCH(7, "Default Expression", 'b').should.equal(error.na);
     logical.SWITCH(7, 9, "Nine", 7, "Seven").should.equal("Seven");
     logical.SWITCH(8, 9, "Nine", 7, "Seven", "Eight").should.equal("Eight");
     logical.SWITCH(10, 9, "Nine", 7, "Seven", 8, "Eight").should.equal(error.na);
