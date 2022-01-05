@@ -93,7 +93,9 @@ describe('Date & Time', function () {
     dateTime.DAYS360('1/1/1901', '1/1/1902', true).should.equal(360);
     dateTime.DAYS360('1/1/1901', '2/1/1901', true).should.equal(30);
     dateTime.DAYS360('1/1/1901', '1/2/1901', false).should.equal(1);
+    dateTime.DAYS360('1/1/1901', '1/2/1901').should.equal(1);
     dateTime.DAYS360('1/1/1901', '12/31/1901', false).should.equal(360);
+    dateTime.DAYS360('1/1/1901', '12/31/1901').should.equal(360);
     dateTime.DAYS360('1/1/1901', '1/1/1902', false).should.equal(360);
     dateTime.DAYS360('1/1/1901', '2/1/1901', false).should.equal(30);
     dateTime.DAYS360('1/30/1901', '12/31/1901', false).should.equal(330);
