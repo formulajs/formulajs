@@ -74,10 +74,12 @@ describe('Text', function() {
     text.EXACT(undefined, "").should.equal(true);
     text.EXACT(error.na, error.na).should.equal(error.na);
     text.EXACT('yes', 'yes').should.equal(true);
+    text.EXACT('yes', 'no').should.equal(false);
     text.EXACT('yes', 'yes', 'yes').should.equal(error.na);
     text.EXACT().should.equal(error.na);
     text.EXACT('true', true).should.equal(true);
     text.EXACT('12', 12).should.equal(true);
+    text.EXACT('Word', '0').should.equal(false);
   });
 
   it('FIND', function() {
@@ -361,7 +363,7 @@ describe('Text', function() {
 
     /**
      * Only supports thousands separator "," and decimal separator "."
-     * 
+     *
      * These separators are not yet configurable. But the aim is not be as extensive as dedicated parsing library
      * such as Numeral.js or Numbro.
      */
