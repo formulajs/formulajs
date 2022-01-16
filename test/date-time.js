@@ -36,7 +36,7 @@ describe('Date & Time', function () {
     xit('should be Excel behaviour, but we do not want to recreate it', function () {
       dateTime.DATE(1899, 1, 1).getFullYear().should.equal(3799);
     });
-  })
+  });
 
   it('DATEDIF', function () {
     dateTime.DATEDIF('1/1/2001', '1/1/2003', 'Y').should.equal(2);
@@ -49,8 +49,8 @@ describe('Date & Time', function () {
     dateTime.DATEDIF('2007-01-01', '2007-12-31', 'd').should.equal(364);
     dateTime.DATEDIF('2007-01-01', '2007-01-31', 'y').should.equal(0);
     dateTime.DATEDIF('2007-01-01', '2008-07-01', 'd').should.equal(547);
-    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'm').should.equal(18);
-    dateTime.DATEDIF('2007-01-01', '2008-07-01', 'ym').should.equal(6);
+    dateTime.DATEDIF(new Date(2007, 1, 1), new Date(2008, 7, 1), 'm').should.equal(18);
+    dateTime.DATEDIF(new Date(2007, 1, 1), new Date(2008, 7, 1), 'ym').should.equal(6);
     dateTime.DATEDIF('2007-01-01', '2008-07-01', 'yd').should.equal(182);
     dateTime.DATEDIF('2008-01-01', '2009-07-01', 'yd').should.equal(181);
     dateTime.DATEDIF('2007-01-01', '2007-01-31', 'md').should.equal(30);

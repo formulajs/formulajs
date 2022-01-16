@@ -147,14 +147,15 @@ describe('Utils => common', function() {
       utils.parseDate('2009 -07-01').should.equal(error.value);
       utils.parseDate('31/12/2009').should.equal(error.value);
       utils.parseDate('2009-31-12').should.equal(error.value);
-    })
+    });
 
     it('should thrown an error in case of out of range input', function () {
       utils.parseDate(-1).should.equal(error.num);
       utils.parseDate(2958466).should.equal(error.num);
-    })
+    });
 
     it('should parse date from serial number', function () {
+      utils.parseDate('1').getTime().should.equal(new Date('1/1/1900').getTime());
       utils.parseDate(1).getTime().should.equal(new Date('1/1/1900').getTime());
       utils.parseDate(61).getTime().should.equal(new Date('3/1/1900').getTime());
       utils.parseDate(60.05).getTime().should.equal(new Date('2/29/1900 01:12:00').getTime());
@@ -167,7 +168,6 @@ describe('Utils => common', function() {
       utils.parseDate('7/1/2009').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
       utils.parseDate('07/01/2009').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
       utils.parseDate('2009/07-01').getTime().should.equal(new Date(2009, 7 - 1, 1).getTime());
-
     });
 
     it('should parse date with time from string', function () {
