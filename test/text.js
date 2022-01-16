@@ -307,6 +307,9 @@ describe('Text', function() {
     text.TRIM(' more  spaces ').should.equal('more spaces');
     text.TRIM(true).should.equal('true');
     text.TRIM(10).should.equal('10');
+    text.TRIM(`  spaces,      tabs, and
+      new lines`).should.equal('spaces, tabs, and new lines');
+    text.TRIM('  spaces,\t\t\ttabs, and\nnew lines').should.equal('spaces, tabs, and new lines');
   });
 
   it('UNICHAR', function() {
