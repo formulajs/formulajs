@@ -53,7 +53,7 @@ describe('Date & Time', function () {
     dateTime.DATEDIF(new Date(2007, 1, 1), new Date(2008, 7, 1), 'ym').should.equal(6);
     dateTime.DATEDIF('2007-01-01', '2008-07-01', 'yd').should.equal(182);
     dateTime.DATEDIF('2008-01-01', '2009-07-01', 'yd').should.equal(181);
-    dateTime.DATEDIF('2007-01-01', '2007-01-31', 'md').should.equal(30);
+    dateTime.DATEDIF('1/1/2007', '1/31/2007', 'md').should.equal(30);
     dateTime.DATEDIF('2007-02-01', '2009-03-01', 'md').should.equal(0);
     dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
     dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md').should.equal(0);
