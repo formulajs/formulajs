@@ -267,20 +267,45 @@ exports.parseMatrix = function(matrix) {
   return matrix;
 };
 
-var d1900 = new Date(Date.UTC(1900, 0, 1));
-exports.parseDate = function(date) {
+function serialNumberToDate(serial) {
+  if (serial < 60) {
+    serial += 1;
+  }
+  var utc_days = Math.floor(serial - 25569);
+  var utc_value = utc_days * 86400;
+  var date_info = new Date(utc_value * 1000);
+
+  var fractional_day = serial - Math.floor(serial) + 0.0000001;
+
+  var total_seconds = Math.floor(86400 * fractional_day);
+
+  var seconds = total_seconds % 60;
+
+  total_seconds -= seconds;
+
+  var hours = Math.floor(total_seconds / (60 * 60));
+  var minutes = Math.floor(total_seconds / 60) % 60;
+  var days = date_info.getDate();
+  var month = date_info.getMonth();
+
+  if (serial >= 60 && serial < 61) {
+    var days = 29;
+    var month = 1;
+  }
+
+  return new Date(date_info.getFullYear(), month, days, hours, minutes, seconds);
+}
+
+exports.parseDate = function (date) {
   if (!isNaN(date)) {
     if (date instanceof Date) {
       return new Date(date);
     }
-    var d = parseInt(date, 10);
-    if (d < 0) {
+    var d = parseFloat(date);
+    if (d < 0 || d >= 2958466) {
       return error.num;
     }
-    if (d <= 60) {
-      return new Date(d1900.getTime() + (d - 1) * 86400000);
-    }
-    return new Date(d1900.getTime() + (d - 2) * 86400000);
+    return serialNumberToDate(d);
   }
   if (typeof date === 'string') {
     date = new Date(date);
@@ -3761,12 +3786,12 @@ exports.EXACT = function(text1, text2) {
   if (arguments.length !== 2) {
     return error.na;
   }
-  var someError = utils.anyError(text1, text1);
+  var someError = utils.anyError(text1, text2);
   if (someError) {
     return someError;
   }
-  text1 = utils.toString(text1);
-  text2 = utils.toString(text2);
+  text1 = utils.parseString(text1);
+  text2 = utils.parseString(text2);
   return text1 === text2;
 };
 
@@ -4013,7 +4038,7 @@ exports.TRIM = function(text) {
   if (text instanceof Error) {
     return text;
   }
-  return text.replace(/ +/g, ' ').trim();
+  return text.replace(/\s+/g, ' ').trim();
 };
 
 exports.UNICHAR = exports.CHAR;
@@ -4477,11 +4502,11 @@ exports.DATE = function (year, month, day) {
   if (utils.anyIsError(year, month, day)) {
     result = error.value;
 
-  } else if (year < 0 || month < 0 || day < 0) {
-    result = error.num;
-
   } else {
     result = new Date(year, month - 1, day);
+    if (result.getFullYear() < 0) {
+      result = error.num;
+    }
   }
 
   return result;
@@ -4592,7 +4617,7 @@ exports.DAYS = function (end_date, start_date) {
 };
 
 exports.DAYS360 = function (start_date, end_date, method) {
-  method = utils.parseBool(method);
+  method = utils.parseBool(method || 'false');
   start_date = utils.parseDate(start_date);
   end_date = utils.parseDate(end_date);
 
