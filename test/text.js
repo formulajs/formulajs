@@ -300,6 +300,15 @@ describe('Text', function() {
     text.TEXT('1234.56', '###0.00').should.equal('1234.56');
     text.TEXT().should.equal(error.na);
   });
+  
+  it('TEXTJOIN', function() {
+    text.TEXTJOIN(' ', true, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The sun will come up tomorrow.');
+    text.TEXTJOIN(' ', false, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The  sun will come up tomorrow.');
+    text.TEXTJOIN(['_', '>'], true, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The_sun>will_come>up_tomorrow.');
+    text.TEXTJOIN(' ', true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.']).should.equal('The sun will come up tomorrow.');
+    text.TEXTJOIN(undefined, undefined, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('Thesunwillcomeuptomorrow.');
+    text.TEXTJOIN(' ', true).should.equal(error.value);
+  });
 
   it('TRIM', function() {
     text.TRIM(undefined).should.equal('');
