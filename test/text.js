@@ -303,11 +303,14 @@ describe('Text', function() {
   
   it('TEXTJOIN', function() {
     text.TEXTJOIN(' ', true, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The sun will come up tomorrow.');
+    text.TEXTJOIN(' ', 'TRUE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The sun will come up tomorrow.');
     text.TEXTJOIN(' ', false, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The  sun will come up tomorrow.');
+    text.TEXTJOIN(' ', 'FALSE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The  sun will come up tomorrow.');
     text.TEXTJOIN(['_', '>'], true, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('The_sun>will_come>up_tomorrow.');
     text.TEXTJOIN(' ', true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.']).should.equal('The sun will come up tomorrow.');
+    text.TEXTJOIN(true, true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.']).should.equal('Thetruesuntruewilltruecometrueuptruetomorrow.');
     text.TEXTJOIN(undefined, undefined, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.').should.equal('Thesunwillcomeuptomorrow.');
-    text.TEXTJOIN(' ', true).should.equal(error.value);
+    text.TEXTJOIN(' ', true).should.equal(error.na);
   });
 
   it('TRIM', function() {
