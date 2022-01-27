@@ -4,54 +4,51 @@ import pkg from './package.json'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
+import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 fs.rmSync('lib', { recursive: true, force: true })
 fs.rmSync('dist', { recursive: true, force: true })
 
 const banner = `/* ${pkg.name} v${pkg.version} */`
 
-const libBase = {
-  input: './src/index.js',
+const baseConfig = {
+  input: 'src/index.js',
   external: ['bessel', 'jstat'],
   plugins: [resolve(), commonjs()]
 }
 
-const cjsConfig = {
-  ...libBase,
-  output: {
-    format: 'cjs',
-    file: 'lib/cjs/index.cjs',
-    exports: 'auto'
-  }
-}
-
-const esmConfig = {
-  ...libBase,
-  output: {
-    format: 'es',
-    file: 'lib/esm/index.mjs'
-  }
+const nodeConfig = {
+  ...baseConfig,
+  output: [
+    { format: 'cjs', file: 'lib/cjs/index.cjs' },
+    { format: 'esm', file: 'lib/esm/index.mjs' }
+  ]
 }
 
 const umdConfig = {
-  ...libBase,
+  ...baseConfig,
+  external: [],
   output: [
     {
       format: 'umd',
       file: 'lib/browser/formula.js',
       name: 'formulajs',
-      banner: banner,
-      compact: true
+      plugins: [
+        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true }),
+        terser({ compress: false, mangle: false, format: { beautify: true, indent_level: 2, preamble: banner } })
+      ]
     },
     {
       format: 'umd',
       file: 'lib/browser/formula.min.js',
       name: 'formulajs',
-      sourcemap: true,
-      plugins: [terser({ format: { preamble: banner } })]
+      plugins: [
+        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true }),
+        terser({ format: { preamble: banner } })
+      ],
+      sourcemap: true
     }
-  ],
-  external: []
+  ]
 }
 
-export default [cjsConfig, esmConfig, umdConfig]
+export default [nodeConfig, umdConfig]
