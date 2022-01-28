@@ -32,7 +32,7 @@
     "coverage": "c8 mocha --reporter min",
     "lint": "eslint ./",
     "stats": "node ./bin/implementation-stats.js",
-    "test": "set TZ='Europe/Amsterdam' && mocha --reporter min",
+    "test": "mocha --reporter min",
     "test-browser": "mocha --reporter mochawesome",
     "watch": "mocha --watch --parallel --reporter min"
   },
