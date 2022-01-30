@@ -1,4 +1,5 @@
-# Formula.js [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
+# Formula.js
+[![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
 
 [Official website and documentation is here](https://formulajs.info)
 
@@ -9,23 +10,36 @@
 Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.9.3/dist/formula.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@formulajs/formulajs@3.0.0/lib/browser/formula.min.js"></script>
 ```
 
 Then the functions can be accessed as
 
 ```
 formulajs.Date(2008, 7, 8)
-formulajs.SUM([1, 2 , 3])
+formulajs.SUM([1, 2, 3])
 ...
 ```
 
 ### In node
-
 Install the package:
 
-```json
-npm i @formulajs/formulajs
+`npm i @formulajs/formulajs`
+
+**import**
+```javascript
+import * as formulajs from '@formulajs/formulajs'    // import entire package
+```
+```javascript
+import { component } from '@formulajs/formulajs'    // import individual components.
+```
+
+**require**
+```javascript
+var formulajs = require('@formulajs/formulajs')`    // require entire package
+```
+```javascript
+var { component } = require('@formulajs/formulajs')`    // require individual components.
 ```
 
 ## Differences between Excel functions and Formula.js
