@@ -6,6 +6,7 @@
 ## Use it
 
 ### In browser
+[![](https://data.jsdelivr.com/v1/package/npm/@formulajs/formulajs/badge)](https://www.jsdelivr.com/package/npm/@formulajs/formulajs)
 
 Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
 
@@ -22,24 +23,36 @@ formulajs.SUM([1, 2, 3])
 ```
 
 ### In node
+[![npm](https://img.shields.io/npm/v/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs) [![npm](https://img.shields.io/npm/dm/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs)
+
 Install the package:
 
-`npm i @formulajs/formulajs`
+```
+npm i @formulajs/formulajs`
+```
 
-**import**
+#### import
 ```javascript
 import * as formulajs from '@formulajs/formulajs'    // import entire package
+
+formulajs.SUM([1, 2, 3])
 ```
 ```javascript
-import { component } from '@formulajs/formulajs'    // import individual components.
+import { SUM } from '@formulajs/formulajs'    // import individual components
+
+SUM([1, 2, 3])
 ```
 
-**require**
+#### require
 ```javascript
 var formulajs = require('@formulajs/formulajs')`    // require entire package
+
+formulajs.SUM([1, 2, 3])
 ```
 ```javascript
-var { component } = require('@formulajs/formulajs')`    // require individual components.
+var { SUM } = require('@formulajs/formulajs')`    // require individual components
+
+SUM([1, 2, 3])
 ```
 
 ## Differences between Excel functions and Formula.js
