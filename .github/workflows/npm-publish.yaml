@@ -12,7 +12,6 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - name: Build
       - run: npm run build
       - name: Publish
         run: |
