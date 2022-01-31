@@ -1,4 +1,5 @@
 # Formula.js
+
 [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
 
 [Official website and documentation is here](https://formulajs.info)
@@ -6,6 +7,7 @@
 ## Use it
 
 ### In browser
+
 [![](https://data.jsdelivr.com/v1/package/npm/@formulajs/formulajs/badge)](https://www.jsdelivr.com/package/npm/@formulajs/formulajs)
 
 Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
@@ -23,6 +25,7 @@ formulajs.SUM([1, 2, 3])
 ```
 
 ### In node
+
 [![npm](https://img.shields.io/npm/v/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs) [![npm](https://img.shields.io/npm/dm/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs)
 
 Install the package:
@@ -32,23 +35,27 @@ npm i @formulajs/formulajs`
 ```
 
 #### import
+
 ```javascript
-import * as formulajs from '@formulajs/formulajs'    // import entire package
+import * as formulajs from '@formulajs/formulajs' // import entire package
 
 formulajs.SUM([1, 2, 3])
 ```
+
 ```javascript
-import { SUM } from '@formulajs/formulajs'    // import individual components
+import { SUM } from '@formulajs/formulajs' // import individual components
 
 SUM([1, 2, 3])
 ```
 
 #### require
+
 ```javascript
 var formulajs = require('@formulajs/formulajs')`    // require entire package
 
 formulajs.SUM([1, 2, 3])
 ```
+
 ```javascript
 var { SUM } = require('@formulajs/formulajs')`    // require individual components
 
