@@ -29,15 +29,15 @@
   ],
   "scripts": {
     "build": "npm run prettier && npm run lint && npm run test && rollup -c",
-    "coverage": "c8 mocha --reporter progress",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "stats": "node ./bin/implementation-stats.js",
-    "test": "mocha --reporter progress",
+    "test": "mocha",
     "test:browser": "mocha --reporter mochawesome",
+    "test:coverage": "c8 mocha --reporter min",
     "test:watch": "mocha --watch --parallel --reporter min"
   },
   "dependencies": {
