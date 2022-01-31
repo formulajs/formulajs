@@ -28,7 +28,7 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm run prettier && npm run lint && npm run test && rollup -c",
+    "build": "npm run prettier && npm run lint && npm run test:coverage && rollup -c",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -37,7 +37,7 @@
     "stats": "node ./bin/implementation-stats.js",
     "test": "mocha",
     "test:browser": "mocha --reporter mochawesome",
-    "test:coverage": "c8 mocha --reporter min",
+    "test:coverage": "c8 mocha",
     "test:watch": "mocha --watch --parallel --reporter min"
   },
   "dependencies": {
