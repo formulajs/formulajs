@@ -28,13 +28,17 @@
     "lib"
   ],
   "scripts": {
-    "build": "npm run lint && rollup -c",
-    "coverage": "c8 mocha --reporter min",
-    "lint": "eslint ./",
+    "build": "npm run prettier && npm run lint && npm run test && rollup -c",
+    "coverage": "c8 mocha --reporter progress",
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "stats": "node ./bin/implementation-stats.js",
-    "test": "mocha --reporter min",
-    "test-browser": "mocha --reporter mochawesome",
-    "watch": "mocha --watch --parallel --reporter min"
+    "test": "mocha --reporter progress",
+    "test:browser": "mocha --reporter mochawesome",
+    "test:watch": "mocha --watch --parallel --reporter min"
   },
   "dependencies": {
     "bessel": "^1.0.2",
@@ -48,10 +52,11 @@
     "c8": "^7.11.0",
     "cli-table3": "^0.6.1",
     "eslint": "^8.8.0",
+    "eslint-config-prettier": "^8.3.0",
     "mocha": "^9.2.0",
     "mochawesome": "^7.0.1",
+    "prettier": "^2.5.1",
     "rollup": "^2.66.1",
-    "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "should": "^13.2.3"
   }
