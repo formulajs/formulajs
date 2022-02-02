@@ -31,19 +31,19 @@ formulajs.SUM([1, 2, 3])
 Install the package:
 
 ```
-npm i @formulajs/formulajs`
+npm i @formulajs/formulajs
 ```
 
 #### import
 
 ```javascript
-import * as formulajs from '@formulajs/formulajs' // import entire package
+import * as formulajs from '@formulajs/formulajs'  // import entire package
 
 formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
-import { SUM } from '@formulajs/formulajs' // import individual components
+import { SUM } from '@formulajs/formulajs'  // import individual components
 
 SUM([1, 2, 3]) // 6
 ```
@@ -51,13 +51,13 @@ SUM([1, 2, 3]) // 6
 #### require
 
 ```javascript
-var formulajs = require('@formulajs/formulajs')`    // require entire package
+var formulajs = require('@formulajs/formulajs')  // require entire package
 
 formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
-var { SUM } = require('@formulajs/formulajs')`    // require individual components
+var { SUM } = require('@formulajs/formulajs')  // require individual components
 
 SUM([1, 2, 3]) // 6
 ```
