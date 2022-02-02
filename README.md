@@ -1,6 +1,6 @@
 # Formula.js
 
-[![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
+[![Tests](https://github.com/formulajs/formulajs/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/formulajs/formulajs/actions/workflows/unit-tests.yaml) [![Build/Publish](https://github.com/formulajs/formulajs/actions/workflows/npm-publish.yaml/badge.svg)](https://github.com/formulajs/formulajs/actions/workflows/npm-publish.yaml)
 
 [Official website and documentation is here](https://formulajs.info)
 
