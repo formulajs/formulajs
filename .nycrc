@@ -1,0 +1,4 @@
+{
+  "include": ["src"],
+  "exclude": ["src/index.js"]
+}
