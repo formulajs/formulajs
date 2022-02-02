@@ -18,8 +18,8 @@ Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version
 
 Then the functions can be accessed as
 
-```
-formulajs.Date(2008, 7, 8)
+```javascript
+formulajs.DATE(2008, 7, 8)
 formulajs.SUM([1, 2, 3])
 ...
 ```
@@ -39,13 +39,13 @@ npm i @formulajs/formulajs`
 ```javascript
 import * as formulajs from '@formulajs/formulajs' // import entire package
 
-formulajs.SUM([1, 2, 3])
+formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
 import { SUM } from '@formulajs/formulajs' // import individual components
 
-SUM([1, 2, 3])
+SUM([1, 2, 3]) // 6
 ```
 
 #### require
@@ -53,13 +53,13 @@ SUM([1, 2, 3])
 ```javascript
 var formulajs = require('@formulajs/formulajs')`    // require entire package
 
-formulajs.SUM([1, 2, 3])
+formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
 var { SUM } = require('@formulajs/formulajs')`    // require individual components
 
-SUM([1, 2, 3])
+SUM([1, 2, 3]) // 6
 ```
 
 ## Differences between Excel functions and Formula.js
@@ -109,7 +109,7 @@ the following contributors: Ilmari Karonen, Sébastien Loisel, Trevor Norris, Ro
 It was then forked and extended by the [handsontable/formula.js](https://github.com/handsontable/formula.js) mainly
 contributed by [@budnix](https://github.com/budnix).
 
-## Contributions and road map 2020
+## Contributions and road map 2022
 
 The road map in the coming month is to gather the improvements made in the main forks of the original project. If you
 forked and made changes to sutoiku/formula.js do not hesitate to propose a pull request with your changes.
