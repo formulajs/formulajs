@@ -1,5 +1,6 @@
-Formula.js [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
-==========
+# Formula.js
+
+[![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
 
 [Official website and documentation is here](https://formulajs.info)
 
@@ -7,34 +8,65 @@ Formula.js [![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch
 
 ### In browser
 
+[![](https://data.jsdelivr.com/v1/package/npm/@formulajs/formulajs/badge)](https://www.jsdelivr.com/package/npm/@formulajs/formulajs)
+
 Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jstat@1.9.2/dist/jstat.min.js"></script> 
-<script src="https://cdn.jsdelivr.net/gh/formulajs/formulajs@2.9.3/dist/formula.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@formulajs/formulajs@3.0.0/lib/browser/formula.min.js"></script>
 ```
 
 Then the functions can be accessed as
 
-```
-formulajs.Date(2008, 7, 8)
-formulajs.SUM([1, 2 , 3])
+```javascript
+formulajs.DATE(2008, 7, 8)
+formulajs.SUM([1, 2, 3])
 ...
 ```
 
 ### In node
 
+[![npm](https://img.shields.io/npm/v/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs) [![npm](https://img.shields.io/npm/dm/@formulajs/formulajs?style=flat-square)](https://www.npmjs.com/package/@formulajs/formulajs)
+
 Install the package:
 
-```json
-npm i @formulajs/formulajs
+```
+npm i @formulajs/formulajs`
+```
+
+#### import
+
+```javascript
+import * as formulajs from '@formulajs/formulajs' // import entire package
+
+formulajs.SUM([1, 2, 3]) // 6
+```
+
+```javascript
+import { SUM } from '@formulajs/formulajs' // import individual components
+
+SUM([1, 2, 3]) // 6
+```
+
+#### require
+
+```javascript
+var formulajs = require('@formulajs/formulajs')`    // require entire package
+
+formulajs.SUM([1, 2, 3]) // 6
+```
+
+```javascript
+var { SUM } = require('@formulajs/formulajs')`    // require individual components
+
+SUM([1, 2, 3]) // 6
 ```
 
 ## Differences between Excel functions and Formula.js
 
 ### Date
 
-The functions ```DATE, DATEVALUE, EDATE, EOMONT, NOW, TODAY```return plain JS Date instead of the serial Excel number.
+The functions `DATE, DATEVALUE, EDATE, EOMONT, NOW, TODAY`return plain JS Date instead of the serial Excel number.
 
 Copying composite formula directly from Excel into JS will not work out of the box:
 
@@ -42,7 +74,7 @@ Copying composite formula directly from Excel into JS will not work out of the b
 = DATE(2020,5,9) - DATE(2020,5,8) // Formula.js: 86400000 / Excel: 1
 ```
 
-It is not recommended to use ```DATEVALUE``` to parse string representing a date. Formula.js uses ```new Date('YOUR STRING')``` under the hood. There are better libraries to do this job (for example Moment.js)
+It is not recommended to use `DATEVALUE` to parse string representing a date. Formula.js uses `new Date('YOUR STRING')` under the hood. There are better libraries to do this job (for example Moment.js)
 
 ## Migration guide
 
@@ -69,17 +101,17 @@ two packages were identical at the time. There is no regression, only fixes and 
 ## Historic
 
 This project is forked from [handsontable/formula.js](https://github.com/handsontable/formula.js) and it's developed for
- everyone needs.
- 
-Original Formula.js project was developed and maintained by Ismael Chang Ghalimi, with support from STOIC and help from
- the following contributors: Ilmari Karonen, Sébastien Loisel, Trevor Norris, Roönaän, Hannes Stiebitzhofer.
+everyone needs.
 
-It was then forked and extended by the [handsontable/formula.js](https://github.com/handsontable/formula.js) mainly 
+Original Formula.js project was developed and maintained by Ismael Chang Ghalimi, with support from STOIC and help from
+the following contributors: Ilmari Karonen, Sébastien Loisel, Trevor Norris, Roönaän, Hannes Stiebitzhofer.
+
+It was then forked and extended by the [handsontable/formula.js](https://github.com/handsontable/formula.js) mainly
 contributed by [@budnix](https://github.com/budnix).
 
-## Contributions and road map 2020
+## Contributions and road map 2022
 
-The road map in the coming month is to gather the improvements made in the main forks of the original project. If you 
-forked and made changes to sutoiku/formula.js do not hesitate to propose a pull request with your changes. 
+The road map in the coming month is to gather the improvements made in the main forks of the original project. If you
+forked and made changes to sutoiku/formula.js do not hesitate to propose a pull request with your changes.
 
 To avoid any regression or miss calculation please provide unit tests as long as function improvements.
