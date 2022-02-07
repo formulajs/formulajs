@@ -1,6 +1,6 @@
 # Formula.js
 
-[![Build Status](https://travis-ci.com/formulajs/formulajs.svg?branch=master)](https://travis-ci.com/formulajs/formulajs)
+[![Tests](https://github.com/formulajs/formulajs/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/formulajs/formulajs/actions/workflows/unit-tests.yaml) [![Build/Publish](https://github.com/formulajs/formulajs/actions/workflows/npm-publish.yaml/badge.svg)](https://github.com/formulajs/formulajs/actions/workflows/npm-publish.yaml)
 
 [Official website and documentation is here](https://formulajs.info)
 
@@ -31,7 +31,7 @@ formulajs.SUM([1, 2, 3])
 Install the package:
 
 ```
-npm i @formulajs/formulajs`
+npm i @formulajs/formulajs
 ```
 
 #### import
@@ -51,13 +51,13 @@ SUM([1, 2, 3]) // 6
 #### require
 
 ```javascript
-var formulajs = require('@formulajs/formulajs')`    // require entire package
+var formulajs = require('@formulajs/formulajs') // require entire package
 
 formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
-var { SUM } = require('@formulajs/formulajs')`    // require individual components
+var { SUM } = require('@formulajs/formulajs') // require individual components
 
 SUM([1, 2, 3]) // 6
 ```
