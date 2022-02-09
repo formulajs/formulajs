@@ -13,6 +13,9 @@
   },
   "license": "MIT",
   "type": "module",
+  "bin": {
+    "formulajs": "./bin/cli.js"
+  },
   "main": "./lib/cjs",
   "module": "./lib/esm",
   "unpkg": "./lib/browser/formula.min.js",
@@ -25,6 +28,7 @@
     "./package.json": "./package.json"
   },
   "files": [
+    "bin/cli.js",
     "lib"
   ],
   "scripts": {
