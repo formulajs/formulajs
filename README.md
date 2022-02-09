@@ -62,6 +62,22 @@ var { SUM } = require('@formulajs/formulajs') // require individual components
 SUM([1, 2, 3]) // 6
 ```
 
+### Command Line Interface (CLI)
+
+When Formula.js is installed globally using npm, it can be used from the command line. To install Formula.js globally:
+
+```
+npm i -g @formulajs/formulajs
+```
+
+After installation, Formula.js is available via the command line:
+
+```sh
+$ formulajs
+> SUM(1,2,3)
+6
+```
+
 ## Differences between Excel functions and Formula.js
 
 ### Date
