@@ -1,6 +1,6 @@
 {
   "name": "@formulajs/formulajs",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "homepage": "https://github.com/formulajs/formulajs#readme",
@@ -50,18 +50,18 @@
     "jstat": "^1.9.5"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.16.11",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^21.0.1",
-    "@rollup/plugin-node-resolve": "^13.1.3",
-    "c8": "^7.11.0",
-    "cli-table3": "^0.6.1",
-    "eslint": "^8.8.0",
-    "eslint-config-prettier": "^8.3.0",
-    "mocha": "^9.2.0",
-    "mochawesome": "^7.0.1",
-    "prettier": "^2.5.1",
-    "rollup": "^2.67.0",
+    "@babel/preset-env": "^7.18.2",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "c8": "^7.11.3",
+    "cli-table3": "^0.6.2",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "mocha": "^10.0.0",
+    "mochawesome": "^7.1.3",
+    "prettier": "^2.7.1",
+    "rollup": "^2.75.7",
     "rollup-plugin-terser": "^7.0.2",
     "should": "^13.2.3"
   }
