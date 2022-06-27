@@ -104,12 +104,7 @@ export function HLOOKUP(needle, table, index, rangeLookup) {
 
 export function LOOKUP(searchCriterion, array, resultArray) {
   array = utils.flatten(array)
-
-  if (resultArray) {
-    resultArray = utils.flatten(resultArray)
-  } else {
-    resultArray = array
-  }
+  resultArray = resultArray ? utils.flatten(resultArray) : array
 
   const isNumberLookup = typeof searchCriterion === 'number'
   let result = error.na
