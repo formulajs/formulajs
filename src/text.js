@@ -449,7 +449,7 @@ export function VALUE(num) {
   }
 
   if (typeof num === 'number') {
-    return num;
+    return num
   }
 
   if (typeof num !== 'string') {
