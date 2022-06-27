@@ -7,7 +7,6 @@ import { terser } from 'rollup-plugin-terser'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
 
 fs.rmSync('lib', { recursive: true, force: true })
-fs.rmSync('dist', { recursive: true, force: true })
 
 const banner = `/* ${pkg.name} v${pkg.version} */`
 
