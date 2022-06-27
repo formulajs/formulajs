@@ -106,9 +106,9 @@ export function LOOKUP(searchCriterion, array, resultArray) {
   array = utils.flatten(array)
 
   if (resultArray) {
-    resultArray = utils.flatten(resultArray);
+    resultArray = utils.flatten(resultArray)
   } else {
-    resultArray = array;
+    resultArray = array
   }
 
   const isNumberLookup = typeof searchCriterion === 'number'

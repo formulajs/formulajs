@@ -414,8 +414,8 @@ describe('Lookup Reference', () => {
     describe('without a resultArray', () => {
       it('should return the nearest value', () => {
         lookup.LOOKUP(0.21, [[0.1, 0.2, 0.3, 0.2]]).should.equal(0.2)
-      });
-    });
+      })
+    })
 
     describe('with a resultArray', () => {
       lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red']).should.equal('yellow')
@@ -425,7 +425,7 @@ describe('Lookup Reference', () => {
       lookup.LOOKUP(0.23, [[0.1], [0.2], [0.3], [0.4]], [['A'], ['B'], ['C'], ['D']]).should.equal('B')
       lookup.LOOKUP(0, [[0.1, 0.2, 0.3, 0.4]], [['A', 'B', 'C', 'D']]).should.equal(error.na)
       lookup.LOOKUP(0.21, [[0.1, 0.2, 0.3, 0.2]], [['A', 'B', 'C', 'D']]).should.equal('B')
-    });
+    })
   })
 
   describe('INDEX', () => {
