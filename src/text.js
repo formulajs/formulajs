@@ -448,6 +448,10 @@ export function VALUE(num) {
     return anyError
   }
 
+  if (typeof num === 'number') {
+    return num
+  }
+
   if (typeof num !== 'string') {
     return error.value
   }

@@ -398,6 +398,10 @@ describe('Text', () => {
       text.VALUE('12%').should.equal(0.12)
     })
 
+    it('should allow numeric input', () => {
+      text.VALUE(12).should.equal(12)
+    })
+
     /**
      * Only supports thousands separator "," and decimal separator "."
      *
