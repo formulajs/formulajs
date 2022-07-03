@@ -4,6 +4,14 @@ import * as information from './information.js'
 import * as statistical from './statistical.js'
 import * as utils from './utils/common.js'
 
+/**
+ * Returns the absolute value of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The real number of which you want the absolute value.
+ * @returns
+ */
 export function ABS(number) {
   number = utils.parseNumber(number)
 
@@ -16,6 +24,14 @@ export function ABS(number) {
   return result
 }
 
+/**
+ * Returns the arccosine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The cosine of the angle you want and must be from -1 to 1.
+ * @returns
+ */
 export function ACOS(number) {
   number = utils.parseNumber(number)
 
@@ -32,6 +48,14 @@ export function ACOS(number) {
   return result
 }
 
+/**
+ * Returns the inverse hyperbolic cosine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number equal to or greater than 1.
+ * @returns
+ */
 export function ACOSH(number) {
   number = utils.parseNumber(number)
 
@@ -48,6 +72,14 @@ export function ACOSH(number) {
   return result
 }
 
+/**
+ * Returns the arccotangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Number is the cotangent of the angle you want. This must be a real number.
+ * @returns
+ */
 export function ACOT(number) {
   number = utils.parseNumber(number)
 
@@ -60,6 +92,13 @@ export function ACOT(number) {
   return result
 }
 
+/**
+ * Returns the hyperbolic arccotangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function ACOTH(number) {
   number = utils.parseNumber(number)
 
@@ -77,6 +116,17 @@ export function ACOTH(number) {
 }
 
 // TODO: use options
+/**
+ * Returns an aggregate in a list or database.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} function_num A number 1 to 19 that specifies which function to use.
+ * @param {*} options A numerical value that determines which values to ignore in the evaluation range for the function. Note: The function will not ignore hidden rows, nested subtotals or nested aggregates if the array argument includes a calculation, for example: =AGGREGATE(14,3,A1:A100*(A1:A100>0),1)
+ * @param {*} ref1 The first numeric argument for functions that take multiple numeric arguments for which you want the aggregate value.
+ * @param {*} ref2,... Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of cells for which you want the aggregate value. Ref2 is a second argument that is required for certain functions. The following functions require a ref2 argument:
+ * @returns
+ */
 export function AGGREGATE(function_num, options, ref1, ref2) {
   function_num = utils.parseNumber(function_num)
   options = utils.parseNumber(function_num)
@@ -127,6 +177,14 @@ export function AGGREGATE(function_num, options, ref1, ref2) {
   }
 }
 
+/**
+ * Converts a Roman number to Arabic, as a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} text A string enclosed in quotation marks, an empty string (""), or a reference to a cell containing text.
+ * @returns
+ */
 export function ARABIC(text) {
   if (text === undefined || text === null) {
     return 0
@@ -163,6 +221,14 @@ export function ARABIC(text) {
   return r
 }
 
+/**
+ * Returns the arcsine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The sine of the angle you want and must be from -1 to 1.
+ * @returns
+ */
 export function ASIN(number) {
   number = utils.parseNumber(number)
 
@@ -179,6 +245,14 @@ export function ASIN(number) {
   return result
 }
 
+/**
+ * Returns the inverse hyperbolic sine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number.
+ * @returns
+ */
 export function ASINH(number) {
   number = utils.parseNumber(number)
 
@@ -189,6 +263,14 @@ export function ASINH(number) {
   return Math.log(number + Math.sqrt(number * number + 1))
 }
 
+/**
+ * Returns the arctangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The tangent of the angle you want.
+ * @returns
+ */
 export function ATAN(number) {
   number = utils.parseNumber(number)
 
@@ -199,6 +281,15 @@ export function ATAN(number) {
   return Math.atan(number)
 }
 
+/**
+ * Returns the arctangent from x- and y-coordinates.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} x_num The x-coordinate of the point.
+ * @param {*} y_num The y-coordinate of the point.
+ * @returns
+ */
 export function ATAN2(number_x, number_y) {
   number_x = utils.parseNumber(number_x)
   number_y = utils.parseNumber(number_y)
@@ -211,6 +302,14 @@ export function ATAN2(number_x, number_y) {
   return Math.atan2(number_x, number_y)
 }
 
+/**
+ * Returns the inverse hyperbolic tangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number between 1 and -1.
+ * @returns
+ */
 export function ATANH(number) {
   number = utils.parseNumber(number)
 
@@ -227,6 +326,16 @@ export function ATANH(number) {
   return result
 }
 
+/**
+ * Converts a number into a text representation with the given radix (base).
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number that you want to convert. Must be an integer greater than or equal to 0 and less than 2^53.
+ * @param {*} radix The base radix that you want to convert the number into. Must be an integer greater than or equal to 2 and less than or equal to 36.
+ * @param {*} min_length Optional. The minimum length of the returned string. Must be an integer greater than or equal to 0.
+ * @returns
+ */
 export function BASE(number, radix, min_length) {
   number = utils.parseNumber(number)
   radix = utils.parseNumber(radix)
@@ -246,6 +355,15 @@ export function BASE(number, radix, min_length) {
   return new Array(Math.max(min_length + 1 - result.length, 0)).join('0') + result
 }
 
+/**
+ * Rounds a number to the nearest integer or to the nearest multiple of significance.
+ *
+ * Category: Compatibility
+ *
+ * @param {*} number The value you want to round.
+ * @param {*} significance The multiple to which you want to round.
+ * @returns
+ */
 export function CEILING(number, significance, mode) {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
@@ -278,6 +396,15 @@ CEILING.MATH = CEILING
 
 CEILING.PRECISE = CEILING
 
+/**
+ * Returns the number of combinations for a given number of objects.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number of items.
+ * @param {*} number_chosen The number of items in each combination.
+ * @returns
+ */
 export function COMBIN(number, number_chosen) {
   number = utils.parseNumber(number)
   number_chosen = utils.parseNumber(number_chosen)
@@ -294,6 +421,15 @@ export function COMBIN(number, number_chosen) {
   return FACT(number) / (FACT(number_chosen) * FACT(number - number_chosen))
 }
 
+/**
+ * Returns the number of combinations with repetitions for a given number of items.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Must be greater than or equal to 0, and greater than or equal to Number_chosen. Non-integer values are truncated.
+ * @param {*} number_chosen Must be greater than or equal to 0. Non-integer values are truncated.
+ * @returns
+ */
 export function COMBINA(number, number_chosen) {
   number = utils.parseNumber(number)
   number_chosen = utils.parseNumber(number_chosen)
@@ -310,6 +446,14 @@ export function COMBINA(number, number_chosen) {
   return number === 0 && number_chosen === 0 ? 1 : COMBIN(number + number_chosen - 1, number - 1)
 }
 
+/**
+ * Returns the cosine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The angle in radians for which you want the cosine.
+ * @returns
+ */
 export function COS(number) {
   number = utils.parseNumber(number)
 
@@ -320,6 +464,14 @@ export function COS(number) {
   return Math.cos(number)
 }
 
+/**
+ * Returns the hyperbolic cosine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number for which you want to find the hyperbolic cosine.
+ * @returns
+ */
 export function COSH(number) {
   number = utils.parseNumber(number)
 
@@ -330,6 +482,14 @@ export function COSH(number) {
   return (Math.exp(number) + Math.exp(-number)) / 2
 }
 
+/**
+ * Returns the hyperbolic cosine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The angle in radians for which you want the cotangent.
+ * @returns
+ */
 export function COT(number) {
   number = utils.parseNumber(number)
 
@@ -344,6 +504,14 @@ export function COT(number) {
   return 1 / Math.tan(number)
 }
 
+/**
+ * Returns the cotangent of an angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number
+ * @returns
+ */
 export function COTH(number) {
   number = utils.parseNumber(number)
 
@@ -360,6 +528,14 @@ export function COTH(number) {
   return (e2 + 1) / (e2 - 1)
 }
 
+/**
+ * Returns the cosecant of an angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number
+ * @returns
+ */
 export function CSC(number) {
   number = utils.parseNumber(number)
 
@@ -374,6 +550,14 @@ export function CSC(number) {
   return 1 / Math.sin(number)
 }
 
+/**
+ * Returns the hyperbolic cosecant of an angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number
+ * @returns
+ */
 export function CSCH(number) {
   number = utils.parseNumber(number)
 
@@ -388,6 +572,15 @@ export function CSCH(number) {
   return 2 / (Math.exp(number) - Math.exp(-number))
 }
 
+/**
+ * Converts a text representation of a number in a given base into a decimal number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} text
+ * @param {*} radix Radix must be an integer.
+ * @returns
+ */
 export function DECIMAL(number, radix) {
   if (arguments.length < 1) {
     return error.value
@@ -408,6 +601,14 @@ export function DECIMAL(number, radix) {
   return parseInt(number, radix)
 }
 
+/**
+ * Converts radians to degrees.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} angle The angle in radians that you want to convert.
+ * @returns
+ */
 export function DEGREES(number) {
   number = utils.parseNumber(number)
 
@@ -418,6 +619,14 @@ export function DEGREES(number) {
   return (number * 180) / Math.PI
 }
 
+/**
+ * Rounds a number up to the nearest even integer.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value to round.
+ * @returns
+ */
 export function EVEN(number) {
   number = utils.parseNumber(number)
 
@@ -428,6 +637,14 @@ export function EVEN(number) {
   return CEILING(number, -2, -1)
 }
 
+/**
+ * Returns e raised to the power of a given number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The exponent applied to the base e.
+ * @returns
+ */
 export function EXP(number) {
   if (arguments.length < 1) {
     return error.na
@@ -449,6 +666,14 @@ export function EXP(number) {
 }
 
 const MEMOIZED_FACT = []
+/**
+ * Returns the factorial of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The nonnegative number for which you want the factorial. If number is not an integer, it is truncated.
+ * @returns
+ */
 export function FACT(number) {
   number = utils.parseNumber(number)
 
@@ -469,6 +694,14 @@ export function FACT(number) {
   }
 }
 
+/**
+ * Returns the double factorial of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value for which to return the double factorial. If number is not an integer, it is truncated.
+ * @returns
+ */
 export function FACTDOUBLE(number) {
   number = utils.parseNumber(number)
 
@@ -485,6 +718,15 @@ export function FACTDOUBLE(number) {
   }
 }
 
+/**
+ * Rounds a number down, toward zero.
+ *
+ * Category: Compatibility
+ *
+ * @param {*} number The numeric value you want to round.
+ * @param {*} significance The multiple to which you want to round.
+ * @returns
+ */
 export function FLOOR(number, significance) {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
@@ -549,6 +791,14 @@ FLOOR.MATH = (number, significance, mode) => {
 FLOOR.PRECISE = FLOOR.MATH
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
+/**
+ * Returns the greatest common divisor.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values. If any value is not an integer, it is truncated.
+ * @returns
+ */
 export function GCD() {
   const range = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -578,6 +828,14 @@ export function GCD() {
   return x
 }
 
+/**
+ * Rounds a number down to the nearest integer.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The real number you want to round down to an integer.
+ * @returns
+ */
 export function INT(number) {
   number = utils.parseNumber(number)
 
@@ -593,6 +851,14 @@ export const ISO = {
   CEILING: CEILING
 }
 
+/**
+ * Returns the least common multiple.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number1, number2,... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the least common multiple. If value is not an integer, it is truncated.
+ * @returns
+ */
 export function LCM() {
   // Credits: Jonas Raoni Soares Silva
   const o = utils.parseNumberArray(utils.flatten(arguments))
@@ -626,6 +892,14 @@ export function LCM() {
   return r
 }
 
+/**
+ * Returns the natural logarithm of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The positive real number for which you want the natural logarithm.
+ * @returns
+ */
 export function LN(number) {
   number = utils.parseNumber(number)
 
@@ -656,6 +930,15 @@ export function LOG2E() {
   return Math.LOG2E
 }
 
+/**
+ * Returns the logarithm of a number to a specified base.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The positive real number for which you want the logarithm.
+ * @param {*} base Optional. The base of the logarithm. If base is omitted, it is assumed to be 10.
+ * @returns
+ */
 export function LOG(number, base) {
   number = utils.parseNumber(number)
   base = utils.parseNumber(base)
@@ -672,6 +955,14 @@ export function LOG(number, base) {
   return Math.log(number) / Math.log(base)
 }
 
+/**
+ * Returns the base-10 logarithm of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The positive real number for which you want the base-10 logarithm.
+ * @returns
+ */
 export function LOG10(number) {
   number = utils.parseNumber(number)
 
@@ -686,6 +977,15 @@ export function LOG10(number) {
   return Math.log(number) / Math.log(10)
 }
 
+/**
+ * Returns the remainder from division.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number for which you want to find the remainder.
+ * @param {*} divisor The number by which you want to divide number.
+ * @returns
+ */
 export function MOD(dividend, divisor) {
   dividend = utils.parseNumber(dividend)
   divisor = utils.parseNumber(divisor)
@@ -705,6 +1005,15 @@ export function MOD(dividend, divisor) {
   return divisor > 0 ? modulus : -modulus
 }
 
+/**
+ * Returns a number rounded to the desired multiple.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value to round.
+ * @param {*} multiple The multiple to which you want to round number.
+ * @returns
+ */
 export function MROUND(number, multiple) {
   number = utils.parseNumber(number)
   multiple = utils.parseNumber(multiple)
@@ -725,6 +1034,14 @@ export function MROUND(number, multiple) {
   return Math.round(number / multiple) * multiple
 }
 
+/**
+ * Returns the multinomial of a set of numbers.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the multinomial.
+ * @returns
+ */
 export function MULTINOMIAL() {
   const args = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -743,6 +1060,14 @@ export function MULTINOMIAL() {
   return FACT(sum) / divisor
 }
 
+/**
+ * Rounds a number up to the nearest odd integer.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number: The value to round.
+ * @returns
+ */
 export function ODD(number) {
   number = utils.parseNumber(number)
 
@@ -756,6 +1081,13 @@ export function ODD(number) {
   return number >= 0 ? temp : -temp
 }
 
+/**
+ * Returns the value of pi.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function PI() {
   return Math.PI
 }
@@ -764,6 +1096,15 @@ export function E() {
   return Math.E
 }
 
+/**
+ * Returns the result of a number raised to a power.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The base number. It can be any real number.
+ * @param {*} power The exponent to which the base number is raised.
+ * @returns
+ */
 export function POWER(number, power) {
   number = utils.parseNumber(number)
   power = utils.parseNumber(power)
@@ -786,6 +1127,15 @@ export function POWER(number, power) {
   return result
 }
 
+/**
+ * Multiplies its arguments.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number1 The first number or range that you want to multiply.
+ * @param {*} number2, ... Optional. Additional numbers or ranges that you want to multiply, up to a maximum of 255 arguments.
+ * @returns
+ */
 export function PRODUCT() {
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter((arg) => arg !== undefined && arg !== null)
@@ -809,6 +1159,15 @@ export function PRODUCT() {
   return result
 }
 
+/**
+ * Returns the integer portion of a division.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} numerator The dividend.
+ * @param {*} denominator The divisor.
+ * @returns
+ */
 export function QUOTIENT(numerator, denominator) {
   numerator = utils.parseNumber(numerator)
   denominator = utils.parseNumber(denominator)
@@ -821,6 +1180,14 @@ export function QUOTIENT(numerator, denominator) {
   return parseInt(numerator / denominator, 10)
 }
 
+/**
+ * Converts degrees to radians.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} angle An angle in degrees that you want to convert.
+ * @returns
+ */
 export function RADIANS(number) {
   number = utils.parseNumber(number)
 
@@ -831,10 +1198,26 @@ export function RADIANS(number) {
   return (number * Math.PI) / 180
 }
 
+/**
+ * Returns a random number between 0 and 1.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function RAND() {
   return Math.random()
 }
 
+/**
+ * Returns a random number between the numbers you specify.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} bottom The smallest integer RANDBETWEEN will return.
+ * @param {*} top The largest integer RANDBETWEEN will return.
+ * @returns
+ */
 export function RANDBETWEEN(bottom, top) {
   bottom = utils.parseNumber(bottom)
   top = utils.parseNumber(top)
@@ -850,6 +1233,15 @@ export function RANDBETWEEN(bottom, top) {
 }
 
 // TODO
+/**
+ * Converts an arabic numeral to roman, as text.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The Arabic numeral you want converted.
+ * @param {*} form Optional. A number specifying the type of roman numeral you want. The roman numeral style ranges from Classic to Simplified, becoming more concise as the value of form increases. See the example following ROMAN(499,0) below.
+ * @returns
+ */
 export function ROMAN(number) {
   number = utils.parseNumber(number)
 
@@ -902,6 +1294,15 @@ export function ROMAN(number) {
   return new Array(+digits.join('') + 1).join('M') + roman
 }
 
+/**
+ * Rounds a number to a specified number of digits.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number that you want to round.
+ * @param {*} num_digits The number of digits to which you want to round the number argument.
+ * @returns
+ */
 export function ROUND(number, digits) {
   number = utils.parseNumber(number)
   digits = utils.parseNumber(digits)
@@ -914,6 +1315,15 @@ export function ROUND(number, digits) {
   return Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
 }
 
+/**
+ * Rounds a number down, toward zero.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number that you want rounded down.
+ * @param {*} num_digits The number of digits to which you want to round number.
+ * @returns
+ */
 export function ROUNDDOWN(number, digits) {
   number = utils.parseNumber(number)
   digits = utils.parseNumber(digits)
@@ -928,6 +1338,15 @@ export function ROUNDDOWN(number, digits) {
   return (sign * Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 }
 
+/**
+ * Rounds a number up, away from zero.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number that you want rounded up.
+ * @param {*} num_digits The number of digits to which you want to round number.
+ * @returns
+ */
 export function ROUNDUP(number, digits) {
   number = utils.parseNumber(number)
   digits = utils.parseNumber(digits)
@@ -942,6 +1361,13 @@ export function ROUNDUP(number, digits) {
   return (sign * Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
 }
 
+/**
+ * Returns the secant of an angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function SEC(number) {
   number = utils.parseNumber(number)
 
@@ -952,6 +1378,13 @@ export function SEC(number) {
   return 1 / Math.cos(number)
 }
 
+/**
+ * Returns the hyperbolic secant of an angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function SECH(number) {
   number = utils.parseNumber(number)
 
@@ -962,6 +1395,17 @@ export function SECH(number) {
   return 2 / (Math.exp(number) + Math.exp(-number))
 }
 
+/**
+ * Returns the sum of a power series based on the formula.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} x The input value to the power series.
+ * @param {*} n The initial power to which you want to raise x.
+ * @param {*} m The step by which to increase n for each term in the series.
+ * @param {*} coefficients A set of coefficients by which each successive power of x is multiplied. The number of values in coefficients determines the number of terms in the power series. For example, if there are three values in coefficients, then there will be three terms in the power series.
+ * @returns
+ */
 export function SERIESSUM(x, n, m, coefficients) {
   x = utils.parseNumber(x)
   n = utils.parseNumber(n)
@@ -981,6 +1425,14 @@ export function SERIESSUM(x, n, m, coefficients) {
   return result
 }
 
+/**
+ * Returns the sign of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number.
+ * @returns
+ */
 export function SIGN(number) {
   number = utils.parseNumber(number)
 
@@ -997,6 +1449,14 @@ export function SIGN(number) {
   }
 }
 
+/**
+ * Returns the sine of the given angle.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The angle in radians for which you want the sine.
+ * @returns
+ */
 export function SIN(number) {
   number = utils.parseNumber(number)
 
@@ -1007,6 +1467,14 @@ export function SIN(number) {
   return Math.sin(number)
 }
 
+/**
+ * Returns the hyperbolic sine of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number.
+ * @returns
+ */
 export function SINH(number) {
   number = utils.parseNumber(number)
 
@@ -1017,6 +1485,14 @@ export function SINH(number) {
   return (Math.exp(number) - Math.exp(-number)) / 2
 }
 
+/**
+ * Returns a positive square root.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number for which you want the square root.
+ * @returns
+ */
 export function SQRT(number) {
   number = utils.parseNumber(number)
 
@@ -1031,6 +1507,14 @@ export function SQRT(number) {
   return Math.sqrt(number)
 }
 
+/**
+ * Returns the square root of (number * pi).
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number by which pi is multiplied.
+ * @returns
+ */
 export function SQRTPI(number) {
   number = utils.parseNumber(number)
 
@@ -1049,6 +1533,16 @@ export function SQRT2() {
   return Math.sqrt(2)
 }
 
+/**
+ * Returns a subtotal in a list or database.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} function_num The number 1-11 or 101-111 that specifies the function to use for the subtotal. 1-11 includes manually-hidden rows, while 101-111 excludes them; filtered-out cells are always excluded.
+ * @param {*} ref1 The first named range or reference for which you want the subtotal.
+ * @param {*} ref2,... Optional. Named ranges or references 2 to 254 for which you want the subtotal.
+ * @returns
+ */
 export function SUBTOTAL(function_code, ref1) {
   function_code = utils.parseNumber(function_code)
 
@@ -1325,6 +1819,13 @@ export function POW(base, exponent) {
   return POWER(base, exponent)
 }
 
+/**
+ * Adds its arguments.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function SUM() {
   let result = 0
 
@@ -1353,6 +1854,16 @@ export function SUM() {
   return result
 }
 
+/**
+ * Adds the cells specified by a given criteria.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} range The range of cells that you want evaluated by criteria. Cells in each range must be numbers or names, arrays, or references that contain numbers. Blank and text values are ignored. The selected range may contain dates in standard Excel format (examples below).
+ * @param {*} criteria The criteria in the form of a number, expression, a cell reference, text, or a function that defines which cells will be added. Wildcard characters can be included - a question mark (?) to match any single character, an asterisk (*) to match any sequence of characters. If you want to find an actual question mark or asterisk, type a tilde (~) preceding the character. For example, criteria can be expressed as 32, ">32", B5, "3?", "apple*", "*~?", or TODAY(). Important: Any text criteria or any criteria that includes logical or mathematical symbols must be enclosed in double quotation marks ("). If the criteria is numeric, double quotation marks are not required.
+ * @param {*} sum_range Optional. The actual cells to add, if you want to add cells other than those specified in the range argument. If the sum_range argument is omitted, Excel adds the cells that are specified in the range argument (the same cells to which the criteria is applied). Sum_range should be the same size and shape as range. If it isn't, performance may suffer, and the formula will sum a range of cells that starts with the first cell in sum_range but has the same dimensions as range. For example: range sum_range Actual summed cells A1:A5 B1:B5 B1:B5 A1:A5 B1:K5 B1:B5
+ * @returns
+ */
 export function SUMIF(range, criteria, sumRange) {
   range = utils.flatten(range)
 
@@ -1390,6 +1901,15 @@ export function SUMIF(range, criteria, sumRange) {
   return result
 }
 
+/**
+ * Adds the cells in a range that meet multiple criteria.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} =sumifs(a2:a9,b2:b9,"=a*",c2:c9,"tom") =SUMIFS(A2:A9,B2:B9,"=A*",C2:C9,"Tom")
+ * @param {*} =sumifs(a2:a9,b2:b9,"<>bananas",c2:c9,"tom") =SUMIFS(A2:A9,B2:B9,"<>Bananas",C2:C9,"Tom")
+ * @returns
+ */
 export function SUMIFS() {
   const args = utils.argsToArray(arguments)
   const range = utils.parseNumberArray(utils.flatten(args.shift()))
@@ -1444,6 +1964,13 @@ export function SUMIFS() {
   return result
 }
 
+/**
+ * Returns the sum of the products of corresponding array components.
+ *
+ * Category: Math and trigonometry
+ *
+ * @returns
+ */
 export function SUMPRODUCT() {
   if (!arguments || arguments.length === 0) {
     return error.value
@@ -1505,6 +2032,14 @@ export function SUMPRODUCT() {
   return result
 }
 
+/**
+ * Returns the sum of the squares of the arguments.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want the sum of the squares. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function SUMSQ() {
   const numbers = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -1522,6 +2057,15 @@ export function SUMSQ() {
   return result
 }
 
+/**
+ * Returns the sum of the difference of squares of corresponding values in two arrays.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} array_x The first array or range of values.
+ * @param {*} array_y The second array or range of values.
+ * @returns
+ */
 export function SUMX2MY2(array_x, array_y) {
   array_x = utils.parseNumberArray(utils.flatten(array_x))
   array_y = utils.parseNumberArray(utils.flatten(array_y))
@@ -1539,6 +2083,15 @@ export function SUMX2MY2(array_x, array_y) {
   return result
 }
 
+/**
+ * Returns the sum of the sum of squares of corresponding values in two arrays.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} array_x The first array or range of values.
+ * @param {*} array_y The second array or range of values.
+ * @returns
+ */
 export function SUMX2PY2(array_x, array_y) {
   array_x = utils.parseNumberArray(utils.flatten(array_x))
   array_y = utils.parseNumberArray(utils.flatten(array_y))
@@ -1558,6 +2111,15 @@ export function SUMX2PY2(array_x, array_y) {
   return result
 }
 
+/**
+ * Returns the sum of squares of differences of corresponding values in two arrays.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} array_x The first array or range of values.
+ * @param {*} array_y The second array or range of values.
+ * @returns
+ */
 export function SUMXMY2(array_x, array_y) {
   array_x = utils.parseNumberArray(utils.flatten(array_x))
   array_y = utils.parseNumberArray(utils.flatten(array_y))
@@ -1577,6 +2139,14 @@ export function SUMXMY2(array_x, array_y) {
   return result
 }
 
+/**
+ * Returns the tangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The angle in radians for which you want the tangent.
+ * @returns
+ */
 export function TAN(number) {
   number = utils.parseNumber(number)
 
@@ -1587,6 +2157,14 @@ export function TAN(number) {
   return Math.tan(number)
 }
 
+/**
+ * Returns the hyperbolic tangent of a number.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number Any real number.
+ * @returns
+ */
 export function TANH(number) {
   number = utils.parseNumber(number)
 
@@ -1599,6 +2177,15 @@ export function TANH(number) {
   return (e2 - 1) / (e2 + 1)
 }
 
+/**
+ * Truncates a number to an integer.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number you want to truncate.
+ * @param {*} num_digits Optional. A number specifying the precision of the truncation. The default value for num_digits is 0 (zero).
+ * @returns
+ */
 export function TRUNC(number, digits) {
   number = utils.parseNumber(number)
   digits = utils.parseNumber(digits)

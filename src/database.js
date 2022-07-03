@@ -106,6 +106,16 @@ function findResultIndex(database, criterias) {
 }
 
 // Database functions
+/**
+ * Returns the average of selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database is the range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria is the range of cells that contains the conditions you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DAVERAGE(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -131,6 +141,16 @@ export function DAVERAGE(database, field, criteria) {
   return resultIndexes.length === 0 ? error.div0 : sum / resultIndexes.length
 }
 
+/**
+ * Counts the cells that contain numbers in a database.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as the argument includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DCOUNT(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -156,6 +176,16 @@ export function DCOUNT(database, field, criteria) {
   return stats.COUNT(targetValues)
 }
 
+/**
+ * Counts nonblank cells in a database.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Optional. Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DCOUNTA(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -181,6 +211,16 @@ export function DCOUNTA(database, field, criteria) {
   return stats.COUNTA(targetValues)
 }
 
+/**
+ * Extracts from a database a single record that matches the specified criteria.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DGET(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -210,6 +250,16 @@ export function DGET(database, field, criteria) {
   return targetFields[resultIndexes[0]]
 }
 
+/**
+ * Returns the maximum value from selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DMAX(database, field, criteria) {
   // Return error if field is not a number and not a string
 
@@ -238,6 +288,16 @@ export function DMAX(database, field, criteria) {
   return maxValue
 }
 
+/**
+ * Returns the minimum value from selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DMIN(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -265,6 +325,16 @@ export function DMIN(database, field, criteria) {
   return minValue
 }
 
+/**
+ * Multiplies the values in a particular field of records that match the criteria in a database.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DPRODUCT(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -297,6 +367,16 @@ export function DPRODUCT(database, field, criteria) {
   return result
 }
 
+/**
+ * Estimates the standard deviation based on a sample of selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DSTDEV(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -324,6 +404,16 @@ export function DSTDEV(database, field, criteria) {
   return stats.STDEV.S(targetValues)
 }
 
+/**
+ * Calculates the standard deviation based on the entire population of selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DSTDEVP(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -351,6 +441,16 @@ export function DSTDEVP(database, field, criteria) {
   return stats.STDEV.P(targetValues)
 }
 
+/**
+ * Adds the numbers in the field column of records in the database that match the criteria.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria Is the range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DSUM(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -376,6 +476,16 @@ export function DSUM(database, field, criteria) {
   return maths.SUM(targetValues)
 }
 
+/**
+ * Estimates variance based on a sample from selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DVAR(database, field, criteria) {
   // Return error if field is not a number and not a string
   if (isNaN(field) && typeof field !== 'string') {
@@ -401,6 +511,16 @@ export function DVAR(database, field, criteria) {
   return stats.VAR.S(targetValues)
 }
 
+/**
+ * Calculates variance based on the entire population of selected database entries.
+ *
+ * Category: Database
+ *
+ * @param {*} database The range of cells that makes up the list or database. A database is a list of related data in which rows of related information are records, and columns of data are fields. The first row of the list contains labels for each column.
+ * @param {*} field Indicates which column is used in the function. Enter the column label enclosed between double quotation marks, such as "Age" or "Yield," or a number (without quotation marks) that represents the position of the column within the list: 1 for the first column, 2 for the second column, and so on.
+ * @param {*} criteria The range of cells that contains the conditions that you specify. You can use any range for the criteria argument, as long as it includes at least one column label and at least one cell below the column label in which you specify a condition for the column.
+ * @returns
+ */
 export function DVARP(database, field, criteria) {
   // Return error if field is not a number and not a string
 

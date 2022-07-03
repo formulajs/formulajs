@@ -2,15 +2,39 @@ import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
 // TODO
+/**
+ * Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text or a reference to a cell that contains the text you want to change. If text does not contain any full-width letters, text is not changed.
+ * @returns
+ */
 export function ASC() {
   throw new Error('ASC is not implemented')
 }
 
 // TODO
+/**
+ * Converts a number to text, using the ß (baht) currency format.
+ *
+ * Category: Text
+ *
+ * @param {*} number A number you want to convert to text, or a reference to a cell containing a number, or a formula that evaluates to a number.
+ * @returns
+ */
 export function BAHTTEXT() {
   throw new Error('BAHTTEXT is not implemented')
 }
 
+/**
+ * Returns the character specified by the code number.
+ *
+ * Category: Text
+ *
+ * @param {*} number A number between 1 and 255 specifying which character you want. The character is from the character set used by your computer. Note: Excel for the web supports only CHAR(9), CHAR(10), CHAR(13), and CHAR(32) and above.
+ * @returns
+ */
 export function CHAR(number) {
   number = utils.parseNumber(number)
 
@@ -25,6 +49,14 @@ export function CHAR(number) {
   return String.fromCharCode(number)
 }
 
+/**
+ * Removes all nonprintable characters from text.
+ *
+ * Category: Text
+ *
+ * @param {*} text Any worksheet information from which you want to remove nonprintable characters.
+ * @returns
+ */
 export function CLEAN(text) {
   if (utils.anyIsError(text)) {
     return text
@@ -36,6 +68,14 @@ export function CLEAN(text) {
   return text.replace(re, '')
 }
 
+/**
+ * Returns a numeric code for the first character in a text string.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text for which you want the code of the first character.
+ * @returns
+ */
 export function CODE(text) {
   if (utils.anyIsError(text)) {
     return text
@@ -51,6 +91,13 @@ export function CODE(text) {
   return result
 }
 
+/**
+ * Joins several text items into one text item.
+ *
+ * Category: Text
+ *
+ * @returns
+ */
 export function CONCATENATE() {
   const args = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, args)
@@ -77,15 +124,41 @@ export function CONCATENATE() {
 export const CONCAT = CONCATENATE
 
 // TODO
+/**
+ * Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text or a reference to a cell that contains the text you want to change. If text does not contain any half-width English letters or katakana, text is not changed.
+ * @returns
+ */
 export function DBCS() {
   throw new Error('DBCS is not implemented')
 }
 
 // TODO
+/**
+ * Converts a number to text, using the $ (dollar) currency format.
+ *
+ * Category: Text
+ *
+ * @param {*} number A number, a reference to a cell containing a number, or a formula that evaluates to a number.
+ * @param {*} decimals Optional. The number of digits to the right of the decimal point. If this is negative, the number is rounded to the left of the decimal point. If you omit decimals, it is assumed to be 2.
+ * @returns
+ */
 export function DOLLAR() {
   throw new Error('DOLLAR is not implemented')
 }
 
+/**
+ * Checks to see if two text values are identical.
+ *
+ * Category: Text
+ *
+ * @param {*} text1 The first text string.
+ * @param {*} text2 The second text string.
+ * @returns
+ */
 export function EXACT(text1, text2) {
   if (arguments.length !== 2) {
     return error.na
@@ -121,6 +194,16 @@ export function FIND(find_text, within_text, position) {
 }
 
 // TODO
+/**
+ * Formats a number as text with a fixed number of decimals.
+ *
+ * Category: Text
+ *
+ * @param {*} number The number you want to round and convert to text.
+ * @param {*} decimals Optional. The number of digits to the right of the decimal point.
+ * @param {*} no_commas Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
+ * @returns
+ */
 export function FIXED() {
   throw new Error('FIXED is not implemented')
 }
@@ -185,6 +268,14 @@ export function LEN(text) {
   return textAsString.length
 }
 
+/**
+ * Converts text to lowercase.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you want to convert to lowercase. LOWER does not change characters in text that are not letters.
+ * @returns
+ */
 export function LOWER(text) {
   if (arguments.length !== 1) {
     return error.value
@@ -218,6 +309,16 @@ export function MID(text, start, number) {
 }
 
 // TODO
+/**
+ * Converts text to number in a locale-independent manner.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text to convert to a number.
+ * @param {*} decimal_separator Optional. The character used to separate the integer and fractional part of the result.
+ * @param {*} group_separator Optional. The character used to separate groupings of numbers, such as thousands from hundreds and millions from thousands.
+ * @returns
+ */
 export function NUMBERVALUE(text, decimal_separator, group_separator) {
   decimal_separator = typeof decimal_separator === 'undefined' ? '.' : decimal_separator
   group_separator = typeof group_separator === 'undefined' ? ',' : group_separator
@@ -230,6 +331,14 @@ export function PRONETIC() {
   throw new Error('PRONETIC is not implemented')
 }
 
+/**
+ * Capitalizes the first letter in each word of a text value.
+ *
+ * Category: Text
+ *
+ * @param {*} text Text enclosed in quotation marks, a formula that returns text, or a reference to a cell containing the text you want to partially capitalize.
+ * @returns
+ */
 export function PROPER(text) {
   if (utils.anyIsError(text)) {
     return text
@@ -283,6 +392,15 @@ export function REPLACE(text, position, length, new_text) {
   return text.substr(0, position - 1) + new_text + text.substr(position - 1 + length)
 }
 
+/**
+ * Repeats text a given number of times.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you want to repeat.
+ * @param {*} number_times A positive number specifying the number of times to repeat text.
+ * @returns
+ */
 export function REPT(text, number) {
   const someError = utils.anyError(text, number)
 
@@ -335,6 +453,17 @@ export function SPLIT(text, separator) {
   return text.split(separator)
 }
 
+/**
+ * Substitutes new text for old text in a text string.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text or the reference to a cell containing text for which you want to substitute characters.
+ * @param {*} old_text The text you want to replace.
+ * @param {*} new_text The text you want to replace old_text with.
+ * @param {*} instance_num Optional. Specifies which occurrence of old_text you want to replace with new_text. If you specify instance_num, only that instance of old_text is replaced. Otherwise, every occurrence of old_text in text is changed to new_text.
+ * @returns
+ */
 export function SUBSTITUTE(text, old_text, new_text, occurrence) {
   if (arguments.length < 3) {
     return error.na
@@ -367,6 +496,14 @@ export function SUBSTITUTE(text, old_text, new_text, occurrence) {
   }
 }
 
+/**
+ * Converts its arguments to text.
+ *
+ * Category: Text
+ *
+ * @param {*} value The value you want to test.
+ * @returns
+ */
 export function T(value) {
   if (value instanceof Error) {
     return value
@@ -376,10 +513,24 @@ export function T(value) {
 }
 
 // TODO incomplete implementation
+/**
+ * Formats a number and converts it to text.
+ *
+ * Category: Text
+ *
+ * @returns
+ */
 export function TEXT() {
   throw new Error('TEXT is not implemented')
 }
 
+/**
+ * Combines the text from multiple ranges and/or strings.
+ *
+ * Category: Text
+ *
+ * @returns
+ */
 export function TEXTJOIN(delimiter, ignore_empty, ...args) {
   if (typeof ignore_empty !== 'boolean') {
     ignore_empty = utils.parseBool(ignore_empty)
@@ -417,6 +568,14 @@ export function TEXTJOIN(delimiter, ignore_empty, ...args) {
   return textToJoin.join(delimiter)
 }
 
+/**
+ * Removes spaces from text.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text from which you want spaces removed.
+ * @returns
+ */
 export function TRIM(text) {
   text = utils.parseString(text)
 
@@ -431,6 +590,14 @@ export const UNICHAR = CHAR
 
 export const UNICODE = CODE
 
+/**
+ * Converts text to uppercase.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you want converted to uppercase. Text can be a reference or text string.
+ * @returns
+ */
 export function UPPER(text) {
   text = utils.parseString(text)
 
@@ -441,6 +608,14 @@ export function UPPER(text) {
   return text.toUpperCase()
 }
 
+/**
+ * Converts a text argument to a number.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text enclosed in quotation marks or a reference to a cell containing the text you want to convert.
+ * @returns
+ */
 export function VALUE(num) {
   const anyError = utils.anyError(num)
 

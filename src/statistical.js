@@ -8,6 +8,14 @@ import * as utils from './utils/common.js'
 
 const SQRT2PI = 2.5066282746310002
 
+/**
+ * Returns the average of the absolute deviations of data points from their mean.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want the average of the absolute deviations. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function AVEDEV() {
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter(utils.isDefined)
@@ -25,6 +33,15 @@ export function AVEDEV() {
   return jStat.sum(jStat(range).subtract(jStat.mean(range)).abs()[0]) / range.length
 }
 
+/**
+ * Returns the average of its arguments.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1 The first number, cell reference, or range for which you want the average.
+ * @param {*} number2, ... Optional. Additional numbers, cell references or ranges for which you want the average, up to a maximum of 255.
+ * @returns
+ */
 export function AVERAGE() {
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter(utils.isDefined)
@@ -59,6 +76,14 @@ export function AVERAGE() {
   return result
 }
 
+/**
+ * Returns the average of its arguments, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 cells, ranges of cells, or values for which you want the average.
+ * @returns
+ */
 export function AVERAGEA() {
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter(utils.isDefined)
@@ -104,6 +129,16 @@ export function AVERAGEA() {
   return result
 }
 
+/**
+ * Returns the average (arithmetic mean) of all the cells in a range that meet a given criteria.
+ *
+ * Category: Statistical
+ *
+ * @param {*} range One or more cells to average, including numbers or names, arrays, or references that contain numbers.
+ * @param {*} criteria The criteria in the form of a number, expression, cell reference, or text that defines which cells are averaged. For example, criteria can be expressed as 32, "32", ">32", "apples", or B4.
+ * @param {*} average_range Optional. The actual set of cells to average. If omitted, range is used.
+ * @returns
+ */
 export function AVERAGEIF(range, criteria, average_range) {
   if (arguments.length <= 1) {
     return error.na
@@ -144,6 +179,16 @@ export function AVERAGEIF(range, criteria, average_range) {
   return result / average_count
 }
 
+/**
+ * Returns the average (arithmetic mean) of all cells that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @param {*} average_range One or more cells to average, including numbers or names, arrays, or references that contain numbers.
+ * @param {*} criteria_range1, criteria_range2, … Criteria_range1 is required, subsequent criteria_ranges are optional. 1 to 127 ranges in which to evaluate the associated criteria.
+ * @param {*} criteria1, criteria2, ... Criteria1 is required, subsequent criteria are optional. 1 to 127 criteria in the form of a number, expression, cell reference, or text that define which cells will be averaged. For example, criteria can be expressed as 32, "32", ">32", "apples", or B4.
+ * @returns
+ */
 export function AVERAGEIFS() {
   // Does not work with multi dimensional ranges yet!
   // http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
@@ -428,6 +473,19 @@ CHISQ.TEST = function (observed, expected) {
   return Math.round(ChiSq(xsqr, dof) * 1000000) / 1000000
 }
 
+/**
+ * Returns the column number of a reference.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} reference Optional. The cell or range of cells for which you want to return the column number. If the reference argument is omitted or refers to a range of cells, and if the COLUMN function is entered as a horizontal array formula, the COLUMN function returns the column numbers of reference as a horizontal array. Notes: If you have a current version of Microsoft 365, then you can simply enter the formula in the top-left-cell of the output range, then press ENTER to confirm the formula as a dynamic array formula. Otherwise, the formula must be entered as a legacy array formula by first selecting the output range, entering the formula in the top-left-cell of the output range, and then pressing CTRL+SHIFT+ENTER to confirm it. Excel inserts curly brackets at the beginning and end of the formula for you. For more information on array formulas, see Guidelines and examples of array formulas. If the reference argument is a range of cells, and if the COLUMN function is not entered as a horizontal array formula, the COLUMN function returns the number of the leftmost column. If the reference argument is omitted, it is assumed to be the reference of the cell in which the COLUMN function appears. The reference argument cannot refer to multiple areas.
+ * @param {*} if the reference argument is omitted or refers to a range of cells, and if the COLUMN function is entered as a horizontal array formula, the COLUMN function returns the column numbers of reference as a horizontal array. Notes: If you have a current version of Microsoft 365, then you can simply enter the formula in the top-left-cell of the output range, then press ENTER to confirm the formula as a dynamic array formula. Otherwise, the formula must be entered as a legacy array formula by first selecting the output range, entering the formula in the top-left-cell of the output range, and then pressing CTRL+SHIFT+ENTER to confirm it. Excel inserts curly brackets at the beginning and end of the formula for you. For more information on array formulas, see Guidelines and examples of array formulas.
+ * @param {*} if you have a current version of Microsoft 365, then you can simply enter the formula in the top-left-cell of the output range, then press ENTER to confirm the formula as a dynamic array formula. Otherwise, the formula must be entered as a legacy array formula by first selecting the output range, entering the formula in the top-left-cell of the output range, and then pressing CTRL+SHIFT+ENTER to confirm it. Excel inserts curly brackets at the beginning and end of the formula for you. For more information on array formulas, see Guidelines and examples of array formulas.
+ * @param {*} if the reference argument is a range of cells, and if the COLUMN function is not entered as a horizontal array formula, the COLUMN function returns the number of the leftmost column.
+ * @param {*} if the reference argument is omitted, it is assumed to be the reference of the cell in which the COLUMN function appears.
+ * @param {*} the reference argument cannot refer to multiple areas.
+ * @returns
+ */
 export function COLUMN(matrix, index) {
   if (arguments.length !== 2) {
     return error.na
@@ -448,6 +506,14 @@ export function COLUMN(matrix, index) {
   return jStat.col(matrix, index)
 }
 
+/**
+ * Returns the number of columns in a reference.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array An array or array formula, or a reference to a range of cells for which you want the number of columns.
+ * @returns
+ */
 export function COLUMNS(matrix) {
   if (arguments.length !== 1) {
     return error.na
@@ -490,6 +556,15 @@ CONFIDENCE.T = (alpha, sd, n) => {
   return jStat.tci(1, alpha, sd, n)[1] - 1
 }
 
+/**
+ * Returns the correlation coefficient between two data sets.
+ *
+ * Category: Statistical
+ *
+ * @param {*} array1 A range of cell values.
+ * @param {*} array2 A second range of cell values.
+ * @returns
+ */
 export function CORREL(array1, array2) {
   array1 = utils.parseNumberArray(utils.flatten(array1))
   array2 = utils.parseNumberArray(utils.flatten(array2))
@@ -501,12 +576,30 @@ export function CORREL(array1, array2) {
   return jStat.corrcoeff(array1, array2)
 }
 
+/**
+ * Counts how many numbers are in the list of arguments.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1 The first item, cell reference, or range within which you want to count numbers.
+ * @param {*} value2, ... Optional. Up to 255 additional items, cell references, or ranges within which you want to count numbers.
+ * @returns
+ */
 export function COUNT() {
   const flatArguments = utils.flatten(arguments)
 
   return utils.numbers(flatArguments).length
 }
 
+/**
+ * Counts how many values are in the list of arguments.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1 The first argument representing the values that you want to count.
+ * @param {*} value2, ... Optional. Additional arguments representing the values that you want to count, up to a maximum of 255 arguments.
+ * @returns
+ */
 export function COUNTA() {
   const flatArguments = utils.flatten(arguments)
 
@@ -527,6 +620,14 @@ export function COUNTIN(range, value) {
   return result
 }
 
+/**
+ * Counts the number of blank cells within a range.
+ *
+ * Category: Statistical
+ *
+ * @param {*} range The range from which you want to count the blank cells.
+ * @returns
+ */
 export function COUNTBLANK() {
   const range = utils.flatten(arguments)
   let blanks = 0
@@ -543,6 +644,13 @@ export function COUNTBLANK() {
   return blanks
 }
 
+/**
+ * Counts the number of cells within a range that meet the given criteria.
+ *
+ * Category: Statistical
+ *
+ * @returns
+ */
 export function COUNTIF(range, criteria) {
   range = utils.flatten(range)
 
@@ -567,6 +675,16 @@ export function COUNTIF(range, criteria) {
   return matches
 }
 
+/**
+ * Counts the number of cells within a range that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @param {*} criteria_range1 The first range in which to evaluate the associated criteria.
+ * @param {*} criteria1 The criteria in the form of a number, expression, cell reference, or text that define which cells will be counted. For example, criteria can be expressed as 32, ">32", B4, "apples", or "32".
+ * @param {*} criteria_range2, criteria2, ... Optional. Additional ranges and their associated criteria. Up to 127 range/criteria pairs are allowed.
+ * @returns
+ */
 export function COUNTIFS() {
   const args = utils.argsToArray(arguments)
   const results = new Array(utils.flatten(args[0]).length)
@@ -640,6 +758,14 @@ COVARIANCE.S = (array1, array2) => {
   return jStat.covariance(array1, array2)
 }
 
+/**
+ * Returns the sum of squares of deviations.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want to calculate the sum of squared deviations. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function DEVSQ() {
   const range = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -763,6 +889,14 @@ F.TEST = (array1, array2) => {
   return sum1 / sum2
 }
 
+/**
+ * Returns the Fisher transformation.
+ *
+ * Category: Statistical
+ *
+ * @param {*} x A numeric value for which you want the transformation.
+ * @returns
+ */
 export function FISHER(x) {
   x = utils.parseNumber(x)
 
@@ -773,6 +907,14 @@ export function FISHER(x) {
   return Math.log((1 + x) / (1 - x)) / 2
 }
 
+/**
+ * Returns the inverse of the Fisher transformation.
+ *
+ * Category: Statistical
+ *
+ * @param {*} y The value for which you want to perform the inverse of the transformation.
+ * @returns
+ */
 export function FISHERINV(y) {
   y = utils.parseNumber(y)
 
@@ -811,6 +953,15 @@ export function FORECAST(x, data_y, data_x) {
   return a + b * x
 }
 
+/**
+ * Returns a frequency distribution as a vertical array.
+ *
+ * Category: Statistical
+ *
+ * @param {*} data_array An array of or reference to a set of values for which you want to count frequencies. If data_array contains no values, FREQUENCY returns an array of zeros.
+ * @param {*} bins_array An array of or reference to intervals into which you want to group the values in data_array. If bins_array contains no values, FREQUENCY returns the number of elements in data_array.
+ * @returns
+ */
 export function FREQUENCY(data, bins) {
   data = utils.parseNumberArray(utils.flatten(data))
   bins = utils.parseNumberArray(utils.flatten(bins))
@@ -846,6 +997,14 @@ export function FREQUENCY(data, bins) {
   return r
 }
 
+/**
+ * Returns the Gamma function value.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number Returns a number.
+ * @returns
+ */
 export function GAMMA(number) {
   number = utils.parseNumber(number)
 
@@ -896,6 +1055,14 @@ GAMMA.INV = function (probability, alpha, beta) {
   return jStat.gamma.inv(probability, alpha, beta)
 }
 
+/**
+ * Returns the natural logarithm of the gamma function, Γ(x).
+ *
+ * Category: Statistical
+ *
+ * @param {*} x The value for which you want to calculate GAMMALN.
+ * @returns
+ */
 export function GAMMALN(number) {
   number = utils.parseNumber(number)
 
@@ -922,6 +1089,14 @@ GAMMALN.PRECISE = function (x) {
   return jStat.gammaln(x)
 }
 
+/**
+ * Returns 0.5 less than the standard normal cumulative distribution.
+ *
+ * Category: Statistical
+ *
+ * @param {*} z Returns a number.
+ * @returns
+ */
 export function GAUSS(z) {
   z = utils.parseNumber(z)
 
@@ -932,6 +1107,14 @@ export function GAUSS(z) {
   return jStat.normal.cdf(z, 0, 1) - 0.5
 }
 
+/**
+ * Returns the geometric mean.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want to calculate the mean. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function GEOMEAN() {
   const args = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -942,6 +1125,27 @@ export function GEOMEAN() {
   return jStat.geomean(args)
 }
 
+/**
+ * Returns values along an exponential trend.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's The set of y-values you already know in the relationship y = b*m^x. If the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable. If the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable. If any of the numbers in known_y's is 0 or negative, GROWTH returns the #NUM! error value.
+ * @param {*} if the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable.
+ * @param {*} if the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
+ * @param {*} if any of the numbers in known_y's is 0 or negative, GROWTH returns the #NUM! error value.
+ * @param {*} known_x's Optional. An optional set of x-values that you may already know in the relationship y = b*m^x. The array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column). If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} the array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column).
+ * @param {*} if known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} new_x's Optional. Are new x-values for which you want GROWTH to return corresponding y-values. New_x's must include a column (or row) for each independent variable, just as known_x's does. So, if known_y's is in a single column, known_x's and new_x's must have the same number of columns. If known_y's is in a single row, known_x's and new_x's must have the same number of rows. If new_x's is omitted, it is assumed to be the same as known_x's. If both known_x's and new_x's are omitted, they are assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} new_x's must include a column (or row) for each independent variable, just as known_x's does. So, if known_y's is in a single column, known_x's and new_x's must have the same number of columns. If known_y's is in a single row, known_x's and new_x's must have the same number of rows.
+ * @param {*} if new_x's is omitted, it is assumed to be the same as known_x's.
+ * @param {*} if both known_x's and new_x's are omitted, they are assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} const Optional. A logical value specifying whether to force the constant b to equal 1. If const is TRUE or omitted, b is calculated normally. If const is FALSE, b is set equal to 1 and the m-values are adjusted so that y = m^x.
+ * @param {*} if const is TRUE or omitted, b is calculated normally.
+ * @param {*} if const is FALSE, b is set equal to 1 and the m-values are adjusted so that y = m^x.
+ * @returns
+ */
 export function GROWTH(known_y, known_x, new_x, use_const) {
   // Credits: Ilmari Karonen (http://stackoverflow.com/questions/14161990/how-to-implement-growth-function-in-javascript)
   known_y = utils.parseNumberArray(known_y)
@@ -1023,6 +1227,14 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
   return new_y
 }
 
+/**
+ * Returns the harmonic mean.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want to calculate the mean. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function HARMEAN() {
   const range = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -1069,6 +1281,15 @@ HYPGEOM.DIST = (x, n, M, N, cumulative) => {
   return cumulative ? cdf(x, n, M, N) : pdf(x, n, M, N)
 }
 
+/**
+ * Returns the intercept of the linear regression line.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's The dependent set of observations or data.
+ * @param {*} known_x's The independent set of observations or data.
+ * @returns
+ */
 export function INTERCEPT(known_y, known_x) {
   known_y = utils.parseNumberArray(known_y)
   known_x = utils.parseNumberArray(known_x)
@@ -1084,6 +1305,14 @@ export function INTERCEPT(known_y, known_x) {
   return FORECAST(0, known_y, known_x)
 }
 
+/**
+ * Returns the kurtosis of a data set.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want to calculate kurtosis. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function KURT() {
   const range = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -1104,6 +1333,15 @@ export function KURT() {
   return ((n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3))) * sigma - (3 * (n - 1) * (n - 1)) / ((n - 2) * (n - 3))
 }
 
+/**
+ * Returns the k-th largest value in a data set.
+ *
+ * Category: Statistical
+ *
+ * @param {*} array The array or range of data for which you want to determine the k-th largest value.
+ * @param {*} k The position (from the largest) in the array or cell range of data to return.
+ * @returns
+ */
 export function LARGE(range, k) {
   range = utils.parseNumberArray(utils.flatten(range))
   k = utils.parseNumber(k)
@@ -1119,6 +1357,25 @@ export function LARGE(range, k) {
   return range.sort((a, b) => b - a)[k - 1]
 }
 
+/**
+ * Returns the parameters of a linear trend.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's The set of y-values that you already know in the relationship y = mx + b. If the range of known_y's is in a single column, each column of known_x's is interpreted as a separate variable. If the range of known_y's is contained in a single row, each row of known_x's is interpreted as a separate variable.
+ * @param {*} if the range of known_y's is in a single column, each column of known_x's is interpreted as a separate variable.
+ * @param {*} if the range of known_y's is contained in a single row, each row of known_x's is interpreted as a separate variable.
+ * @param {*} known_x's Optional. A set of x-values that you may already know in the relationship y = mx + b. The range of known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column). If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} the range of known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column).
+ * @param {*} if known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} const Optional. A logical value specifying whether to force the constant b to equal 0. If const is TRUE or omitted, b is calculated normally. If const is FALSE, b is set equal to 0 and the m-values are adjusted to fit y = mx.
+ * @param {*} if const is TRUE or omitted, b is calculated normally.
+ * @param {*} if const is FALSE, b is set equal to 0 and the m-values are adjusted to fit y = mx.
+ * @param {*} stats Optional. A logical value specifying whether to return additional regression statistics. If stats is TRUE, LINEST returns the additional regression statistics; as a result, the returned array is {mn,mn-1,...,m1,b;sen,sen-1,...,se1,seb;r2,sey;F,df;ssreg,ssresid}. If stats is FALSE or omitted, LINEST returns only the m-coefficients and the constant b. The additional regression statistics are as follows.
+ * @param {*} if stats is TRUE, LINEST returns the additional regression statistics; as a result, the returned array is {mn,mn-1,...,m1,b;sen,sen-1,...,se1,seb;r2,sey;F,df;ssreg,ssresid}.
+ * @param {*} if stats is FALSE or omitted, LINEST returns only the m-coefficients and the constant b. The additional regression statistics are as follows.
+ * @returns
+ */
 export function LINEST(data_y, data_x) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1148,6 +1405,25 @@ export function LINEST(data_y, data_x) {
 // http://office.microsoft.com/en-us/starter-help/logest-function-HP010342665.aspx
 // LOGEST returns are based on the following linear model:
 // ln y = x1 ln m1 + ... + xn ln mn + ln b
+/**
+ * Returns the parameters of an exponential trend.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's The set of y-values you already know in the relationship y = b*m^x. If the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable. If the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
+ * @param {*} if the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable.
+ * @param {*} if the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
+ * @param {*} known_x's Optional. An optional set of x-values that you may already know in the relationship y = b*m^x. The array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a range of cells with a height of one row or a width of one column (which is also known as a vector). If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} the array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a range of cells with a height of one row or a width of one column (which is also known as a vector).
+ * @param {*} if known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} const Optional. A logical value specifying whether to force the constant b to equal 1. If const is TRUE or omitted, b is calculated normally. If const is FALSE, b is set equal to 1, and the m-values are fitted to y = m^x.
+ * @param {*} if const is TRUE or omitted, b is calculated normally.
+ * @param {*} if const is FALSE, b is set equal to 1, and the m-values are fitted to y = m^x.
+ * @param {*} stats Optional. A logical value specifying whether to return additional regression statistics. If stats is TRUE, LOGEST returns the additional regression statistics, so the returned array is {mn,mn-1,...,m1,b;sen,sen-1,...,se1,seb;r 2,sey; F,df;ssreg,ssresid}. If stats is FALSE or omitted, LOGEST returns only the m-coefficients and the constant b.
+ * @param {*} if stats is TRUE, LOGEST returns the additional regression statistics, so the returned array is {mn,mn-1,...,m1,b;sen,sen-1,...,se1,seb;r 2,sey; F,df;ssreg,ssresid}.
+ * @param {*} if stats is FALSE or omitted, LOGEST returns only the m-coefficients and the constant b.
+ * @returns
+ */
 export function LOGEST(data_y, data_x) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1193,6 +1469,14 @@ LOGNORM.INV = (probability, mean, sd) => {
   return jStat.lognormal.inv(probability, mean, sd)
 }
 
+/**
+ * Returns the maximum value in a list of arguments.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 numbers for which you want to find the maximum value.
+ * @returns
+ */
 export function MAX() {
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
@@ -1206,6 +1490,15 @@ export function MAX() {
   return range.length === 0 ? 0 : Math.max.apply(Math, range)
 }
 
+/**
+ * Returns the maximum value in a list of arguments, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1 The first number argument for which you want to find the largest value.
+ * @param {*} value2,... Optional. Number arguments 2 to 255 for which you want to find the largest value.
+ * @returns
+ */
 export function MAXA() {
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
@@ -1220,6 +1513,14 @@ export function MAXA() {
   return range.length === 0 ? 0 : Math.max.apply(Math, range)
 }
 
+/**
+ * Returns the median of the given numbers.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 numbers for which you want the median.
+ * @returns
+ */
 export function MEDIAN() {
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
@@ -1238,6 +1539,14 @@ export function MEDIAN() {
   return result
 }
 
+/**
+ * Returns the minimum value in a list of arguments.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is optional, subsequent numbers are optional. 1 to 255 numbers for which you want to find the minimum value.
+ * @returns
+ */
 export function MIN() {
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
@@ -1251,6 +1560,14 @@ export function MIN() {
   return range.length === 0 ? 0 : Math.min.apply(Math, range)
 }
 
+/**
+ * Returns the smallest value in a list of arguments, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 values for which you want to find the smallest value.
+ * @returns
+ */
 export function MINA() {
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
@@ -1375,6 +1692,15 @@ NORM.S.INV = (probability) => {
   return jStat.normal.inv(probability, 0, 1)
 }
 
+/**
+ * Returns the Pearson product moment correlation coefficient.
+ *
+ * Category: Statistical
+ *
+ * @param {*} array1 A set of independent values.
+ * @param {*} array2 A set of dependent values.
+ * @returns
+ */
 export function PEARSON(data_x, data_y) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1508,6 +1834,15 @@ PERCENTRANK.INC = (array, x, significance) => {
   return Math.floor(result * power) / power
 }
 
+/**
+ * Returns the number of permutations for a given number of objects.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number An integer that describes the number of objects.
+ * @param {*} number_chosen An integer that describes the number of objects in each permutation.
+ * @returns
+ */
 export function PERMUT(number, number_chosen) {
   number = utils.parseNumber(number)
   number_chosen = utils.parseNumber(number_chosen)
@@ -1519,6 +1854,15 @@ export function PERMUT(number, number_chosen) {
   return mathTrig.FACT(number) / mathTrig.FACT(number - number_chosen)
 }
 
+/**
+ * Returns the number of permutations for a given number of objects (with repetitions) that can be selected from the total objects.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number An integer that describes the total number of objects.
+ * @param {*} number_chosen An integer that describes the number of objects in each permutation.
+ * @returns
+ */
 export function PERMUTATIONA(number, number_chosen) {
   number = utils.parseNumber(number)
   number_chosen = utils.parseNumber(number_chosen)
@@ -1530,6 +1874,14 @@ export function PERMUTATIONA(number, number_chosen) {
   return Math.pow(number, number_chosen)
 }
 
+/**
+ * Returns the value of the density function for a standard normal distribution.
+ *
+ * Category: Statistical
+ *
+ * @param {*} x X is the number for which you want the density of the standard normal distribution.
+ * @returns
+ */
 export function PHI(x) {
   x = utils.parseNumber(x)
 
@@ -1553,6 +1905,17 @@ POISSON.DIST = (x, mean, cumulative) => {
   return cumulative ? jStat.poisson.cdf(x, mean) : jStat.poisson.pdf(x, mean)
 }
 
+/**
+ * Returns the probability that values in a range are between two limits.
+ *
+ * Category: Statistical
+ *
+ * @param {*} x_range The range of numeric values of x with which there are associated probabilities.
+ * @param {*} prob_range A set of probabilities associated with values in x_range.
+ * @param {*} lower_limit Optional. The lower bound on the value for which you want a probability.
+ * @param {*} upper_limit Optional. The optional upper bound on the value for which you want a probability.
+ * @returns
+ */
 export function PROB(range, probability, lower, upper) {
   if (lower === undefined) {
     return 0
@@ -1670,6 +2033,17 @@ RANK.EQ = (number, range, order) => {
   return range.indexOf(number) + 1
 }
 
+/**
+ * Returns the row number of a reference.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} reference Optional. The cell or range of cells for which you want the row number. If reference is omitted, it is assumed to be the reference of the cell in which the ROW function appears. If reference is a range of cells, and if ROW is entered as a vertical array, ROW returns the row numbers of reference as a vertical array. Reference cannot refer to multiple areas.
+ * @param {*} if reference is omitted, it is assumed to be the reference of the cell in which the ROW function appears.
+ * @param {*} if reference is a range of cells, and if ROW is entered as a vertical array, ROW returns the row numbers of reference as a vertical array.
+ * @param {*} reference cannot refer to multiple areas.
+ * @returns
+ */
 export function ROW(matrix, index) {
   if (arguments.length !== 2) {
     return error.na
@@ -1690,6 +2064,14 @@ export function ROW(matrix, index) {
   return jStat.row(matrix, index)
 }
 
+/**
+ * Returns the number of rows in a reference.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array An array, an array formula, or a reference to a range of cells for which you want the number of rows.
+ * @returns
+ */
 export function ROWS(matrix) {
   if (arguments.length !== 1) {
     return error.na
@@ -1706,6 +2088,15 @@ export function ROWS(matrix) {
   return jStat.rows(matrix)
 }
 
+/**
+ * Returns the square of the Pearson product moment correlation coefficient.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's An array or range of data points.
+ * @param {*} known_x's An array or range of data points.
+ * @returns
+ */
 export function RSQ(data_x, data_y) {
   // no need to flatten here, PEARSON will take care of that
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1718,6 +2109,14 @@ export function RSQ(data_x, data_y) {
   return Math.pow(PEARSON(data_x, data_y), 2)
 }
 
+/**
+ * Returns the skewness of a distribution.
+ *
+ * Category: Statistical
+ *
+ * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want to calculate skewness. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function SKEW() {
   const range = utils.parseNumberArray(utils.flatten(arguments))
 
@@ -1759,6 +2158,15 @@ SKEW.P = function () {
   return m3 / Math.pow(m2, 3 / 2)
 }
 
+/**
+ * Returns the slope of the linear regression line.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's An array or cell range of numeric dependent data points.
+ * @param {*} known_x's The set of independent data points.
+ * @returns
+ */
 export function SLOPE(data_y, data_x) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1781,6 +2189,15 @@ export function SLOPE(data_y, data_x) {
   return num / den
 }
 
+/**
+ * Returns the k-th smallest value in a data set.
+ *
+ * Category: Statistical
+ *
+ * @param {*} array An array or range of numerical data for which you want to determine the k-th smallest value.
+ * @param {*} k The position (from the smallest) in the array or range of data to return.
+ * @returns
+ */
 export function SMALL(range, k) {
   range = utils.parseNumberArray(utils.flatten(range))
   k = utils.parseNumber(k)
@@ -1792,6 +2209,16 @@ export function SMALL(range, k) {
   return range.sort((a, b) => a - b)[k - 1]
 }
 
+/**
+ * Returns a normalized value.
+ *
+ * Category: Statistical
+ *
+ * @param {*} x The value you want to normalize.
+ * @param {*} mean The arithmetic mean of the distribution.
+ * @param {*} standard_dev The standard deviation of the distribution.
+ * @returns
+ */
 export function STANDARDIZE(x, mean, sd) {
   x = utils.parseNumber(x)
   mean = utils.parseNumber(mean)
@@ -1824,6 +2251,14 @@ STDEV.S = function () {
   return result
 }
 
+/**
+ * Estimates standard deviation based on a sample, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 values corresponding to a sample of a population. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function STDEVA() {
   const v = VARA.apply(this, arguments)
   const result = Math.sqrt(v)
@@ -1831,6 +2266,14 @@ export function STDEVA() {
   return result
 }
 
+/**
+ * Calculates standard deviation based on the entire population, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 values corresponding to a population. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @returns
+ */
 export function STDEVPA() {
   const v = VARPA.apply(this, arguments)
   let result = Math.sqrt(v)
@@ -1842,6 +2285,15 @@ export function STDEVPA() {
   return result
 }
 
+/**
+ * Returns the standard error of the predicted y-value for each x in the regression.
+ *
+ * Category: Statistical
+ *
+ * @param {*} known_y's An array or range of dependent data points.
+ * @param {*} known_x's An array or range of independent data points.
+ * @returns
+ */
 export function STEYX(data_y, data_x) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1866,6 +2318,14 @@ export function STEYX(data_y, data_x) {
   return Math.sqrt((lft - (num * num) / den) / (n - 2))
 }
 
+/**
+ * Returns the transpose of an array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array An array or range of cells on a worksheet that you want to transpose. The transpose of an array is created by using the first row of the array as the first column of the new array, the second row of the array as the second column of the new array, and so on. If you're not sure of how to enter an array formula, see Create an array formula.
+ * @returns
+ */
 export function TRANSPOSE(matrix) {
   if (!matrix) {
     return error.na
@@ -1974,6 +2434,22 @@ T.TEST = (data_x, data_y) => {
   return T.DIST['2T'](t, data_x.length + data_y.length - 2)
 }
 
+/**
+ * Returns values along a linear trend.
+ *
+ * Category: Statistical
+ *
+ * @param {*} if the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable.
+ * @param {*} if the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
+ * @param {*} the array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column).
+ * @param {*} if known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} new_x's must include a column (or row) for each independent variable, just as known_x's does. So, if known_y's is in a single column, known_x's and new_x's must have the same number of columns. If known_y's is in a single row, known_x's and new_x's must have the same number of rows.
+ * @param {*} if you omit new_x's, it is assumed to be the same as known_x's.
+ * @param {*} if you omit both known_x's and new_x's, they are assumed to be the array {1,2,3,...} that is the same size as known_y's.
+ * @param {*} if const is TRUE or omitted, b is calculated normally.
+ * @param {*} if const is FALSE, b is set equal to 0 (zero), and the m-values are adjusted so that y = mx.
+ * @returns
+ */
 export function TREND(data_y, data_x, new_data_x) {
   data_y = utils.parseNumberArray(utils.flatten(data_y))
   data_x = utils.parseNumberArray(utils.flatten(data_x))
@@ -1995,6 +2471,15 @@ export function TREND(data_y, data_x, new_data_x) {
   return result
 }
 
+/**
+ * Returns the mean of the interior of a data set.
+ *
+ * Category: Statistical
+ *
+ * @param {*} array The array or range of values to trim and average.
+ * @param {*} percent The fractional number of data points to exclude from the calculation. For example, if percent = 0.2, 4 points are trimmed from a data set of 20 points (20 x 0.2): 2 from the top and 2 from the bottom of the set.
+ * @returns
+ */
 export function TRIMMEAN(range, percent) {
   range = utils.parseNumberArray(utils.flatten(range))
   percent = utils.parseNumber(percent)
@@ -2051,6 +2536,14 @@ VAR.S = function () {
   return sigma / (n - 1)
 }
 
+/**
+ * Estimates variance based on a sample, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 value arguments corresponding to a sample of a population.
+ * @returns
+ */
 export function VARA() {
   const range = utils.flatten(arguments)
   const n = range.length
@@ -2077,6 +2570,14 @@ export function VARA() {
   return sigma / (count - 1)
 }
 
+/**
+ * Calculates variance based on the entire population, including numbers, text, and logical values.
+ *
+ * Category: Statistical
+ *
+ * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 255 value arguments corresponding to a population.
+ * @returns
+ */
 export function VARPA() {
   const range = utils.flatten(arguments)
   const n = range.length
