@@ -318,11 +318,7 @@ export function arrayValuesToNumbers(arr) {
     if (typeof el === 'string') {
       const number = parseNumber(el)
 
-      if (number instanceof Error) {
-        arr[n] = 0
-      } else {
-        arr[n] = number
-      }
+      arr[n] = number instanceof Error ? 0 : number
     }
   }
 
