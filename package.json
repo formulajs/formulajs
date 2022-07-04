@@ -50,13 +50,13 @@
     "jstat": "^1.9.5"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-env": "^7.18.6",
     "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "c8": "^7.11.3",
     "cli-table3": "^0.6.2",
-    "eslint": "^8.18.0",
+    "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
     "mocha": "^10.0.0",
     "mochawesome": "^7.1.3",
