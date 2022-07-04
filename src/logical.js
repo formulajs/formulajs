@@ -39,11 +39,11 @@ export function AND() {
  *
  * Category: Lookup and reference
  *
- * @param {*} index_num Specifies which value argument is selected. Index_num must be a number between 1 and 254, or a formula or reference to a cell containing a number between 1 and 254. If index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on. If index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value. If index_num is a fraction, it is truncated to the lowest integer before being used.
- * @param {*} if index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on.
- * @param {*} if index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value.
- * @param {*} if index_num is a fraction, it is truncated to the lowest integer before being used.
- * @param {*} value1, value2, ... Value 1 is required, subsequent values are optional. 1 to 254 value arguments from which CHOOSE selects a value or an action to perform based on index_num. The arguments can be numbers, cell references, defined names, formulas, functions, or text.
+ * @param {*} index_num Specifies which value argument is selected. Index_num must be a number between 1 and 254, or a formula or reference to a value containing a number between 1 and 254. If index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on. If index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value. If index_num is a fraction, it is truncated to the lowest integer before being used.
+- If index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on.
+- If index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value.
+- If index_num is a fraction, it is truncated to the lowest integer before being used.
+ * @param {*} args value1, value2, ... Value 1 is required, subsequent values are optional. 1 to 254 value arguments from which CHOOSE selects a value or an action to perform based on index_num. The arguments can be numbers, value references, defined names, formulas, functions, or text.
  * @returns
  */
 export function CHOOSE() {
@@ -80,28 +80,30 @@ export function FALSE() {
  *
  * Category: Logical
  *
- * @param {*} =if(a2>b2,"over Budget","OK")
- * @param {*} =if(a2=b2,b4-a4,"") =IF(A2=B2,B4-A4,"")
+ * @param {*} logical_test
+ * @param {*} value_if_true
+ * @param {*} value_if_false
+ *
  * @returns
  */
-export function IF(test, then_value, otherwise_value) {
-  if (test instanceof Error) {
-    return test
+export function IF(logical_test, value_if_true, value_if_false) {
+  if (logical_test instanceof Error) {
+    return logical_test
   }
 
-  then_value = arguments.length >= 2 ? then_value : true
+  value_if_true = arguments.length >= 2 ? value_if_true : true
 
-  if (then_value === undefined || then_value === null) {
-    then_value = 0
+  if (value_if_true === undefined || value_if_true === null) {
+    value_if_true = 0
   }
 
-  otherwise_value = arguments.length === 3 ? otherwise_value : false
+  value_if_false = arguments.length === 3 ? value_if_false : false
 
-  if (otherwise_value === undefined || otherwise_value === null) {
-    otherwise_value = 0
+  if (value_if_false === undefined || value_if_false === null) {
+    value_if_false = 0
   }
 
-  return test ? then_value : otherwise_value
+  return logical_test ? value_if_true : value_if_false
 }
 
 /**
@@ -130,9 +132,9 @@ export function IFS() {
  * @param {*} value_if_error The value to return if the formula evaluates to an error. The following error types are evaluated: #N/A, #VALUE!, #REF!, #DIV/0!, #NUM!, #NAME?, or #NULL!.
  * @returns
  */
-export function IFERROR(value, valueIfError) {
+export function IFERROR(value, value_if_error) {
   if (information.ISERROR(value)) {
-    return valueIfError
+    return value_if_error
   }
 
   return value
@@ -216,7 +218,7 @@ export function TRUE() {
  *
  * Category: Logical
  *
- * @param {*} logical1, logical2,… Logical 1 is required, subsequent logical values are optional. 1 to 254 conditions you want to test that can be either TRUE or FALSE, and can be logical values, arrays, or references.
+ * @param {*} args logical1, logical2,… Logical 1 is required, subsequent logical values are optional. 1 to 254 conditions you want to test that can be either TRUE or FALSE, and can be logical values, arrays, or references.
  * @returns
  */
 export function XOR() {

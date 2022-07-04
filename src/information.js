@@ -2,13 +2,10 @@ import * as error from './utils/error.js'
 
 // TODO
 /**
- * Returns information about the formatting, location, or contents of a cell.
+ * Returns information about the formatting, location, or contents of a value.
  *
  * Category: Information
  *
- * @param {*} in automatic calculation mode, when a cell is modified by a user the calculation may be triggered before or after the selection has progressed, dependingvon the platform you're using for Excel. For example, Excel for Windows currently triggers calculation before selection changes, butvExcel for the web triggers it afterward.
- * @param {*} when Co-Authoring with another user who makes an edit, this function will report your active cell rather than the editor's.
- * @param {*} any recalculation, for instance pressing F9, will cause the function to return a new result even though no cell edit has occurred.
  * @returns
  */
 export function CELL() {
@@ -46,9 +43,6 @@ ERROR.TYPE = (error_val) => {
  *
  * Category: Information
  *
- * @param {*} type_text Text that specifies what type of information you want returned.
- * @param {*} a1 reference style "$A:$D$9".
- * @param {*} r1c1 reference style "$A:R9C4"
  * @returns
  */
 export function INFO() {
@@ -60,13 +54,19 @@ export function INFO() {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISBLANK(value) {
   return value === null
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} number
+ * @returns
+ */
 export function ISBINARY(number) {
   return /^[01]{1,10}$/.test(number)
 }
@@ -76,7 +76,7 @@ export function ISBINARY(number) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISERR(value) {
@@ -91,7 +91,7 @@ export function ISERR(value) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISERROR(value) {
@@ -112,11 +112,11 @@ export function ISEVEN(number) {
 
 // TODO
 /**
- * Returns TRUE if there is a reference to a cell that contains a formula.
+ * Returns TRUE if there is a reference to a value that contains a formula.
  *
  * Category: Information
  *
- * @param {*} reference Reference is a reference to the cell you want to test. Reference can be a cell reference, a formula, or a name that refers to a cell.
+ * @param {*} reference Reference is a reference to the value you want to test. Reference can be a value reference, a formula, or a name that refers to a value.
  * @returns
  */
 export function ISFORMULA() {
@@ -128,7 +128,7 @@ export function ISFORMULA() {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISLOGICAL(value) {
@@ -140,7 +140,7 @@ export function ISLOGICAL(value) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISNA(value) {
@@ -152,7 +152,7 @@ export function ISNA(value) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISNONTEXT(value) {
@@ -164,7 +164,7 @@ export function ISNONTEXT(value) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISNUMBER(value) {
@@ -176,11 +176,11 @@ export function ISNUMBER(value) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
-export function ISODD(number) {
-  return !!(Math.floor(Math.abs(number)) & 1)
+export function ISODD(value) {
+  return !!(Math.floor(Math.abs(value)) & 1)
 }
 
 // TODO
@@ -189,7 +189,7 @@ export function ISODD(number) {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISREF() {
@@ -201,7 +201,7 @@ export function ISREF() {
  *
  * Category: Information
  *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty cell), error, logical value, text, number, or reference value, or a name referring to any of these.
+ * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
  * @returns
  */
 export function ISTEXT(value) {

@@ -256,11 +256,11 @@ export function BITAND(number1, number2) {
  * @param {*} shift_amount Shift_amount must be an integer.
  * @returns
  */
-export function BITLSHIFT(number, shift) {
+export function BITLSHIFT(number, shift_amount) {
   number = utils.parseNumber(number)
-  shift = utils.parseNumber(shift)
+  shift_amount = utils.parseNumber(shift_amount)
 
-  if (utils.anyIsError(number, shift)) {
+  if (utils.anyIsError(number, shift_amount)) {
     return error.value
   }
 
@@ -280,12 +280,12 @@ export function BITLSHIFT(number, shift) {
   }
 
   // Return error if the absolute value of shift is greater than 53
-  if (Math.abs(shift) > 53) {
+  if (Math.abs(shift_amount) > 53) {
     return error.num
   }
 
   // Return number shifted by shift bits to the left or to the right if shift is negative
-  return shift >= 0 ? number << shift : number >> -shift
+  return shift_amount >= 0 ? number << shift_amount : number >> -shift_amount
 }
 
 /**
@@ -333,11 +333,11 @@ export function BITOR(number1, number2) {
  * @param {*} shift_amount Must be an integer.
  * @returns
  */
-export function BITRSHIFT(number, shift) {
+export function BITRSHIFT(number, shift_amount) {
   number = utils.parseNumber(number)
-  shift = utils.parseNumber(shift)
+  shift_amount = utils.parseNumber(shift_amount)
 
-  if (utils.anyIsError(number, shift)) {
+  if (utils.anyIsError(number, shift_amount)) {
     return error.value
   }
 
@@ -357,12 +357,12 @@ export function BITRSHIFT(number, shift) {
   }
 
   // Return error if the absolute value of shift is greater than 53
-  if (Math.abs(shift) > 53) {
+  if (Math.abs(shift_amount) > 53) {
     return error.num
   }
 
   // Return number shifted by shift bits to the right or to the left if shift is negative
-  return shift >= 0 ? number >> shift : number << -shift
+  return shift_amount >= 0 ? number >> shift_amount : number << -shift_amount
 }
 
 /**
@@ -411,12 +411,12 @@ export function BITXOR(number1, number2) {
  * @param {*} suffix Optional. The suffix for the imaginary component of the complex number. If omitted, suffix is assumed to be "i".
  * @returns
  */
-export function COMPLEX(real, imaginary, suffix) {
-  real = utils.parseNumber(real)
-  imaginary = utils.parseNumber(imaginary)
+export function COMPLEX(real_num, i_num, suffix) {
+  real_num = utils.parseNumber(real_num)
+  i_num = utils.parseNumber(i_num)
 
-  if (utils.anyIsError(real, imaginary)) {
-    return real
+  if (utils.anyIsError(real_num, i_num)) {
+    return real_num
   }
 
   // Set suffix
@@ -428,15 +428,15 @@ export function COMPLEX(real, imaginary, suffix) {
   }
 
   // Return complex number
-  if (real === 0 && imaginary === 0) {
+  if (real_num === 0 && i_num === 0) {
     return 0
-  } else if (real === 0) {
-    return imaginary === 1 ? suffix : imaginary.toString() + suffix
-  } else if (imaginary === 0) {
-    return real.toString()
+  } else if (real_num === 0) {
+    return i_num === 1 ? suffix : i_num.toString() + suffix
+  } else if (i_num === 0) {
+    return real_num.toString()
   } else {
-    const sign = imaginary > 0 ? '+' : ''
-    return real.toString() + sign + (imaginary === 1 ? suffix : imaginary.toString() + suffix)
+    const sign = i_num > 0 ? '+' : ''
+    return real_num.toString() + sign + (i_num === 1 ? suffix : i_num.toString() + suffix)
   }
 }
 
@@ -445,6 +445,9 @@ export function COMPLEX(real, imaginary, suffix) {
  *
  * Category: Engineering
  *
+ * @param {*} number is the value in from_units to convert.
+ * @param {*} from_unit is the units for number.
+ * @param {*} to_unit is the units for the result. CONVERT accepts the following text values (in quotation marks) for from_unit and to_unit.
  * @returns
  */
 export function CONVERT(number, from_unit, to_unit) {
@@ -923,21 +926,30 @@ export function DELTA(number1, number2) {
  * @param {*} upper_limit Optional. The upper bound for integrating ERF. If omitted, ERF integrates between zero and lower_limit.
  * @returns
  */
-export function ERF(lower_bound, upper_bound) {
+export function ERF(lower_limit, upper_limit) {
   // Set number2 to zero if undefined
-  upper_bound = upper_bound === undefined ? 0 : upper_bound
+  upper_limit = upper_limit === undefined ? 0 : upper_limit
 
-  lower_bound = utils.parseNumber(lower_bound)
-  upper_bound = utils.parseNumber(upper_bound)
+  lower_limit = utils.parseNumber(lower_limit)
+  upper_limit = utils.parseNumber(upper_limit)
 
-  if (utils.anyIsError(lower_bound, upper_bound)) {
+  if (utils.anyIsError(lower_limit, upper_limit)) {
     return error.value
   }
 
-  return jStat.erf(lower_bound)
+  return jStat.erf(lower_limit)
 }
 
 // TODO
+
+/**
+ * Returns the error function.
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The lower bound for integrating ERF.PRECISE.
+ * @returns
+ */
 ERF.PRECISE = () => {
   throw new Error('ERF.PRECISE is not implemented')
 }
@@ -960,6 +972,15 @@ export function ERFC(x) {
 }
 
 // TODO
+
+/**
+ * Returns the complementary ERF function integrated between x and infinity.
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The lower bound for integrating ERFC.PRECISE.
+ * @returns
+ */
 ERFC.PRECISE = () => {
   throw new Error('ERFC.PRECISE is not implemented')
 }
@@ -1348,6 +1369,7 @@ export function IMCOSH(inumber) {
  *
  * Category: Engineering
  *
+ * @param {*} inumber A complex number for which you want the cotangent.
  * @returns
  */
 export function IMCOT(inumber) {
@@ -1542,7 +1564,7 @@ export function IMPOWER(inumber, number) {
  *
  * Category: Engineering
  *
- * @param {*} inumber1, [inumber2], … Inumber1 is required, subsequent inumbers are not. 1 to 255 complex numbers to multiply.
+ * @param {*} args inumber1, [inumber2], … Inumber1 is required, subsequent inumbers are not. 1 to 255 complex numbers to multiply.
  * @returns
  */
 export function IMPRODUCT() {
@@ -1870,7 +1892,7 @@ export function IMSUB(inumber1, inumber2) {
  *
  * Category: Engineering
  *
- * @param {*} inumber1, [inumber2], ... Inumber1 is required, subsequent numbers are not. 1 to 255 complex numbers to add.
+ * @param {*} args inumber1, [inumber2], ... Inumber1 is required, subsequent numbers are not. 1 to 255 complex numbers to add.
  * @returns
  */
 export function IMSUM() {

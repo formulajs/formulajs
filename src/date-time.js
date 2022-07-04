@@ -69,6 +69,9 @@ const WEEKEND_TYPES = [
  *
  * Category: Date and time
  *
+ * @param {*} year Year
+ * @param {*} month Month
+ * @param {*} day Day
  * @returns
  */
 export function DATE(year, month, day) {
@@ -96,6 +99,15 @@ export function DATE(year, month, day) {
  *
  * Category: Date and time
  *
+ * @param {*} start_date A date that represents the first, or starting date of a given period.
+ * @param {*} end_date A date that represents the last, or ending, date of the period.
+ * @param {*} unit The type of information that you want returned, where:
+ - "Y": The number of complete years in the period.
+ - "M": The number of complete months in the period.
+ - "D": The number of days in the period.
+ - "MD": The difference between the days in start_date and end_date. The months and years of the dates are ignored.
+ - "YM": The difference between the months in start_date and end_date. The days and years of the dates are ignored
+ - "YD": The difference between the days of start_date and end_date. The years of the dates are ignored.
  * @returns
  */
 export function DATEDIF(start_date, end_date, unit) {
@@ -171,7 +183,7 @@ export function DATEDIF(start_date, end_date, unit) {
  *
  * Category: Date and time
  *
- * @param {*} date_text Text that represents a date in an Excel date format, or a reference to a cell that contains text that represents a date in an Excel date format. For example, "1/30/2008" or "30-Jan-2008" are text strings within quotation marks that represent dates. Using the default date system in Microsoft Excel for Windows, the date_text argument must represent a date between January 1, 1900 and December 31, 9999. The DATEVALUE function returns the #VALUE! error value if the value of the date_text argument falls outside of this range. If the year portion of the date_text argument is omitted, the DATEVALUE function uses the current year from your computer's built-in clock. Time information in the date_text argument is ignored.
+ * @param {*} date_text Text that represents a date in an Excel date format, or a reference to a value that contains text that represents a date in an Excel date format.
  * @returns
  */
 export function DATEVALUE(date_text) {
@@ -193,7 +205,7 @@ export function DATEVALUE(date_text) {
  *
  * Category: Date and time
  *
- * @param {*} serial_number The date of the day you are trying to find. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} serial_number The date of the day you are trying to find.
  * @returns
  */
 export function DAY(serial_number) {
@@ -242,7 +254,8 @@ export function DAYS(end_date, start_date) {
  *
  * Category: Date and time
  *
- * @param {*} start_date, end_date  The two dates between which you want to know the number of days. If start_date occurs after end_date, the DAYS360 function returns a negative number. Dates should be entered by using the DATE function, or derived from the results of other formulas or functions. For example, use DATE(2008,5,23) to return the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} start_date A date that represents the start date. If start_date occurs after end_date, the DAYS360 function returns a negative number.
+ * @param {*} end_date A date that represents the end date.
  * @param {*} method Optional. A logical value that specifies whether to use the U.S. or European method in the calculation.
  * @returns
  */
@@ -295,7 +308,7 @@ export function DAYS360(start_date, end_date, method) {
  *
  * Category: Date and time
  *
- * @param {*} start_date A date that represents the start date. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} start_date A date that represents the start date.
  * @param {*} months The number of months before or after start_date. A positive value for months yields a future date; a negative value yields a past date.
  * @returns
  */
@@ -321,8 +334,8 @@ export function EDATE(start_date, months) {
  *
  * Category: Date and time
  *
- * @param {*} start_date A date that represents the starting date. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
- * @param {*} months The number of months before or after start_date. A positive value for months yields a future date; a negative value yields a past date. Note: If months is not an integer, it is truncated.
+ * @param {*} start_date A date that represents the starting date.
+ * @param {*} months The number of months before or after start_date. A positive value for months yields a future date; a negative value yields a past date.
  * @returns
  */
 export function EOMONTH(start_date, months) {
@@ -359,6 +372,12 @@ export function HOUR(serial_number) {
   return serial_number.getHours()
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} second
+ * @returns
+ */
 export function INTERVAL(second) {
   if (typeof second !== 'number' && typeof second !== 'string') {
     return error.value
@@ -434,7 +453,7 @@ export function MINUTE(serial_number) {
  *
  * Category: Date and time
  *
- * @param {*} serial_number The date of the month you are trying to find. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} serial_number The date of the month you are trying to find.
  * @returns
  */
 export function MONTH(serial_number) {
@@ -454,13 +473,24 @@ export function MONTH(serial_number) {
  *
  * @param {*} start_date A date that represents the start date.
  * @param {*} end_date A date that represents the end date.
- * @param {*} holidays Optional. An optional range of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of cells that contains the dates or an array constant of the serial numbers that represent the dates.
+ * @param {*} holidays Optional. An optional range of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contains the dates or an array constant of the serial numbers that represent the dates.
  * @returns
  */
 export function NETWORKDAYS(start_date, end_date, holidays) {
   return NETWORKDAYS.INTL(start_date, end_date, 1, holidays)
 }
 
+/**
+ * Returns the number of whole workdays between two dates using parameters to indicate which and how many days are weekend days.
+ *
+ * Category: Date and time
+ *
+ * @param {*} start_date The date for from which the difference is to be computed. The start_date can be earlier than, the same as, or later than the end_date.
+ * @param {*} end_date The date for to which the difference is to be computed.
+ * @param {*} weekend Optional. Indicates the days of the week that are weekend days and are not included in the number of whole working days between start_date and end_date. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
+ * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
+ * @returns
+ */
 NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
   start_date = utils.parseDate(start_date)
 
@@ -634,7 +664,7 @@ export function TODAY() {
  *
  * Category: Date and time
  *
- * @param {*} serial_number A sequential number that represents the date of the day you are trying to find. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} serial_number A sequential number that represents the date of the day you are trying to find.
  * @param {*} return_type Optional. A number that determines the type of return value.
  * @returns
  */
@@ -659,7 +689,7 @@ export function WEEKDAY(serial_number, return_type) {
  *
  * Category: Date and time
  *
- * @param {*} serial_number A date within the week. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} serial_number A date within the week.
  * @param {*} return_type Optional. A number that determines on which day the week begins. The default is 1.
  * @returns
  */
@@ -693,13 +723,24 @@ export function WEEKNUM(serial_number, return_type) {
  *
  * @param {*} start_date A date that represents the start date.
  * @param {*} days The number of nonweekend and nonholiday days before or after start_date. A positive value for days yields a future date; a negative value yields a past date.
- * @param {*} holidays Optional. An optional list of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of cells that contain the dates or an array constant of the serial numbers that represent the dates.
+ * @param {*} holidays Optional. An optional list of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contain the dates or an array constant of the serial numbers that represent the dates.
  * @returns
  */
 export function WORKDAY(start_date, days, holidays) {
   return WORKDAY.INTL(start_date, days, 1, holidays)
 }
 
+/**
+ * Returns the serial number of the date before or after a specified number of workdays using parameters to indicate which and how many days are weekend days.
+ *
+ * Category: Date and time
+ *
+ * @param {*} start_date The start date, truncated to integer.
+ * @param {*} days The number of workdays before or after the start_date. A positive value yields a future date; a negative value yields a past date; a zero value yields the start_date. Day-offset is truncated to an integer.
+ * @param {*} weekend Optional. Indicates the days of the week that are weekend days and are not considered working days. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
+ * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. Holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
+ * @returns
+ */
 WORKDAY.INTL = (start_date, days, weekend, holidays) => {
   start_date = utils.parseDate(start_date)
 
@@ -777,7 +818,7 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
  *
  * Category: Date and time
  *
- * @param {*} serial_number The date of the year you want to find. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text.
+ * @param {*} serial_number The date of the year you want to find.
  * @returns
  */
 export function YEAR(serial_number) {
@@ -807,8 +848,6 @@ function daysBetween(start_date, end_date) {
  * @param {*} start_date A date that represents the start date.
  * @param {*} end_date A date that represents the end date.
  * @param {*} basis Optional. The type of day count basis to use.
- * @param {*} dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2018,5,23) for the 23rd day of May, 2018. Problems can occur if dates are entered as text.
- * @param {*} the YEARFRAC function may return an incorrect result when using the US (NASD) 30/360 basis, and the start_date is the last day in February.
  * @returns
  */
 export function YEARFRAC(start_date, end_date, basis) {

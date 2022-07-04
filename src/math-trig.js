@@ -97,6 +97,7 @@ export function ACOT(number) {
  *
  * Category: Math and trigonometry
  *
+ * @param {*} number The absolute value of Number must be greater than 1.
  * @returns
  */
 export function ACOTH(number) {
@@ -124,7 +125,7 @@ export function ACOTH(number) {
  * @param {*} function_num A number 1 to 19 that specifies which function to use.
  * @param {*} options A numerical value that determines which values to ignore in the evaluation range for the function. Note: The function will not ignore hidden rows, nested subtotals or nested aggregates if the array argument includes a calculation, for example: =AGGREGATE(14,3,A1:A100*(A1:A100>0),1)
  * @param {*} ref1 The first numeric argument for functions that take multiple numeric arguments for which you want the aggregate value.
- * @param {*} ref2,... Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of cells for which you want the aggregate value. Ref2 is a second argument that is required for certain functions. The following functions require a ref2 argument:
+ * @param {*} ref2 Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of values for which you want the aggregate value. Ref2 is a second argument that is required for certain functions.
  * @returns
  */
 export function AGGREGATE(function_num, options, ref1, ref2) {
@@ -182,7 +183,7 @@ export function AGGREGATE(function_num, options, ref1, ref2) {
  *
  * Category: Math and trigonometry
  *
- * @param {*} text A string enclosed in quotation marks, an empty string (""), or a reference to a cell containing text.
+ * @param {*} text A string enclosed in quotation marks, an empty string (""), or a reference to a value containing text.
  * @returns
  */
 export function ARABIC(text) {
@@ -290,16 +291,16 @@ export function ATAN(number) {
  * @param {*} y_num The y-coordinate of the point.
  * @returns
  */
-export function ATAN2(number_x, number_y) {
-  number_x = utils.parseNumber(number_x)
-  number_y = utils.parseNumber(number_y)
-  const anyError = utils.anyError(number_x, number_y)
+export function ATAN2(x_num, y_num) {
+  x_num = utils.parseNumber(x_num)
+  y_num = utils.parseNumber(y_num)
+  const anyError = utils.anyError(x_num, y_num)
 
   if (anyError) {
     return anyError
   }
 
-  return Math.atan2(number_x, number_y)
+  return Math.atan2(x_num, y_num)
 }
 
 /**
@@ -362,6 +363,7 @@ export function BASE(number, radix, min_length) {
  *
  * @param {*} number The value you want to round.
  * @param {*} significance The multiple to which you want to round.
+ * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
 export function CEILING(number, significance, mode) {
@@ -581,14 +583,14 @@ export function CSCH(number) {
  * @param {*} radix Radix must be an integer.
  * @returns
  */
-export function DECIMAL(number, radix) {
+export function DECIMAL(text, radix) {
   if (arguments.length < 1) {
     return error.value
   }
 
-  number = utils.parseNumber(number)
+  text = utils.parseNumber(text)
   radix = utils.parseNumber(radix)
-  const anyError = utils.anyError(number, radix)
+  const anyError = utils.anyError(text, radix)
 
   if (anyError) {
     return anyError
@@ -598,7 +600,7 @@ export function DECIMAL(number, radix) {
     return error.num
   }
 
-  return parseInt(number, radix)
+  return parseInt(text, radix)
 }
 
 /**
@@ -609,14 +611,14 @@ export function DECIMAL(number, radix) {
  * @param {*} angle The angle in radians that you want to convert.
  * @returns
  */
-export function DEGREES(number) {
-  number = utils.parseNumber(number)
+export function DEGREES(angle) {
+  angle = utils.parseNumber(angle)
 
-  if (number instanceof Error) {
-    return number
+  if (angle instanceof Error) {
+    return angle
   }
 
-  return (number * 180) / Math.PI
+  return (angle * 180) / Math.PI
 }
 
 /**
@@ -711,11 +713,7 @@ export function FACTDOUBLE(number) {
 
   const n = Math.floor(number)
 
-  if (n <= 0) {
-    return 1
-  } else {
-    return n * FACTDOUBLE(n - 2)
-  }
+  return n <= 0 ? 1 : n * FACTDOUBLE(n - 2)
 }
 
 /**
@@ -747,14 +745,23 @@ export function FLOOR(number, significance) {
   significance = Math.abs(significance)
   const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
-  if (number >= 0) {
-    return ROUND(Math.floor(number / significance) * significance, precision)
-  } else {
-    return -ROUND(Math.ceil(Math.abs(number) / significance), precision)
-  }
+  return number >= 0
+    ? ROUND(Math.floor(number / significance) * significance, precision)
+    : -ROUND(Math.ceil(Math.abs(number) / significance), precision)
 }
 
 // TODO: Verify
+
+/**
+ * Rounds a number down, to the nearest integer or to the nearest multiple of significance.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The number to be rounded down.
+ * @param {*} significance Optional. The multiple to which you want to round.
+ * @param {*} mode Optional. The direction (toward or away from 0) to round negative numbers.
+ * @returns
+ */
 FLOOR.MATH = (number, significance, mode) => {
   if (significance instanceof Error) {
     return significance
@@ -788,6 +795,16 @@ FLOOR.MATH = (number, significance, mode) => {
 }
 
 // Deprecated
+
+/**
+ * Rounds a number the nearest integer or to the nearest multiple of significance. Regardless of the sign of the number, the number is rounded up.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value to be rounded.
+ * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
+ * @returns
+ */
 FLOOR.PRECISE = FLOOR.MATH
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
@@ -796,7 +813,7 @@ FLOOR.PRECISE = FLOOR.MATH
  *
  * Category: Math and trigonometry
  *
- * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values. If any value is not an integer, it is truncated.
+ * @param {*} args number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values. If any value is not an integer, it is truncated.
  * @returns
  */
 export function GCD() {
@@ -856,7 +873,7 @@ export const ISO = {
  *
  * Category: Math and trigonometry
  *
- * @param {*} number1, number2,... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the least common multiple. If value is not an integer, it is truncated.
+ * @param {*} args number1, number2,... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the least common multiple. If value is not an integer, it is truncated.
  * @returns
  */
 export function LCM() {
@@ -914,18 +931,38 @@ export function LN(number) {
   return Math.log(number)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function LN10() {
   return Math.log(10)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function LN2() {
   return Math.log(2)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function LOG10E() {
   return Math.LOG10E
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function LOG2E() {
   return Math.LOG2E
 }
@@ -986,10 +1023,10 @@ export function LOG10(number) {
  * @param {*} divisor The number by which you want to divide number.
  * @returns
  */
-export function MOD(dividend, divisor) {
-  dividend = utils.parseNumber(dividend)
+export function MOD(number, divisor) {
+  number = utils.parseNumber(number)
   divisor = utils.parseNumber(divisor)
-  const anyError = utils.anyError(dividend, divisor)
+  const anyError = utils.anyError(number, divisor)
 
   if (anyError) {
     return anyError
@@ -999,8 +1036,8 @@ export function MOD(dividend, divisor) {
     return error.div0
   }
 
-  let modulus = Math.abs(dividend % divisor)
-  modulus = dividend < 0 ? divisor - modulus : modulus
+  let modulus = Math.abs(number % divisor)
+  modulus = number < 0 ? divisor - modulus : modulus
 
   return divisor > 0 ? modulus : -modulus
 }
@@ -1039,7 +1076,7 @@ export function MROUND(number, multiple) {
  *
  * Category: Math and trigonometry
  *
- * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the multinomial.
+ * @param {*} args number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 values for which you want the multinomial.
  * @returns
  */
 export function MULTINOMIAL() {
@@ -1092,6 +1129,11 @@ export function PI() {
   return Math.PI
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function E() {
   return Math.E
 }
@@ -1133,7 +1175,7 @@ export function POWER(number, power) {
  * Category: Math and trigonometry
  *
  * @param {*} number1 The first number or range that you want to multiply.
- * @param {*} number2, ... Optional. Additional numbers or ranges that you want to multiply, up to a maximum of 255 arguments.
+ * @param {*} args number2, ... Optional. Additional numbers or ranges that you want to multiply, up to a maximum of 255 arguments.
  * @returns
  */
 export function PRODUCT() {
@@ -1188,14 +1230,14 @@ export function QUOTIENT(numerator, denominator) {
  * @param {*} angle An angle in degrees that you want to convert.
  * @returns
  */
-export function RADIANS(number) {
-  number = utils.parseNumber(number)
+export function RADIANS(angle) {
+  angle = utils.parseNumber(angle)
 
-  if (number instanceof Error) {
-    return number
+  if (angle instanceof Error) {
+    return angle
   }
 
-  return (number * Math.PI) / 180
+  return (angle * Math.PI) / 180
 }
 
 /**
@@ -1239,7 +1281,6 @@ export function RANDBETWEEN(bottom, top) {
  * Category: Math and trigonometry
  *
  * @param {*} number The Arabic numeral you want converted.
- * @param {*} form Optional. A number specifying the type of roman numeral you want. The roman numeral style ranges from Classic to Simplified, becoming more concise as the value of form increases. See the example following ROMAN(499,0) below.
  * @returns
  */
 export function ROMAN(number) {
@@ -1303,16 +1344,16 @@ export function ROMAN(number) {
  * @param {*} num_digits The number of digits to which you want to round the number argument.
  * @returns
  */
-export function ROUND(number, digits) {
+export function ROUND(number, num_digits) {
   number = utils.parseNumber(number)
-  digits = utils.parseNumber(digits)
-  const anyError = utils.anyError(number, digits)
+  num_digits = utils.parseNumber(num_digits)
+  const anyError = utils.anyError(number, num_digits)
 
   if (anyError) {
     return anyError
   }
 
-  return Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
+  return Math.round(number * Math.pow(10, num_digits)) / Math.pow(10, num_digits)
 }
 
 /**
@@ -1324,10 +1365,10 @@ export function ROUND(number, digits) {
  * @param {*} num_digits The number of digits to which you want to round number.
  * @returns
  */
-export function ROUNDDOWN(number, digits) {
+export function ROUNDDOWN(number, num_digits) {
   number = utils.parseNumber(number)
-  digits = utils.parseNumber(digits)
-  const anyError = utils.anyError(number, digits)
+  num_digits = utils.parseNumber(num_digits)
+  const anyError = utils.anyError(number, num_digits)
 
   if (anyError) {
     return anyError
@@ -1335,7 +1376,7 @@ export function ROUNDDOWN(number, digits) {
 
   const sign = number > 0 ? 1 : -1
 
-  return (sign * Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
+  return (sign * Math.floor(Math.abs(number) * Math.pow(10, num_digits))) / Math.pow(10, num_digits)
 }
 
 /**
@@ -1347,10 +1388,10 @@ export function ROUNDDOWN(number, digits) {
  * @param {*} num_digits The number of digits to which you want to round number.
  * @returns
  */
-export function ROUNDUP(number, digits) {
+export function ROUNDUP(number, num_digits) {
   number = utils.parseNumber(number)
-  digits = utils.parseNumber(digits)
-  const anyError = utils.anyError(number, digits)
+  num_digits = utils.parseNumber(num_digits)
+  const anyError = utils.anyError(number, num_digits)
 
   if (anyError) {
     return anyError
@@ -1358,7 +1399,7 @@ export function ROUNDUP(number, digits) {
 
   const sign = number > 0 ? 1 : -1
 
-  return (sign * Math.ceil(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
+  return (sign * Math.ceil(Math.abs(number) * Math.pow(10, num_digits))) / Math.pow(10, num_digits)
 }
 
 /**
@@ -1366,6 +1407,7 @@ export function ROUNDUP(number, digits) {
  *
  * Category: Math and trigonometry
  *
+ * @param {*} number The angle in radians for which you want the secant.
  * @returns
  */
 export function SEC(number) {
@@ -1383,6 +1425,7 @@ export function SEC(number) {
  *
  * Category: Math and trigonometry
  *
+ * @param {*} number The angle in radians for which you want the hyperbolic secant.
  * @returns
  */
 export function SECH(number) {
@@ -1525,10 +1568,20 @@ export function SQRTPI(number) {
   return Math.sqrt(number * Math.PI)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function SQRT1_2() {
   return 1 / Math.sqrt(2)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function SQRT2() {
   return Math.sqrt(2)
 }
@@ -1538,19 +1591,18 @@ export function SQRT2() {
  *
  * Category: Math and trigonometry
  *
- * @param {*} function_num The number 1-11 or 101-111 that specifies the function to use for the subtotal. 1-11 includes manually-hidden rows, while 101-111 excludes them; filtered-out cells are always excluded.
+ * @param {*} function_num The number 1-11 or 101-111 that specifies the function to use for the subtotal. 1-11 includes manually-hidden rows, while 101-111 excludes them; filtered-out values are always excluded.
  * @param {*} ref1 The first named range or reference for which you want the subtotal.
- * @param {*} ref2,... Optional. Named ranges or references 2 to 254 for which you want the subtotal.
  * @returns
  */
-export function SUBTOTAL(function_code, ref1) {
-  function_code = utils.parseNumber(function_code)
+export function SUBTOTAL(function_num, ref1) {
+  function_num = utils.parseNumber(function_num)
 
-  if (function_code instanceof Error) {
-    return function_code
+  if (function_num instanceof Error) {
+    return function_num
   }
 
-  switch (function_code) {
+  switch (function_num) {
     case 1:
       return statistical.AVERAGE(ref1)
     case 2:
@@ -1599,6 +1651,13 @@ export function SUBTOTAL(function_code, ref1) {
   }
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function ADD(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1615,6 +1674,13 @@ export function ADD(num1, num2) {
   return num1 + num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function MINUS(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1631,6 +1697,13 @@ export function MINUS(num1, num2) {
   return num1 - num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} dividend
+ * @param {*} divisor
+ * @returns
+ */
 export function DIVIDE(dividend, divisor) {
   if (arguments.length !== 2) {
     return error.na
@@ -1651,6 +1724,13 @@ export function DIVIDE(dividend, divisor) {
   return dividend / divisor
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} factor1
+ * @param {*} factor2
+ * @returns
+ */
 export function MULTIPLY(factor1, factor2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1667,6 +1747,13 @@ export function MULTIPLY(factor1, factor2) {
   return factor1 * factor2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function GT(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1697,6 +1784,13 @@ export function GT(num1, num2) {
   return num1 > num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function GTE(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1719,6 +1813,13 @@ export function GTE(num1, num2) {
   return num1 >= num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function LT(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1741,6 +1842,13 @@ export function LT(num1, num2) {
   return num1 < num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} num1
+ * @param {*} num2
+ * @returns
+ */
 export function LTE(num1, num2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1763,6 +1871,13 @@ export function LTE(num1, num2) {
   return num1 <= num2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} value1
+ * @param {*} value2
+ * @returns
+ */
 export function EQ(value1, value2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1787,6 +1902,13 @@ export function EQ(value1, value2) {
   return value1 === value2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} value1
+ * @param {*} value2
+ * @returns
+ */
 export function NE(value1, value2) {
   if (arguments.length !== 2) {
     return error.na
@@ -1811,6 +1933,13 @@ export function NE(value1, value2) {
   return value1 !== value2
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} base
+ * @param {*} exponent
+ * @returns
+ */
 export function POW(base, exponent) {
   if (arguments.length !== 2) {
     return error.na
@@ -1855,23 +1984,19 @@ export function SUM() {
 }
 
 /**
- * Adds the cells specified by a given criteria.
+ * Adds the values specified by a given criteria.
  *
  * Category: Math and trigonometry
  *
- * @param {*} range The range of cells that you want evaluated by criteria. Cells in each range must be numbers or names, arrays, or references that contain numbers. Blank and text values are ignored. The selected range may contain dates in standard Excel format (examples below).
- * @param {*} criteria The criteria in the form of a number, expression, a cell reference, text, or a function that defines which cells will be added. Wildcard characters can be included - a question mark (?) to match any single character, an asterisk (*) to match any sequence of characters. If you want to find an actual question mark or asterisk, type a tilde (~) preceding the character. For example, criteria can be expressed as 32, ">32", B5, "3?", "apple*", "*~?", or TODAY(). Important: Any text criteria or any criteria that includes logical or mathematical symbols must be enclosed in double quotation marks ("). If the criteria is numeric, double quotation marks are not required.
- * @param {*} sum_range Optional. The actual cells to add, if you want to add cells other than those specified in the range argument. If the sum_range argument is omitted, Excel adds the cells that are specified in the range argument (the same cells to which the criteria is applied). Sum_range should be the same size and shape as range. If it isn't, performance may suffer, and the formula will sum a range of cells that starts with the first cell in sum_range but has the same dimensions as range. For example: range sum_range Actual summed cells A1:A5 B1:B5 B1:B5 A1:A5 B1:K5 B1:B5
+ * @param {*} range The range of values that you want evaluated by criteria. Cells in each range must be numbers or names, arrays, or references that contain numbers. Blank and text values are ignored.
+ * @param {*} criteria The criteria in the form of a number, expression, a value reference, text, or a function that defines which values will be added.
+ * @param {*} sum_range Optional. The actual values to add, if you want to add values other than those specified in the range argument. If the sum_range argument is omitted, Excel adds the values that are specified in the range argument (the same values to which the criteria is applied). Sum_range should be the same size and shape as range. If it isn't, performance may suffer, and the formula will sum a range of values that starts with the first value in sum_range but has the same dimensions as range.
  * @returns
  */
-export function SUMIF(range, criteria, sumRange) {
+export function SUMIF(range, criteria, sum_range) {
   range = utils.flatten(range)
 
-  if (sumRange) {
-    sumRange = utils.flatten(sumRange)
-  } else {
-    sumRange = range
-  }
+  sum_range = sum_range ? utils.flatten(sum_range) : range
 
   if (range instanceof Error) {
     return range
@@ -1887,7 +2012,7 @@ export function SUMIF(range, criteria, sumRange) {
 
   for (let i = 0; i < range.length; i++) {
     const value = range[i]
-    const sumValue = sumRange[i]
+    const sumValue = sum_range[i]
 
     if (isWildcard) {
       result += value
@@ -1902,12 +2027,10 @@ export function SUMIF(range, criteria, sumRange) {
 }
 
 /**
- * Adds the cells in a range that meet multiple criteria.
+ * Adds the values in a range that meet multiple criteria.
  *
  * Category: Math and trigonometry
  *
- * @param {*} =sumifs(a2:a9,b2:b9,"=a*",c2:c9,"tom") =SUMIFS(A2:A9,B2:B9,"=A*",C2:C9,"Tom")
- * @param {*} =sumifs(a2:a9,b2:b9,"<>bananas",c2:c9,"tom") =SUMIFS(A2:A9,B2:B9,"<>Bananas",C2:C9,"Tom")
  * @returns
  */
 export function SUMIFS() {
@@ -2037,7 +2160,7 @@ export function SUMPRODUCT() {
  *
  * Category: Math and trigonometry
  *
- * @param {*} number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want the sum of the squares. You can also use a single array or a reference to an array instead of arguments separated by commas.
+ * @param {*} args number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 arguments for which you want the sum of the squares. You can also use a single array or a reference to an array instead of arguments separated by commas.
  * @returns
  */
 export function SUMSQ() {
@@ -2186,10 +2309,10 @@ export function TANH(number) {
  * @param {*} num_digits Optional. A number specifying the precision of the truncation. The default value for num_digits is 0 (zero).
  * @returns
  */
-export function TRUNC(number, digits) {
+export function TRUNC(number, num_digits) {
   number = utils.parseNumber(number)
-  digits = utils.parseNumber(digits)
-  const anyError = utils.anyError(number, digits)
+  num_digits = utils.parseNumber(num_digits)
+  const anyError = utils.anyError(number, num_digits)
 
   if (anyError) {
     return anyError
@@ -2197,5 +2320,5 @@ export function TRUNC(number, digits) {
 
   const sign = number > 0 ? 1 : -1
 
-  return (sign * Math.floor(Math.abs(number) * Math.pow(10, digits))) / Math.pow(10, digits)
+  return (sign * Math.floor(Math.abs(number) * Math.pow(10, num_digits))) / Math.pow(10, num_digits)
 }

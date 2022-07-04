@@ -12,8 +12,7 @@ export const TOKEN_TYPE_LITERAL = _TOKEN_TYPE_LITERAL
  *
  * @param {String} value Value/Symbol to describe.
  * @param {String} type Type of the token 'operator' or 'literal'.
- * @
-return {Object}
+ * @return {Object}
  */
 export function createToken(value, type) {
   if (SUPPORTED_TOKENS.indexOf(type) === -1) {
@@ -30,8 +29,7 @@ export function createToken(value, type) {
  * Tries to cast numeric values to their type passed as a string.
  *
  * @param {*} value
- * @
-return {*}
+ * @return {*}
  */
 function castValueToCorrectType(value) {
   if (typeof value !== 'string') {
@@ -49,8 +47,7 @@ function castValueToCorrectType(value) {
  * Generate stream of tokens from passed expression.
  *
  * @param {String} expression
- * @
-return {String[]}
+ * @return {String[]}
  */
 function tokenizeExpression(expression) {
   const expressionLength = expression.length
@@ -102,8 +99,7 @@ function tokenizeExpression(expression) {
  * Analyze and convert tokens to an object which describes their meaning.
  *
  * @param {String[]} tokens
- * @
-return {Object[]}
+ * @return {Object[]}
  */
 function analyzeTokens(tokens) {
   let literalValue = ''
@@ -134,8 +130,7 @@ function analyzeTokens(tokens) {
  * Compute/Evaluate an expression passed as an array of tokens.
  *
  * @param {Object[]} tokens
- * @
-return {Boolean}
+ * @return {Boolean}
  */
 function computeExpression(tokens) {
   const values = []
@@ -162,8 +157,7 @@ function computeExpression(tokens) {
  *
  * @param {*} values
  * @param {String} operator
- * @
-return {Boolean}
+ * @return {Boolean}
  */
 function evaluate(values, operator) {
   let result = false

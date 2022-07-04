@@ -22,16 +22,16 @@ function ensureDate(d) {
  * @param {*} par The security's par value. If you omit par, ACCRINT uses $1,000.
  * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
  * @param {*} basis Optional. The type of day count basis to use.
- * @param {*} calc_method Optional. A logical value that specifies the way to calculate the total accrued interest when the date of settlement is later than the date of first_interest. A value of TRUE (1) returns the total accrued interest from issue to settlement. A value of FALSE (0) returns the accrued interest from first_interest to settlement. If you do not enter the argument, it defaults to TRUE.
+ * @param {*} calc_method Optional. Not implemented in formulajs. A logical value that specifies the way to calculate the total accrued interest when the date of settlement is later than the date of first_interest. A value of TRUE (1) returns the total accrued interest from issue to settlement. A value of FALSE (0) returns the accrued interest from first_interest to settlement. If you do not enter the argument, it defaults to TRUE.
  * @returns
  */
-export function ACCRINT(issue, first, settlement, rate, par, frequency, basis) {
+export function ACCRINT(issue, first_interest, settlement, rate, par, frequency, basis) {
   // Return error if either date is invalid
   issue = ensureDate(issue)
-  first = ensureDate(first)
+  first_interest = ensureDate(first_interest)
   settlement = ensureDate(settlement)
 
-  if (!validDate(issue) || !validDate(first) || !validDate(settlement)) {
+  if (!validDate(issue) || !validDate(first_interest) || !validDate(settlement)) {
     return error.value
   }
 
@@ -60,7 +60,6 @@ export function ACCRINT(issue, first, settlement, rate, par, frequency, basis) {
   basis = basis || 0
 
   // Compute accrued interest
-
   return par * rate * dateTime.YEARFRAC(issue, settlement, basis)
 }
 
@@ -228,20 +227,20 @@ export function COUPPCD() {
  * @param {*} type The timing of the payment.
  * @returns
  */
-export function CUMIPMT(rate, periods, value, start, end, type) {
+export function CUMIPMT(rate, nper, pv, start_period, end_period, type) {
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
-  value = utils.parseNumber(value)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
 
-  if (utils.anyIsError(rate, periods, value)) {
+  if (utils.anyIsError(rate, nper, pv)) {
     return error.value
   }
 
-  if (rate <= 0 || periods <= 0 || value <= 0) {
+  if (rate <= 0 || nper <= 0 || pv <= 0) {
     return error.num
   }
 
-  if (start < 1 || end < 1 || start > end) {
+  if (start_period < 1 || end_period < 1 || start_period > end_period) {
     return error.num
   }
 
@@ -249,23 +248,19 @@ export function CUMIPMT(rate, periods, value, start, end, type) {
     return error.num
   }
 
-  const payment = PMT(rate, periods, value, 0, type)
+  const payment = PMT(rate, nper, pv, 0, type)
   let interest = 0
 
-  if (start === 1) {
+  if (start_period === 1) {
     if (type === 0) {
-      interest = -value
+      interest = -pv
     }
 
-    start++
+    start_period++
   }
 
-  for (let i = start; i <= end; i++) {
-    if (type === 1) {
-      interest += FV(rate, i - 2, payment, value, 1) - payment
-    } else {
-      interest += FV(rate, i - 1, payment, value, 0)
-    }
+  for (let i = start_period; i <= end_period; i++) {
+    interest += type === 1 ? FV(rate, i - 2, payment, pv, 1) - payment : FV(rate, i - 1, payment, pv, 0)
   }
 
   interest *= rate
@@ -286,24 +281,24 @@ export function CUMIPMT(rate, periods, value, start, end, type) {
  * @param {*} type The timing of the payment.
  * @returns
  */
-export function CUMPRINC(rate, periods, value, start, end, type) {
+export function CUMPRINC(rate, nper, pv, start_period, end, type) {
   // Credits: algorithm inspired by Apache OpenOffice
   // Credits: Hannes Stiebitzhofer for the translations of function and variable names
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
-  value = utils.parseNumber(value)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
 
-  if (utils.anyIsError(rate, periods, value)) {
+  if (utils.anyIsError(rate, nper, pv)) {
     return error.value
   }
 
-  // Return error if either rate, periods, or value are lower than or equal to zero
-  if (rate <= 0 || periods <= 0 || value <= 0) {
+  // Return error if either rate, nper, or value are lower than or equal to zero
+  if (rate <= 0 || nper <= 0 || pv <= 0) {
     return error.num
   }
 
   // Return error if start < 1, end < 1, or start > end
-  if (start < 1 || end < 1 || start > end) {
+  if (start_period < 1 || end < 1 || start_period > end) {
     return error.num
   }
 
@@ -313,29 +308,23 @@ export function CUMPRINC(rate, periods, value, start, end, type) {
   }
 
   // Compute cumulative principal
-  const payment = PMT(rate, periods, value, 0, type)
+  const payment = PMT(rate, nper, pv, 0, type)
   let principal = 0
 
-  if (start === 1) {
-    if (type === 0) {
-      principal = payment + value * rate
-    } else {
-      principal = payment
-    }
+  if (start_period === 1) {
+    principal = type === 0 ? payment + pv * rate : payment
 
-    start++
+    start_period++
   }
 
-  for (let i = start; i <= end; i++) {
-    if (type > 0) {
-      principal += payment - (FV(rate, i - 2, payment, value, 1) - payment) * rate
-    } else {
-      principal += payment - FV(rate, i - 1, payment, value, 0) * rate
-    }
+  for (let i = start_period; i <= end; i++) {
+    principal +=
+      type > 0
+        ? payment - (FV(rate, i - 2, payment, pv, 1) - payment) * rate
+        : payment - FV(rate, i - 1, payment, pv, 0) * rate
   }
 
   // Return cumulative principal
-
   return principal
 }
 
@@ -494,12 +483,12 @@ export function DISC() {
  * @param {*} fraction The integer to use in the denominator of the fraction.
  * @returns
  */
-export function DOLLARDE(dollar, fraction) {
+export function DOLLARDE(fractional_dollar, fraction) {
   // Credits: algorithm inspired by Apache OpenOffice
-  dollar = utils.parseNumber(dollar)
+  fractional_dollar = utils.parseNumber(fractional_dollar)
   fraction = utils.parseNumber(fraction)
 
-  if (utils.anyIsError(dollar, fraction)) {
+  if (utils.anyIsError(fractional_dollar, fraction)) {
     return error.value
   }
 
@@ -517,10 +506,10 @@ export function DOLLARDE(dollar, fraction) {
   fraction = parseInt(fraction, 10)
 
   // Compute integer part
-  let result = parseInt(dollar, 10)
+  let result = parseInt(fractional_dollar, 10)
 
   // Add decimal part
-  result += ((dollar % 1) * Math.pow(10, Math.ceil(Math.log(fraction) / Math.LN10))) / fraction
+  result += ((fractional_dollar % 1) * Math.pow(10, Math.ceil(Math.log(fraction) / Math.LN10))) / fraction
 
   // Round result
   const power = Math.pow(10, Math.ceil(Math.log(fraction) / Math.LN2) + 1)
@@ -539,12 +528,12 @@ export function DOLLARDE(dollar, fraction) {
  * @param {*} fraction The integer to use in the denominator of a fraction.
  * @returns
  */
-export function DOLLARFR(dollar, fraction) {
+export function DOLLARFR(decimal_dollar, fraction) {
   // Credits: algorithm inspired by Apache OpenOffice
-  dollar = utils.parseNumber(dollar)
+  decimal_dollar = utils.parseNumber(decimal_dollar)
   fraction = utils.parseNumber(fraction)
 
-  if (utils.anyIsError(dollar, fraction)) {
+  if (utils.anyIsError(decimal_dollar, fraction)) {
     return error.value
   }
 
@@ -562,10 +551,10 @@ export function DOLLARFR(dollar, fraction) {
   fraction = parseInt(fraction, 10)
 
   // Compute integer part
-  let result = parseInt(dollar, 10)
+  let result = parseInt(decimal_dollar, 10)
 
   // Add decimal part
-  result += (dollar % 1) * Math.pow(10, -Math.ceil(Math.log(fraction) / Math.LN10)) * fraction
+  result += (decimal_dollar % 1) * Math.pow(10, -Math.ceil(Math.log(fraction) / Math.LN10)) * fraction
 
   // Return converted dollar price
   return result
@@ -598,24 +587,24 @@ export function DURATION() {
  * @param {*} npery The number of compounding periods per year.
  * @returns
  */
-export function EFFECT(rate, periods) {
-  rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
+export function EFFECT(nominal_rate, npery) {
+  nominal_rate = utils.parseNumber(nominal_rate)
+  npery = utils.parseNumber(npery)
 
-  if (utils.anyIsError(rate, periods)) {
+  if (utils.anyIsError(nominal_rate, npery)) {
     return error.value
   }
 
   // Return error if rate <=0 or periods < 1
-  if (rate <= 0 || periods < 1) {
+  if (nominal_rate <= 0 || npery < 1) {
     return error.num
   }
 
   // Truncate periods if it is not an integer
-  periods = parseInt(periods, 10)
+  npery = parseInt(npery, 10)
 
   // Return effective annual interest rate
-  return Math.pow(1 + rate / periods, periods) - 1
+  return Math.pow(1 + nominal_rate / npery, npery) - 1
 }
 
 /**
@@ -630,18 +619,18 @@ export function EFFECT(rate, periods) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
-export function FV(rate, periods, payment, value, type) {
+export function FV(rate, nper, payment, value, type) {
   // Credits: algorithm inspired by Apache OpenOffice
   value = value || 0
   type = type || 0
 
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
+  nper = utils.parseNumber(nper)
   payment = utils.parseNumber(payment)
   value = utils.parseNumber(value)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, periods, payment, value, type)) {
+  if (utils.anyIsError(rate, nper, payment, value, type)) {
     return error.value
   }
 
@@ -649,15 +638,14 @@ export function FV(rate, periods, payment, value, type) {
   let result
 
   if (rate === 0) {
-    result = value + payment * periods
+    result = value + payment * nper
   } else {
-    const term = Math.pow(1 + rate, periods)
+    const term = Math.pow(1 + rate, nper)
 
-    if (type === 1) {
-      result = value * term + (payment * (1 + rate) * (term - 1)) / rate
-    } else {
-      result = value * term + (payment * (term - 1)) / rate
-    }
+    result =
+      type === 1
+        ? value * term + (payment * (1 + rate) * (term - 1)) / rate
+        : value * term + (payment * (term - 1)) / rate
   }
 
   return -result
@@ -724,41 +712,34 @@ export function INTRATE() {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
-export function IPMT(rate, period, periods, present, future, type) {
+export function IPMT(rate, per, nper, pv, fv, type) {
   // Credits: algorithm inspired by Apache OpenOffice
-  future = future || 0
+  fv = fv || 0
   type = type || 0
 
   rate = utils.parseNumber(rate)
-  period = utils.parseNumber(period)
-  periods = utils.parseNumber(periods)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  per = utils.parseNumber(per)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, period, periods, present, future, type)) {
+  if (utils.anyIsError(rate, per, nper, pv, fv, type)) {
     return error.value
   }
 
   // Compute payment
-  const payment = PMT(rate, periods, present, future, type)
+  const payment = PMT(rate, nper, pv, fv, type)
 
   // Compute interest
-  let interest
-
-  if (period === 1) {
-    if (type === 1) {
-      interest = 0
-    } else {
-      interest = -present
-    }
-  } else {
-    if (type === 1) {
-      interest = FV(rate, period - 2, payment, present, 1) - payment
-    } else {
-      interest = FV(rate, period - 1, payment, present, 0)
-    }
-  }
+  let interest =
+    per === 1
+      ? type === 1
+        ? 0
+        : -pv
+      : type === 1
+      ? FV(rate, per - 2, payment, pv, 1) - payment
+      : FV(rate, per - 1, payment, pv, 0)
 
   // Return interest
   return interest * rate
@@ -769,14 +750,14 @@ export function IPMT(rate, period, periods, present, future, type) {
  *
  * Category: Financial
  *
- * @param {*} values An array or a reference to cells that contain numbers for which you want to calculate the internal rate of return. Values must contain at least one positive value and one negative value to calculate the internal rate of return. IRR uses the order of values to interpret the order of cash flows. Be sure to enter your payment and income values in the sequence you want. If an array or reference argument contains text, logical values, or empty cells, those values are ignored.
- * @param {*} values must contain at least one positive value and one negative value to calculate the internal rate of return.
- * @param {*} irr uses the order of values to interpret the order of cash flows. Be sure to enter your payment and income values in the sequence you want.
- * @param {*} if an array or reference argument contains text, logical values, or empty cells, those values are ignored.
- * @param {*} guess Optional. A number that you guess is close to the result of IRR. Microsoft Excel uses an iterative technique for calculating IRR. Starting with guess, IRR cycles through the calculation until the result is accurate within 0.00001 percent. If IRR can't find a result that works after 20 tries, the #NUM! error value is returned. In most cases you do not need to provide guess for the IRR calculation. If guess is omitted, it is assumed to be 0.1 (10 percent). If IRR gives the #NUM! error value, or if the result is not close to what you expected, try again with a different value for guess.
- * @param {*} microsoft Excel uses an iterative technique for calculating IRR. Starting with guess, IRR cycles through the calculation until the result is accurate within 0.00001 percent. If IRR can't find a result that works after 20 tries, the #NUM! error value is returned.
- * @param {*} in most cases you do not need to provide guess for the IRR calculation. If guess is omitted, it is assumed to be 0.1 (10 percent).
- * @param {*} if IRR gives the #NUM! error value, or if the result is not close to what you expected, try again with a different value for guess.
+ * @param {*} values An array or a reference to values that contain numbers for which you want to calculate the internal rate of return.
+- Values must contain at least one positive value and one negative value to calculate the internal rate of return.
+- IRR uses the order of values to interpret the order of cash flows. Be sure to enter your payment and income values in the sequence you want.
+- If an array or reference argument contains text, logical values, or empty values, those values are ignored.
+ * @param {*} guess Optional. A number that you guess is close to the result of IRR.
+- Microsoft Excel uses an iterative technique for calculating IRR. Starting with guess, IRR cycles through the calculation until the result is accurate within 0.00001 percent. If IRR can't find a result that works after 20 tries, the #NUM! error value is returned.
+- In most cases you do not need to provide guess for the IRR calculation. If guess is omitted, it is assumed to be 0.1 (10 percent).
+- If IRR gives the #NUM! error value, or if the result is not close to what you expected, try again with a different value for guess.
  * @returns
  */
 export function IRR(values, guess) {
@@ -864,20 +845,25 @@ export function IRR(values, guess) {
  *
  * Category: Financial
  *
+ * @param {*} rate The interest rate for the investment.
+ * @param {*} per The period for which you want to find the interest, and must be between 1 and Nper.
+ * @param {*} nper The total number of payment periods for the investment.
+ * @param {*} pv The present value of the investment. For a loan, Pv is the loan amount.
+ *
  * @returns
  */
-export function ISPMT(rate, period, periods, value) {
+export function ISPMT(rate, per, nper, pv) {
   rate = utils.parseNumber(rate)
-  period = utils.parseNumber(period)
-  periods = utils.parseNumber(periods)
-  value = utils.parseNumber(value)
+  per = utils.parseNumber(per)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
 
-  if (utils.anyIsError(rate, period, periods, value)) {
+  if (utils.anyIsError(rate, per, nper, pv)) {
     return error.value
   }
 
   // Return interest
-  return value * rate * (period / periods - 1)
+  return pv * rate * (per / nper - 1)
 }
 
 // TODO
@@ -903,9 +889,9 @@ export function MDURATION() {
  *
  * Category: Financial
  *
- * @param {*} values An array or a reference to cells that contain numbers. These numbers represent a series of payments (negative values) and income (positive values) occurring at regular periods. Values must contain at least one positive value and one negative value to calculate the modified internal rate of return. Otherwise, MIRR returns the #DIV/0! error value. If an array or reference argument contains text, logical values, or empty cells, those values are ignored; however, cells with the value zero are included.
- * @param {*} values must contain at least one positive value and one negative value to calculate the modified internal rate of return. Otherwise, MIRR returns the #DIV/0! error value.
- * @param {*} if an array or reference argument contains text, logical values, or empty cells, those values are ignored; however, cells with the value zero are included.
+ * @param {*} values An array or a reference to values that contain numbers. These numbers represent a series of payments (negative values) and income (positive values) occurring at regular periods.
+- Values must contain at least one positive value and one negative value to calculate the modified internal rate of return. Otherwise, MIRR returns the #DIV/0! error value.
+- If an array or reference argument contains text, logical values, or empty values, those values are ignored; however, values with the value zero are included.
  * @param {*} finance_rate The interest rate you pay on the money used in the cash flows.
  * @param {*} reinvest_rate The interest rate you receive on the cash flows as you reinvest them.
  * @returns
@@ -950,24 +936,24 @@ export function MIRR(values, finance_rate, reinvest_rate) {
  * @param {*} npery The number of compounding periods per year.
  * @returns
  */
-export function NOMINAL(rate, periods) {
-  rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
+export function NOMINAL(effect_rate, npery) {
+  effect_rate = utils.parseNumber(effect_rate)
+  npery = utils.parseNumber(npery)
 
-  if (utils.anyIsError(rate, periods)) {
+  if (utils.anyIsError(effect_rate, npery)) {
     return error.value
   }
 
   // Return error if rate <=0 or periods < 1
-  if (rate <= 0 || periods < 1) {
+  if (effect_rate <= 0 || npery < 1) {
     return error.num
   }
 
   // Truncate periods if it is not an integer
-  periods = parseInt(periods, 10)
+  npery = parseInt(npery, 10)
 
   // Return nominal annual interest rate
-  return (Math.pow(rate + 1, 1 / periods) - 1) * periods
+  return (Math.pow(effect_rate + 1, 1 / npery) - 1) * npery
 }
 
 /**
@@ -982,25 +968,25 @@ export function NOMINAL(rate, periods) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function NPER(rate, payment, present, future, type) {
+export function NPER(rate, pmt, pv, fv, type) {
   type = type === undefined ? 0 : type
-  future = future === undefined ? 0 : future
+  fv = fv === undefined ? 0 : fv
 
   rate = utils.parseNumber(rate)
-  payment = utils.parseNumber(payment)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  pmt = utils.parseNumber(pmt)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, payment, present, future, type)) {
+  if (utils.anyIsError(rate, pmt, pv, fv, type)) {
     return error.value
   }
 
   if (rate === 0) {
-    return -(present + future) / payment
+    return -(pv + fv) / pmt
   } else {
-    const num = payment * (1 + rate * type) - future * rate
-    const den = present * rate + payment * (1 + rate * type)
+    const num = pmt * (1 + rate * type) - fv * rate
+    const den = pv * rate + pmt * (1 + rate * type)
 
     return Math.log(num / den) / Math.log(1 + rate)
   }
@@ -1012,11 +998,11 @@ export function NPER(rate, payment, present, future, type) {
  * Category: Financial
  *
  * @param {*} rate The rate of discount over the length of one period.
- * @param {*} value1, value2, ... Value1 is required, subsequent values are optional. 1 to 254 arguments representing the payments and income. Value1, value2, ... must be equally spaced in time and occur at the end of each period. NPV uses the order of value1, value2, ... to interpret the order of cash flows. Be sure to enter your payment and income values in the correct sequence. Arguments that are empty cells, logical values, or text representations of numbers, error values, or text that cannot be translated into numbers are ignored. If an argument is an array or reference, only numbers in that array or reference are counted. Empty cells, logical values, text, or error values in the array or reference are ignored.
- * @param {*} value1, value2, ... must be equally spaced in time and occur at the end of each period.
- * @param {*} npv uses the order of value1, value2, ... to interpret the order of cash flows. Be sure to enter your payment and income values in the correct sequence.
- * @param {*} arguments that are empty cells, logical values, or text representations of numbers, error values, or text that cannot be translated into numbers are ignored.
- * @param {*} if an argument is an array or reference, only numbers in that array or reference are counted. Empty cells, logical values, text, or error values in the array or reference are ignored.
+ * @param {*} args value1, value2, ... Value1 is required, subsequent values are optional. 1 to 254 arguments representing the payments and income.
+- value1, value2, ... must be equally spaced in time and occur at the end of each period.
+- NPV uses the order of value1, value2, ... to interpret the order of cash flows. Be sure to enter your payment and income values in the correct sequence.
+- Arguments that are empty values, logical values, or text representations of numbers, error values, or text that cannot be translated into numbers are ignored.
+- If an argument is an array or reference, only numbers in that array or reference are counted. Empty values, logical values, text, or error values in the array or reference are ignored.
  * @returns
  */
 export function NPV() {
@@ -1033,7 +1019,6 @@ export function NPV() {
   let value = 0
 
   // Loop on all values
-
   for (let j = 1; j < args.length; j++) {
     value += args[j] / Math.pow(1 + rate, j)
   }
@@ -1134,12 +1119,12 @@ export function ODDLYIELD() {
  * @param {*} fv Fv is the desired future value of the investment.
  * @returns
  */
-export function PDURATION(rate, present, future) {
+export function PDURATION(rate, pv, fv) {
   rate = utils.parseNumber(rate)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
 
-  if (utils.anyIsError(rate, present, future)) {
+  if (utils.anyIsError(rate, pv, fv)) {
     return error.value
   }
 
@@ -1149,7 +1134,7 @@ export function PDURATION(rate, present, future) {
   }
 
   // Return number of periods
-  return (Math.log(future) - Math.log(present)) / Math.log(1 + rate)
+  return (Math.log(fv) - Math.log(pv)) / Math.log(1 + rate)
 }
 
 /**
@@ -1164,18 +1149,18 @@ export function PDURATION(rate, present, future) {
  * @param {*} type Optional. The number 0 (zero) or 1 and indicates when payments are due.
  * @returns
  */
-export function PMT(rate, periods, present, future, type) {
+export function PMT(rate, nper, pv, fv, type) {
   // Credits: algorithm inspired by Apache OpenOffice
-  future = future || 0
+  fv = fv || 0
   type = type || 0
 
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, periods, present, future, type)) {
+  if (utils.anyIsError(rate, nper, pv, fv, type)) {
     return error.value
   }
 
@@ -1183,15 +1168,14 @@ export function PMT(rate, periods, present, future, type) {
   let result
 
   if (rate === 0) {
-    result = (present + future) / periods
+    result = (pv + fv) / nper
   } else {
-    const term = Math.pow(1 + rate, periods)
+    const term = Math.pow(1 + rate, nper)
 
-    if (type === 1) {
-      result = ((future * rate) / (term - 1) + (present * rate) / (1 - 1 / term)) / (1 + rate)
-    } else {
-      result = (future * rate) / (term - 1) + (present * rate) / (1 - 1 / term)
-    }
+    result =
+      type === 1
+        ? ((fv * rate) / (term - 1) + (pv * rate) / (1 - 1 / term)) / (1 + rate)
+        : (fv * rate) / (term - 1) + (pv * rate) / (1 - 1 / term)
   }
 
   return -result
@@ -1210,21 +1194,21 @@ export function PMT(rate, periods, present, future, type) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function PPMT(rate, period, periods, present, future, type) {
-  future = future || 0
+export function PPMT(rate, per, nper, pv, fv, type) {
+  fv = fv || 0
   type = type || 0
 
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, periods, present, future, type)) {
+  if (utils.anyIsError(rate, nper, pv, fv, type)) {
     return error.value
   }
 
-  return PMT(rate, periods, present, future, type) - IPMT(rate, period, periods, present, future, type)
+  return PMT(rate, nper, pv, fv, type) - IPMT(rate, per, nper, pv, fv, type)
 }
 
 // TODO
@@ -1293,28 +1277,24 @@ export function PRICEMAT() {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function PV(rate, periods, payment, future, type) {
-  future = future || 0
+export function PV(rate, per, pmt, fv, type) {
+  fv = fv || 0
   type = type || 0
 
   rate = utils.parseNumber(rate)
-  periods = utils.parseNumber(periods)
-  payment = utils.parseNumber(payment)
-  future = utils.parseNumber(future)
+  per = utils.parseNumber(per)
+  pmt = utils.parseNumber(pmt)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, periods, payment, future, type)) {
+  if (utils.anyIsError(rate, per, pmt, fv, type)) {
     return error.value
   }
 
   // Return present value
-  if (rate === 0) {
-    return -payment * periods - future
-  } else {
-    return (
-      (((1 - Math.pow(1 + rate, periods)) / rate) * payment * (1 + rate * type) - future) / Math.pow(1 + rate, periods)
-    )
-  }
+  return rate === 0
+    ? -pmt * per - fv
+    : (((1 - Math.pow(1 + rate, per)) / rate) * pmt * (1 + rate * type) - fv) / Math.pow(1 + rate, per)
 }
 
 /**
@@ -1328,23 +1308,23 @@ export function PV(rate, periods, payment, future, type) {
  * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). If fv is omitted, you must include the pmt argument.
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @param {*} guess Optional. Your guess for what the rate will be. If you omit guess, it is assumed to be 10 percent. If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
- * @param {*} if you omit guess, it is assumed to be 10 percent.
- * @param {*} if RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
+ - If you omit guess, it is assumed to be 10 percent.
+- If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
  * @returns
  */
-export function RATE(periods, payment, present, future, type, guess) {
+export function RATE(nper, pmt, pv, fv, type, guess) {
   guess = guess === undefined ? 0.01 : guess
-  future = future === undefined ? 0 : future
+  fv = fv === undefined ? 0 : fv
   type = type === undefined ? 0 : type
 
-  periods = utils.parseNumber(periods)
-  payment = utils.parseNumber(payment)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+  nper = utils.parseNumber(nper)
+  pmt = utils.parseNumber(pmt)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
   guess = utils.parseNumber(guess)
 
-  if (utils.anyIsError(periods, payment, present, future, type, guess)) {
+  if (utils.anyIsError(nper, pmt, pv, fv, type, guess)) {
     return error.value
   }
 
@@ -1362,10 +1342,10 @@ export function RATE(periods, payment, present, future, type, guess) {
     let y, f
 
     if (Math.abs(rate) < epsMax) {
-      y = present * (1 + periods * rate) + payment * (1 + rate * type) * periods + future
+      y = pv * (1 + nper * rate) + pmt * (1 + rate * type) * nper + fv
     } else {
-      f = Math.pow(1 + rate, periods)
-      y = present * f + payment * (1 / rate + type) * (f - 1) + future
+      f = Math.pow(1 + rate, nper)
+      y = pv * f + pmt * (1 / rate + type) * (f - 1) + fv
     }
 
     if (Math.abs(y) < epsMax) {
@@ -1375,11 +1355,11 @@ export function RATE(periods, payment, present, future, type, guess) {
     let dy
 
     if (Math.abs(rate) < epsMax) {
-      dy = present * periods + payment * type * periods
+      dy = pv * nper + pmt * type * nper
     } else {
-      f = Math.pow(1 + rate, periods)
-      const df = periods * Math.pow(1 + rate, periods - 1)
-      dy = present * df + payment * (1 / rate + type) * df + payment * (-1 / (rate * rate)) * (f - 1)
+      f = Math.pow(1 + rate, nper)
+      const df = nper * Math.pow(1 + rate, nper - 1)
+      dy = pv * df + pmt * (1 / rate + type) * df + pmt * (-1 / (rate * rate)) * (f - 1)
     }
 
     rate -= y / dy
@@ -1415,22 +1395,22 @@ export function RECEIVED() {
  * @param {*} fv Fv is the future value of the investment.
  * @returns
  */
-export function RRI(periods, present, future) {
-  periods = utils.parseNumber(periods)
-  present = utils.parseNumber(present)
-  future = utils.parseNumber(future)
+export function RRI(nper, pv, fv) {
+  nper = utils.parseNumber(nper)
+  pv = utils.parseNumber(pv)
+  fv = utils.parseNumber(fv)
 
-  if (utils.anyIsError(periods, present, future)) {
+  if (utils.anyIsError(nper, pv, fv)) {
     return error.value
   }
 
-  // Return error if periods or present is equal to 0 (zero)
-  if (periods === 0 || present === 0) {
+  // Return error if nper or present is equal to 0 (zero)
+  if (nper === 0 || pv === 0) {
     return error.num
   }
 
   // Return equivalent interest rate
-  return Math.pow(future / present, 1 / periods) - 1
+  return Math.pow(fv / pv, 1 / nper) - 1
 }
 
 /**
@@ -1472,14 +1452,14 @@ export function SLN(cost, salvage, life) {
  * @param {*} per The period and must use the same units as life.
  * @returns
  */
-export function SYD(cost, salvage, life, period) {
+export function SYD(cost, salvage, life, per) {
   // Return error if any of the parameters is not a number
   cost = utils.parseNumber(cost)
   salvage = utils.parseNumber(salvage)
   life = utils.parseNumber(life)
-  period = utils.parseNumber(period)
+  per = utils.parseNumber(per)
 
-  if (utils.anyIsError(cost, salvage, life, period)) {
+  if (utils.anyIsError(cost, salvage, life, per)) {
     return error.value
   }
 
@@ -1489,15 +1469,15 @@ export function SYD(cost, salvage, life, period) {
   }
 
   // Return error if period is lower than 1 or greater than life
-  if (period < 1 || period > life) {
+  if (per < 1 || per > life) {
     return error.num
   }
 
   // Truncate period if it is not an integer
-  period = parseInt(period, 10)
+  per = parseInt(per, 10)
 
   // Return straight-line depreciation
-  return ((cost - salvage) * (life - period + 1) * 2) / (life * (life + 1))
+  return ((cost - salvage) * (life - per + 1) * 2) / (life * (life + 1))
 }
 
 /**
@@ -1586,17 +1566,17 @@ export function TBILLPRICE(settlement, maturity, discount) {
  * @param {*} pr The Treasury bill's price per $100 face value.
  * @returns
  */
-export function TBILLYIELD(settlement, maturity, price) {
+export function TBILLYIELD(settlement, maturity, pr) {
   settlement = utils.parseDate(settlement)
   maturity = utils.parseDate(maturity)
-  price = utils.parseNumber(price)
+  pr = utils.parseNumber(pr)
 
-  if (utils.anyIsError(settlement, maturity, price)) {
+  if (utils.anyIsError(settlement, maturity, pr)) {
     return error.value
   }
 
   // Return error if price is lower than or equal to zero
-  if (price <= 0) {
+  if (pr <= 0) {
     return error.num
   }
 
@@ -1611,7 +1591,7 @@ export function TBILLYIELD(settlement, maturity, price) {
   }
 
   // Return bond-equivalent yield
-  return ((100 - price) * 360) / (price * dateTime.DAYS360(settlement, maturity, false))
+  return ((100 - pr) * 360) / (pr * dateTime.DAYS360(settlement, maturity, false))
 }
 
 // TODO
@@ -1626,9 +1606,9 @@ export function TBILLYIELD(settlement, maturity, price) {
  * @param {*} start_period The starting period for which you want to calculate the depreciation. Start_period must use the same units as life.
  * @param {*} end_period The ending period for which you want to calculate the depreciation. End_period must use the same units as life.
  * @param {*} factor Optional. The rate at which the balance declines. If factor is omitted, it is assumed to be 2 (the double-declining balance method). Change factor if you do not want to use the double-declining balance method. For a description of the double-declining balance method, see DDB.
- * @param {*} no_switch Optional. A logical value specifying whether to switch to straight-line depreciation when depreciation is greater than the declining balance calculation. If no_switch is TRUE, Microsoft Excel does not switch to straight-line depreciation even when the depreciation is greater than the declining balance calculation. If no_switch is FALSE or omitted, Excel switches to straight-line depreciation when depreciation is greater than the declining balance calculation.
- * @param {*} if no_switch is TRUE, Microsoft Excel does not switch to straight-line depreciation even when the depreciation is greater than the declining balance calculation.
- * @param {*} if no_switch is FALSE or omitted, Excel switches to straight-line depreciation when depreciation is greater than the declining balance calculation.
+ * @param {*} no_switch Optional. A logical value specifying whether to switch to straight-line depreciation when depreciation is greater than the declining balance calculation.
+- If no_switch is TRUE, Microsoft Excel does not switch to straight-line depreciation even when the depreciation is greater than the declining balance calculation.
+- If no_switch is FALSE or omitted, Excel switches to straight-line depreciation when depreciation is greater than the declining balance calculation.
  * @returns
  */
 export function VDB() {
