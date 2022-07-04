@@ -33,7 +33,7 @@ const umdConfig = {
       file: 'lib/browser/formula.js',
       name: 'formulajs',
       plugins: [
-        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true }),
+        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true, compact: true }),
         terser({ compress: false, mangle: false, format: { beautify: true, indent_level: 2, preamble: banner } })
       ]
     },
@@ -42,7 +42,7 @@ const umdConfig = {
       file: 'lib/browser/formula.min.js',
       name: 'formulajs',
       plugins: [
-        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true }),
+        getBabelOutputPlugin({ presets: ['@babel/preset-env'], allowAllFormats: true, compact: true }),
         terser({ format: { preamble: banner } })
       ],
       sourcemap: true
