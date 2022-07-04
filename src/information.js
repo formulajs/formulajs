@@ -2,6 +2,8 @@ import * as error from './utils/error.js'
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns information about the formatting, location, or contents of a value.
  *
  * Category: Information
@@ -39,6 +41,8 @@ ERROR.TYPE = (error_val) => {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns information about the current operating environment.
  *
  * Category: Information
@@ -112,6 +116,8 @@ export function ISEVEN(number) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns TRUE if there is a reference to a value that contains a formula.
  *
  * Category: Information
@@ -185,6 +191,8 @@ export function ISODD(value) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns TRUE if the value is a reference.
  *
  * Category: Information
@@ -253,6 +261,8 @@ export function NA() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the sheet number of the referenced sheet.
  *
  * Category: Information
@@ -266,6 +276,8 @@ export function SHEET() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the number of sheets in a reference.
  *
  * Category: Information

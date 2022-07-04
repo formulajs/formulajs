@@ -65,6 +65,8 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the accrued interest for a security that pays interest at maturity.
  *
  * Category: Financial
@@ -82,6 +84,8 @@ export function ACCRINTM() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the depreciation for each accounting period by using a depreciation coefficient.
  *
  * Category: Financial
@@ -101,6 +105,8 @@ export function AMORDEGRC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the depreciation for each accounting period.
  *
  * Category: Financial
@@ -120,6 +126,8 @@ export function AMORLINC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the number of days from the beginning of the coupon period to the settlement date.
  *
  * Category: Financial
@@ -136,6 +144,8 @@ export function COUPDAYBS() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the number of days in the coupon period that contains the settlement date.
  *
  * Category: Financial
@@ -152,6 +162,8 @@ export function COUPDAYS() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the number of days from the settlement date to the next coupon date.
  *
  * Category: Financial
@@ -168,6 +180,8 @@ export function COUPDAYSNC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the next coupon date after the settlement date.
  *
  * Category: Financial
@@ -184,6 +198,8 @@ export function COUPNCD() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the number of coupons payable between the settlement date and maturity date.
  *
  * Category: Financial
@@ -200,6 +216,8 @@ export function COUPNUM() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the previous coupon date before the settlement date.
  *
  * Category: Financial
@@ -459,6 +477,8 @@ export function DDB(cost, salvage, life, period, factor) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the discount rate for a security.
  *
  * Category: Financial
@@ -562,6 +582,8 @@ export function DOLLARFR(decimal_dollar, fraction) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the annual duration of a security with periodic interest payments.
  *
  * Category: Financial
@@ -684,6 +706,8 @@ export function FVSCHEDULE(principal, schedule) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the interest rate for a fully invested security.
  *
  * Category: Financial
@@ -868,6 +892,8 @@ export function ISPMT(rate, per, nper, pv) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the Macauley modified duration for a security with an assumed par value of $100.
  *
  * Category: Financial
@@ -1029,6 +1055,8 @@ export function NPV() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the price per $100 face value of a security with an odd first period.
  *
  * Category: Financial
@@ -1050,6 +1078,8 @@ export function ODDFPRICE() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the yield of a security with an odd first period.
  *
  * Category: Financial
@@ -1071,6 +1101,8 @@ export function ODDFYIELD() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the price per $100 face value of a security with an odd last period.
  *
  * Category: Financial
@@ -1091,6 +1123,8 @@ export function ODDLPRICE() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the yield of a security with an odd last period.
  *
  * Category: Financial
@@ -1213,6 +1247,8 @@ export function PPMT(rate, per, nper, pv, fv, type) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the price per $100 face value of a security that pays periodic interest.
  *
  * Category: Financial
@@ -1232,6 +1268,8 @@ export function PRICE() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the price per $100 face value of a discounted security.
  *
  * Category: Financial
@@ -1249,6 +1287,8 @@ export function PRICEDISC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the price per $100 face value of a security that pays interest at maturity.
  *
  * Category: Financial
@@ -1370,6 +1410,8 @@ export function RATE(nper, pmt, pv, fv, type, guess) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the amount received at maturity for a fully invested security.
  *
  * Category: Financial
@@ -1596,6 +1638,8 @@ export function TBILLYIELD(settlement, maturity, pr) {
 
 // TODO
 /**
+ * -- Not implemented --
+ * 
  * Returns the depreciation of an asset for a specified or partial period by using a declining balance method.
  *
  * Category: Financial
@@ -1732,6 +1776,8 @@ export function XNPV(rate, values, dates) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the yield on a security that pays periodic interest.
  *
  * Category: Financial
@@ -1751,6 +1797,8 @@ export function YIELD() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the annual yield for a discounted security; for example, a Treasury bill.
  *
  * Category: Financial
@@ -1768,6 +1816,8 @@ export function YIELDDISC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Returns the annual yield of a security that pays interest at maturity.
  *
  * Category: Financial

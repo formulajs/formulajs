@@ -3,6 +3,8 @@ import * as utils from './utils/common.js'
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters.
  *
  * Category: Text
@@ -16,6 +18,8 @@ export function ASC() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Converts a number to text, using the ß (baht) currency format.
  *
  * Category: Text
@@ -125,6 +129,8 @@ export const CONCAT = CONCATENATE
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters.
  *
  * Category: Text
@@ -138,6 +144,8 @@ export function DBCS() {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Converts a number to text, using the $ (dollar) currency format.
  *
  * Category: Text
@@ -205,6 +213,8 @@ export function FIND(find_text, within_text, start_num) {
 
 // TODO
 /**
+ * -- Not implemented --
+ *
  * Formats a number as text with a fixed number of decimals.
  *
  * Category: Text
@@ -370,6 +380,9 @@ export function NUMBERVALUE(text, decimal_separator, group_separator) {
 }
 
 // TODO
+/**
+ * -- Not implemented --
+ */
 export function PRONETIC() {
   throw new Error('PRONETIC is not implemented')
 }
@@ -617,6 +630,8 @@ export function T(value) {
 
 // TODO incomplete implementation
 /**
+ * -- Not implemented --
+ *
  * Formats a number and converts it to text.
  *
  * Category: Text

@@ -943,6 +943,8 @@ export function ERF(lower_limit, upper_limit) {
 // TODO
 
 /**
+ * -- Not implemented --
+ *
  * Returns the error function.
  *
  * Category: Engineering
@@ -974,6 +976,8 @@ export function ERFC(x) {
 // TODO
 
 /**
+ * -- Not implemented --
+ *
  * Returns the complementary ERF function integrated between x and infinity.
  *
  * Category: Engineering
