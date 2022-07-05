@@ -1,3 +1,5 @@
+// TYPE DEFINITIONS FOR FORMULA.JS
+
 /**
  * Returns the absolute value of a number.
  *
@@ -165,6 +167,7 @@ export function AND(...args: any[]): any
  * @returns
  */
 export function ARABIC(text: any): number | Error
+
 export function ARGS2ARRAY(...args: any[]): any
 
 /**
@@ -349,6 +352,7 @@ export function BESSELK(x: any, n: any): any
  * @returns
  */
 export function BESSELY(x: any, n: any): any
+
 export namespace BETA {
   /**
    * Returns the beta cumulative distribution function.
@@ -440,6 +444,7 @@ export function BIN2HEX(number: any, places: any): string | Error
  * @returns
  */
 export function BIN2OCT(number: any, places: any): string | Error
+
 export namespace BINOM {
   /**
    * Returns the individual term binomial distribution probability.
@@ -493,6 +498,7 @@ export namespace BINOM {
  * @returns
  */
 export function BINOMDIST(number_s: any, trials: any, probability_s: any, cumulative: any): any
+
 export namespace BINOMDIST {}
 
 /**
@@ -561,6 +567,7 @@ export function BITXOR(number1: any, number2: any): number | Error
  * @returns
  */
 export function CEILING(number: any, significance: any, mode: any): any
+
 export namespace CEILING {
   export { CEILING as MATH }
   export { CEILING as PRECISE }
@@ -577,6 +584,7 @@ export namespace CEILING {
  * @returns
  */
 export function CEILINGMATH(number: any, significance: any, mode: any): any
+
 export namespace CEILINGMATH {}
 
 /**
@@ -590,6 +598,7 @@ export namespace CEILINGMATH {}
  * @returns
  */
 export function CEILINGPRECISE(number: any, significance: any, mode: any): any
+
 export namespace CEILINGPRECISE {}
 
 /**
@@ -624,6 +633,7 @@ export function CHAR(number: any): string | Error
  * @returns
  */
 export function CHIDIST(x: any, deg_freedom: any, cumulative: any): any
+
 export namespace CHIDIST {
   /**
    * Returns the one-tailed probability of the chi-squared distribution.
@@ -658,6 +668,7 @@ export function CHIDISTRT(x: any, deg_freedom: any): number | Error
  * @returns
  */
 export function CHIINV(probability: any, deg_freedom: any): any
+
 export namespace CHIINV {
   /**
    * Returns the inverse of the one-tailed probability of the chi-squared distribution.
@@ -681,6 +692,7 @@ export namespace CHIINV {
  * @returns
  */
 export function CHIINVRT(probability: any, deg_freedom: any): any
+
 export namespace CHISQ {
   /**
    * Returns the cumulative beta probability density function.
@@ -836,6 +848,7 @@ export function CONCAT(...args: any[]): any
  * @returns
  */
 export function CONCATENATE(...args: any[]): any
+
 export namespace CONFIDENCE {
   /**
    * Returns the confidence interval for a population mean.
@@ -1090,6 +1103,7 @@ export function COUPPCD(): void
  * @returns
  */
 export function COVAR(array1: any, array2: any): number | Error
+
 export namespace COVARIANCE {
   /**
    * Returns covariance, the average of the products of paired deviations.
@@ -1666,6 +1680,7 @@ export function EQ(value1: any, value2: any, ...args: any[]): boolean | Error
  * @returns
  */
 export function ERF(lower_limit: any, upper_limit: any): any
+
 export namespace ERF {
   /**
    * -- Not implemented --
@@ -1689,6 +1704,7 @@ export namespace ERF {
  * @returns
  */
 export function ERFC(x: any): any
+
 export namespace ERFC {
   /**
    * -- Not implemented --
@@ -1726,6 +1742,7 @@ export function ERFCPRECISE(): never
  * @returns
  */
 export function ERFPRECISE(): never
+
 export namespace ERROR {
   function TYPE(error_val: any): Error | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 }
@@ -1760,6 +1777,7 @@ export function EXACT(text1: any, text2: any, ...args: any[]): any
  * @returns
  */
 export function EXP(number: any, ...args: any[]): any
+
 export namespace EXPON {
   /**
    * Returns the exponential distribution.
@@ -1785,6 +1803,7 @@ export namespace EXPON {
  * @returns
  */
 export function EXPONDIST(x: any, lambda: any, cumulative: any): any
+
 export namespace F {
   /**
    * Returns the F probability distribution.
@@ -1890,6 +1909,7 @@ export function FALSE(): boolean
  * @returns
  */
 export function FDIST(x: any, deg_freedom1: any, deg_freedom2: any, cumulative: any): any
+
 export namespace FDIST {}
 
 /**
@@ -1936,6 +1956,7 @@ export function FINDFIELD(database: any, title: any): Error
  * @returns
  */
 export function FINV(probability: any, deg_freedom1: any, deg_freedom2: any): any
+
 export namespace FINV {}
 
 /**
@@ -1983,6 +2004,7 @@ export function FISHERINV(y: any): number | Error
  * @returns
  */
 export function FIXED(): void
+
 export function FLATTEN(...args: any[]): any
 
 /**
@@ -1995,6 +2017,7 @@ export function FLATTEN(...args: any[]): any
  * @returns
  */
 export function FLOOR(number: any, significance: any): any
+
 export namespace FLOOR {
   /**
    * Rounds a number down, to the nearest integer or to the nearest multiple of significance.
@@ -2103,6 +2126,7 @@ export function FVSCHEDULE(principal: any, schedule: any): any
  * @returns
  */
 export function GAMMA(number: any): any
+
 export namespace GAMMA {
   /**
    * Returns the gamma distribution.
@@ -2164,6 +2188,7 @@ export function GAMMAINV(probability: any, alpha: any, beta: any, ...args: any[]
  * @returns
  */
 export function GAMMALN(x: any): any
+
 export namespace GAMMALN {
   /**
    * Returns the natural logarithm of the gamma function, Γ(x).
@@ -2340,6 +2365,7 @@ export function HOUR(serial_number: any): any
  * @returns
  */
 export function HTML2TEXT(value: any): any
+
 export namespace HYPGEOM {
   /**
    * Returns the hypergeometric distribution.
@@ -2872,6 +2898,7 @@ export function ISNONTEXT(value: any): boolean
  * @returns
  */
 export function ISNUMBER(value: any): boolean
+
 export namespace ISO {
   export { CEILING }
 }
@@ -3093,6 +3120,7 @@ export function LOGEST(known_y: any, known_x: any): number[] | Error
  * @returns
  */
 export function LOGINV(probability: any, mean: any, standard_dev: any): any
+
 export namespace LOGNORM {
   /**
    * Returns the cumulative lognormal distribution.
@@ -3321,6 +3349,7 @@ export function MIRR(values: any, finance_rate: any, reinvest_rate: any): number
  * @returns
  */
 export function MOD(number: any, divisor: any): any
+
 export namespace MODE {
   /**
    * Returns a vertical array of the most frequently occurring, or repetitive values in an array or range of data.
@@ -3430,6 +3459,7 @@ export function NA(): Error
  * @returns
  */
 export function NE(value1: any, value2: any, ...args: any[]): boolean | Error
+
 export namespace NEGBINOM {
   /**
    * Returns the negative binomial distribution.
@@ -3469,6 +3499,7 @@ export function NEGBINOMDIST(number_f: any, number_s: any, probability_s: any, c
  * @returns
  */
 export function NETWORKDAYS(start_date: any, end_date: any, holidays: any): number | Error
+
 export namespace NETWORKDAYS {
   /**
    * Returns the number of whole workdays between two dates using parameters to indicate which and how many days are weekend days.
@@ -3507,6 +3538,7 @@ export function NETWORKDAYSINTL(start_date: any, end_date: any, weekend: any, ho
  * @returns
  */
 export function NOMINAL(effect_rate: any, npery: any): number | Error
+
 export namespace NORM {
   /**
    * Returns the normal cumulative distribution.
@@ -3819,6 +3851,7 @@ export function PDURATION(rate: any, pv: any, fv: any): number | Error
  * @returns
  */
 export function PEARSON(array1: any, array2: any): number | Error
+
 export namespace PERCENTILE {
   /**
    * Returns the k-th percentile of values in a range, where k is in the range 0..1, exclusive.
@@ -3860,6 +3893,7 @@ export function PERCENTILEEXC(array: any, k: any): number | Error
  * @returns
  */
 export function PERCENTILEINC(array: any, k: any): number | Error
+
 export namespace PERCENTRANK {
   /**
    * Returns the rank of a value in a data set as a percentage (0..1, exclusive) of the data set.
@@ -3964,6 +3998,7 @@ export function PI(): number
  * @returns
  */
 export function PMT(rate: any, nper: any, pv: any, fv: any, type: any): number | Error
+
 export namespace POISSON {
   /**
    * Returns the Poisson distribution.
@@ -4128,6 +4163,7 @@ export function PROPER(text: any): any
  * @returns
  */
 export function PV(rate: any, per: any, pmt: any, fv: any, type: any): number | Error
+
 export namespace QUARTILE {
   /**
    * Returns the quartile of the data set, based on percentile values from 0..1, exclusive.
@@ -4214,6 +4250,7 @@ export function RAND(): number
  * @returns
  */
 export function RANDBETWEEN(bottom: any, top: any): any
+
 export namespace RANK {
   /**
    * Returns the rank of a number in a list of numbers.
@@ -4575,6 +4612,7 @@ export function SINH(number: any): number | Error
  * @returns
  */
 export function SKEW(...args: any[]): number | Error
+
 export namespace SKEW {
   /**
    * Returns the skewness of a distribution based on a population.
@@ -4683,6 +4721,7 @@ export function SQRTPI(number: any): number | Error
  * @returns
  */
 export function STANDARDIZE(x: any, mean: any, standard_dev: any): number | Error
+
 export namespace STDEV {
   /**
    * Calculates standard deviation based on the entire population.
@@ -4949,6 +4988,7 @@ export function TBILLPRICE(settlement: any, maturity: any, discount: any): numbe
  * @returns
  */
 export function TBILLYIELD(settlement: any, maturity: any, pr: any): number | Error
+
 export const TDIST: {
   (x: any, deg_freedom: any, cumulative: any): number | Error
 
@@ -5029,6 +5069,7 @@ export function TIME(hour: any, minute: any, second: any): number | Error
  * @returns
  */
 export function TIMEVALUE(time_text: any): number | Error
+
 export const TINV: {
   (probability: any, deg_freedom: any): any
 
@@ -5185,6 +5226,7 @@ export function UPPER(text: any): any
  * @returns
  */
 export function VALUE(text: any): any
+
 export namespace VAR {
   /**
    * Calculates variance based on the entire population.
@@ -5301,6 +5343,7 @@ export function WEEKDAY(serial_number: any, return_type: any): number | Error
  * @returns
  */
 export function WEEKNUM(serial_number: any, return_type: any): number | Error
+
 export namespace WEIBULL {
   /**
    * Returns the Weibull distribution.
@@ -5340,6 +5383,7 @@ export function WEIBULLDIST(x: any, alpha: any, beta: any, cumulative: any): num
  * @returns
  */
 export function WORKDAY(start_date: any, days: any, holidays: any): any
+
 export namespace WORKDAY {
   /**
    * Returns the serial number of the date before or after a specified number of workdays using parameters to indicate which and how many days are weekend days.
@@ -5474,6 +5518,7 @@ export function YIELDDISC(): void
  * @returns
  */
 export function YIELDMAT(): void
+
 export namespace Z {
   /**
    * Returns the one-tailed probability-value of a z-test.
@@ -5499,4 +5544,5 @@ export namespace Z {
  * @returns
  */
 export function ZTEST(array: any, x: any, sigma: any): number | Error
+
 export { T$1 as T }
