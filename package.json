@@ -29,8 +29,10 @@
   },
   "files": [
     "bin/cli.js",
-    "lib"
+    "lib",
+    "types"
   ],
+  "types": "./types/index.d.ts",
   "scripts": {
     "prebuild": "npm run prettier && npm run lint && npm run test:coverage",
     "build": "rollup -c",
