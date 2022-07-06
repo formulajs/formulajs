@@ -1,6 +1,13 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
+/**
+ * Returns a list of unique values in a list or range.
+ *
+ * Category: Lookup and reference
+ *
+ * @returns
+ */
 export function UNIQUE() {
   const result = []
 
@@ -33,6 +40,13 @@ export function ARGS2ARRAY() {
   return Array.prototype.slice.call(arguments, 0)
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} context
+ * @param {*} reference
+ * @returns
+ */
 export function REFERENCE(context, reference) {
   if (!arguments.length) {
     return error.error
@@ -58,10 +72,22 @@ export function REFERENCE(context, reference) {
   } catch (error) {}
 }
 
+/**
+ * Formula.js only
+ *
+ * @param {*} array
+ * @param {*} separator
+ * @returns
+ */
 export function JOIN(array, separator) {
   return array.join(separator)
 }
 
+/**
+ * Formula.js only
+ *
+ * @returns
+ */
 export function NUMBERS() {
   const possibleNumbers = utils.flatten(arguments)
 
