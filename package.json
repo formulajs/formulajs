@@ -34,7 +34,7 @@
   ],
   "types": "./types/index.d.ts",
   "scripts": {
-    "prebuild": "npm run prettier && npm run lint && npm run test:coverage",
+    "prebuild": "npm run prettier && npm run lint && npm run test:coverage && npm run types",
     "build": "rollup -c",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
@@ -45,7 +45,8 @@
     "test": "mocha",
     "test:browser": "mocha --reporter mochawesome",
     "test:coverage": "c8 mocha",
-    "test:watch": "mocha --watch --parallel --reporter min"
+    "test:watch": "mocha --watch --parallel --reporter min",
+    "types": "tsc src/index.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "dependencies": {
     "bessel": "^1.0.2",
