@@ -5,3 +5,4 @@ coverage
 lib
 mochawesome-report
 node_modules
+types
