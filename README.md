@@ -13,7 +13,7 @@
 Powered by [jsDelivr](https://www.jsdelivr.com/), you can use the latest version of Formula.js:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@formulajs/formulajs@3.0.0/lib/browser/formula.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@formulajs/formulajs/lib/browser/formula.min.js"></script>
 ```
 
 Then the functions can be accessed as
@@ -51,13 +51,13 @@ SUM([1, 2, 3]) // 6
 #### require
 
 ```javascript
-var formulajs = require('@formulajs/formulajs') // require entire package
+const formulajs = require('@formulajs/formulajs') // require entire package
 
 formulajs.SUM([1, 2, 3]) // 6
 ```
 
 ```javascript
-var { SUM } = require('@formulajs/formulajs') // require individual components
+const { SUM } = require('@formulajs/formulajs') // require individual components
 
 SUM([1, 2, 3]) // 6
 ```

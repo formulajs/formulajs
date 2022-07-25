@@ -660,7 +660,7 @@ export function TEXTJOIN(delimiter, ignore_empty, ...args) {
     return error.na
   }
 
-  delimiter = delimiter ?? ''
+  delimiter = delimiter !== null && delimiter !== undefined ? delimiter : ''
 
   let flatArgs = utils.flatten(args)
   let textToJoin = ignore_empty ? flatArgs.filter((text) => text) : flatArgs
