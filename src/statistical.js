@@ -3,7 +3,7 @@ import jStat from 'jstat'
 import * as error from './utils/error.js'
 import * as evalExpression from './utils/criteria-eval.js'
 import * as mathTrig from './math-trig.js'
-import * as misc from './miscellaneous.js'
+import * as lookup from './lookup-reference.js'
 import * as utils from './utils/common.js'
 
 const SQRT2PI = 2.5066282746310002
@@ -568,59 +568,6 @@ CHISQ.TEST = function (actual_range, expected_range) {
   return Math.round(ChiSq(xsqr, dof) * 1000000) / 1000000
 }
 
-/**
- * Returns the column number of a reference.
- *
- * Category: Lookup and reference
- *
- * @param {*} reference the value or range of values for which you want to return the column number.
- * @param {*} index
- * @returns
- */
-export function COLUMN(reference, index) {
-  if (arguments.length !== 2) {
-    return error.na
-  }
-
-  if (index < 0) {
-    return error.num
-  }
-
-  if (!(reference instanceof Array) || typeof index !== 'number') {
-    return error.value
-  }
-
-  if (reference.length === 0) {
-    return undefined
-  }
-
-  return jStat.col(reference, index)
-}
-
-/**
- * Returns the number of columns in a reference.
- *
- * Category: Lookup and reference
- *
- * @param {*} array An array or array formula, or a reference to a range of values for which you want the number of columns.
- * @returns
- */
-export function COLUMNS(array) {
-  if (arguments.length !== 1) {
-    return error.na
-  }
-
-  if (!(array instanceof Array)) {
-    return error.value
-  }
-
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.cols(array)
-}
-
 export const CONFIDENCE = {}
 
 /**
@@ -841,7 +788,7 @@ export function COUNTIFS() {
  * @returns
  */
 export function COUNTUNIQUE() {
-  return misc.UNIQUE.apply(null, utils.flatten(arguments)).length
+  return lookup.UNIQUE.apply(null, utils.flatten(arguments)).length
 }
 
 export const COVARIANCE = {}
@@ -1968,7 +1915,7 @@ NORM.DIST = (x, mean, standard_dev, cumulative) => {
 /**
  * Returns the inverse of the normal cumulative distribution.
  *
- * Category: Compatibility
+ * Category: Statistical
  *
  * @param {*} probability A probability corresponding to the normal distribution.
  * @param {*} mean The arithmetic mean of the distribution.
@@ -2137,7 +2084,7 @@ PERCENTRANK.EXC = (array, x, significance) => {
   }
 
   array = array.sort((a, b) => a - b)
-  const uniques = misc.UNIQUE.apply(null, array)
+  const uniques = lookup.UNIQUE.apply(null, array)
   const n = array.length
   const m = uniques.length
   const power = Math.pow(10, significance)
@@ -2181,7 +2128,7 @@ PERCENTRANK.INC = (array, x, significance) => {
   }
 
   array = array.sort((a, b) => a - b)
-  const uniques = misc.UNIQUE.apply(null, array)
+  const uniques = lookup.UNIQUE.apply(null, array)
   const n = array.length
   const m = uniques.length
   const power = Math.pow(10, significance)
@@ -2481,30 +2428,6 @@ export function ROW(reference, index) {
 }
 
 /**
- * Returns the number of rows in a reference.
- *
- * Category: Lookup and reference
- *
- * @param {*} array An array, an array formula, or a reference to a range of values for which you want the number of rows.
- * @returns
- */
-export function ROWS(array) {
-  if (arguments.length !== 1) {
-    return error.na
-  }
-
-  if (!(array instanceof Array)) {
-    return error.value
-  }
-
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.rows(array)
-}
-
-/**
  * Returns the square of the Pearson product moment correlation coefficient.
  *
  * Category: Statistical
@@ -2755,22 +2678,6 @@ export function STEYX(known_y, known_x) {
   }
 
   return Math.sqrt((lft - (num * num) / den) / (n - 2))
-}
-
-/**
- * Returns the transpose of an array.
- *
- * Category: Lookup and reference
- *
- * @param {*} array An array or range of values on a worksheet that you want to transpose. The transpose of an array is created by using the first row of the array as the first column of the new array, the second row of the array as the second column of the new array, and so on. If you're not sure of how to enter an array formula, see Create an array formula.
- * @returns
- */
-export function TRANSPOSE(array) {
-  if (!array) {
-    return error.na
-  }
-
-  return jStat.transpose(array)
 }
 
 export const T = {}

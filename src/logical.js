@@ -35,36 +35,6 @@ export function AND() {
 }
 
 /**
- * Chooses a value from a list of values.
- *
- * Category: Lookup and reference
- *
- * @param {*} index_num Specifies which value argument is selected. Index_num must be a number between 1 and 254, or a formula or reference to a value containing a number between 1 and 254. If index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on. If index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value. If index_num is a fraction, it is truncated to the lowest integer before being used.
- - If index_num is 1, CHOOSE returns value1; if it is 2, CHOOSE returns value2; and so on.
- - If index_num is less than 1 or greater than the number of the last value in the list, CHOOSE returns the #VALUE! error value.
- - If index_num is a fraction, it is truncated to the lowest integer before being used.
- * @param {*} args value1, value2, ... Value 1 is required, subsequent values are optional. 1 to 254 value arguments from which CHOOSE selects a value or an action to perform based on index_num. The arguments can be numbers, value references, defined names, formulas, functions, or text.
- * @returns
- */
-export function CHOOSE() {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
-  const index = arguments[0]
-
-  if (index < 1 || index > 254) {
-    return error.value
-  }
-
-  if (arguments.length < index + 1) {
-    return error.value
-  }
-
-  return arguments[index]
-}
-
-/**
  * Returns the logical value FALSE.
  *
  * Category: Logical

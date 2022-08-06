@@ -359,7 +359,7 @@ export function BASE(number, radix, min_length) {
 /**
  * Rounds a number to the nearest integer or to the nearest multiple of significance.
  *
- * Category: Compatibility
+ * Category: Math and trigonometry
  *
  * @param {*} number The value you want to round.
  * @param {*} significance The multiple to which you want to round.
@@ -719,7 +719,7 @@ export function FACTDOUBLE(number) {
 /**
  * Rounds a number down, toward zero.
  *
- * Category: Compatibility
+ * Category: Math and trigonometry
  *
  * @param {*} number The numeric value you want to round.
  * @param {*} significance The multiple to which you want to round.

@@ -4,31 +4,6 @@ import * as database from '../src/database.js'
 import * as error from '../src/utils/error.js'
 
 describe('Database', () => {
-  it('FINDFIELD', () => {
-    database
-      .FINDFIELD(
-        [
-          ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
-          ['Height', 18, 12, 13, 14, 9, 8],
-          ['Age', 20, 12, 14, 15, 8, 9],
-          ['Yield', 14, 10, 9, 10, 8, 6]
-        ],
-        'Yield'
-      )
-      .should.equal(3)
-    database
-      .FINDFIELD(
-        [
-          ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
-          ['Height', 18, 12, 13, 14, 9, 8],
-          ['Age', 20, 12, 14, 15, 8, 9],
-          ['Yield', 14, 10, 9, 10, 8, 6]
-        ],
-        'invalid'
-      )
-      .should.equal(error.value)
-  })
-
   it('DAVERAGE', () => {
     database
       .DAVERAGE(
