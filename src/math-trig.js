@@ -1353,7 +1353,7 @@ export function ROUND(number, num_digits) {
     return anyError
   }
 
-  return Math.round(number * Math.pow(10, num_digits)) / Math.pow(10, num_digits)
+  return Number(Math.round(Number(number + 'e' + digits)) + 'e' + digits * -1)
 }
 
 /**
