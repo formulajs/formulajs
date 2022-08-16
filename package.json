@@ -46,7 +46,7 @@
     "test:browser": "mocha --reporter mochawesome",
     "test:coverage": "c8 mocha",
     "test:watch": "mocha --watch --parallel --reporter min",
-    "types": "tsc src/index.js --declaration --allowJs --emitDeclarationOnly --outDir types"
+    "types": "tsc"
   },
   "dependencies": {
     "bessel": "^1.0.2",
