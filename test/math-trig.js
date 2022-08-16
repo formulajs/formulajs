@@ -772,6 +772,8 @@ describe('Math & Trig', () => {
     mathTrig.ROUND(error.na).should.equal(error.na)
     mathTrig.ROUND(2.15, 1).should.approximately(2.2, 1e-9)
     mathTrig.ROUND(2.149, 1).should.approximately(2.1, 1e-9)
+    mathTrig.ROUND(600.425, 2).should.approximately(600.43, 1e-9)
+    mathTrig.ROUND(600.435, 2).should.approximately(600.44, 1e-9)
     mathTrig.ROUND(-1.475, 2).should.approximately(-1.47, 1e-9) // TODO: check if -1.48 would be the correct result or a precision error
     mathTrig.ROUND(21.5, -1).should.equal(20)
     mathTrig.ROUND(626.3, -3).should.equal(1000)

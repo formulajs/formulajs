@@ -911,7 +911,7 @@ export function ROUND(number, digits) {
     return anyError
   }
 
-  return Math.round(number * Math.pow(10, digits)) / Math.pow(10, digits)
+  return Number(Math.round(Number(number + 'e' + digits)) + 'e' + digits * -1)
 }
 
 export function ROUNDDOWN(number, digits) {
