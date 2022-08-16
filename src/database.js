@@ -16,7 +16,14 @@ function compact(array) {
   return result
 }
 
-function findField(database, title) {
+/**
+ * Formula.js only
+ *
+ * @param {*} database
+ * @param {*} title
+ * @returns
+ */
+export function FINDFIELD(database, title) {
   let index = null
 
   utils.arrayEach(database, (value, i) => {
@@ -126,7 +133,7 @@ export function DAVERAGE(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -161,7 +168,7 @@ export function DCOUNT(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -196,7 +203,7 @@ export function DCOUNTA(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -231,7 +238,7 @@ export function DGET(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -271,7 +278,7 @@ export function DMAX(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -308,7 +315,7 @@ export function DMIN(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -345,7 +352,7 @@ export function DPRODUCT(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -387,7 +394,7 @@ export function DSTDEV(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -424,7 +431,7 @@ export function DSTDEVP(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -461,7 +468,7 @@ export function DSUM(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -496,7 +503,7 @@ export function DVAR(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
@@ -532,7 +539,7 @@ export function DVARP(database, field, criteria) {
   let targetFields = []
 
   if (typeof field === 'string') {
-    const index = findField(database, field)
+    const index = FINDFIELD(database, field)
     targetFields = utils.rest(database[index])
   } else {
     targetFields = utils.rest(database[field])
