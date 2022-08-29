@@ -93,6 +93,14 @@ describe('Lookup Reference', () => {
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3)
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], -1).should.equal(3)
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 1).should.equal(2)
+    lookup.MATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(1)
+    lookup.MATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3)
+    lookup.MATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(4)
+    lookup.MATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 0).should.equal(1)
+    lookup.MATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 0).should.equal(1)
+    lookup.MATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3)
+    lookup.MATCH('*$c', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na)
+    lookup.MATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0).should.equal(3)
   })
 
   it('ROWS', () => {
