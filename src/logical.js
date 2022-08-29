@@ -2,6 +2,13 @@ import * as error from './utils/error.js'
 import * as information from './information.js'
 import * as utils from './utils/common.js'
 
+/**
+ * Returns TRUE if all of its arguments are TRUE.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function AND() {
   const args = utils.flatten(arguments)
   let result = error.value
@@ -27,48 +34,55 @@ export function AND() {
   return result
 }
 
-export function CHOOSE() {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
-  const index = arguments[0]
-
-  if (index < 1 || index > 254) {
-    return error.value
-  }
-
-  if (arguments.length < index + 1) {
-    return error.value
-  }
-
-  return arguments[index]
-}
-
+/**
+ * Returns the logical value FALSE.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function FALSE() {
   return false
 }
 
-export function IF(test, then_value, otherwise_value) {
-  if (test instanceof Error) {
-    return test
+/**
+ * Specifies a logical test to perform.
+ *
+ * Category: Logical
+ *
+ * @param {*} logical_test
+ * @param {*} value_if_true
+ * @param {*} value_if_false
+ *
+ * @returns
+ */
+export function IF(logical_test, value_if_true, value_if_false) {
+  if (logical_test instanceof Error) {
+    return logical_test
   }
 
-  then_value = arguments.length >= 2 ? then_value : true
+  value_if_true = arguments.length >= 2 ? value_if_true : true
 
-  if (then_value === undefined || then_value === null) {
-    then_value = 0
+  if (value_if_true === undefined || value_if_true === null) {
+    value_if_true = 0
   }
 
-  otherwise_value = arguments.length === 3 ? otherwise_value : false
+  value_if_false = arguments.length === 3 ? value_if_false : false
 
-  if (otherwise_value === undefined || otherwise_value === null) {
-    otherwise_value = 0
+  if (value_if_false === undefined || value_if_false === null) {
+    value_if_false = 0
   }
 
-  return test ? then_value : otherwise_value
+  return logical_test ? value_if_true : value_if_false
 }
 
+/**
+ * Checks whether one or more conditions are met and returns a value that corresponds to the first TRUE condition.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function IFS() {
   for (let i = 0; i < arguments.length / 2; i++) {
     if (arguments[i * 2]) {
@@ -79,18 +93,41 @@ export function IFS() {
   return error.na
 }
 
-export function IFERROR(value, valueIfError) {
+/**
+ * Returns a value you specify if a formula evaluates to an error; otherwise, returns the result of the formula.
+ *
+ * Category: Logical
+ *
+ * @param {*} value The argument that is checked for an error.
+ * @param {*} value_if_error The value to return if the formula evaluates to an error. The following error types are evaluated: #N/A, #VALUE!, #REF!, #DIV/0!, #NUM!, #NAME?, or #NULL!.
+ * @returns
+ */
+export function IFERROR(value, value_if_error) {
   if (information.ISERROR(value)) {
-    return valueIfError
+    return value_if_error
   }
 
   return value
 }
 
+/**
+ * Returns the value you specify if the expression resolves to #N/A, otherwise returns the result of the expression.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function IFNA(value, value_if_na) {
   return value === error.na ? value_if_na : value
 }
 
+/**
+ * Reverses the logic of its argument.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function NOT(logical) {
   if (typeof logical === 'string') {
     return error.value
@@ -103,6 +140,13 @@ export function NOT(logical) {
   return !logical
 }
 
+/**
+ * Returns TRUE if any argument is TRUE.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function OR() {
   const args = utils.flatten(arguments)
   let result = error.value
@@ -128,10 +172,25 @@ export function OR() {
   return result
 }
 
+/**
+ * Returns the logical value TRUE.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function TRUE() {
   return true
 }
 
+/**
+ * Returns a logical exclusive OR of all arguments.
+ *
+ * Category: Logical
+ *
+ * @param {*} args logical1, logical2,… Logical 1 is required, subsequent logical values are optional. 1 to 254 conditions you want to test that can be either TRUE or FALSE, and can be logical values, arrays, or references.
+ * @returns
+ */
 export function XOR() {
   const args = utils.flatten(arguments)
   let result = error.value
@@ -161,6 +220,13 @@ export function XOR() {
   return !!(Math.floor(Math.abs(result)) & 1)
 }
 
+/**
+ * Evaluates an expression against a list of values and returns the result corresponding to the first matching value. If there is no match, an optional default value may be returned.
+ *
+ * Category: Logical
+ *
+ * @returns
+ */
 export function SWITCH() {
   let result
 

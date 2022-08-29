@@ -9,6 +9,15 @@ function isValidBinaryNumber(number) {
   return /^[01]{1,10}$/.test(number)
 }
 
+/**
+ * Returns the modified Bessel function In(x).
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The value at which to evaluate the function.
+ * @param {*} n The order of the Bessel function. If n is not an integer, it is truncated.
+ * @returns
+ */
 export function BESSELI(x, n) {
   x = utils.parseNumber(x)
   n = utils.parseNumber(n)
@@ -20,6 +29,15 @@ export function BESSELI(x, n) {
   return bessel.besseli(x, n)
 }
 
+/**
+ * Returns the Bessel function Jn(x).
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The value at which to evaluate the function.
+ * @param {*} n The order of the Bessel function. If n is not an integer, it is truncated.
+ * @returns
+ */
 export function BESSELJ(x, n) {
   x = utils.parseNumber(x)
   n = utils.parseNumber(n)
@@ -31,6 +49,15 @@ export function BESSELJ(x, n) {
   return bessel.besselj(x, n)
 }
 
+/**
+ * Returns the modified Bessel function Kn(x).
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The value at which to evaluate the function.
+ * @param {*} n The order of the function. If n is not an integer, it is truncated.
+ * @returns
+ */
 export function BESSELK(x, n) {
   x = utils.parseNumber(x)
   n = utils.parseNumber(n)
@@ -42,6 +69,15 @@ export function BESSELK(x, n) {
   return bessel.besselk(x, n)
 }
 
+/**
+ * Returns the Bessel function Yn(x).
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The value at which to evaluate the function.
+ * @param {*} n The order of the function. If n is not an integer, it is truncated.
+ * @returns
+ */
 export function BESSELY(x, n) {
   x = utils.parseNumber(x)
   n = utils.parseNumber(n)
@@ -53,6 +89,14 @@ export function BESSELY(x, n) {
   return bessel.bessely(x, n)
 }
 
+/**
+ * Converts a binary number to decimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The binary number you want to convert. Number cannot contain more than 10 characters (10 bits). The most significant bit of number is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @returns
+ */
 export function BIN2DEC(number) {
   // Return error if number is not binary or contains more than 10 characters (10 digits)
   if (!isValidBinaryNumber(number)) {
@@ -72,6 +116,15 @@ export function BIN2DEC(number) {
   }
 }
 
+/**
+ * Converts a binary number to hexadecimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The binary number you want to convert. Number cannot contain more than 10 characters (10 bits). The most significant bit of number is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, BIN2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function BIN2HEX(number, places) {
   // Return error if number is not binary or contains more than 10 characters (10 digits)
   if (!isValidBinaryNumber(number)) {
@@ -110,6 +163,15 @@ export function BIN2HEX(number, places) {
   }
 }
 
+/**
+ * Converts a binary number to octal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The binary number you want to convert. Number cannot contain more than 10 characters (10 bits). The most significant bit of number is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, BIN2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function BIN2OCT(number, places) {
   // Return error if number is not binary or contains more than 10 characters (10 digits)
   if (!isValidBinaryNumber(number)) {
@@ -148,6 +210,15 @@ export function BIN2OCT(number, places) {
   }
 }
 
+/**
+ * Returns a 'Bitwise And' of two numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number1 Must be in decimal form and greater than or equal to 0.
+ * @param {*} number2 Must be in decimal form and greater than or equal to 0.
+ * @returns
+ */
 export function BITAND(number1, number2) {
   // Return error if either number is a non-numeric value
   number1 = utils.parseNumber(number1)
@@ -176,11 +247,20 @@ export function BITAND(number1, number2) {
   return number1 & number2
 }
 
-export function BITLSHIFT(number, shift) {
+/**
+ * Returns a value number shifted left by shift_amount bits.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number Number must be an integer greater than or equal to 0.
+ * @param {*} shift_amount Shift_amount must be an integer.
+ * @returns
+ */
+export function BITLSHIFT(number, shift_amount) {
   number = utils.parseNumber(number)
-  shift = utils.parseNumber(shift)
+  shift_amount = utils.parseNumber(shift_amount)
 
-  if (utils.anyIsError(number, shift)) {
+  if (utils.anyIsError(number, shift_amount)) {
     return error.value
   }
 
@@ -200,14 +280,23 @@ export function BITLSHIFT(number, shift) {
   }
 
   // Return error if the absolute value of shift is greater than 53
-  if (Math.abs(shift) > 53) {
+  if (Math.abs(shift_amount) > 53) {
     return error.num
   }
 
   // Return number shifted by shift bits to the left or to the right if shift is negative
-  return shift >= 0 ? number << shift : number >> -shift
+  return shift_amount >= 0 ? number << shift_amount : number >> -shift_amount
 }
 
+/**
+ * Returns a bitwise OR of 2 numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number1 Must be in decimal form and greater than or equal to 0.
+ * @param {*} number2 Must be in decimal form and greater than or equal to 0.
+ * @returns
+ */
 export function BITOR(number1, number2) {
   number1 = utils.parseNumber(number1)
   number2 = utils.parseNumber(number2)
@@ -235,11 +324,20 @@ export function BITOR(number1, number2) {
   return number1 | number2
 }
 
-export function BITRSHIFT(number, shift) {
+/**
+ * Returns a value number shifted right by shift_amount bits.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number Must be an integer greater than or equal to 0.
+ * @param {*} shift_amount Must be an integer.
+ * @returns
+ */
+export function BITRSHIFT(number, shift_amount) {
   number = utils.parseNumber(number)
-  shift = utils.parseNumber(shift)
+  shift_amount = utils.parseNumber(shift_amount)
 
-  if (utils.anyIsError(number, shift)) {
+  if (utils.anyIsError(number, shift_amount)) {
     return error.value
   }
 
@@ -259,14 +357,23 @@ export function BITRSHIFT(number, shift) {
   }
 
   // Return error if the absolute value of shift is greater than 53
-  if (Math.abs(shift) > 53) {
+  if (Math.abs(shift_amount) > 53) {
     return error.num
   }
 
   // Return number shifted by shift bits to the right or to the left if shift is negative
-  return shift >= 0 ? number >> shift : number << -shift
+  return shift_amount >= 0 ? number >> shift_amount : number << -shift_amount
 }
 
+/**
+ * Returns a bitwise 'Exclusive Or' of two numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number1 Must be greater than or equal to 0.
+ * @param {*} number2 Must be greater than or equal to 0.
+ * @returns
+ */
 export function BITXOR(number1, number2) {
   number1 = utils.parseNumber(number1)
   number2 = utils.parseNumber(number2)
@@ -294,12 +401,22 @@ export function BITXOR(number1, number2) {
   return number1 ^ number2
 }
 
-export function COMPLEX(real, imaginary, suffix) {
-  real = utils.parseNumber(real)
-  imaginary = utils.parseNumber(imaginary)
+/**
+ * Converts real and imaginary coefficients into a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} real_num The real coefficient of the complex number.
+ * @param {*} i_num The imaginary coefficient of the complex number.
+ * @param {*} suffix Optional. The suffix for the imaginary component of the complex number. If omitted, suffix is assumed to be "i".
+ * @returns
+ */
+export function COMPLEX(real_num, i_num, suffix) {
+  real_num = utils.parseNumber(real_num)
+  i_num = utils.parseNumber(i_num)
 
-  if (utils.anyIsError(real, imaginary)) {
-    return real
+  if (utils.anyIsError(real_num, i_num)) {
+    return real_num
   }
 
   // Set suffix
@@ -311,18 +428,28 @@ export function COMPLEX(real, imaginary, suffix) {
   }
 
   // Return complex number
-  if (real === 0 && imaginary === 0) {
+  if (real_num === 0 && i_num === 0) {
     return 0
-  } else if (real === 0) {
-    return imaginary === 1 ? suffix : imaginary.toString() + suffix
-  } else if (imaginary === 0) {
-    return real.toString()
+  } else if (real_num === 0) {
+    return i_num === 1 ? suffix : i_num.toString() + suffix
+  } else if (i_num === 0) {
+    return real_num.toString()
   } else {
-    const sign = imaginary > 0 ? '+' : ''
-    return real.toString() + sign + (imaginary === 1 ? suffix : imaginary.toString() + suffix)
+    const sign = i_num > 0 ? '+' : ''
+    return real_num.toString() + sign + (i_num === 1 ? suffix : i_num.toString() + suffix)
   }
 }
 
+/**
+ * Converts a number from one measurement system to another.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number is the value in from_units to convert.
+ * @param {*} from_unit is the units for number.
+ * @param {*} to_unit is the units for the result. CONVERT accepts the following text values (in quotation marks) for from_unit and to_unit.
+ * @returns
+ */
 export function CONVERT(number, from_unit, to_unit) {
   number = utils.parseNumber(number)
 
@@ -613,6 +740,15 @@ export function CONVERT(number, from_unit, to_unit) {
   return (number * from[6] * from_multiplier) / (to[6] * to_multiplier)
 }
 
+/**
+ * Converts a decimal number to binary.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The decimal integer you want to convert. If number is negative, valid place values are ignored and DEC2BIN returns a 10-character (10-bit) binary number in which the most significant bit is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function DEC2BIN(number, places) {
   number = utils.parseNumber(number)
 
@@ -655,6 +791,15 @@ export function DEC2BIN(number, places) {
   }
 }
 
+/**
+ * Converts a decimal number to hexadecimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The decimal integer you want to convert. If number is negative, places is ignored and DEC2HEX returns a 10-character (40-bit) hexadecimal number in which the most significant bit is the sign bit. The remaining 39 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function DEC2HEX(number, places) {
   number = utils.parseNumber(number)
 
@@ -697,6 +842,15 @@ export function DEC2HEX(number, places) {
   }
 }
 
+/**
+ * Converts a decimal number to octal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The decimal integer you want to convert. If number is negative, places is ignored and DEC2OCT returns a 10-character (30-bit) octal number in which the most significant bit is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function DEC2OCT(number, places) {
   number = utils.parseNumber(number)
 
@@ -739,6 +893,15 @@ export function DEC2OCT(number, places) {
   }
 }
 
+/**
+ * Tests whether two values are equal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number1 The first number.
+ * @param {*} number2 Optional. The second number. If omitted, number2 is assumed to be zero.
+ * @returns
+ */
 export function DELTA(number1, number2) {
   // Set number2 to zero if undefined
   number2 = number2 === undefined ? 0 : number2
@@ -754,25 +917,53 @@ export function DELTA(number1, number2) {
 }
 
 // TODO: why is upper_bound not used ? The excel documentation has no examples with upper_bound
-export function ERF(lower_bound, upper_bound) {
+/**
+ * Returns the error function.
+ *
+ * Category: Engineering
+ *
+ * @param {*} lower_limit The lower bound for integrating ERF.
+ * @param {*} upper_limit Optional. The upper bound for integrating ERF. If omitted, ERF integrates between zero and lower_limit.
+ * @returns
+ */
+export function ERF(lower_limit, upper_limit) {
   // Set number2 to zero if undefined
-  upper_bound = upper_bound === undefined ? 0 : upper_bound
+  upper_limit = upper_limit === undefined ? 0 : upper_limit
 
-  lower_bound = utils.parseNumber(lower_bound)
-  upper_bound = utils.parseNumber(upper_bound)
+  lower_limit = utils.parseNumber(lower_limit)
+  upper_limit = utils.parseNumber(upper_limit)
 
-  if (utils.anyIsError(lower_bound, upper_bound)) {
+  if (utils.anyIsError(lower_limit, upper_limit)) {
     return error.value
   }
 
-  return jStat.erf(lower_bound)
+  return jStat.erf(lower_limit)
 }
 
 // TODO
+
+/**
+ * -- Not implemented --
+ *
+ * Returns the error function.
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The lower bound for integrating ERF.PRECISE.
+ * @returns
+ */
 ERF.PRECISE = () => {
   throw new Error('ERF.PRECISE is not implemented')
 }
 
+/**
+ * Returns the complementary error function.
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The lower bound for integrating ERFC.
+ * @returns
+ */
 export function ERFC(x) {
   // Return error if x is not a number
   if (isNaN(x)) {
@@ -783,10 +974,30 @@ export function ERFC(x) {
 }
 
 // TODO
+
+/**
+ * -- Not implemented --
+ *
+ * Returns the complementary ERF function integrated between x and infinity.
+ *
+ * Category: Engineering
+ *
+ * @param {*} x The lower bound for integrating ERFC.PRECISE.
+ * @returns
+ */
 ERFC.PRECISE = () => {
   throw new Error('ERFC.PRECISE is not implemented')
 }
 
+/**
+ * Tests whether a number is greater than a threshold value.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The value to test against step.
+ * @param {*} step Optional. The threshold value. If you omit a value for step, GESTEP uses zero.
+ * @returns
+ */
 export function GESTEP(number, step) {
   step = step || 0
   number = utils.parseNumber(number)
@@ -799,6 +1010,15 @@ export function GESTEP(number, step) {
   return number >= step ? 1 : 0
 }
 
+/**
+ * Converts a hexadecimal number to binary.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The hexadecimal number you want to convert. Number cannot contain more than 10 characters. The most significant bit of number is the sign bit (40th bit from the right). The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, HEX2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function HEX2BIN(number, places) {
   // Return error if number is not hexadecimal or contains more than ten characters (10 digits)
   if (!/^[0-9A-Fa-f]{1,10}$/.test(number)) {
@@ -846,6 +1066,14 @@ export function HEX2BIN(number, places) {
   }
 }
 
+/**
+ * Converts a hexadecimal number to decimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The hexadecimal number you want to convert. Number cannot contain more than 10 characters (40 bits). The most significant bit of number is the sign bit. The remaining 39 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @returns
+ */
 export function HEX2DEC(number) {
   // Return error if number is not hexadecimal or contains more than ten characters (10 digits)
   if (!/^[0-9A-Fa-f]{1,10}$/.test(number)) {
@@ -859,6 +1087,15 @@ export function HEX2DEC(number) {
   return decimal >= 549755813888 ? decimal - 1099511627776 : decimal
 }
 
+/**
+ * Converts a hexadecimal number to octal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The hexadecimal number you want to convert. Number cannot contain more than 10 characters. The most significant bit of number is the sign bit. The remaining 39 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, HEX2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function HEX2OCT(number, places) {
   // Return error if number is not hexadecimal or contains more than ten characters (10 digits)
   if (!/^[0-9A-Fa-f]{1,10}$/.test(number)) {
@@ -903,6 +1140,14 @@ export function HEX2OCT(number, places) {
   }
 }
 
+/**
+ * Returns the absolute value (modulus) of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the absolute value.
+ * @returns
+ */
 export function IMABS(inumber) {
   // Lookup real and imaginary coefficients using exports.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -917,6 +1162,14 @@ export function IMABS(inumber) {
   return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
 }
 
+/**
+ * Returns the imaginary coefficient of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the imaginary coefficient.
+ * @returns
+ */
 export function IMAGINARY(inumber) {
   if (inumber === undefined || inumber === true || inumber === false) {
     return error.value
@@ -979,6 +1232,14 @@ export function IMAGINARY(inumber) {
   }
 }
 
+/**
+ * Returns the argument theta, an angle expressed in radians.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the argument .
+ * @returns
+ */
 export function IMARGUMENT(inumber) {
   // Lookup real and imaginary coefficients using exports.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1024,6 +1285,14 @@ export function IMARGUMENT(inumber) {
   }
 }
 
+/**
+ * Returns the complex conjugate of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the conjugate.
+ * @returns
+ */
 export function IMCONJUGATE(inumber) {
   // Lookup real and imaginary coefficients using exports.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1041,6 +1310,14 @@ export function IMCONJUGATE(inumber) {
   return y !== 0 ? COMPLEX(x, -y, unit) : inumber
 }
 
+/**
+ * Returns the cosine of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the cosine.
+ * @returns
+ */
 export function IMCOS(inumber) {
   // Lookup real and imaginary coefficients using exports.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1062,6 +1339,14 @@ export function IMCOS(inumber) {
   )
 }
 
+/**
+ * Returns the hyperbolic cosine of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the hyperbolic cosine.
+ * @returns
+ */
 export function IMCOSH(inumber) {
   // Lookup real and imaginary coefficients using exports.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1083,6 +1368,14 @@ export function IMCOSH(inumber) {
   )
 }
 
+/**
+ * Returns the cotangent of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the cotangent.
+ * @returns
+ */
 export function IMCOT(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1096,6 +1389,15 @@ export function IMCOT(inumber) {
   return IMDIV(IMCOS(inumber), IMSIN(inumber))
 }
 
+/**
+ * Returns the quotient of two complex numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber1 The complex numerator or dividend.
+ * @param {*} inumber2 The complex denominator or divisor.
+ * @returns
+ */
 export function IMDIV(inumber1, inumber2) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const a = IMREAL(inumber1)
@@ -1128,6 +1430,14 @@ export function IMDIV(inumber1, inumber2) {
   return COMPLEX((a * c + b * d) / den, (b * c - a * d) / den, unit)
 }
 
+/**
+ * Returns the exponential of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the exponential.
+ * @returns
+ */
 export function IMEXP(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1146,6 +1456,14 @@ export function IMEXP(inumber) {
   return COMPLEX(e * Math.cos(y), e * Math.sin(y), unit)
 }
 
+/**
+ * Returns the natural logarithm of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the natural logarithm.
+ * @returns
+ */
 export function IMLN(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1163,6 +1481,14 @@ export function IMLN(inumber) {
   return COMPLEX(Math.log(Math.sqrt(x * x + y * y)), Math.atan(y / x), unit)
 }
 
+/**
+ * Returns the base-10 logarithm of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the common logarithm.
+ * @returns
+ */
 export function IMLOG10(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1180,6 +1506,14 @@ export function IMLOG10(inumber) {
   return COMPLEX(Math.log(Math.sqrt(x * x + y * y)) / Math.log(10), Math.atan(y / x) / Math.log(10), unit)
 }
 
+/**
+ * Returns the base-2 logarithm of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the base-2 logarithm.
+ * @returns
+ */
 export function IMLOG2(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1197,6 +1531,15 @@ export function IMLOG2(inumber) {
   return COMPLEX(Math.log(Math.sqrt(x * x + y * y)) / Math.log(2), Math.atan(y / x) / Math.log(2), unit)
 }
 
+/**
+ * Returns a complex number raised to an integer power.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number you want to raise to a power.
+ * @param {*} number The power to which you want to raise the complex number.
+ * @returns
+ */
 export function IMPOWER(inumber, number) {
   number = utils.parseNumber(number)
   const x = IMREAL(inumber)
@@ -1220,6 +1563,14 @@ export function IMPOWER(inumber, number) {
   return COMPLEX(p * Math.cos(number * t), p * Math.sin(number * t), unit)
 }
 
+/**
+ * Returns the product of complex numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} args inumber1, [inumber2], … Inumber1 is required, subsequent inumbers are not. 1 to 255 complex numbers to multiply.
+ * @returns
+ */
 export function IMPRODUCT() {
   // Initialize result
   let result = arguments[0]
@@ -1248,6 +1599,14 @@ export function IMPRODUCT() {
   return result
 }
 
+/**
+ * Returns the real coefficient of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the real coefficient.
+ * @returns
+ */
 export function IMREAL(inumber) {
   if (inumber === undefined || inumber === true || inumber === false) {
     return error.value
@@ -1307,6 +1666,14 @@ export function IMREAL(inumber) {
   }
 }
 
+/**
+ * Returns the secant of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the secant.
+ * @returns
+ */
 export function IMSEC(inumber) {
   // Return error if inumber is a logical value
   if (inumber === true || inumber === false) {
@@ -1325,6 +1692,14 @@ export function IMSEC(inumber) {
   return IMDIV('1', IMCOS(inumber))
 }
 
+/**
+ * Returns the hyperbolic secant of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the hyperbolic secant.
+ * @returns
+ */
 export function IMSECH(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1338,6 +1713,14 @@ export function IMSECH(inumber) {
   return IMDIV('1', IMCOSH(inumber))
 }
 
+/**
+ * Returns the sine of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the sine.
+ * @returns
+ */
 export function IMSIN(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1359,6 +1742,14 @@ export function IMSIN(inumber) {
   )
 }
 
+/**
+ * Returns the hyperbolic sine of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the hyperbolic sine.
+ * @returns
+ */
 export function IMSINH(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1380,6 +1771,14 @@ export function IMSINH(inumber) {
   )
 }
 
+/**
+ * Returns the square root of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the square root.
+ * @returns
+ */
 export function IMSQRT(inumber) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const x = IMREAL(inumber)
@@ -1403,6 +1802,14 @@ export function IMSQRT(inumber) {
   return COMPLEX(s * Math.cos(t / 2), s * Math.sin(t / 2), unit)
 }
 
+/**
+ * Returns the cosecant of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the cosecant.
+ * @returns
+ */
 export function IMCSC(inumber) {
   // Return error if inumber is a logical value
   if (inumber === true || inumber === false) {
@@ -1422,6 +1829,14 @@ export function IMCSC(inumber) {
   return IMDIV('1', IMSIN(inumber))
 }
 
+/**
+ * Returns the hyperbolic cosecant of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the hyperbolic cosecant.
+ * @returns
+ */
 export function IMCSCH(inumber) {
   // Return error if inumber is a logical value
   if (inumber === true || inumber === false) {
@@ -1441,6 +1856,15 @@ export function IMCSCH(inumber) {
   return IMDIV('1', IMSINH(inumber))
 }
 
+/**
+ * Returns the difference between two complex numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber1 The complex number from which to subtract inumber2.
+ * @param {*} inumber2 The complex number to subtract from inumber1.
+ * @returns
+ */
 export function IMSUB(inumber1, inumber2) {
   // Lookup real and imaginary coefficients using Formula.js [http://formulajs.org]
   const a = IMREAL(inumber1)
@@ -1467,6 +1891,14 @@ export function IMSUB(inumber1, inumber2) {
   return COMPLEX(a - c, b - d, unit)
 }
 
+/**
+ * Returns the sum of complex numbers.
+ *
+ * Category: Engineering
+ *
+ * @param {*} args inumber1, [inumber2], ... Inumber1 is required, subsequent numbers are not. 1 to 255 complex numbers to add.
+ * @returns
+ */
 export function IMSUM() {
   if (!arguments.length) {
     return error.value
@@ -1497,6 +1929,14 @@ export function IMSUM() {
   return result
 }
 
+/**
+ * Returns the tangent of a complex number.
+ *
+ * Category: Engineering
+ *
+ * @param {*} inumber A complex number for which you want the tangent.
+ * @returns
+ */
 export function IMTAN(inumber) {
   // Return error if inumber is a logical value
   if (inumber === true || inumber === false) {
@@ -1515,6 +1955,15 @@ export function IMTAN(inumber) {
   return IMDIV(IMSIN(inumber), IMCOS(inumber))
 }
 
+/**
+ * Converts an octal number to binary.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The octal number you want to convert. Number may not contain more than 10 characters. The most significant bit of number is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, OCT2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function OCT2BIN(number, places) {
   // Return error if number is not hexadecimal or contains more than ten characters (10 digits)
   if (!/^[0-7]{1,10}$/.test(number)) {
@@ -1562,6 +2011,14 @@ export function OCT2BIN(number, places) {
   }
 }
 
+/**
+ * Converts an octal number to decimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The octal number you want to convert. Number may not contain more than 10 octal characters (30 bits). The most significant bit of number is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @returns
+ */
 export function OCT2DEC(number) {
   // Return error if number is not octal or contains more than ten characters (10 digits)
   if (!/^[0-7]{1,10}$/.test(number)) {
@@ -1575,6 +2032,15 @@ export function OCT2DEC(number) {
   return decimal >= 536870912 ? decimal - 1073741824 : decimal
 }
 
+/**
+ * Converts an octal number to hexadecimal.
+ *
+ * Category: Engineering
+ *
+ * @param {*} number The octal number you want to convert. Number may not contain more than 10 octal characters (30 bits). The most significant bit of number is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
+ * @param {*} places Optional. The number of characters to use. If places is omitted, OCT2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @returns
+ */
 export function OCT2HEX(number, places) {
   // Return error if number is not octal or contains more than ten characters (10 digits)
   if (!/^[0-7]{1,10}$/.test(number)) {

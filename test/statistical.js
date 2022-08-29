@@ -170,64 +170,6 @@ describe('Statistical', () => {
     ).should.equal(error.value)
   })
 
-  it('COLUMN', () => {
-    statistical.COLUMN().should.equal(error.na)
-    statistical
-      .COLUMN([
-        [1, 2],
-        [2, 3],
-        [2, 4]
-      ])
-      .should.equal(error.na)
-    statistical
-      .COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        -1
-      )
-      .should.equal(error.num)
-    statistical.COLUMN('hello', 1).should.equal(error.value)
-    statistical
-      .COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        0
-      )
-      .should.eql([[1], [2], [2]])
-    statistical
-      .COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        1
-      )
-      .should.eql([[2], [3], [4]])
-    ;(typeof statistical.COLUMN([], 0)).should.equal('undefined')
-  })
-
-  it('COLUMNS', () => {
-    statistical.COLUMNS().should.equal(error.na)
-    statistical.COLUMNS(1).should.equal(error.value)
-    statistical.COLUMNS([]).should.eql(0)
-    statistical
-      .COLUMNS([
-        [1, 2],
-        [2, 3],
-        [2, 4]
-      ])
-      .should.equal(2)
-    statistical.COLUMNS([[1, 2]]).should.equal(2)
-    statistical.COLUMNS([1, 2]).should.equal(1)
-  })
-
   it('CONFIDENCE.NORM', () => {
     statistical.CONFIDENCE.NORM(0.05, 2.5, 50).should.approximately(0.6929519121748391, 1e-9)
     statistical.CONFIDENCE.NORM(0.05, 'invalid', 50).should.equal(error.value)
@@ -947,21 +889,6 @@ describe('Statistical', () => {
     should.not.exist(statistical.ROW([], 3))
   })
 
-  it('ROWS', () => {
-    statistical.ROWS().should.equal(error.na)
-    statistical.ROWS(1).should.equal(error.value)
-    statistical.ROWS([]).should.eql(0)
-    statistical
-      .ROWS([
-        [1, 2],
-        [2, 3],
-        [2, 4]
-      ])
-      .should.equal(3)
-    statistical.ROWS([[1, 2]]).should.equal(1)
-    statistical.ROWS([1, 2]).should.equal(2)
-  })
-
   it('RSQ', () => {
     const y = [2, 3, 9, 1, 8, 7, 5]
     const x = [6, 5, 11, 7, 5, 4, 4]
@@ -1031,32 +958,6 @@ describe('Statistical', () => {
     statistical.STEYX(data_y, data_x).should.approximately(3.305718950210041, 1e-9)
     data_x.push('invalid')
     statistical.STEYX(data_y, data_x).should.equal(error.value)
-  })
-
-  it('TRANSPOSE', () => {
-    statistical.TRANSPOSE().should.equal(error.na)
-    statistical.TRANSPOSE([]).should.eql([])
-    statistical.TRANSPOSE([1, 2, 3]).should.eql([[1], [2], [3]])
-    statistical
-      .TRANSPOSE([
-        [1, 2],
-        [3, 4],
-        [5, 6]
-      ])
-      .should.eql([
-        [1, 3, 5],
-        [2, 4, 6]
-      ])
-    statistical
-      .TRANSPOSE([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-      .should.eql([
-        [1, 4],
-        [2, 5],
-        [3, 6]
-      ])
   })
 
   it('T.DIST', () => {

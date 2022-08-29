@@ -4,6 +4,73 @@ import * as error from '../src/utils/error.js'
 import * as lookup from '../src/lookup-reference.js'
 
 describe('Lookup Reference', () => {
+  it('CHOOSE', () => {
+    lookup.CHOOSE().should.equal(error.na)
+    lookup.CHOOSE(1).should.equal(error.na)
+    lookup.CHOOSE(1, 'jima').should.equal('jima')
+    lookup.CHOOSE(3, 'jima', 'jimb', 'jimc').should.equal('jimc')
+    lookup.CHOOSE(2, 'jima').should.equal(error.value)
+    lookup.CHOOSE(255, 'jima').should.equal(error.value)
+  })
+
+  it('COLUMN', () => {
+    lookup.COLUMN().should.equal(error.na)
+    lookup
+      .COLUMN([
+        [1, 2],
+        [2, 3],
+        [2, 4]
+      ])
+      .should.equal(error.na)
+    lookup
+      .COLUMN(
+        [
+          [1, 2],
+          [2, 3],
+          [2, 4]
+        ],
+        -1
+      )
+      .should.equal(error.num)
+    lookup.COLUMN('hello', 1).should.equal(error.value)
+    lookup
+      .COLUMN(
+        [
+          [1, 2],
+          [2, 3],
+          [2, 4]
+        ],
+        0
+      )
+      .should.eql([[1], [2], [2]])
+    lookup
+      .COLUMN(
+        [
+          [1, 2],
+          [2, 3],
+          [2, 4]
+        ],
+        1
+      )
+      .should.eql([[2], [3], [4]])
+    ;(typeof lookup.COLUMN([], 0)).should.equal('undefined')
+  })
+
+  it('COLUMNS', () => {
+    lookup.COLUMNS().should.equal(error.na)
+    lookup.COLUMNS(1).should.equal(error.value)
+    lookup.COLUMNS([]).should.eql(0)
+    lookup
+      .COLUMNS([
+        [1, 2],
+        [2, 3],
+        [2, 4]
+      ])
+      .should.equal(2)
+    lookup.COLUMNS([[1, 2]]).should.equal(2)
+    lookup.COLUMNS([1, 2]).should.equal(1)
+  })
+
   it('MATCH', () => {
     lookup.MATCH().should.equal(error.na)
     lookup.MATCH(1).should.equal(error.na)
@@ -26,6 +93,54 @@ describe('Lookup Reference', () => {
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3)
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], -1).should.equal(3)
     lookup.MATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 1).should.equal(2)
+  })
+
+  it('ROWS', () => {
+    lookup.ROWS().should.equal(error.na)
+    lookup.ROWS(1).should.equal(error.value)
+    lookup.ROWS([]).should.eql(0)
+    lookup
+      .ROWS([
+        [1, 2],
+        [2, 3],
+        [2, 4]
+      ])
+      .should.equal(3)
+    lookup.ROWS([[1, 2]]).should.equal(1)
+    lookup.ROWS([1, 2]).should.equal(2)
+  })
+
+  it('TRANSPOSE', () => {
+    lookup.TRANSPOSE().should.equal(error.na)
+    lookup.TRANSPOSE([]).should.eql([])
+    lookup.TRANSPOSE([1, 2, 3]).should.eql([[1], [2], [3]])
+    lookup
+      .TRANSPOSE([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+      ])
+      .should.eql([
+        [1, 3, 5],
+        [2, 4, 6]
+      ])
+    lookup
+      .TRANSPOSE([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+      .should.eql([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+  })
+
+  it('UNIQUE', () => {
+    lookup.UNIQUE(1, 2, 3, 4, 5, 6, 6, 3).should.containDeep([1, 2, 3, 4, 5, 6])
+    lookup.UNIQUE('jima', 'jimb', 'jima', 'jimc').should.containDeep(['jima', 'jimb', 'jimc'])
+    lookup.UNIQUE().should.eql([])
+    lookup.UNIQUE([]).should.eql([[]])
   })
 
   it('VLOOKUP', () => {
