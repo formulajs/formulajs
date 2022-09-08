@@ -229,9 +229,10 @@ export function MATCH(lookup_value, lookup_array, match_type) {
       }
     } else if (match_type === 0) {
       if (typeof lookup_value === 'string') {
-        lookup_value = lookup_value.replace(/\?/g, '.')
+        const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
+        const regex = new RegExp('^' + lookupValueStr + '$')
 
-        if (lookup_array[idx].toLowerCase().match(lookup_value.toLowerCase())) {
+        if (regex.test(lookup_array[idx].toLowerCase())) {
           return idx + 1
         }
       } else {
