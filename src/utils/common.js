@@ -202,15 +202,15 @@ function serialNumberToDate(serial) {
 
   const hours = Math.floor(total_seconds / (60 * 60))
   const minutes = Math.floor(total_seconds / 60) % 60
-  let days = date_info.getDate()
-  let month = date_info.getMonth()
+  let days = date_info.getUTCDate()
+  let month = date_info.getUTCMonth()
 
   if (serial >= 60 && serial < 61) {
     days = 29
     month = 1
   }
 
-  return new Date(date_info.getFullYear(), month, days, hours, minutes, seconds)
+  return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
 }
 
 export function parseDate(date) {
@@ -229,7 +229,7 @@ export function parseDate(date) {
   }
 
   if (typeof date === 'string') {
-    date = new Date(date)
+    date = /(\d{4})-(\d\d?)-(\d\d?)$/.test(date) ? new Date(date + 'T00:00:00.000') : new Date(date)
 
     if (!isNaN(date)) {
       return date
