@@ -103,6 +103,210 @@ describe('Lookup Reference', () => {
     lookup.MATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0).should.equal(3)
   })
 
+  it.only('XMATCH', () => {
+    // invalid inputs
+    lookup.XMATCH().should.equal(error.na);
+    lookup.XMATCH(1).should.equal(error.na);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], -2).should.equal(error.na);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 1, 0).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7]).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 0).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 0, 1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 0, -1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100], 0, 2).should.equal(error.na);
+    lookup.XMATCH(5, [100, 7, 4, 3, 2, 1, 0], 0, -2).should.equal(error.na);
+
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 2).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -2).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 2, 1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -2, 1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 2, -1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -2, -1).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100], 2, 2).should.equal(error.na);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100], -2, 2).should.equal(error.na);
+    lookup.XMATCH(5, [100, 7, 4, 3, 2, 1, 0], 2, -2).should.equal(error.na);
+    lookup.XMATCH(5, [100, 7, 4, 3, 2, 1, 0], -2, -2).should.equal(error.na);
+
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie']).should.equal(error.na);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 0, 1).should.equal(error.na);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 0, -1).should.equal(error.na);
+    lookup.XMATCH('j*b', ['bernie', 'jima', 'jimb', 'jimc'], 0, 2).should.equal(error.na);
+    lookup.XMATCH('j*b', ['jimc', 'jimb','jima', 'bernie'], 0, -2).should.equal(error.na);
+
+    lookup.XMATCH('j?b', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j?b', ['jima', 'jimb', 'jimc', 'bernie'], 0, 1).should.equal(error.na);
+    lookup.XMATCH('j?b', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(error.na);
+    lookup.XMATCH('j?b', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(error.na);
+    lookup.XMATCH('j???b', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j???b', ['jima', 'jimb', 'jimc', 'bernie'], 0, 1).should.equal(error.na);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 0, 1).should.equal(error.na);
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 2).should.equal(error.na);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie']).should.equal(error.na);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 2, 1).should.equal(error.na);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 2, -1).should.equal(error.na);
+    lookup.XMATCH('jimc', ['bernie', 'jima', 'jimb', 'jimd'], 2, 2).should.equal(error.na);
+    lookup.XMATCH('jimc', ['jimd', 'jimb', 'jima', 'bernie'], 2, -2).should.equal(error.na);
+
+    lookup.XMATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(error.na);
+    lookup.XMATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 1).should.equal(error.na);
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(error.na);
+
+    // valid inputs
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7]).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 0).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 1).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], -1).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 2).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 2, 1).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 100, 7], 2, -1).should.equal(2);
+    lookup.XMATCH(1, [0, 1, 2, 3, 4, 7, 100], 2, 2).should.equal(2);
+    lookup.XMATCH(1, [100, 7, 4, 3, 2, 1, 0], 2, -2).should.equal(6);
+
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]]).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 0).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 1).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], -1).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 2).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 2, 1).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 2, -1).should.equal(2);
+    lookup.XMATCH(1, [[0], [1], [2], [3], [4]], 2, 2).should.equal(2);
+    lookup.XMATCH(1, [[4], [3], [2], [1], [0]], 2, -2).should.equal(4);
+
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7]).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], 0).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], 1).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], -1).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], 2).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], 2, 1).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 100, 7], 2, -1).should.equal(5);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 7, 100], 2, 2).should.equal(5);
+    lookup.XMATCH(4, [100, 7, 4, 3, 2, 1, 0], 2, -2).should.equal(3);
+    lookup.XMATCH(4, [0, 1, 2, 3, 4, 7, 100, 110], 2, 2).should.equal(5);
+    lookup.XMATCH(4, [110, 100, 7, 4, 3, 2, 1, 0], 2, -2).should.equal(4);
+
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 1).should.equal(7);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -1).should.equal(5);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 1, 1).should.equal(7);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -1, 1).should.equal(5);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], 1, -1).should.equal(7);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 100, 7], -1, -1).should.equal(5);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100], 1, 2).should.equal(6);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100], -1, 2).should.equal(5);
+    lookup.XMATCH(5, [100, 7, 4, 3, 2, 1, 0], 1, -2).should.equal(2);
+    lookup.XMATCH(5, [100, 7, 4, 3, 2, 1, 0], -1, -2).should.equal(3);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100, 110], 1, 2).should.equal(6);
+    lookup.XMATCH(5, [0, 1, 2, 3, 4, 7, 100, 110], -1, 2).should.equal(5);
+    lookup.XMATCH(5, [110, 100, 7, 4, 3, 2, 1, 0], 1, -2).should.equal(3);
+    lookup.XMATCH(5, [110, 100, 7, 4, 3, 2, 1, 0], -1, -2).should.equal(4);
+
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie']).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(1);
+    lookup.XMATCH('jima', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(1);
+    lookup.XMATCH('jima', ['bernie', 'jima', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('jima', ['jimc', 'jimb','jima', 'bernie'], 2, -2).should.equal(3);
+
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(1);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(4);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 1, 1).should.equal(1);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], -1, 1).should.equal(4);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 1, -1).should.equal(1);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], -1, -1).should.equal(4);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(2);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(2);
+    lookup.XMATCH('j*b', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(2);
+    lookup.XMATCH('j*b', ['bernie', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('j*b', ['jimc', 'jimb','jima', 'bernie'], 2, -2).should.equal(2);
+
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(1);
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(4);
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(2);
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(2);
+    lookup.XMATCH('j??b', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(2);
+    lookup.XMATCH('j??b', ['bernie', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('j??b', ['jimc', 'jimb','jima', 'bernie'], 2, -2).should.equal(2);
+
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(1);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(4);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(1);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(1);
+    lookup.XMATCH('j???', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(3);
+    lookup.XMATCH('j???', ['bernie', 'jima', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('j???', ['jimc', 'jimb','jima', 'bernie'], 2, -2).should.equal(2);
+
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(3);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(3);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(3);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(3);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(3);
+    lookup.XMATCH('jimc', ['bernie', 'jima', 'jimb', 'jimc'], 2, 2).should.equal(4);
+    lookup.XMATCH('jimc', ['jimc', 'jimb','jima', 'bernie'], 2, -2).should.equal(1);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], -1).should.equal(2);
+    lookup.XMATCH('jimc', ['jima', 'jimb', 'jimd', 'bernie'], 1).should.equal(3);
+
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na);
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(1);
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], -1).should.equal(4);
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(1);
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(1);
+    lookup.XMATCH('ji**', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(3);
+    lookup.XMATCH('ji**', ['bernie', 'jima', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('ji**', ['jimc', 'jimb', 'jima', 'bernie'], 2, -2).should.equal(2);
+
+    lookup.XMATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(4);
+    lookup.XMATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(3);
+    lookup.XMATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(3);
+    lookup.XMATCH('*mc', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(3);
+
+    lookup.XMATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(4);
+    lookup.XMATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(4);
+    lookup.XMATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(4);
+    lookup.XMATCH('*er*', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(4);
+    lookup.XMATCH('*er*', ['bernie', 'jima', 'jimb', 'jimc'], 2, 2).should.equal(1);
+    lookup.XMATCH('*er*', ['jimc', 'jimb', 'jima', 'bernie'], 2, -2).should.equal(4);
+
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 1).should.equal(2);
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], -1).should.equal(1);
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 2).should.equal(1);
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(1);
+    lookup.XMATCH('jima~.', ['jima.', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(1);
+    lookup.XMATCH('jima~.', ['bernie', 'jima.', 'jimb', 'jimc'], 2, 2).should.equal(2);
+    lookup.XMATCH('jima~.', ['jimc', 'jimb', 'jima.', 'bernie'], 2, -2).should.equal(3);
+
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], -1).should.equal(3);
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 2).should.equal(1);
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(1);
+    lookup.XMATCH('j~$ma', ['j$ma', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(1);
+    lookup.XMATCH('j~$ma', ['bernie', 'j$ma', 'jimb', 'jimc'], 2, 2).should.equal(2);
+
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 1).should.equal(4);
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 2).should.equal(3);
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 2, 1).should.equal(3);
+    lookup.XMATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 2, -1).should.equal(3);
+
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 1).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], -1).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 2).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 2, 1).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 2, -1).should.equal(3);
+    lookup.XMATCH('selected', ['not_selected', 'not_selected', 'not_selected', 'selected'], 2, 2).should.equal(4);
+    lookup.XMATCH('selected', ['selected', 'not_selected', 'not_selected', 'not_selected'], 2, -2).should.equal(1);
+  })
+
   it('ROWS', () => {
     lookup.ROWS().should.equal(error.na)
     lookup.ROWS(1).should.equal(error.value)
