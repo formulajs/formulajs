@@ -649,3 +649,114 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
 
   return result
 }
+
+/**
+ * Filters an array based on a Boolean (True/False) array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The array, or range to filter. E.g. [[1,2,3],[4,5,6]]
+ * @param {*} include A boolean array whose height or width is the same as the array. E.g. [[true, false, true]] OR [[true],[false]]
+ * @param {*} if_empty Optional. The value to return if all values in the included array are empty (filter returns nothing). E.g. "No results"
+ * @returns
+ */
+export function FILTER(array, include, if_empty) {
+  // correct types
+  if (!array || !include) {
+    return error.na
+  }
+
+  if (!(array instanceof Array)) {
+    return error.na
+  }
+
+  if (!(include instanceof Array)) {
+    return error.na
+  }
+
+  // array lengths must be greater than 0 and symmetrical
+  if (array.length === 0) {
+    return error.na
+  }
+
+  if (include.length === 0) {
+    return error.na
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    if (!(array[i] instanceof Array)) {
+      return error.na
+    }
+
+    if (array[i].length === 0) {
+      return error.na
+    }
+
+    if (array[i].length !== array[0].length) {
+      return error.na
+    }
+  }
+
+  for (let i = 0; i < include.length; i++) {
+    if (!(include[i] instanceof Array)) {
+      return error.na
+    }
+
+    if (include[i].length === 0) {
+      return error.na
+    }
+
+    if (include[i].length !== include[0].length) {
+      return error.na
+    }
+  }
+
+  const arrayWidth = array[0].length
+  const arrayHeight = array.length
+  const includeWidth = include[0].length
+  const includeHeight = include.length
+
+  // include array must have same width or height as array (and generally not both)
+  if (arrayWidth !== includeWidth && arrayHeight !== includeHeight) {
+    return error.na
+  }
+
+  if (
+    arrayHeight > 1 &&
+    arrayWidth > 1 &&
+    ((arrayWidth === includeWidth && includeHeight !== 1) || (arrayHeight === includeHeight && includeWidth !== 1))
+  ) {
+    return error.na
+  }
+
+  if (
+    arrayHeight > 1 &&
+    arrayWidth === 1 &&
+    (includeWidth !== 1 || (includeHeight !== 1 && includeHeight !== arrayHeight))
+  ) {
+    return error.na
+  }
+
+  // filter
+  const result = []
+  for (let i = 0; i < arrayHeight; i++) {
+    const row = []
+    for (let j = 0; j < arrayWidth; j++) {
+      const value = include[i]?.[j] ?? include[0]?.[j] ?? include[i]?.[0]
+      const bool = utils.parseBool(value)
+      if (bool === true) row.push(array[i][j])
+      else if (bool instanceof Error) return bool
+    }
+    if (row.length > 0) result.push(row)
+  }
+
+  if (result.length === 0) {
+    if (if_empty != null) {
+      return if_empty
+    }
+
+    return error.calc
+  }
+
+  return result
+}
