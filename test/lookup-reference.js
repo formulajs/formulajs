@@ -103,7 +103,7 @@ describe('Lookup Reference', () => {
     lookup.MATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0).should.equal(3)
   })
 
-  it.only('XMATCH', () => {
+  it('XMATCH', () => {
     // invalid inputs
     lookup.XMATCH().should.equal(error.na)
     lookup.XMATCH(1).should.equal(error.na)
