@@ -101,11 +101,11 @@ describe('Lookup Reference', () => {
       lookup.MATCH('*?c', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(3)
       lookup.MATCH('*$c', ['jima', 'jimb', 'jimc', 'bernie'], 0).should.equal(error.na)
       lookup.MATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0).should.equal(3)
-    });
+    })
 
     it('should work with mixed type elements in the lookup_array', () => {
       lookup.MATCH('jimc', ['jima', 4, null, undefined, 'jimc', 'bernie'], 0).should.equal(5)
-    });
+    })
   })
 
   it('ROWS', () => {

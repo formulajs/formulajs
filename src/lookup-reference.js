@@ -232,9 +232,9 @@ export function MATCH(lookup_value, lookup_array, match_type) {
         const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
         const regex = new RegExp('^' + lookupValueStr + '$')
 
-        let lookupArrayElement = lookup_array[idx];
+        let lookupArrayElement = lookup_array[idx]
         if (typeof lookupArrayElement !== 'string') {
-          continue;
+          continue
         }
 
         if (regex.test(lookupArrayElement.toLowerCase())) {
