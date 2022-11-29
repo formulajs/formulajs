@@ -760,3 +760,131 @@ export function FILTER(array, include, if_empty) {
 
   return result
 }
+
+/**
+ * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The range, or array to sort.
+ * @param {*} sort_index Optional. A number indicating the row or column to sort by. Default is 1.
+ * @param {*} sort_order Optional. A number indicating the sort order. 1 for ascending, -1 for descending. Default is 1.
+ * @param {*} by_col Optional. A logical value indicating the desired sort direction. FALSE to sort by row. TRUE to sort by column. Default is FALSE.
+ * @returns
+ */
+ export function SORT(array, sort_index, sort_order, by_col) {
+  // array
+  if (!array) {
+    return error.na
+  }
+
+  if (!(array instanceof Array)) {
+    return error.na
+  }
+
+  if (array.length === 0) {
+    return error.na
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    if (!(array[i] instanceof Array)) {
+      return error.na
+    }
+
+    if (array[i].length === 0) {
+      return error.na
+    }
+
+    if (array[i].length !== array[0].length) {
+      return error.na
+    }
+  }
+
+  const arrayWidth = array[0].length
+  const arrayHeight = array.length
+
+   // by_col
+   if (by_col == null) {
+    by_col = "FALSE"
+  }
+
+  const byCol = utils.parseBool(by_col)
+  if (typeof byCol !== 'boolean') {
+    return error.na
+  }
+
+  // sort_index
+  if (sort_index == null) {
+    sort_index = 1
+  }
+
+  if (typeof sort_index !== 'number') {
+    return error.na
+  }
+
+  if (sort_index < 1) {
+    return error.na
+  }
+
+  if (byCol && sort_index > arrayHeight) {
+    return error.na
+  }
+
+  if (!byCol && sort_index > arrayWidth) {
+    return error.na
+  }
+
+  // sort_order
+  if (sort_order == null) {
+    sort_order = 1
+  }
+
+  if (sort_order !== 1 && sort_order !== -1) {
+    return error.na
+  }
+
+  // sort
+  let result = []
+  if (byCol) {
+    for (let i = 0; i < arrayWidth; i++) {
+      const col = []
+      for (let j = 0; j < arrayHeight; j++) {
+        col.push(array[j][i])
+      }
+
+      const sortedCol = col.sort((a, b) => {
+        if (a[sort_index - 1] < b[sort_index - 1]) {
+          return -1 * sort_order
+        }
+
+        if (a[sort_index - 1] > b[sort_index - 1]) {
+          return 1 * sort_order
+        }
+
+        return 0
+      })
+
+      result.push(sortedCol)
+    }
+
+    for (let i = 0; i < arrayHeight; i++) {
+      for (let j = 0; j < arrayWidth; j++) {
+        result[i][j] = result[j][i]
+      }
+    }
+  } else {
+    result = array.sort((a, b) => {
+      if (a[sort_index - 1] < b[sort_index - 1]) {
+        return -1 * sort_order
+      }
+
+      if (a[sort_index - 1] > b[sort_index - 1]) {
+        return 1 * sort_order
+      }
+
+      return 0
+    })
+  }
+
+  return result
+}
