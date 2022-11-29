@@ -1161,4 +1161,22 @@ describe('Lookup Reference', () => {
       lookup.FILTER([[1, 2, 3]]).should.equal(error.na)
     })
   })
+
+  describe('SORT', () => {
+    it('should sort array', () => {
+      lookup.SORT([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ],
+      1,
+      1,
+      true
+      ).should.eql([
+        [7, 8, 9],
+        [4, 5, 6],
+        [1, 2, 3]
+      ])
+    })
+  })
 })
