@@ -72,9 +72,13 @@ describe('Lookup Reference', () => {
   })
 
   describe('MATCH', () => {
-    it('should return the following values', () => {
+    it('should throw an error in case of missing arguments', () => {
       lookup.MATCH().should.equal(error.na)
       lookup.MATCH(1).should.equal(error.na)
+      lookup.MATCH(null, 1).should.equal(error.na)
+    })
+
+    it('should return the following values', () => {
       lookup.MATCH(1, [0, 1, 2, 3, 4, 100, 7]).should.equal(2)
       lookup.MATCH(1, [[0], [1], [2], [3], [4]]).should.equal(2)
       lookup.MATCH(4, [0, 1, 2, 3, 4, 100, 7], 1).should.equal(5)

@@ -193,7 +193,7 @@ export function LOOKUP(lookup_value, array, result_array) {
  * @returns
  */
 export function MATCH(lookup_value, lookup_array, match_type) {
-  if (!lookup_value && !lookup_array) {
+  if (!lookup_value || !lookup_array) {
     return error.na
   }
 
@@ -228,16 +228,11 @@ export function MATCH(lookup_value, lookup_array, match_type) {
         }
       }
     } else if (match_type === 0) {
-      if (typeof lookup_value === 'string') {
+      if (typeof lookup_value === 'string' && typeof lookup_array[idx] === 'string') {
         const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
         const regex = new RegExp('^' + lookupValueStr + '$')
 
-        let lookupArrayElement = lookup_array[idx]
-        if (typeof lookupArrayElement !== 'string') {
-          continue
-        }
-
-        if (regex.test(lookupArrayElement.toLowerCase())) {
+        if (regex.test(lookup_array[idx].toLowerCase())) {
           return idx + 1
         }
       } else {
