@@ -106,7 +106,7 @@ export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) 
  *
  * Category: Lookup and reference
  *
- * @param {*} array A range of values or an array constant. 
+ * @param {*} array A range of values or an array constant.
  - If array contains only one row or column, the corresponding row_num or column_num argument is optional.
  - If array has more than one row and more than one column, and only row_num or column_num is used, INDEX returns an array of the entire row or column in array.
  * @param {*} row_num Required, unless column_num is present. Selects the row in array from which to return a value. If row_num is omitted, column_num is required.
@@ -193,7 +193,7 @@ export function LOOKUP(lookup_value, array, result_array) {
  * @returns
  */
 export function MATCH(lookup_value, lookup_array, match_type) {
-  if (!lookup_value && !lookup_array) {
+  if (!lookup_value || !lookup_array) {
     return error.na
   }
 
@@ -228,7 +228,7 @@ export function MATCH(lookup_value, lookup_array, match_type) {
         }
       }
     } else if (match_type === 0) {
-      if (typeof lookup_value === 'string') {
+      if (typeof lookup_value === 'string' && typeof lookup_array[idx] === 'string') {
         const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
         const regex = new RegExp('^' + lookupValueStr + '$')
 
