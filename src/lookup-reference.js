@@ -810,7 +810,7 @@ export function FILTER(array, include, if_empty) {
 
   const byCol = utils.parseBool(by_col)
   if (typeof byCol !== 'boolean') {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   // sort_index
@@ -819,19 +819,19 @@ export function FILTER(array, include, if_empty) {
   }
 
   if (typeof sort_index !== 'number') {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   if (sort_index < 1) {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   if (byCol && sort_index > arrayHeight) {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   if (!byCol && sort_index > arrayWidth) {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   // sort_order
@@ -840,50 +840,64 @@ export function FILTER(array, include, if_empty) {
   }
 
   if (sort_order !== 1 && sort_order !== -1) {
-    return error.na
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
   // sort
   let result = []
   if (byCol) {
+    let columns = []
     for (let i = 0; i < arrayWidth; i++) {
-      const col = []
+      const column = []
       for (let j = 0; j < arrayHeight; j++) {
-        col.push(array[j][i])
+        column.push(array[j][i])
       }
-
-      const sortedCol = col.sort((a, b) => {
-        if (a[sort_index - 1] < b[sort_index - 1]) {
-          return -1 * sort_order
-        }
-
-        if (a[sort_index - 1] > b[sort_index - 1]) {
-          return 1 * sort_order
-        }
-
-        return 0
-      })
-
-      result.push(sortedCol)
+      columns.push(column)
     }
 
-    for (let i = 0; i < arrayHeight; i++) {
-      for (let j = 0; j < arrayWidth; j++) {
-        result[i][j] = result[j][i]
-      }
-    }
-  } else {
-    result = array.sort((a, b) => {
-      if (a[sort_index - 1] < b[sort_index - 1]) {
+    const sortedColumns = columns.sort((a, b) => {
+      // NOTE: Excel sorts all values as strings, e.g. 1 => "1"
+      if (a[sort_index - 1].toString() < b[sort_index - 1].toString()) {
         return -1 * sort_order
       }
 
-      if (a[sort_index - 1] > b[sort_index - 1]) {
+      if (a[sort_index - 1].toString() > b[sort_index - 1].toString()) {
         return 1 * sort_order
       }
 
       return 0
     })
+
+    for (let i = 0; i < arrayHeight; i++) {
+      const row = []
+      for (let j = 0; j < arrayWidth; j++) {
+        row.push(sortedColumns[j][i])
+      }
+
+      result.push(row)
+    }
+  } else {
+    result = array.sort((a, b) => {
+      // NOTE: Excel sorts all values as strings, e.g. 1 => "1"
+      if (a[sort_index - 1].toString() < b[sort_index - 1].toString()) {
+        return -1 * sort_order
+      }
+
+      if (a[sort_index - 1].toString() > b[sort_index - 1].toString()) {
+        return 1 * sort_order
+      }
+
+      return 0
+    })
+  }
+
+  // replace empty strings with zeros
+  for (let i = 0; i < result.length; i++) {
+    for (let j = 0; j < result[i].length; j++) {
+      if (result[i][j] === '') {
+        result[i][j] = 0
+      }
+    }
   }
 
   return result

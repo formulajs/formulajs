@@ -271,3 +271,171 @@ describe('Utils => common', () => {
     })
   })
 })
+
+describe('addEmptyValuesToArray', () => {
+  it('should add empty values to both columns and rows', () => {
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+      [1, 2],
+      [1],
+      [],
+      [1, 2, 3, 4],
+    ], 4, 6).should.eql([
+      [1, 2, 3, ""],
+      [1, 2, "", ""],
+      [1, "", "", ""],
+      ["", "", "", ""],
+      [1, 2, 3, 4],
+      ["", "", "", ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+    ], 3, 3).should.eql([
+      [1, 2, 3],
+      ["", "", ""],
+      ["", "", ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [],
+    ], 3, 3).should.eql([
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ])
+  })
+
+  it('should add empty values to columns only', () => {
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+      [1, 2],
+      [1],
+      [],
+      [1, 2, 3, 4],
+    ], 5, 5).should.eql([
+      [1, 2, 3, "", ""],
+      [1, 2, "", "", ""],
+      [1, "", "", "", ""],
+      ["", "", "", "", ""],
+      [1, 2, 3, 4, ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+    ], 4, 1).should.eql([
+      [1, 2, 3, ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [],
+    ], 4, 1).should.eql([
+      ["", "", "", ""],
+    ])
+  })
+
+  it('should add empty values to rows only', () => {
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+    ], 3, 5).should.eql([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+      ["", "", ""],
+      ["", "", ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+    ], 3, 4).should.eql([
+      [1, 2, 3],
+      ["", "", ""],
+      ["", "", ""],
+      ["", "", ""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [""],
+    ], 1, 4).should.eql([
+      [""],
+      [""],
+      [""],
+      [""],
+    ])
+  })
+
+  it('should not add empty values', () => {
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+    ], 3, 3).should.eql([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+    ], 3, 1).should.eql([
+      [1, 2, 3],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [],
+    ], 0, 1).should.eql([
+      [],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [""],
+    ], 1, 1).should.eql([
+      [""],
+    ])
+  })
+
+  it('return original array if there are invalid inputs', () => {
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+    ], -1, -1).should.eql([
+      [1, 2, 3],
+      [1, 2, 3],
+      [1, 2, 3],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [1, 2, 3],
+    ], 3, -1).should.eql([
+      [1, 2, 3],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [],
+    ], -1, 1).should.eql([
+      [],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [""],
+    ]).should.eql([
+      [""],
+    ])
+
+    utils.addEmptyValuesToArray([
+      [""],
+    ], 1).should.eql([
+      [""],
+    ])
+
+    utils.addEmptyValuesToArray(1, 1, 1).should.eql(1)
+    utils.addEmptyValuesToArray("1", 1, 1).should.eql("1")
+    utils.addEmptyValuesToArray(true, 1, 1).should.eql(true)
+    utils.addEmptyValuesToArray(false, 1, 1).should.eql(false)
+    utils.addEmptyValuesToArray({}, 1, 1).should.eql({})
+    utils.addEmptyValuesToArray([], 1, 1).should.eql([])
+  })
+});
