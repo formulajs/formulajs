@@ -1052,7 +1052,7 @@ describe('Lookup Reference', () => {
             [true, true, true]
           ]
         )
-        .should.equal(error.na)
+        .should.eql(error.na)
     })
 
     it('should return error if filter array contains invalid non-boolean values', () => {
@@ -1065,7 +1065,11 @@ describe('Lookup Reference', () => {
           ],
           [[true, false, 'a']]
         )
-        .should.equal([[error.value, "", ""], ["", "", ""], ["", "", ""]])
+        .should.eql([
+          [error.value, "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
 
       lookup
         .FILTER(
@@ -1076,11 +1080,15 @@ describe('Lookup Reference', () => {
           ],
           [[true, 'falsee', 'truee']]
         )
-        .should.equal([[error.value, "", ""], ["", "", ""], ["", "", ""]])
+        .should.eql([
+          [error.value, "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
 
-      lookup.FILTER([[1, 2, 3]], [[true, false, 'TRUEE']]).should.equal([[error.value, "", ""]])
+      lookup.FILTER([[1, 2, 3]], [[true, false, 'TRUEE']]).should.eql([[error.value, "", ""]])
 
-      lookup.FILTER([[1, 2, 3]], [[true, '', false]]).should.equal([[error.value, "", ""]])
+      lookup.FILTER([[1, 2, 3]], [[true, '', false]]).should.eql([[error.value, "", ""]])
     })
 
     it('should return filtered array if filter array contains valid non-boolean values', () => {

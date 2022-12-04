@@ -745,18 +745,18 @@ export function FILTER(array, include, if_empty) {
       const value = include[i]?.[j] ?? include[0]?.[j] ?? include[i]?.[0]
       const bool = utils.parseBool(value)
       if (bool === true) row.push(array[i][j])
-      else if (bool instanceof Error) return bool
+      else if (bool instanceof Error) return utils.addEmptyValuesToArray([[bool]], arrayWidth, arrayHeight)
     }
     if (row.length > 0) result.push(row)
   }
 
   if (result.length === 0) {
     if (if_empty != null) {
-      return if_empty
+      return utils.addEmptyValuesToArray([[if_empty]], arrayWidth, arrayHeight)
     }
 
-    return error.calc
+    return utils.addEmptyValuesToArray([[error.calc]], arrayWidth, arrayHeight)
   }
 
-  return result
+  return utils.addEmptyValuesToArray(result, arrayWidth, arrayHeight)
 }
