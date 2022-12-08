@@ -296,7 +296,7 @@ describe('Text', () => {
     text.T(true).should.equal('')
   })
 
-  it.only('TEXT', () => {
+  it('TEXT', () => {
     text.TEXT().should.equal(error.na)
     text.TEXT('value').should.equal(error.na)
     text.TEXT("VALUE", "").should.equal(error.value)
