@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "bessel": "^1.0.2",
+    "decimal.js": "^10.4.3",
     "jstat": "^1.9.5"
   },
   "devDependencies": {
