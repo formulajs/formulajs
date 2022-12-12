@@ -156,10 +156,22 @@ describe('Text', () => {
     text.MID(0).should.equal(error.value)
   })
 
-  it('NUMBERVALUE', () => {
-    text.NUMBERVALUE('2.500,27', ',', '.').should.equal(2500.27)
-    text.NUMBERVALUE('250', ',', '.').should.equal(250)
-    // text.NUMBERVALUE("3.5%").should.equal(.035);
+  describe('NUMBERVALUE', () => {
+    it('should parse text value', () => {
+      text.NUMBERVALUE('2.500,27', ',', '.').should.equal(2500.27)
+      text.NUMBERVALUE('250', ',', '.').should.equal(250)
+      text.NUMBERVALUE('', ',', '.').should.equal(0)
+      // text.NUMBERVALUE("3.5%").should.equal(.035);
+    })
+
+    it('should work with empty inputs', () => {
+      text.NUMBERVALUE(null, ',', '.').should.equal(0)
+      text.NUMBERVALUE(undefined, ',', '.').should.equal(0)
+    })
+
+    it('should throw an error in case of text input different from string', () => {
+      text.NUMBERVALUE(true).should.equal(error.na)
+    })
   })
 
   it('PRONETIC', () => {
@@ -370,11 +382,14 @@ describe('Text', () => {
   })
 
   describe('VALUE', () => {
-    it('should thrown an error in case of null, empty, error input', () => {
+    it('should thrown an error in case of error input', () => {
       text.VALUE(error.na).should.equal(error.na)
-      text.VALUE('').should.equal(error.value)
-      text.VALUE(null).should.equal(error.value)
-      text.VALUE().should.equal(error.value)
+    })
+
+    it('should return 0 in case of null, empty input', () => {
+      text.VALUE('').should.equal(0)
+      text.VALUE().should.equal(0)
+      text.VALUE(null).should.equal(0)
     })
 
     it('should thrown an error in case of boolean input', () => {

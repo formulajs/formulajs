@@ -373,6 +373,12 @@ export function MID(text, start_num, num_chars) {
  * @returns
  */
 export function NUMBERVALUE(text, decimal_separator, group_separator) {
+  text = utils.isDefined(text) ? text : ''
+
+  if (typeof text !== 'string') {
+    return error.na
+  }
+
   decimal_separator = typeof decimal_separator === 'undefined' ? '.' : decimal_separator
   group_separator = typeof group_separator === 'undefined' ? ',' : group_separator
 
@@ -747,6 +753,10 @@ export function VALUE(text) {
     return text
   }
 
+  if (!utils.isDefined(text)) {
+    text = ''
+  }
+
   if (typeof text !== 'string') {
     return error.value
   }
@@ -757,7 +767,7 @@ export function VALUE(text) {
   text = text.replace(/[ ,]/g, '')
 
   if (text === '') {
-    return error.value
+    return 0
   }
 
   let output = Number(text)
