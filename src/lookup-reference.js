@@ -386,7 +386,6 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
  * @returns
  */
  export function SORT(array, sort_index, sort_order, by_col) {
-  // array
   if (!array) {
     return error.na
   }
@@ -416,7 +415,6 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
   const arrayWidth = array[0].length
   const arrayHeight = array.length
 
-   // by_col
    if (by_col == null) {
     by_col = "FALSE"
   }
@@ -426,7 +424,6 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
     return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
-  // sort_index
   if (sort_index == null) {
     sort_index = 1
   }
@@ -447,7 +444,6 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
     return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
-  // sort_order
   if (sort_order == null) {
     sort_order = 1
   }
@@ -456,7 +452,6 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
     return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
   }
 
-  // sort
   let result = []
   if (byCol) {
     let columns = []
