@@ -60,3 +60,33 @@ export function NUMBERS() {
 
   return possibleNumbers.filter((el) => typeof el === 'number')
 }
+
+/**
+ * SINGLE (@ symbol)
+ *
+ * Implicit intersection - Reduces many values to a single value, e.g. [[1, 2], [3, 4]] -> 1. Supports Excel versions without dynamic array functionality.
+ *
+ * @param {*} values
+ * @returns
+ */
+export function SINGLE(value) {
+  if (value instanceof Array) {
+    for (let i = 0; i < value.length; i++) {
+      if (!(value[i] instanceof Array)) {
+        return error.na
+      }
+
+      if (value[i].length === 0) {
+        return error.na
+      }
+
+      if (value[i].length !== value[0].length) {
+        return error.na
+      }
+    }
+
+    return value[0][0]
+  }
+
+  return value
+}

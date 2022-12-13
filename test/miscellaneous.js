@@ -51,4 +51,26 @@ describe('Miscellaneous', () => {
     misc.REFERENCE().should.equal(error.error)
     should.not.exist(misc.REFERENCE(ctx, 'name.address2'))
   })
+
+  it('SINGLE', () => {
+    misc
+      .SINGLE([
+        [1, 2],
+        [3, 4]
+      ])
+      .should.equal(1)
+
+    misc.SINGLE([[1, 2]]).should.equal(1)
+    misc.SINGLE([[1]]).should.equal(1)
+    misc.SINGLE('A').should.equal('A')
+    misc.SINGLE(1).should.equal(1)
+    misc.SINGLE([null]).should.equal(error.na)
+    misc.SINGLE([1]).should.equal(error.na)
+    misc.SINGLE([1, 2]).should.equal(error.na)
+    misc.SINGLE([1, 2], [3, 4]).should.equal(error.na)
+    misc.SINGLE([[1, 2], [1]]).should.equal(error.na)
+    misc.SINGLE([[]]).should.equal(error.na)
+    misc.SINGLE([[], []]).should.equal(error.na)
+    misc.SINGLE([[], [1]]).should.equal(error.na)
+  })
 })
