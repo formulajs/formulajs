@@ -1,6 +1,6 @@
 {
   "name": "@formulajs/formulajs",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "homepage": "https://github.com/formulajs/formulajs#readme",
