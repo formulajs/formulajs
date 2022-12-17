@@ -390,7 +390,7 @@ describe('Text', () => {
       text.VALUE(error.na).should.equal(error.na)
     })
 
-    it('should return the input in case of number input',()=>{
+    it('should return the input in case of number input', () => {
       text.VALUE(3).should.equal(3)
     })
 
