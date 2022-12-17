@@ -201,11 +201,11 @@ export function MATCH(lookup_value, lookup_array, match_type) {
     match_type = 1
   }
 
+  lookup_array = utils.flatten(lookup_array)
+
   if (!(lookup_array instanceof Array)) {
     return error.na
   }
-
-  lookup_array = utils.flatten(lookup_array)
 
   if (match_type !== -1 && match_type !== 0 && match_type !== 1) {
     return error.na

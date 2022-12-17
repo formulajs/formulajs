@@ -2,7 +2,7 @@ import * as error from './error.js'
 
 export function flattenShallow(array) {
   if (!array || !array.reduce) {
-    return array
+    return [array]
   }
 
   return array.reduce((a, b) => {
@@ -164,9 +164,7 @@ export function parseNumberArray(arr) {
 }
 
 export function parseMatrix(matrix) {
-  const n = matrix.length
-
-  if (!matrix || n === 0) {
+  if (!matrix || (matrix.length && matrix.length === 0)) {
     return error.value
   }
 

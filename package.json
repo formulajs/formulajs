@@ -42,10 +42,10 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "stats": "node ./bin/implementation-stats.js",
-    "test": "mocha",
-    "test:browser": "mocha --reporter mochawesome",
+    "test": "mocha \"test/**/*.js\"",
+    "test:browser": "mocha \"test/**/*.js\" --reporter mochawesome",
     "test:coverage": "c8 mocha",
-    "test:watch": "mocha --watch --parallel --reporter min",
+    "test:watch": "mocha \"test/**/*.js\" --watch --parallel --reporter min",
     "types": "tsc"
   },
   "dependencies": {

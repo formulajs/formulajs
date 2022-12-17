@@ -110,6 +110,10 @@ describe('Lookup Reference', () => {
     it('should work with mixed type elements in the lookup_array', () => {
       lookup.MATCH('jimc', ['jima', 4, null, undefined, 'jimc', 'bernie'], 0).should.equal(5)
     })
+
+    it('should work with a single value lookup_array', () => {
+      lookup.MATCH('test', 'test').should.equal(1)
+    })
   })
 
   it('ROWS', () => {
