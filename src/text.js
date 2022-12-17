@@ -375,6 +375,10 @@ export function MID(text, start_num, num_chars) {
 export function NUMBERVALUE(text, decimal_separator, group_separator) {
   text = utils.isDefined(text) ? text : ''
 
+  if (typeof text === 'number') {
+    return text
+  }
+
   if (typeof text !== 'string') {
     return error.na
   }

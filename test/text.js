@@ -169,6 +169,10 @@ describe('Text', () => {
       text.NUMBERVALUE(undefined, ',', '.').should.equal(0)
     })
 
+    it('should work with number input', () => {
+      text.NUMBERVALUE(3).should.equal(3)
+    })
+
     it('should throw an error in case of text input different from string', () => {
       text.NUMBERVALUE(true).should.equal(error.na)
     })
@@ -384,6 +388,10 @@ describe('Text', () => {
   describe('VALUE', () => {
     it('should thrown an error in case of error input', () => {
       text.VALUE(error.na).should.equal(error.na)
+    })
+
+    it('should return the input in case of number input',()=>{
+      text.VALUE(3).should.equal(3)
     })
 
     it('should return 0 in case of null, empty input', () => {
