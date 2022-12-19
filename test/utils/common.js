@@ -32,16 +32,44 @@ describe('Utils => common', () => {
     utils.isFlat().should.equal(false)
   })
 
-  it('flatten', () => {
-    should.deepEqual(
-      utils.flatten([
-        [1, 2],
-        [3, 4]
-      ]),
-      [1, 2, 3, 4]
-    )
+  describe.only('flatten', () => {
+    describe('with Array arguments', () => {
+      it('should flatten an array', () => {
+        should.deepEqual(
+          utils.flatten([
+            [1, 2],
+            [3, 4]
+          ]),
+          [1, 2, 3, 4]
+        )
 
-    should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
+        should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
+
+        should.deepEqual(utils.flatten(['test']), ['test'])
+      })
+
+      it('should force array type return', () => {
+        should.deepEqual(utils.flatten('test'), ['test'])
+      })
+
+      it('should return an empty array', () => {
+        should.deepEqual(utils.flatten(), [])
+      })
+    })
+
+    describe('with Arguments as arguments', () => {
+      it('should force array type return', () => {
+        ;(function () {
+          should.deepEqual(utils.flatten(arguments), ['test'])
+        })('test')
+      })
+
+      it('should return an empty array', () => {
+        ;(function () {
+          should.deepEqual(utils.flatten(arguments), [])
+        })()
+      })
+    })
   })
 
   it('argsToArray', () => {
