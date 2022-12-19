@@ -42,6 +42,10 @@ export function isFlat(array) {
 }
 
 export function flatten() {
+  if (arguments.length === 0) {
+    return []
+  }
+
   let result = argsToArray.apply(null, arguments)
 
   while (!isFlat(result)) {

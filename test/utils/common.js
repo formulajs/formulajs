@@ -34,7 +34,7 @@ describe('Utils => common', () => {
 
   describe.only('flatten', () => {
     describe('with Array arguments', () => {
-      it('should flatten an array', () => {
+      it('should merge and flatten argument', () => {
         should.deepEqual(
           utils.flatten([
             [1, 2],
@@ -45,11 +45,14 @@ describe('Utils => common', () => {
 
         should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
 
+        should.deepEqual(utils.flatten(1, 2, [3, 4], [[5, 6]]), [1, 2, 3, 4, 5, 6])
+
         should.deepEqual(utils.flatten(['test']), ['test'])
       })
 
       it('should force array type return', () => {
         should.deepEqual(utils.flatten('test'), ['test'])
+        should.deepEqual(utils.flatten(12), [12])
       })
 
       it('should return an empty array', () => {
@@ -58,10 +61,20 @@ describe('Utils => common', () => {
     })
 
     describe('with Arguments as arguments', () => {
+      it('should merge and flatten arguments', () => {
+        ;(function () {
+          should.deepEqual(utils.flatten(arguments), [1, 2, 3, 4, 5, 6])
+        })(1, 2, [3, 4], [[5, 6]])
+      })
+
       it('should force array type return', () => {
         ;(function () {
           should.deepEqual(utils.flatten(arguments), ['test'])
         })('test')
+
+        ;(function () {
+          should.deepEqual(utils.flatten(arguments), [12])
+        })(12)
       })
 
       it('should return an empty array', () => {
