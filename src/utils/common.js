@@ -42,11 +42,8 @@ export function isFlat(array) {
 }
 
 export function flatten() {
-  if (arguments.length === 0) {
-    return []
-  }
-
   let result
+
   if (arguments.length === 1) {
     if (typeof arguments[0] !== 'object') {
       result = [arguments[0]]

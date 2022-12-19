@@ -33,8 +33,8 @@ describe('Utils => common', () => {
   })
 
   describe('flatten', () => {
-    describe('with Array arguments', () => {
-      it('should merge and flatten argument', () => {
+    describe('with direct arguments', () => {
+      it('should merge and flatten arguments', () => {
         should.deepEqual(
           utils.flatten([
             [1, 2],
@@ -48,6 +48,8 @@ describe('Utils => common', () => {
         should.deepEqual(utils.flatten([[1]], 2, [3, 4], [[5, 6]]), [1, 2, 3, 4, 5, 6])
 
         should.deepEqual(utils.flatten(['test']), ['test'])
+
+        should.deepEqual(utils.flatten([[12]]), [12])
       })
 
       it('should force array type return', () => {
