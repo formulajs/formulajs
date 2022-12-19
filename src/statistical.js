@@ -1626,7 +1626,7 @@ export function LOGEST(known_y, known_x) {
     return error.value
   }
 
-  if(known_y.length !== known_x.length){
+  if (known_y.length !== known_x.length) {
     return error.value
   }
 

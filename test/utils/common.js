@@ -71,7 +71,6 @@ describe('Utils => common', () => {
         ;(function () {
           should.deepEqual(utils.flatten(arguments), ['test'])
         })('test')
-
         ;(function () {
           should.deepEqual(utils.flatten(arguments), [12])
         })(12)
