@@ -32,16 +32,31 @@ describe('Utils => common', () => {
     utils.isFlat().should.equal(false)
   })
 
-  it('flatten', () => {
-    should.deepEqual(
-      utils.flatten([
-        [1, 2],
-        [3, 4]
-      ]),
-      [1, 2, 3, 4]
-    )
+  describe('flatten', () => {
+    it('should flatten an array', () => {
+      should.deepEqual(
+        utils.flatten([
+          [1, 2],
+          [3, 4]
+        ]),
+        [1, 2, 3, 4]
+      )
 
-    should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
+      should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
+      should.deepEqual(utils.flatten(['test']), ['test'])
+
+      ;(function () {
+        should.deepEqual(utils.flatten(arguments), ['test'])
+      })(['test'])
+
+    })
+
+    it('should work with single input', () => {
+      ;(function () {
+        should.deepEqual(utils.flatten(arguments), ['test'])
+      })('test')
+      should.deepEqual(utils.flatten('test'), ['test'])
+    })
   })
 
   it('argsToArray', () => {

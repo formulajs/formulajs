@@ -112,7 +112,9 @@ describe('Lookup Reference', () => {
     })
 
     it('should work with a single value lookup_array', () => {
-      lookup.MATCH('test', 'test').should.equal(1)
+      lookup.MATCH('test', 'test', 0).should.equal(1)
+      lookup.MATCH('test', 'test', 1).should.equal(1)
+      lookup.MATCH(5, 4, 1).should.equal(1)
     })
   })
 
