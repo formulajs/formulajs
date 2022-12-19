@@ -46,7 +46,17 @@ export function flatten() {
     return []
   }
 
-  let result = argsToArray.apply(null, arguments)
+  let result
+  if (arguments.length === 1) {
+    if (typeof arguments[0] !== 'object') {
+      result = [arguments[0]]
+    } else {
+      // arguments is an argument of arguments
+      result = argsToArray.apply(null, arguments)
+    }
+  } else {
+    result = Array.from(arguments)
+  }
 
   while (!isFlat(result)) {
     result = flattenShallow(result)
