@@ -45,12 +45,8 @@ export function flatten() {
   let result
 
   if (arguments.length === 1) {
-    if (typeof arguments[0] !== 'object') {
-      result = [arguments[0]]
-    } else {
-      // arguments is an argument of arguments
-      result = argsToArray.apply(null, arguments)
-    }
+    const argument = arguments[0]
+    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : (result = [argument])
   } else {
     result = Array.from(arguments)
   }
@@ -60,6 +56,10 @@ export function flatten() {
   }
 
   return result
+}
+
+function isArrayLike(a) {
+  return a != null && typeof a.length === 'number' && typeof a !== 'string'
 }
 
 export function argsToArray(args) {

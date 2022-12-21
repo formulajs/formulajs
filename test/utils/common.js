@@ -50,6 +50,8 @@ describe('Utils => common', () => {
         should.deepEqual(utils.flatten(['test']), ['test'])
 
         should.deepEqual(utils.flatten([[12]]), [12])
+
+        should.deepEqual(utils.flatten(null), [null])
       })
 
       it('should force array type return', () => {
