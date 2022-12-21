@@ -46,7 +46,7 @@ export function flatten() {
 
   if (arguments.length === 1) {
     const argument = arguments[0]
-    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : (result = [argument])
+    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : [argument]
   } else {
     result = Array.from(arguments)
   }
