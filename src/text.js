@@ -1,5 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import Decimal from 'decimal.js';
 
 // TODO
 /**
@@ -638,18 +639,164 @@ export function T(value) {
   return typeof value === 'string' ? value : ''
 }
 
-// TODO incomplete implementation
+function handleTextNumbers(value, format_text) {
+  let result = ""
+  const integers = value.toString().split(".")[0] || ""
+  const decimals = value.toString().split(".")[1] || ""
+  let currentValueIndex = 0
+  let currentIntegerIndex = 0
+  let currentDecimalIndex = 0
+  let isInteger = true
+
+  const numberOfHashesAndZerosBeforeDecimal = format_text.split(".")[0].match(/[0|#]/g)?.length || 0
+  const numberOfHashesAndZerosAfterDecimal = format_text.split(".")?.[1]?.match(/[0|#]/g)?.length || 0
+  const endOfDecimalIndex = Math.min(decimals.length, numberOfHashesAndZerosAfterDecimal) - 1
+
+  for (let i = 0; i < format_text.length; i++) {
+    if (format_text[i] === "#" || format_text[i] === "0") {
+      // integer portion of the number
+      if (isInteger && currentIntegerIndex < integers.length) {
+        // even if the number of hashes and zeros is less than the number of integers, we still need to show all the integers
+        if (currentIntegerIndex === 0 && numberOfHashesAndZerosBeforeDecimal < integers.length) {
+          const addToIndexes = integers.length - numberOfHashesAndZerosBeforeDecimal + 1
+          const shouldRound = addToIndexes === integers.length && !numberOfHashesAndZerosAfterDecimal
+
+          if (shouldRound) {
+            result += Math.round(value).toString().substring(0, addToIndexes)
+          }
+          else {
+            result += integers.substring(0, addToIndexes)
+          }
+
+          currentValueIndex += addToIndexes
+          currentIntegerIndex += addToIndexes
+        }
+        // replace the hash or zero with the associated integer
+        else {
+          const shouldRound = currentIntegerIndex === integers.length - 1 && !numberOfHashesAndZerosAfterDecimal
+          if (shouldRound) {
+            result += Math.round(value).toString().substr(-1)
+          }
+          else {
+            result += value.toString()[currentValueIndex]
+          }
+
+          currentValueIndex++
+          currentIntegerIndex++
+        }
+      }
+      // decimal portion of the number
+      else if (!isInteger && currentDecimalIndex < endOfDecimalIndex + 1) {
+        const shouldRound = currentDecimalIndex === endOfDecimalIndex
+        if (shouldRound) {
+          result += value.toFixed(currentDecimalIndex + 1).toString().substr(-1)
+        } else {
+          result += value.toString()[currentValueIndex]
+        }
+
+        currentValueIndex++
+        currentDecimalIndex++
+      }
+    }
+    // decimal point
+    else if (format_text[i] === ".") {
+      isInteger = false
+      if (currentIntegerIndex <= integers.length) {
+        result += integers.substring(currentIntegerIndex)
+        currentValueIndex = integers.length + 1
+        currentIntegerIndex = integers.length
+      }
+      result += "."
+    }
+
+    // other random characters, e.g. xx, $, etc.
+    else {
+      result += format_text[i]
+    }
+  }
+
+  return result;
+}
+
 /**
- * -- Not implemented --
+ * -- Partially implemented --
+ *
+ * The following are not supported:
+ * - Scientific notation
+ * - Leading and trailing zeros
+ * - Some special formats like "[<=9999999]###-####;(###) ###-####", "###° 00' 00''"
+ * - Fractions
+ * - Dates and times
+ * - Some accounting formats
+ * - Thousands separator
  *
  * Formats a number and converts it to text.
  *
  * Category: Text
- *
+ * @params {*} value A numeric value that you want to be converted into text.
+ * @params {*} format_text A text string that defines the formatting that you want to be applied to the supplied value.
  * @returns
  */
-export function TEXT() {
-  throw new Error('TEXT is not implemented')
+export function TEXT(value, format_text) {
+  if (value === undefined || format_text === undefined) {
+    return error.na;
+  }
+
+  value = utils.parseNumber(value);
+  if (utils.anyIsError(value)) {
+    return error.value
+  }
+
+  format_text = utils.parseString(format_text);
+  if (utils.anyIsError("FORMAT: ", format_text)) {
+    return error.value;
+  }
+
+  let result = "";
+  if (format_text === "") {
+    result = format_text
+  }
+  else if (
+    format_text.includes("#,") ||
+    format_text.includes("0,") ||
+    format_text.includes("h") ||
+    format_text.includes("m") ||
+    format_text.includes("s") ||
+    format_text.includes("d") ||
+    format_text.includes("y") ||
+    format_text.includes("A/P") ||
+    format_text.includes("AM/PM") ||
+    format_text.includes("?/") ||
+    format_text.includes("/?") ||
+    format_text.includes("E+") ||
+    format_text.includes("E-") ||
+    format_text.includes("e+") ||
+    format_text.includes("e-") ||
+    format_text.includes("*") ||
+    format_text.includes("_") ||
+    format_text.includes(";") ||
+    format_text.includes("[") ||
+    format_text.includes("]")
+  ) {
+    throw new Error("TEXT formula not implemented")
+  }
+  // percentage
+  else if (format_text.includes("%")) {
+    if (format_text.length === 1) {
+      return format_text
+    }
+    const percentage = new Decimal(value).times(100).toNumber()
+    result = handleTextNumbers(percentage, format_text)
+  }
+  // general
+  else if (format_text.includes("#") || format_text.includes("0")) {
+    result = handleTextNumbers(new Decimal(value).toNumber(), format_text)
+  }
+  else {
+    throw new Error("TEXT formula not implemented")
+  }
+
+  return result
 }
 
 /**
