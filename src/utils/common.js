@@ -42,13 +42,24 @@ export function isFlat(array) {
 }
 
 export function flatten() {
-  let result = argsToArray.apply(null, arguments)
+  let result
+
+  if (arguments.length === 1) {
+    const argument = arguments[0]
+    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : [argument]
+  } else {
+    result = Array.from(arguments)
+  }
 
   while (!isFlat(result)) {
     result = flattenShallow(result)
   }
 
   return result
+}
+
+function isArrayLike(a) {
+  return a != null && typeof a.length === 'number' && typeof a !== 'string'
 }
 
 export function argsToArray(args) {
