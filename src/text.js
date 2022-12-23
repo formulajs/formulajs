@@ -211,10 +211,7 @@ export function FIND(find_text, within_text, start_num) {
   return found_index + 1
 }
 
-// TODO
 /**
- * -- Not implemented --
- *
  * Formats a number as text with a fixed number of decimals.
  *
  * Category: Text
@@ -224,8 +221,24 @@ export function FIND(find_text, within_text, start_num) {
  * @param {*} no_commas Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
  * @returns
  */
-export function FIXED() {
-  throw new Error('FIXED is not implemented')
+export function FIXED(number_, decimals_, no_commas) {
+  const number = utils.parseNumber(number_)
+  if (isNaN(number)) {
+    return '#VALUE!'
+  }
+
+  const decimals = utils.parseNumber(decimals_)
+  if (isNaN(decimals)) {
+    return '#VALUE!'
+  }
+
+  let fixedValue = Number(number).toFixed(decimals)
+  
+  if (no_commas) {
+    fixedValue = fixedValue.replace(/,/g,'')
+  }
+  
+  return fixedValue
 }
 
 /**
