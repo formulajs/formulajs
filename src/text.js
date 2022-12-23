@@ -232,7 +232,14 @@ export function FIXED(number_, decimals_, no_commas) {
     return '#VALUE!'
   }
 
-  let fixedValue = Number(number).toFixed(decimals)
+  let fixedValue = Number(number)
+  
+  if (decimals < 0) {
+    const factor = Math.pow(10, -decimals)
+    fixedValue = Math.round(fixedValue / factor) * factor
+  } else {
+    fixedValue = fixedValue.toFixed(decimals)
+  }
   
   if (no_commas) {
     fixedValue = fixedValue.replace(/,/g,'')
@@ -240,6 +247,7 @@ export function FIXED(number_, decimals_, no_commas) {
   
   return fixedValue
 }
+
 
 /**
  * Formula.js only
