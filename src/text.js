@@ -1,5 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import { ROUND } from './math-trig.js'
 
 // TODO
 /**
@@ -144,8 +145,6 @@ export function DBCS() {
 
 // TODO
 /**
- * -- Not implemented --
- *
  * Converts a number to text, using the $ (dollar) currency format.
  *
  * Category: Text
@@ -154,8 +153,29 @@ export function DBCS() {
  * @param {*} decimals Optional. The number of digits to the right of the decimal point. If this is negative, the number is rounded to the left of the decimal point. If you omit decimals, it is assumed to be 2.
  * @returns
  */
-export function DOLLAR() {
-  throw new Error('DOLLAR is not implemented')
+export function DOLLAR(number, decimals = 2) {
+  number = utils.parseNumber(number)
+  if (isNaN(number)) {
+    return error.value
+  }
+
+  number = ROUND(number, decimals)
+
+  const options = {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: decimals >= 0 ? decimals : 0,
+    maximumFractionDigits: decimals >= 0 ? decimals : 0,
+    currencyDisplay: 'symbol'
+  }
+
+  if (number < 0) {
+    return Math.abs(number) >= 1000
+      ? '$(' + FIXED(Math.abs(number),decimals) + ')'
+      : '$(' + FIXED(Math.abs(number),decimals,true) + ')'
+  }
+
+  return number.toLocaleString('en-US', options)
 }
 
 /**
@@ -221,33 +241,34 @@ export function FIND(find_text, within_text, start_num) {
  * @param {*} no_commas Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
  * @returns
  */
-export function FIXED(number_, decimals_, no_commas) {
-  const number = utils.parseNumber(number_)
+export function FIXED(number, decimals = 2, no_commas = false) {
+  number = utils.parseNumber(number)
   if (isNaN(number)) {
-    return '#VALUE!'
+    return error.value
   }
 
-  const decimals = utils.parseNumber(decimals_)
+  decimals = utils.parseNumber(decimals)
   if (isNaN(decimals)) {
-    return '#VALUE!'
+    return error.value
   }
 
   let fixedValue = Number(number)
-  
+
   if (decimals < 0) {
     const factor = Math.pow(10, -decimals)
     fixedValue = Math.round(fixedValue / factor) * factor
   } else {
     fixedValue = fixedValue.toFixed(decimals)
   }
-  
+
   if (no_commas) {
-    fixedValue = fixedValue.replace(/,/g,'')
+    fixedValue = fixedValue.toString().replace(/,/g, '')
+  } else {
+    fixedValue = fixedValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
-  
+
   return fixedValue
 }
-
 
 /**
  * Formula.js only

@@ -59,7 +59,7 @@ describe('Text', () => {
     text.DBCS.should.throw('DBCS is not implemented')
   })
 
-  xit('DOLLAR', () => {
+  it('DOLLAR', () => {
     text.DOLLAR(1234.567).should.equal('$1,234.57')
     text.DOLLAR(1234.567, -2).should.equal('$1,200')
     text.DOLLAR(-1234.567, -2).should.equal('$(1,200)')
@@ -96,7 +96,7 @@ describe('Text', () => {
     text.FIND(12, 312).should.equal(2)
   })
 
-  xit('FIXED', () => {
+  it('FIXED', () => {
     text.FIXED(1234.567, 1).should.equal('1,234.6')
     text.FIXED(1234.567, -1).should.equal('1,230')
     text.FIXED(-1234.567, -1, true).should.equal('-1230')
