@@ -1626,6 +1626,10 @@ export function LOGEST(known_y, known_x) {
     return error.value
   }
 
+  if (known_y.length !== known_x.length) {
+    return error.value
+  }
+
   for (let i = 0; i < known_y.length; i++) {
     known_y[i] = Math.log(known_y[i])
   }
