@@ -143,7 +143,6 @@ export function DBCS() {
   throw new Error('DBCS is not implemented')
 }
 
-// TODO
 /**
  * Converts a number to text, using the $ (dollar) currency format.
  *
@@ -261,7 +260,9 @@ export function FIXED(number, decimals = 2, no_commas = false) {
   if (no_commas) {
     number = number.toString().replace(/,/g, '')
   } else {
-    number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    const parts = number.toString().split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+$)/g, ',')
+    number = parts.join('.')
   }
 
   return number
@@ -677,18 +678,45 @@ export function T(value) {
   return typeof value === 'string' ? value : ''
 }
 
-// TODO incomplete implementation
 /**
- * -- Not implemented --
- *
  * Formats a number and converts it to text.
  *
  * Category: Text
  *
+ * @param {*} number The number you want to format.
+ * @param {*} format The format you want to use.
  * @returns
  */
-export function TEXT() {
-  throw new Error('TEXT is not implemented')
+export function TEXT(number, format) {
+  if (number === undefined || format === undefined) return error.na
+
+  const currencySymbol = format.startsWith('$') ? '$' : ''
+  const isPercent = format.endsWith('%')
+  format = format.replace(/%/g, '').replace(/\$/g, '')
+
+  // count all 0s after the decimal point
+  const decimalPlaces = format.split('.')[1].match(/0/g).length
+
+  const noCommas = !format.includes(',')
+
+  if (isPercent) {
+    number = number * 100
+  }
+
+  number = FIXED(number, decimalPlaces, noCommas)
+
+  if (number.startsWith('-')) {
+    number = number.replace('-', '')
+    number = '-' + currencySymbol + number
+  } else {
+    number = currencySymbol + number
+  }
+
+  if (isPercent) {
+    number = number + '%'
+  }
+
+  return number
 }
 
 /**
