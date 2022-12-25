@@ -66,6 +66,8 @@ describe('Text', () => {
     text.DOLLAR(-0.123, 4).should.equal('$(0.1230)')
     text.DOLLAR(-99.888).should.equal('$(99.89)')
     text.DOLLAR('invalid').should.equal(error.value)
+    text.DOLLAR(255).should.equal('$255.00')
+    text.DOLLAR(367.456, 2).should.equal('$367.46')
   })
 
   it('EXACT', () => {
@@ -102,6 +104,12 @@ describe('Text', () => {
     text.FIXED(-1234.567, -1, true).should.equal('-1230')
     text.FIXED(44.332).should.equal('44.33')
     text.FIXED('invalid').should.equal(error.value)
+    text.FIXED(1234567.89, 3).should.equal('1,234,567.890')
+    text.FIXED(123456.789, undefined, true).should.equal('123456.79')
+    text.FIXED(12345.6789, -2).should.equal('12,300')
+    text.FIXED(12134567.89, -3, 1).should.equal('12135000')
+    text.FIXED(12345.789, 3 / 4).should.equal('12,346')
+    text.FIXED(12345.789, 8 / 5).should.equal('12,345.8')
   })
 
   it('HTML2TEXT', () => {
