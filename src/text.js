@@ -251,22 +251,20 @@ export function FIXED(number, decimals = 2, no_commas = false) {
     return error.value
   }
 
-  let fixedValue = Number(number)
-
   if (decimals < 0) {
     const factor = Math.pow(10, -decimals)
-    fixedValue = Math.round(fixedValue / factor) * factor
+    number = Math.round(number / factor) * factor
   } else {
-    fixedValue = fixedValue.toFixed(decimals)
+    number = number.toFixed(decimals)
   }
 
   if (no_commas) {
-    fixedValue = fixedValue.toString().replace(/,/g, '')
+    number = number.toString().replace(/,/g, '')
   } else {
-    fixedValue = fixedValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   }
 
-  return fixedValue
+  return number
 }
 
 /**
