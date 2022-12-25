@@ -165,17 +165,16 @@ export function DOLLAR(number, decimals = 2) {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: decimals >= 0 ? decimals : 0,
-    maximumFractionDigits: decimals >= 0 ? decimals : 0,
-    currencyDisplay: 'symbol'
+    maximumFractionDigits: decimals >= 0 ? decimals : 0
   }
+
+  const formattedNumber = number.toLocaleString('en-US', options)
 
   if (number < 0) {
-    return Math.abs(number) >= 1000
-      ? '$(' + FIXED(Math.abs(number),decimals) + ')'
-      : '$(' + FIXED(Math.abs(number),decimals,true) + ')'
+    return '$(' + formattedNumber.slice(2) + ')'
   }
 
-  return number.toLocaleString('en-US', options)
+  return formattedNumber
 }
 
 /**
