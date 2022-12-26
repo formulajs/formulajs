@@ -1,5 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import { ROUND } from './math-trig.js'
 
 // TODO
 /**
@@ -142,10 +143,7 @@ export function DBCS() {
   throw new Error('DBCS is not implemented')
 }
 
-// TODO
 /**
- * -- Not implemented --
- *
  * Converts a number to text, using the $ (dollar) currency format.
  *
  * Category: Text
@@ -154,8 +152,28 @@ export function DBCS() {
  * @param {*} decimals Optional. The number of digits to the right of the decimal point. If this is negative, the number is rounded to the left of the decimal point. If you omit decimals, it is assumed to be 2.
  * @returns
  */
-export function DOLLAR() {
-  throw new Error('DOLLAR is not implemented')
+export function DOLLAR(number, decimals = 2) {
+  number = utils.parseNumber(number)
+  if (isNaN(number)) {
+    return error.value
+  }
+
+  number = ROUND(number, decimals)
+
+  const options = {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: decimals >= 0 ? decimals : 0,
+    maximumFractionDigits: decimals >= 0 ? decimals : 0
+  }
+
+  const formattedNumber = number.toLocaleString('en-US', options)
+
+  if (number < 0) {
+    return '$(' + formattedNumber.slice(2) + ')'
+  }
+
+  return formattedNumber
 }
 
 /**
@@ -211,10 +229,7 @@ export function FIND(find_text, within_text, start_num) {
   return found_index + 1
 }
 
-// TODO
 /**
- * -- Not implemented --
- *
  * Formats a number as text with a fixed number of decimals.
  *
  * Category: Text
@@ -224,8 +239,33 @@ export function FIND(find_text, within_text, start_num) {
  * @param {*} no_commas Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
  * @returns
  */
-export function FIXED() {
-  throw new Error('FIXED is not implemented')
+export function FIXED(number, decimals = 2, no_commas = false) {
+  number = utils.parseNumber(number)
+  if (isNaN(number)) {
+    return error.value
+  }
+
+  decimals = utils.parseNumber(decimals)
+  if (isNaN(decimals)) {
+    return error.value
+  }
+
+  if (decimals < 0) {
+    const factor = Math.pow(10, -decimals)
+    number = Math.round(number / factor) * factor
+  } else {
+    number = number.toFixed(decimals)
+  }
+
+  if (no_commas) {
+    number = number.toString().replace(/,/g, '')
+  } else {
+    const parts = number.toString().split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+$)/g, ',')
+    number = parts.join('.')
+  }
+
+  return number
 }
 
 /**
@@ -638,18 +678,45 @@ export function T(value) {
   return typeof value === 'string' ? value : ''
 }
 
-// TODO incomplete implementation
 /**
- * -- Not implemented --
- *
  * Formats a number and converts it to text.
  *
  * Category: Text
  *
+ * @param {*} number The number you want to format.
+ * @param {*} format The format you want to use.
  * @returns
  */
-export function TEXT() {
-  throw new Error('TEXT is not implemented')
+export function TEXT(number, format) {
+  if (number === undefined || format === undefined) return error.na
+
+  const currencySymbol = format.startsWith('$') ? '$' : ''
+  const isPercent = format.endsWith('%')
+  format = format.replace(/%/g, '').replace(/\$/g, '')
+
+  // count all 0s after the decimal point
+  const decimalPlaces = format.split('.')[1].match(/0/g).length
+
+  const noCommas = !format.includes(',')
+
+  if (isPercent) {
+    number = number * 100
+  }
+
+  number = FIXED(number, decimalPlaces, noCommas)
+
+  if (number.startsWith('-')) {
+    number = number.replace('-', '')
+    number = '-' + currencySymbol + number
+  } else {
+    number = currencySymbol + number
+  }
+
+  if (isPercent) {
+    number = number + '%'
+  }
+
+  return number
 }
 
 /**

@@ -59,13 +59,15 @@ describe('Text', () => {
     text.DBCS.should.throw('DBCS is not implemented')
   })
 
-  xit('DOLLAR', () => {
+  it('DOLLAR', () => {
     text.DOLLAR(1234.567).should.equal('$1,234.57')
     text.DOLLAR(1234.567, -2).should.equal('$1,200')
     text.DOLLAR(-1234.567, -2).should.equal('$(1,200)')
     text.DOLLAR(-0.123, 4).should.equal('$(0.1230)')
     text.DOLLAR(-99.888).should.equal('$(99.89)')
     text.DOLLAR('invalid').should.equal(error.value)
+    text.DOLLAR(255).should.equal('$255.00')
+    text.DOLLAR(367.456, 2).should.equal('$367.46')
   })
 
   it('EXACT', () => {
@@ -96,12 +98,22 @@ describe('Text', () => {
     text.FIND(12, 312).should.equal(2)
   })
 
-  xit('FIXED', () => {
+  it('FIXED', () => {
     text.FIXED(1234.567, 1).should.equal('1,234.6')
     text.FIXED(1234.567, -1).should.equal('1,230')
     text.FIXED(-1234.567, -1, true).should.equal('-1230')
     text.FIXED(44.332).should.equal('44.33')
     text.FIXED('invalid').should.equal(error.value)
+    text.FIXED(1234567.89, 3).should.equal('1,234,567.890')
+    text.FIXED(123456.789, undefined, true).should.equal('123456.79')
+    text.FIXED(12345.6789, -2).should.equal('12,300')
+    text.FIXED(12134567.89, -3, 1).should.equal('12135000')
+    text.FIXED(12345.789, 3 / 4).should.equal('12,346')
+    text.FIXED(12345.789, 8 / 5).should.equal('12,345.8')
+    text.FIXED(1234.56789, 5).should.equal('1,234.56789')
+    text.FIXED(1234.567899, 5).should.equal('1,234.56790')
+    text.FIXED(1234.5, 5).should.equal('1,234.50000')
+    text.FIXED(123456.9, 4).should.equal('123,456.9000')
   })
 
   it('HTML2TEXT', () => {
@@ -312,11 +324,23 @@ describe('Text', () => {
     text.T(true).should.equal('')
   })
 
-  xit('TEXT', () => {
-    text.TEXT('1234.59', '###0.0').should.equal('1234.6')
-    text.TEXT('1234.52', '###0.0').should.equal('1234.5')
-    text.TEXT('1234.56', '###0.00').should.equal('1234.56')
+  it('TEXT', () => {
+    text.TEXT(1234.59, '###0.0').should.equal('1234.6')
+    text.TEXT(1234.52, '###0.0').should.equal('1234.5')
+    text.TEXT(1234.56, '###0.00').should.equal('1234.56')
+    text.TEXT(1234, '###0.0000').should.equal('1234.0000')
+    text.TEXT(123456.9, '#,##0.0000').should.equal('123,456.9000')
     text.TEXT().should.equal(error.na)
+
+    text.TEXT(1234567.89, '$#,##0.00').should.equal('$1,234,567.89')
+    text.TEXT(1234.59, '$#,##0.00').should.equal('$1,234.59')
+    text.TEXT(-1234567.89, '$#,##0.00').should.equal('-$1,234,567.89')
+    text.TEXT(-1234.59, '$#,##0.00').should.equal('-$1,234.59')
+    text.TEXT(0, '$#,##0.00').should.equal('$0.00')
+
+    text.TEXT(0.89, '0.00%').should.equal('89.00%')
+    text.TEXT(0.1234, '0.00%').should.equal('12.34%')
+    text.TEXT(1, '0.00%').should.equal('100.00%')
   })
 
   it('TEXTJOIN', () => {
