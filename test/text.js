@@ -1,452 +1,452 @@
-import 'should'
+import { expect } from 'chai'
 
 import * as error from '../src/utils/error.js'
 import * as text from '../src/text.js'
 
 describe('Text', () => {
   it('ASC', () => {
-    text.ASC.should.throw('ASC is not implemented')
+    expect(text.ASC).to.throw('ASC is not implemented')
   })
 
   it('BAHTTEXT', () => {
-    text.BAHTTEXT.should.throw('BAHTTEXT is not implemented')
+    expect(text.BAHTTEXT).to.throw('BAHTTEXT is not implemented')
   })
 
   it('CHAR', () => {
-    text.CHAR(65).should.equal('A')
-    text.CHAR(255).should.equal('ÿ')
-    text.CHAR(1000).should.equal('Ϩ')
-    text.CHAR(undefined).should.equal(error.value)
-    text.CHAR(error.na).should.equal(error.na)
-    text.CHAR('invalid').should.equal(error.value)
+    expect(text.CHAR(65)).to.equal('A')
+    expect(text.CHAR(255)).to.equal('ÿ')
+    expect(text.CHAR(1000)).to.equal('Ϩ')
+    expect(text.CHAR(undefined)).to.equal(error.value)
+    expect(text.CHAR(error.na)).to.equal(error.na)
+    expect(text.CHAR('invalid')).to.equal(error.value)
   })
 
   it('CLEAN', () => {
-    text.CLEAN(undefined).should.equal('')
-    text.CLEAN(error.na).should.equal(error.na)
-    text.CLEAN('Monthly Report').should.equal('Monthly Report')
+    expect(text.CLEAN(undefined)).to.equal('')
+    expect(text.CLEAN(error.na)).to.equal(error.na)
+    expect(text.CLEAN('Monthly Report')).to.equal('Monthly Report')
   })
 
   it('CODE', () => {
-    text.CODE().should.equal(error.value)
-    text.CODE(undefined).should.equal(error.value)
-    text.CODE(error.na).should.equal(error.na)
-    text.CODE('A').should.equal(65)
-    text.CODE('Ϩ').should.equal(1000)
+    expect(text.CODE()).to.equal(error.value)
+    expect(text.CODE(undefined)).to.equal(error.value)
+    expect(text.CODE(error.na)).to.equal(error.na)
+    expect(text.CODE('A')).to.equal(65)
+    expect(text.CODE('Ϩ')).to.equal(1000)
   })
 
   it('CONCATENATE', () => {
-    text.CONCATENATE('a', undefined, 'b').should.equal('ab')
-    text.CONCATENATE('a', error.na, 'b').should.equal(error.na)
-    text.CONCATENATE('hello', ' ', 'world').should.equal('hello world')
-    text.CONCATENATE(['hello', ' my ', 'world']).should.equal('hello my world')
-    text.CONCATENATE(1, 'one').should.equal('1one')
-    text.CONCATENATE(true, 'yes').should.equal('TRUEyes')
-    text.CONCATENATE(false, 'no').should.equal('FALSEno')
+    expect(text.CONCATENATE('a', undefined, 'b')).to.equal('ab')
+    expect(text.CONCATENATE('a', error.na, 'b')).to.equal(error.na)
+    expect(text.CONCATENATE('hello', ' ', 'world')).to.equal('hello world')
+    expect(text.CONCATENATE(['hello', ' my ', 'world'])).to.equal('hello my world')
+    expect(text.CONCATENATE(1, 'one')).to.equal('1one')
+    expect(text.CONCATENATE(true, 'yes')).to.equal('TRUEyes')
+    expect(text.CONCATENATE(false, 'no')).to.equal('FALSEno')
   })
 
   it('CONCAT', () => {
-    text.CONCAT('a', undefined, 'b').should.equal('ab')
-    text.CONCAT('a', error.na, 'b').should.equal(error.na)
-    text.CONCAT('hello', ' ', 'world').should.equal('hello world')
-    text.CONCAT(['hello', ' my ', 'world']).should.equal('hello my world')
-    text.CONCAT(1, 'one').should.equal('1one')
-    text.CONCAT(true, 'yes').should.equal('TRUEyes')
-    text.CONCAT(false, 'no').should.equal('FALSEno')
+    expect(text.CONCAT('a', undefined, 'b')).to.equal('ab')
+    expect(text.CONCAT('a', error.na, 'b')).to.equal(error.na)
+    expect(text.CONCAT('hello', ' ', 'world')).to.equal('hello world')
+    expect(text.CONCAT(['hello', ' my ', 'world'])).to.equal('hello my world')
+    expect(text.CONCAT(1, 'one')).to.equal('1one')
+    expect(text.CONCAT(true, 'yes')).to.equal('TRUEyes')
+    expect(text.CONCAT(false, 'no')).to.equal('FALSEno')
   })
 
   it('DBCS', () => {
-    text.DBCS.should.throw('DBCS is not implemented')
+    expect(text.DBCS).to.throw('DBCS is not implemented')
   })
 
   it('DOLLAR', () => {
-    text.DOLLAR(1234.567).should.equal('$1,234.57')
-    text.DOLLAR(1234.567, -2).should.equal('$1,200')
-    text.DOLLAR(-1234.567, -2).should.equal('$(1,200)')
-    text.DOLLAR(-0.123, 4).should.equal('$(0.1230)')
-    text.DOLLAR(-99.888).should.equal('$(99.89)')
-    text.DOLLAR('invalid').should.equal(error.value)
-    text.DOLLAR(255).should.equal('$255.00')
-    text.DOLLAR(367.456, 2).should.equal('$367.46')
+    expect(text.DOLLAR(1234.567)).to.equal('$1,234.57')
+    expect(text.DOLLAR(1234.567, -2)).to.equal('$1,200')
+    expect(text.DOLLAR(-1234.567, -2)).to.equal('$(1,200)')
+    expect(text.DOLLAR(-0.123, 4)).to.equal('$(0.1230)')
+    expect(text.DOLLAR(-99.888)).to.equal('$(99.89)')
+    expect(text.DOLLAR('invalid')).to.equal(error.value)
+    expect(text.DOLLAR(255)).to.equal('$255.00')
+    expect(text.DOLLAR(367.456, 2)).to.equal('$367.46')
   })
 
   it('EXACT', () => {
-    text.EXACT(undefined, undefined).should.equal(true)
-    text.EXACT(undefined, null).should.equal(true)
-    text.EXACT(undefined, '').should.equal(true)
-    text.EXACT(error.na, error.na).should.equal(error.na)
-    text.EXACT('yes', 'yes').should.equal(true)
-    text.EXACT('yes', 'no').should.equal(false)
-    text.EXACT('yes', 'yes', 'yes').should.equal(error.na)
-    text.EXACT().should.equal(error.na)
-    text.EXACT('true', true).should.equal(true)
-    text.EXACT('12', 12).should.equal(true)
-    text.EXACT('Word', '0').should.equal(false)
+    expect(text.EXACT(undefined, undefined)).to.equal(true)
+    expect(text.EXACT(undefined, null)).to.equal(true)
+    expect(text.EXACT(undefined, '')).to.equal(true)
+    expect(text.EXACT(error.na, error.na)).to.equal(error.na)
+    expect(text.EXACT('yes', 'yes')).to.equal(true)
+    expect(text.EXACT('yes', 'no')).to.equal(false)
+    expect(text.EXACT('yes', 'yes', 'yes')).to.equal(error.na)
+    expect(text.EXACT()).to.equal(error.na)
+    expect(text.EXACT('true', true)).to.equal(true)
+    expect(text.EXACT('12', 12)).to.equal(true)
+    expect(text.EXACT('Word', '0')).to.equal(false)
   })
 
   it('FIND', () => {
     const data = 'Miriam McGovern'
-    text.FIND(undefined, undefined).should.equal(1)
-    text.FIND('M', data).should.equal(1)
-    text.FIND('m', data).should.equal(6)
-    text.FIND('M', data, 3).should.equal(8)
-    text.FIND('M', undefined).should.equal(error.value)
-    text.FIND('M').should.equal(error.na)
-    text.FIND().should.equal(error.na)
-    text.FIND(true, '12true').should.equal(3)
-    text.FIND(12, '312').should.equal(2)
-    text.FIND(12, 312).should.equal(2)
+    expect(text.FIND(undefined, undefined)).to.equal(1)
+    expect(text.FIND('M', data)).to.equal(1)
+    expect(text.FIND('m', data)).to.equal(6)
+    expect(text.FIND('M', data, 3)).to.equal(8)
+    expect(text.FIND('M', undefined)).to.equal(error.value)
+    expect(text.FIND('M')).to.equal(error.na)
+    expect(text.FIND()).to.equal(error.na)
+    expect(text.FIND(true, '12true')).to.equal(3)
+    expect(text.FIND(12, '312')).to.equal(2)
+    expect(text.FIND(12, 312)).to.equal(2)
   })
 
   it('FIXED', () => {
-    text.FIXED(1234.567, 1).should.equal('1,234.6')
-    text.FIXED(1234.567, -1).should.equal('1,230')
-    text.FIXED(-1234.567, -1, true).should.equal('-1230')
-    text.FIXED(44.332).should.equal('44.33')
-    text.FIXED('invalid').should.equal(error.value)
-    text.FIXED(1234567.89, 3).should.equal('1,234,567.890')
-    text.FIXED(123456.789, undefined, true).should.equal('123456.79')
-    text.FIXED(12345.6789, -2).should.equal('12,300')
-    text.FIXED(12134567.89, -3, 1).should.equal('12135000')
-    text.FIXED(12345.789, 3 / 4).should.equal('12,346')
-    text.FIXED(12345.789, 8 / 5).should.equal('12,345.8')
-    text.FIXED(1234.56789, 5).should.equal('1,234.56789')
-    text.FIXED(1234.567899, 5).should.equal('1,234.56790')
-    text.FIXED(1234.5, 5).should.equal('1,234.50000')
-    text.FIXED(123456.9, 4).should.equal('123,456.9000')
+    expect(text.FIXED(1234.567, 1)).to.equal('1,234.6')
+    expect(text.FIXED(1234.567, -1)).to.equal('1,230')
+    expect(text.FIXED(-1234.567, -1, true)).to.equal('-1230')
+    expect(text.FIXED(44.332)).to.equal('44.33')
+    expect(text.FIXED('invalid')).to.equal(error.value)
+    expect(text.FIXED(1234567.89, 3)).to.equal('1,234,567.890')
+    expect(text.FIXED(123456.789, undefined, true)).to.equal('123456.79')
+    expect(text.FIXED(12345.6789, -2)).to.equal('12,300')
+    expect(text.FIXED(12134567.89, -3, 1)).to.equal('12135000')
+    expect(text.FIXED(12345.789, 3 / 4)).to.equal('12,346')
+    expect(text.FIXED(12345.789, 8 / 5)).to.equal('12,345.8')
+    expect(text.FIXED(1234.56789, 5)).to.equal('1,234.56789')
+    expect(text.FIXED(1234.567899, 5)).to.equal('1,234.56790')
+    expect(text.FIXED(1234.5, 5)).to.equal('1,234.50000')
+    expect(text.FIXED(123456.9, 4)).to.equal('123,456.9000')
   })
 
   it('HTML2TEXT', () => {
-    text.HTML2TEXT().should.equal('')
-    text.HTML2TEXT(undefined).should.equal('')
-    text.HTML2TEXT(error.na).should.equal(error.na)
-    text.HTML2TEXT('').should.equal('')
-    text.HTML2TEXT('<i>Hello</i>').should.equal('Hello')
-    text.HTML2TEXT(['<i>Hello</i>', '<b>Jim</b>']).should.equal('Hello\nJim')
+    expect(text.HTML2TEXT()).to.equal('')
+    expect(text.HTML2TEXT(undefined)).to.equal('')
+    expect(text.HTML2TEXT(error.na)).to.equal(error.na)
+    expect(text.HTML2TEXT('')).to.equal('')
+    expect(text.HTML2TEXT('<i>Hello</i>')).to.equal('Hello')
+    expect(text.HTML2TEXT(['<i>Hello</i>', '<b>Jim</b>'])).to.equal('Hello\nJim')
   })
 
   it('LEFT', () => {
-    text.LEFT(error.na, 2).should.equal(error.na)
-    text.LEFT('text', error.na).should.equal(error.na)
-    text.LEFT(undefined, undefined).should.equal('')
-    text.LEFT(undefined, 3).should.equal('')
-    text.LEFT('Sale Price', 4).should.equal('Sale')
-    text.LEFT('Sweeden').should.equal('S')
-    text.LEFT(42).should.equal('4')
-    text.LEFT(true).should.equal('t')
+    expect(text.LEFT(error.na, 2)).to.equal(error.na)
+    expect(text.LEFT('text', error.na)).to.equal(error.na)
+    expect(text.LEFT(undefined, undefined)).to.equal('')
+    expect(text.LEFT(undefined, 3)).to.equal('')
+    expect(text.LEFT('Sale Price', 4)).to.equal('Sale')
+    expect(text.LEFT('Sweeden')).to.equal('S')
+    expect(text.LEFT(42)).to.equal('4')
+    expect(text.LEFT(true)).to.equal('t')
   })
 
   it('LEN', () => {
-    text.LEN(undefined).should.equal(0)
-    text.LEN(error.na).should.equal(error.na)
-    text.LEN(true).should.equal(4)
-    text.LEN('four').should.equal(4)
-    text.LEN([1, 2, 3, 4, 5]).should.equal(error.value)
-    text.LEN().should.equal(error.error)
-    text.LEN(null).should.equal(0)
-    text.LEN([]).should.equal(error.value)
-    text.LEN(123).should.equal(3)
+    expect(text.LEN(undefined)).to.equal(0)
+    expect(text.LEN(error.na)).to.equal(error.na)
+    expect(text.LEN(true)).to.equal(4)
+    expect(text.LEN('four')).to.equal(4)
+    expect(text.LEN([1, 2, 3, 4, 5])).to.equal(error.value)
+    expect(text.LEN()).to.equal(error.error)
+    expect(text.LEN(null)).to.equal(0)
+    expect(text.LEN([])).to.equal(error.value)
+    expect(text.LEN(123)).to.equal(3)
   })
 
   it('LOWER', () => {
-    text.LOWER(undefined).should.equal('')
-    text.LOWER(error.na).should.equal(error.na)
-    text.LOWER('abcd').should.equal('abcd')
-    text.LOWER('ABcd').should.equal('abcd')
-    text.LOWER('ABCD').should.equal('abcd')
-    text.LOWER('').should.equal('')
-    text.LOWER(true).should.equal('true')
-    text.LOWER(1).should.equal('1')
-    text.LOWER().should.equal(error.value)
+    expect(text.LOWER(undefined)).to.equal('')
+    expect(text.LOWER(error.na)).to.equal(error.na)
+    expect(text.LOWER('abcd')).to.equal('abcd')
+    expect(text.LOWER('ABcd')).to.equal('abcd')
+    expect(text.LOWER('ABCD')).to.equal('abcd')
+    expect(text.LOWER('')).to.equal('')
+    expect(text.LOWER(true)).to.equal('true')
+    expect(text.LOWER(1)).to.equal('1')
+    expect(text.LOWER()).to.equal(error.value)
   })
 
   it('MID', () => {
     const data = 'Fluid Flow'
-    text.MID(data, 1, 5).should.equal('Fluid')
-    text.MID(data, 7, 20).should.equal('Flow')
-    text.MID(data, 20, 50).should.equal('')
-    text.MID(0).should.equal(error.value)
+    expect(text.MID(data, 1, 5)).to.equal('Fluid')
+    expect(text.MID(data, 7, 20)).to.equal('Flow')
+    expect(text.MID(data, 20, 50)).to.equal('')
+    expect(text.MID(0)).to.equal(error.value)
   })
 
   describe('NUMBERVALUE', () => {
     it('should parse text value', () => {
-      text.NUMBERVALUE('2.500,27', ',', '.').should.equal(2500.27)
-      text.NUMBERVALUE('250', ',', '.').should.equal(250)
-      text.NUMBERVALUE('', ',', '.').should.equal(0)
-      // text.NUMBERVALUE("3.5%").should.equal(.035);
+      expect(text.NUMBERVALUE('2.500,27', ',', '.')).to.equal(2500.27)
+      expect(text.NUMBERVALUE('250', ',', '.')).to.equal(250)
+      expect(text.NUMBERVALUE('', ',', '.')).to.equal(0)
+      // expect(text.NUMBERVALUE("3.5%")).to.equal(.035);
     })
 
     it('should work with empty inputs', () => {
-      text.NUMBERVALUE(null, ',', '.').should.equal(0)
-      text.NUMBERVALUE(undefined, ',', '.').should.equal(0)
+      expect(text.NUMBERVALUE(null, ',', '.')).to.equal(0)
+      expect(text.NUMBERVALUE(undefined, ',', '.')).to.equal(0)
     })
 
     it('should work with number input', () => {
-      text.NUMBERVALUE(3).should.equal(3)
+      expect(text.NUMBERVALUE(3)).to.equal(3)
     })
 
     it('should throw an error in case of text input different from string', () => {
-      text.NUMBERVALUE(true).should.equal(error.na)
+      expect(text.NUMBERVALUE(true)).to.equal(error.na)
     })
   })
 
   it('PRONETIC', () => {
-    text.PRONETIC.should.throw('PRONETIC is not implemented')
+    expect(text.PRONETIC).to.throw('PRONETIC is not implemented')
   })
 
   it('PROPER', () => {
-    text.PROPER(undefined).should.equal('')
-    text.PROPER(null).should.equal('')
-    text.PROPER(error.na).should.equal(error.na)
-    text.PROPER('a title case').should.equal('A Title Case')
-    text.PROPER(true).should.equal('True')
-    text.PROPER(false).should.equal('False')
-    text.PROPER(90).should.equal('90')
-    text.PROPER(NaN).should.equal(error.value)
-    text.PROPER().should.equal('')
+    expect(text.PROPER(undefined)).to.equal('')
+    expect(text.PROPER(null)).to.equal('')
+    expect(text.PROPER(error.na)).to.equal(error.na)
+    expect(text.PROPER('a title case')).to.equal('A Title Case')
+    expect(text.PROPER(true)).to.equal('True')
+    expect(text.PROPER(false)).to.equal('False')
+    expect(text.PROPER(90)).to.equal('90')
+    expect(text.PROPER(NaN)).to.equal(error.value)
+    expect(text.PROPER()).to.equal('')
   })
 
   it('REGEXEXTRACT', () => {
-    text.REGEXEXTRACT('(Content) between brackets', '(([A-Za-z]+))').should.equal('Content')
-    text.REGEXEXTRACT('The price today is $826.25', '[0-9]+.[0-9]+[0-9]+').should.equal('826.25')
-    text.REGEXEXTRACT('Google Doc 101', '[0-9]+').should.equal('101')
-    text.REGEXEXTRACT('Google Doc 101').should.equal(error.na)
-    text.REGEXEXTRACT().should.equal(error.na)
+    expect(text.REGEXEXTRACT('(Content) between brackets', '(([A-Za-z]+))')).to.equal('Content')
+    expect(text.REGEXEXTRACT('The price today is $826.25', '[0-9]+.[0-9]+[0-9]+')).to.equal('826.25')
+    expect(text.REGEXEXTRACT('Google Doc 101', '[0-9]+')).to.equal('101')
+    expect(text.REGEXEXTRACT('Google Doc 101')).to.equal(error.na)
+    expect(text.REGEXEXTRACT()).to.equal(error.na)
   })
 
   it('REGEXREPLACE', () => {
-    text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))', 'Me').should.equal('(Me) between brackets')
-    text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))').should.equal(error.na)
-    text.REGEXREPLACE('(Content) between brackets').should.equal(error.na)
-    text.REGEXREPLACE().should.equal(error.na)
+    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))', 'Me')).to.equal('(Me) between brackets')
+    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))')).to.equal(error.na)
+    expect(text.REGEXREPLACE('(Content) between brackets')).to.equal(error.na)
+    expect(text.REGEXREPLACE()).to.equal(error.na)
   })
 
   it('REGEXMATCH', () => {
     // eslint-disable-next-line no-extra-semi
-    ;(typeof text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', true)).should.equal('object')
-    text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', false).should.equal(true)
-    text.REGEXMATCH('(Content) between brackets').should.equal(error.na)
-    text.REGEXMATCH().should.equal(error.na)
+    expect(typeof text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', true)).to.equal('object')
+    expect(text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', false)).to.equal(true)
+    expect(text.REGEXMATCH('(Content) between brackets')).to.equal(error.na)
+    expect(text.REGEXMATCH()).to.equal(error.na)
   })
 
   it('REPLACE', () => {
-    text.REPLACE('abcdefghijk', 6, 5, '*').should.equal('abcde*k')
-    text.REPLACE('2009', 3, 2, '10').should.equal('2010')
-    text.REPLACE('123456', 1, 3, '@').should.equal('@456')
-    text.REPLACE().should.equal(error.value)
+    expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
+    expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')
+    expect(text.REPLACE('123456', 1, 3, '@')).to.equal('@456')
+    expect(text.REPLACE()).to.equal(error.value)
   })
 
   it('REPT', () => {
-    text.REPT(undefined, undefined).should.equal('')
-    text.REPT('text', undefined).should.equal('')
-    text.REPT(undefined, 3).should.equal('')
-    text.REPT(error.na, 3).should.equal(error.na)
-    text.REPT('multiple ', 3).should.equal('multiple multiple multiple ')
-    text.REPT('m').should.equal('')
-    text.REPT().should.equal('')
-    text.REPT(true, 2).should.equal('truetrue')
-    text.REPT(12, 2).should.equal('1212')
+    expect(text.REPT(undefined, undefined)).to.equal('')
+    expect(text.REPT('text', undefined)).to.equal('')
+    expect(text.REPT(undefined, 3)).to.equal('')
+    expect(text.REPT(error.na, 3)).to.equal(error.na)
+    expect(text.REPT('multiple ', 3)).to.equal('multiple multiple multiple ')
+    expect(text.REPT('m')).to.equal('')
+    expect(text.REPT()).to.equal('')
+    expect(text.REPT(true, 2)).to.equal('truetrue')
+    expect(text.REPT(12, 2)).to.equal('1212')
   })
 
   it('RIGHT', () => {
-    text.RIGHT(error.na, 2).should.equal(error.na)
-    text.RIGHT('text', error.na).should.equal(error.na)
-    text.RIGHT(undefined, undefined).should.equal('')
-    text.RIGHT(undefined, 3).should.equal('')
-    text.RIGHT('Sale Price', 5).should.equal('Price')
-    text.RIGHT('Stock Number').should.equal('r')
-    text.RIGHT('something', 'invalid').should.equal(error.value)
-    text.RIGHT().should.equal('')
-    text.RIGHT(42).should.equal('2')
-    text.RIGHT(true).should.equal('e')
+    expect(text.RIGHT(error.na, 2)).to.equal(error.na)
+    expect(text.RIGHT('text', error.na)).to.equal(error.na)
+    expect(text.RIGHT(undefined, undefined)).to.equal('')
+    expect(text.RIGHT(undefined, 3)).to.equal('')
+    expect(text.RIGHT('Sale Price', 5)).to.equal('Price')
+    expect(text.RIGHT('Stock Number')).to.equal('r')
+    expect(text.RIGHT('something', 'invalid')).to.equal(error.value)
+    expect(text.RIGHT()).to.equal('')
+    expect(text.RIGHT(42)).to.equal('2')
+    expect(text.RIGHT(true)).to.equal('e')
   })
 
   it('SEARCH', () => {
-    text.SEARCH('e', 'Statements', 6).should.equal(7)
-    text.SEARCH('margin', 'Profit Margin').should.equal(8)
-    text.SEARCH(true, 'bool').should.equal(error.value)
-    text.SEARCH('foo', 'bar').should.equal(error.value)
-    text.SEARCH('ba', 'bar').should.equal(1)
+    expect(text.SEARCH('e', 'Statements', 6)).to.equal(7)
+    expect(text.SEARCH('margin', 'Profit Margin')).to.equal(8)
+    expect(text.SEARCH(true, 'bool')).to.equal(error.value)
+    expect(text.SEARCH('foo', 'bar')).to.equal(error.value)
+    expect(text.SEARCH('ba', 'bar')).to.equal(1)
   })
 
   it('SPLIT', () => {
     // eslint-disable-next-line no-extra-semi
-    ;(typeof text.SPLIT('123242', '2')).should.equal('object')
-    ;(text.SPLIT('123242', '2') instanceof Array).should.equal(true)
+    expect(typeof text.SPLIT('123242', '2')).to.equal('object')
+    expect(text.SPLIT('123242', '2') instanceof Array).to.equal(true)
   })
 
   describe('SUBSTITUTE', () => {
     it('should substitute all occurrences of a string for another string', () => {
-      text.SUBSTITUTE('Jim Alateras', 'Jim', 'James').should.equal('James Alateras')
-      text.SUBSTITUTE('Jim Alateras', 'im', 'ames').should.equal('James Alateras')
-      text.SUBSTITUTE('Jim Alateras', '', 'ames').should.equal('Jim Alateras')
-      text.SUBSTITUTE('Jim Alateras', undefined, 'ames').should.equal('Jim Alateras')
-      text.SUBSTITUTE('Jim, Alateras, Sr.', ',', '').should.equal('Jim Alateras Sr.')
-      text.SUBSTITUTE('', 'im', 'ames').should.equal('')
-      should.not.exist(text.SUBSTITUTE(undefined, 'im', 'ames'))
+      expect(text.SUBSTITUTE('Jim Alateras', 'Jim', 'James')).to.equal('James Alateras')
+      expect(text.SUBSTITUTE('Jim Alateras', 'im', 'ames')).to.equal('James Alateras')
+      expect(text.SUBSTITUTE('Jim Alateras', '', 'ames')).to.equal('Jim Alateras')
+      expect(text.SUBSTITUTE('Jim Alateras', undefined, 'ames')).to.equal('Jim Alateras')
+      expect(text.SUBSTITUTE('Jim, Alateras, Sr.', ',', '')).to.equal('Jim Alateras Sr.')
+      expect(text.SUBSTITUTE('', 'im', 'ames')).to.equal('')
+      expect(text.SUBSTITUTE(undefined, 'im', 'ames')).to.not.exist
     })
 
     it('should substitute regex meta-characters without interpretation', () => {
-      text.SUBSTITUTE('J. Alateras', '.', 'ames').should.equal('James Alateras')
+      expect(text.SUBSTITUTE('J. Alateras', '.', 'ames')).to.equal('James Alateras')
     })
 
     it('should return an #N/A error if not enough inputs', () => {
-      text.SUBSTITUTE('Jim Alateras').should.equal(error.na)
-      text.SUBSTITUTE().should.equal(error.na)
+      expect(text.SUBSTITUTE('Jim Alateras')).to.equal(error.na)
+      expect(text.SUBSTITUTE()).to.equal(error.na)
     })
 
     it('should substitute the nth occurrence of a string for another string', () => {
-      text.SUBSTITUTE('a-a-a', ':', '', 1).should.equal('a-a-a')
-      text.SUBSTITUTE('a-a-a', '-', ':', '2').should.equal('a-a:a')
-      text.SUBSTITUTE('a-a-a', '-', ':', '2.5').should.equal('a-a:a')
-      text.SUBSTITUTE('a-a-a', '-', ':', '3').should.equal('a-a-a')
-      text.SUBSTITUTE('a-a-a', '-', ':', 2).should.equal('a-a:a')
-      text.SUBSTITUTE('a-a-a', '-', ':', 2.5).should.equal('a-a:a')
-      text.SUBSTITUTE('a-a-a', '-', ':', 3).should.equal('a-a-a')
+      expect(text.SUBSTITUTE('a-a-a', ':', '', 1)).to.equal('a-a-a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '2')).to.equal('a-a:a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '2.5')).to.equal('a-a:a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '3')).to.equal('a-a-a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 2)).to.equal('a-a:a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 2.5)).to.equal('a-a:a')
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 3)).to.equal('a-a-a')
     })
 
     it('should return a #VALUE! error if occurrence is not a number greater than or equal to 1', () => {
-      text.SUBSTITUTE('a-a-a', '-', ':', '').should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', 'x').should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', '-1').should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', '-0.5').should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', -1).should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', 0).should.equal(error.value)
-      text.SUBSTITUTE('a-a-a', '-', ':', 0.5).should.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '')).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 'x')).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '-1')).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', '-0.5')).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', -1)).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 0)).to.equal(error.value)
+      expect(text.SUBSTITUTE('a-a-a', '-', ':', 0.5)).to.equal(error.value)
     })
   })
 
   it('T', () => {
-    text.T(undefined).should.equal('')
-    text.T(error.na).should.equal(error.na)
-    text.T('Rainfall').should.equal('Rainfall')
-    text.T(19).should.equal('')
-    text.T(true).should.equal('')
+    expect(text.T(undefined)).to.equal('')
+    expect(text.T(error.na)).to.equal(error.na)
+    expect(text.T('Rainfall')).to.equal('Rainfall')
+    expect(text.T(19)).to.equal('')
+    expect(text.T(true)).to.equal('')
   })
 
   it('TEXT', () => {
-    text.TEXT(1234.59, '###0.0').should.equal('1234.6')
-    text.TEXT(1234.52, '###0.0').should.equal('1234.5')
-    text.TEXT(1234.56, '###0.00').should.equal('1234.56')
-    text.TEXT(1234, '###0.0000').should.equal('1234.0000')
-    text.TEXT(123456.9, '#,##0.0000').should.equal('123,456.9000')
-    text.TEXT().should.equal(error.na)
+    expect(text.TEXT(1234.59, '###0.0')).to.equal('1234.6')
+    expect(text.TEXT(1234.52, '###0.0')).to.equal('1234.5')
+    expect(text.TEXT(1234.56, '###0.00')).to.equal('1234.56')
+    expect(text.TEXT(1234, '###0.0000')).to.equal('1234.0000')
+    expect(text.TEXT(123456.9, '#,##0.0000')).to.equal('123,456.9000')
+    expect(text.TEXT()).to.equal(error.na)
 
-    text.TEXT(1234567.89, '$#,##0.00').should.equal('$1,234,567.89')
-    text.TEXT(1234.59, '$#,##0.00').should.equal('$1,234.59')
-    text.TEXT(-1234567.89, '$#,##0.00').should.equal('-$1,234,567.89')
-    text.TEXT(-1234.59, '$#,##0.00').should.equal('-$1,234.59')
-    text.TEXT(0, '$#,##0.00').should.equal('$0.00')
+    expect(text.TEXT(1234567.89, '$#,##0.00')).to.equal('$1,234,567.89')
+    expect(text.TEXT(1234.59, '$#,##0.00')).to.equal('$1,234.59')
+    expect(text.TEXT(-1234567.89, '$#,##0.00')).to.equal('-$1,234,567.89')
+    expect(text.TEXT(-1234.59, '$#,##0.00')).to.equal('-$1,234.59')
+    expect(text.TEXT(0, '$#,##0.00')).to.equal('$0.00')
 
-    text.TEXT(0.89, '0.00%').should.equal('89.00%')
-    text.TEXT(0.1234, '0.00%').should.equal('12.34%')
-    text.TEXT(1, '0.00%').should.equal('100.00%')
+    expect(text.TEXT(0.89, '0.00%')).to.equal('89.00%')
+    expect(text.TEXT(0.1234, '0.00%')).to.equal('12.34%')
+    expect(text.TEXT(1, '0.00%')).to.equal('100.00%')
   })
 
   it('TEXTJOIN', () => {
-    text
-      .TEXTJOIN(' ', true, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('The sun will come up tomorrow.')
-    text
-      .TEXTJOIN(' ', 'TRUE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('The sun will come up tomorrow.')
-    text
-      .TEXTJOIN(' ', false, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('The  sun will come up tomorrow.')
-    text
-      .TEXTJOIN(' ', 'FALSE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('The  sun will come up tomorrow.')
-    text
-      .TEXTJOIN(['_', '>'], true, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('The_sun>will_come>up_tomorrow.')
-    text
-      .TEXTJOIN(' ', true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.'])
-      .should.equal('The sun will come up tomorrow.')
-    text
-      .TEXTJOIN(true, true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.'])
-      .should.equal('Thetruesuntruewilltruecometrueuptruetomorrow.')
-    text
-      .TEXTJOIN(undefined, undefined, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')
-      .should.equal('Thesunwillcomeuptomorrow.')
-    text.TEXTJOIN(' ', true).should.equal(error.na)
+    expect(text.TEXTJOIN(' ', true, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'The sun will come up tomorrow.'
+    )
+    expect(text.TEXTJOIN(' ', 'TRUE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'The sun will come up tomorrow.'
+    )
+    expect(text.TEXTJOIN(' ', false, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'The  sun will come up tomorrow.'
+    )
+    expect(text.TEXTJOIN(' ', 'FALSE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'The  sun will come up tomorrow.'
+    )
+    expect(text.TEXTJOIN(['_', '>'], true, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'The_sun>will_come>up_tomorrow.'
+    )
+    expect(text.TEXTJOIN(' ', true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.'])).to.equal(
+      'The sun will come up tomorrow.'
+    )
+    expect(text.TEXTJOIN(true, true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.'])).to.equal(
+      'Thetruesuntruewilltruecometrueuptruetomorrow.'
+    )
+    expect(text.TEXTJOIN(undefined, undefined, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+      'Thesunwillcomeuptomorrow.'
+    )
+    expect(text.TEXTJOIN(' ', true)).to.equal(error.na)
   })
 
   it('TRIM', () => {
-    text.TRIM(undefined).should.equal('')
-    text.TRIM(error.na).should.equal(error.na)
-    text.TRIM(' more  spaces ').should.equal('more spaces')
-    text.TRIM(true).should.equal('true')
-    text.TRIM(10).should.equal('10')
-    text
-      .TRIM(
+    expect(text.TRIM(undefined)).to.equal('')
+    expect(text.TRIM(error.na)).to.equal(error.na)
+    expect(text.TRIM(' more  spaces ')).to.equal('more spaces')
+    expect(text.TRIM(true)).to.equal('true')
+    expect(text.TRIM(10)).to.equal('10')
+    expect(
+      text.TRIM(
         `  spaces,      tabs, and
       new lines`
       )
-      .should.equal('spaces, tabs, and new lines')
-    text.TRIM('  spaces,\t\t\ttabs, and\nnew lines').should.equal('spaces, tabs, and new lines')
+    ).to.equal('spaces, tabs, and new lines')
+    expect(text.TRIM('  spaces,\t\t\ttabs, and\nnew lines')).to.equal('spaces, tabs, and new lines')
   })
 
   it('UNICHAR', () => {
-    text.UNICHAR(undefined).should.equal(error.value)
-    text.UNICHAR(error.na).should.equal(error.na)
-    text.UNICHAR(65).should.equal('A')
-    text.UNICHAR(255).should.equal('ÿ')
-    text.UNICHAR(1000).should.equal('Ϩ')
+    expect(text.UNICHAR(undefined)).to.equal(error.value)
+    expect(text.UNICHAR(error.na)).to.equal(error.na)
+    expect(text.UNICHAR(65)).to.equal('A')
+    expect(text.UNICHAR(255)).to.equal('ÿ')
+    expect(text.UNICHAR(1000)).to.equal('Ϩ')
   })
 
   it('UNICODE', () => {
-    text.UNICODE(undefined).should.equal(error.value)
-    text.UNICODE(error.na).should.equal(error.na)
-    text.UNICODE('A').should.equal(65)
-    text.UNICODE('Ϩ').should.equal(1000)
+    expect(text.UNICODE(undefined)).to.equal(error.value)
+    expect(text.UNICODE(error.na)).to.equal(error.na)
+    expect(text.UNICODE('A')).to.equal(65)
+    expect(text.UNICODE('Ϩ')).to.equal(1000)
   })
 
   it('UPPER', () => {
-    text.UPPER(undefined).should.equal('')
-    text.UPPER(error.na).should.equal(error.na)
-    text.UPPER('to upper case please').should.equal('TO UPPER CASE PLEASE')
-    text.UPPER(true).should.equal('TRUE')
-    text.UPPER(1).should.equal('1')
+    expect(text.UPPER(undefined)).to.equal('')
+    expect(text.UPPER(error.na)).to.equal(error.na)
+    expect(text.UPPER('to upper case please')).to.equal('TO UPPER CASE PLEASE')
+    expect(text.UPPER(true)).to.equal('TRUE')
+    expect(text.UPPER(1)).to.equal('1')
   })
 
   describe('VALUE', () => {
     it('should thrown an error in case of error input', () => {
-      text.VALUE(error.na).should.equal(error.na)
+      expect(text.VALUE(error.na)).to.equal(error.na)
     })
 
     it('should return the input in case of number input', () => {
-      text.VALUE(3).should.equal(3)
+      expect(text.VALUE(3)).to.equal(3)
     })
 
     it('should return 0 in case of null, empty input', () => {
-      text.VALUE('').should.equal(0)
-      text.VALUE().should.equal(0)
-      text.VALUE(null).should.equal(0)
+      expect(text.VALUE('')).to.equal(0)
+      expect(text.VALUE()).to.equal(0)
+      expect(text.VALUE(null)).to.equal(0)
     })
 
     it('should thrown an error in case of boolean input', () => {
-      text.VALUE(true).should.equal(error.value)
+      expect(text.VALUE(true)).to.equal(error.value)
     })
 
     it('should thrown an error in case of malformed input', () => {
-      text.VALUE('SOMETEXT').should.equal(error.value)
-      text.VALUE('2+2').should.equal(error.value)
-      text.VALUE('3%22').should.equal(error.value)
-      text.VALUE('3D22').should.equal(error.value)
-      text.VALUE('SOMETEXT 42').should.equal(error.value)
+      expect(text.VALUE('SOMETEXT')).to.equal(error.value)
+      expect(text.VALUE('2+2')).to.equal(error.value)
+      expect(text.VALUE('3%22')).to.equal(error.value)
+      expect(text.VALUE('3D22')).to.equal(error.value)
+      expect(text.VALUE('SOMETEXT 42')).to.equal(error.value)
     })
 
     it('should parse scientific notation string', () => {
-      text.VALUE('10E3').should.equal(10000)
+      expect(text.VALUE('10E3')).to.equal(10000)
     })
 
     it('should parse percentage string', () => {
-      text.VALUE('%12').should.equal(0.12)
-      text.VALUE('12%').should.equal(0.12)
+      expect(text.VALUE('%12')).to.equal(0.12)
+      expect(text.VALUE('12%')).to.equal(0.12)
     })
 
     it('should allow numeric input', () => {
-      text.VALUE(12).should.equal(12)
+      expect(text.VALUE(12)).to.equal(12)
     })
 
     /**
@@ -456,23 +456,23 @@ describe('Text', () => {
      * such as Numeral.js or Numbro.
      */
     it('should parse a number as string', () => {
-      text.VALUE('123.45').should.equal(123.45)
-      text.VALUE('10,000').should.equal(10000)
-      text.VALUE('1,210,000').should.equal(1210000)
-      text.VALUE('11 000').should.equal(11000)
-      text.VALUE('-3.14').should.equal(-3.14)
+      expect(text.VALUE('123.45')).to.equal(123.45)
+      expect(text.VALUE('10,000')).to.equal(10000)
+      expect(text.VALUE('1,210,000')).to.equal(1210000)
+      expect(text.VALUE('11 000')).to.equal(11000)
+      expect(text.VALUE('-3.14')).to.equal(-3.14)
     })
 
     it('should parse dollar monetary string', () => {
-      text.VALUE('$1000').should.equal(1000)
-      text.VALUE('$11,000').should.equal(11000)
+      expect(text.VALUE('$1000')).to.equal(1000)
+      expect(text.VALUE('$11,000')).to.equal(11000)
     })
 
     /**
      * These test cases illustrate permissive input cases. They do not mirror exactly Excel behaviors.
      */
     it('could be less permissive', () => {
-      text.VALUE('EUR1000').should.equal(1000)
+      expect(text.VALUE('EUR1000')).to.equal(1000)
     })
   })
 })

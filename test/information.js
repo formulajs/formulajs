@@ -1,4 +1,4 @@
-import 'should'
+import { expect } from 'chai'
 
 import * as error from '../src/utils/error.js'
 import * as information from '../src/information.js'
@@ -6,140 +6,140 @@ import * as information from '../src/information.js'
 describe('Information', () => {
   // TODO
   it('CELL', () => {
-    information.CELL.should.throw('CELL is not implemented')
+    expect(information.CELL).to.throw('CELL is not implemented')
   })
 
   it('ERROR.TYPE', () => {
-    information.ERROR.TYPE(error.nil).should.equal(1)
-    information.ERROR.TYPE(error.div0).should.equal(2)
-    information.ERROR.TYPE(error.value).should.equal(3)
-    information.ERROR.TYPE(error.ref).should.equal(4)
-    information.ERROR.TYPE(error.name).should.equal(5)
-    information.ERROR.TYPE(error.num).should.equal(6)
-    information.ERROR.TYPE(error.na).should.equal(7)
-    information.ERROR.TYPE(error.data).should.equal(8)
-    information.ERROR.TYPE(1).should.equal(error.na)
+    expect(information.ERROR.TYPE(error.nil)).to.equal(1)
+    expect(information.ERROR.TYPE(error.div0)).to.equal(2)
+    expect(information.ERROR.TYPE(error.value)).to.equal(3)
+    expect(information.ERROR.TYPE(error.ref)).to.equal(4)
+    expect(information.ERROR.TYPE(error.name)).to.equal(5)
+    expect(information.ERROR.TYPE(error.num)).to.equal(6)
+    expect(information.ERROR.TYPE(error.na)).to.equal(7)
+    expect(information.ERROR.TYPE(error.data)).to.equal(8)
+    expect(information.ERROR.TYPE(1)).to.equal(error.na)
   })
 
   // TODO
   it('INFO', () => {
-    information.INFO.should.throw('INFO is not implemented')
+    expect(information.INFO).to.throw('INFO is not implemented')
   })
 
   it('ISBINARY', () => {
-    information.ISBINARY(1).should.equal(true)
-    information.ISBINARY(0).should.equal(true)
-    information.ISBINARY(1000).should.equal(true)
-    information.ISBINARY('1').should.equal(true)
-    information.ISBINARY('0').should.equal(true)
-    information.ISBINARY('1000').should.equal(true)
-    information.ISBINARY('invalid').should.equal(false)
+    expect(information.ISBINARY(1)).to.equal(true)
+    expect(information.ISBINARY(0)).to.equal(true)
+    expect(information.ISBINARY(1000)).to.equal(true)
+    expect(information.ISBINARY('1')).to.equal(true)
+    expect(information.ISBINARY('0')).to.equal(true)
+    expect(information.ISBINARY('1000')).to.equal(true)
+    expect(information.ISBINARY('invalid')).to.equal(false)
   })
 
   it('ISBLANK', () => {
-    information.ISBLANK(null).should.equal(true)
-    information.ISBLANK(1).should.equal(false)
+    expect(information.ISBLANK(null)).to.equal(true)
+    expect(information.ISBLANK(1)).to.equal(false)
   })
 
   it('ISERR', () => {
-    information.ISERR(1).should.equal(false)
-    information.ISERR(error.na).should.equal(false)
-    information.ISERR(error.value).should.equal(true)
-    information.ISERR(NaN).should.equal(true)
-    information.ISERR(1 / 0).should.equal(true)
+    expect(information.ISERR(1)).to.equal(false)
+    expect(information.ISERR(error.na)).to.equal(false)
+    expect(information.ISERR(error.value)).to.equal(true)
+    expect(information.ISERR(NaN)).to.equal(true)
+    expect(information.ISERR(1 / 0)).to.equal(true)
   })
 
   it('ISERROR', () => {
-    information.ISERROR(1).should.equal(false)
-    information.ISERROR(error.na).should.equal(true)
-    information.ISERROR(error.value).should.equal(true)
+    expect(information.ISERROR(1)).to.equal(false)
+    expect(information.ISERROR(error.na)).to.equal(true)
+    expect(information.ISERROR(error.value)).to.equal(true)
   })
 
   it('ISEVEN', () => {
-    information.ISEVEN(-1).should.equal(false)
-    information.ISEVEN(2.5).should.equal(true)
-    information.ISEVEN(5).should.equal(false)
-    information.ISEVEN(0).should.equal(true)
-    information.ISEVEN(null).should.equal(true)
+    expect(information.ISEVEN(-1)).to.equal(false)
+    expect(information.ISEVEN(2.5)).to.equal(true)
+    expect(information.ISEVEN(5)).to.equal(false)
+    expect(information.ISEVEN(0)).to.equal(true)
+    expect(information.ISEVEN(null)).to.equal(true)
   })
 
   // TODO
   it('ISFORMULA', () => {
-    information.ISFORMULA.should.throw('ISFORMULA is not implemented')
+    expect(information.ISFORMULA).to.throw('ISFORMULA is not implemented')
   })
 
   it('ISLOGICAL', () => {
-    information.ISLOGICAL(true).should.equal(true)
-    information.ISLOGICAL(false).should.equal(true)
-    information.ISLOGICAL(1).should.equal(false)
-    information.ISLOGICAL('true').should.equal(false)
-    information.ISLOGICAL(null).should.equal(false)
+    expect(information.ISLOGICAL(true)).to.equal(true)
+    expect(information.ISLOGICAL(false)).to.equal(true)
+    expect(information.ISLOGICAL(1)).to.equal(false)
+    expect(information.ISLOGICAL('true')).to.equal(false)
+    expect(information.ISLOGICAL(null)).to.equal(false)
   })
 
   it('ISNA', () => {
-    information.ISNA(error.na).should.equal(true)
-    information.ISNA(1).should.equal(false)
+    expect(information.ISNA(error.na)).to.equal(true)
+    expect(information.ISNA(1)).to.equal(false)
   })
 
   it('ISNONTEXT', () => {
-    information.ISNONTEXT(1).should.equal(true)
-    information.ISNONTEXT(true).should.equal(true)
-    information.ISNONTEXT('a').should.equal(false)
+    expect(information.ISNONTEXT(1)).to.equal(true)
+    expect(information.ISNONTEXT(true)).to.equal(true)
+    expect(information.ISNONTEXT('a')).to.equal(false)
   })
 
   it('ISNUMBER', () => {
-    information.ISNUMBER(1).should.equal(true)
-    information.ISNUMBER('1').should.equal(false)
-    information.ISNUMBER(1 / 0).should.equal(false)
+    expect(information.ISNUMBER(1)).to.equal(true)
+    expect(information.ISNUMBER('1')).to.equal(false)
+    expect(information.ISNUMBER(1 / 0)).to.equal(false)
   })
 
   it('ISODD', () => {
-    information.ISODD(-1).should.equal(true)
-    information.ISODD(5).should.equal(true)
-    information.ISODD(2.5).should.equal(false)
-    information.ISODD(null).should.equal(false)
+    expect(information.ISODD(-1)).to.equal(true)
+    expect(information.ISODD(5)).to.equal(true)
+    expect(information.ISODD(2.5)).to.equal(false)
+    expect(information.ISODD(null)).to.equal(false)
   })
 
   // TODO
   it('ISREF', () => {
-    information.ISREF.should.throw('ISREF is not implemented')
+    expect(information.ISREF).to.throw('ISREF is not implemented')
   })
 
   it('ISTEXT', () => {
-    information.ISTEXT('a').should.equal(true)
-    information.ISTEXT(1).should.equal(false)
-    information.ISTEXT(true).should.equal(false)
-    information.ISTEXT().should.equal(false)
+    expect(information.ISTEXT('a')).to.equal(true)
+    expect(information.ISTEXT(1)).to.equal(false)
+    expect(information.ISTEXT(true)).to.equal(false)
+    expect(information.ISTEXT()).to.equal(false)
   })
 
   it('N', () => {
-    information.N(1).should.equal(1)
-    information.N(new Date(0)).should.equal(new Date(0).getTime())
-    information.N(true).should.equal(1)
-    information.N(false).should.equal(0)
-    information.N(error.na).should.equal(error.na)
-    information.N('a').should.equal(0)
+    expect(information.N(1)).to.equal(1)
+    expect(information.N(new Date(0))).to.equal(new Date(0).getTime())
+    expect(information.N(true)).to.equal(1)
+    expect(information.N(false)).to.equal(0)
+    expect(information.N(error.na)).to.equal(error.na)
+    expect(information.N('a')).to.equal(0)
   })
 
   it('NA', () => {
-    information.NA().should.equal(error.na)
+    expect(information.NA()).to.equal(error.na)
   })
 
   // TODO
   it('SHEET', () => {
-    information.SHEET.should.throw('SHEET is not implemented')
+    expect(information.SHEET).to.throw('SHEET is not implemented')
   })
 
   // TODO
   it('SHEETS', () => {
-    information.SHEETS.should.throw('SHEETS is not implemented')
+    expect(information.SHEETS).to.throw('SHEETS is not implemented')
   })
 
   it('TYPE', () => {
-    information.TYPE(1).should.equal(1)
-    information.TYPE('a').should.equal(2)
-    information.TYPE(true).should.equal(4)
-    information.TYPE(error.na).should.equal(16)
-    information.TYPE([1]).should.equal(64)
+    expect(information.TYPE(1)).to.equal(1)
+    expect(information.TYPE('a')).to.equal(2)
+    expect(information.TYPE(true)).to.equal(4)
+    expect(information.TYPE(error.na)).to.equal(16)
+    expect(information.TYPE([1])).to.equal(64)
   })
 })
