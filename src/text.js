@@ -688,7 +688,13 @@ export function T(value) {
  * @returns
  */
 export function TEXT(number, format) {
-  if (number === undefined || format === undefined) return error.na
+  if (number === undefined || number instanceof Error || format instanceof Error) return error.na
+
+  if (format === undefined || format === null) return ''
+
+  if (typeof format === 'number') return String(format)
+
+  if (typeof format !== 'string') return error.value
 
   const currencySymbol = format.startsWith('$') ? '$' : ''
   const isPercent = format.endsWith('%')
