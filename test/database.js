@@ -1,12 +1,12 @@
-import 'should'
+import { expect } from 'chai'
 
 import * as database from '../src/database.js'
 import * as error from '../src/utils/error.js'
 
 describe('Database', () => {
   it('FINDFIELD', () => {
-    database
-      .FINDFIELD(
+    expect(
+      database.FINDFIELD(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -15,9 +15,9 @@ describe('Database', () => {
         ],
         'Yield'
       )
-      .should.equal(3)
-    database
-      .FINDFIELD(
+    ).to.equal(3)
+    expect(
+      database.FINDFIELD(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -26,12 +26,12 @@ describe('Database', () => {
         ],
         'invalid'
       )
-      .should.equal(error.value)
+    ).to.equal(error.value)
   })
 
   it('DAVERAGE', () => {
-    database
-      .DAVERAGE(
+    expect(
+      database.DAVERAGE(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -44,9 +44,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(12)
-    database
-      .DAVERAGE(
+    ).to.equal(12)
+    expect(
+      database.DAVERAGE(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -59,9 +59,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(10.75)
-    database
-      .DAVERAGE(
+    ).to.equal(10.75)
+    expect(
+      database.DAVERAGE(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -74,9 +74,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DAVERAGE(
+    ).to.equal(error.value)
+    expect(
+      database.DAVERAGE(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 8],
@@ -89,12 +89,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(10.75)
+    ).to.equal(10.75)
   })
 
   it('DCOUNT', () => {
-    database
-      .DCOUNT(
+    expect(
+      database.DCOUNT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -107,9 +107,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(2)
-    database
-      .DCOUNT(
+    ).to.equal(2)
+    expect(
+      database.DCOUNT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -122,9 +122,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DCOUNT(
+    ).to.equal(error.value)
+    expect(
+      database.DCOUNT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -137,12 +137,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(2)
+    ).to.equal(2)
   })
 
   it('DCOUNTA', () => {
-    database
-      .DCOUNTA(
+    expect(
+      database.DCOUNTA(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -155,9 +155,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(1)
-    database
-      .DCOUNTA(
+    ).to.equal(1)
+    expect(
+      database.DCOUNTA(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -170,9 +170,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DCOUNTA(
+    ).to.equal(error.value)
+    expect(
+      database.DCOUNTA(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -185,12 +185,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(1)
+    ).to.equal(1)
   })
 
   it('DGET', () => {
-    database
-      .DGET(
+    expect(
+      database.DGET(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -203,9 +203,9 @@ describe('Database', () => {
           ['Age', '>16']
         ]
       )
-      .should.equal(14)
-    database
-      .DGET(
+    ).to.equal(14)
+    expect(
+      database.DGET(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -218,9 +218,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.num)
-    database
-      .DGET(
+    ).to.equal(error.num)
+    expect(
+      database.DGET(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -233,9 +233,9 @@ describe('Database', () => {
           ['Age', '>20']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DGET(
+    ).to.equal(error.value)
+    expect(
+      database.DGET(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -248,9 +248,9 @@ describe('Database', () => {
           ['Age', '>16']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DGET(
+    ).to.equal(error.value)
+    expect(
+      database.DGET(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -263,12 +263,12 @@ describe('Database', () => {
           ['Age', '>16']
         ]
       )
-      .should.equal(14)
+    ).to.equal(14)
   })
 
   it('DMAX', () => {
-    database
-      .DMAX(
+    expect(
+      database.DMAX(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -281,9 +281,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(14)
-    database
-      .DMAX(
+    ).to.equal(14)
+    expect(
+      database.DMAX(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -296,9 +296,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(14)
-    database
-      .DMAX(
+    ).to.equal(14)
+    expect(
+      database.DMAX(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -308,9 +308,9 @@ describe('Database', () => {
         'Yield',
         [['Height'], ['Age', '>14']]
       )
-      .should.equal(14)
-    database
-      .DMAX(
+    ).to.equal(14)
+    expect(
+      database.DMAX(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -323,9 +323,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DMAX(
+    ).to.equal(error.value)
+    expect(
+      database.DMAX(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -338,12 +338,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(14)
+    ).to.equal(14)
   })
 
   it('DMIN', () => {
-    database
-      .DMIN(
+    expect(
+      database.DMIN(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -356,9 +356,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(10)
-    database
-      .DMIN(
+    ).to.equal(10)
+    expect(
+      database.DMIN(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -371,9 +371,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DMIN(
+    ).to.equal(error.value)
+    expect(
+      database.DMIN(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -386,12 +386,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(10)
+    ).to.equal(10)
   })
 
   it('DPRODUCT', () => {
-    database
-      .DPRODUCT(
+    expect(
+      database.DPRODUCT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -404,9 +404,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(140)
-    database
-      .DPRODUCT(
+    ).to.equal(140)
+    expect(
+      database.DPRODUCT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -419,9 +419,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DPRODUCT(
+    ).to.equal(error.value)
+    expect(
+      database.DPRODUCT(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -434,12 +434,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(140)
+    ).to.equal(140)
   })
 
   it('DSTDEV', () => {
-    database
-      .DSTDEV(
+    expect(
+      database.DSTDEV(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -449,9 +449,9 @@ describe('Database', () => {
         'Yield',
         [['Height', '>10']]
       )
-      .should.equal(2.8635642126552705)
-    database
-      .DSTDEV(
+    ).to.equal(2.8635642126552705)
+    expect(
+      database.DSTDEV(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -461,9 +461,9 @@ describe('Database', () => {
         undefined,
         [['Height', '>10']]
       )
-      .should.equal(error.value)
-    database
-      .DSTDEV(
+    ).to.equal(error.value)
+    expect(
+      database.DSTDEV(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -473,12 +473,12 @@ describe('Database', () => {
         3,
         [['Height', '>10']]
       )
-      .should.equal(2.8635642126552705)
+    ).to.equal(2.8635642126552705)
   })
 
   it('DSTDEVP', () => {
-    database
-      .DSTDEVP(
+    expect(
+      database.DSTDEVP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -488,9 +488,9 @@ describe('Database', () => {
         'Yield',
         [['Height', '>10']]
       )
-      .should.equal(2.5612496949731396)
-    database
-      .DSTDEVP(
+    ).to.equal(2.5612496949731396)
+    expect(
+      database.DSTDEVP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -500,9 +500,9 @@ describe('Database', () => {
         undefined,
         [['Height', '>10']]
       )
-      .should.equal(error.value)
-    database
-      .DSTDEVP(
+    ).to.equal(error.value)
+    expect(
+      database.DSTDEVP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -512,12 +512,12 @@ describe('Database', () => {
         3,
         [['Height', '>10']]
       )
-      .should.equal(2.5612496949731396)
+    ).to.equal(2.5612496949731396)
   })
 
   it('DSUM', () => {
-    database
-      .DSUM(
+    expect(
+      database.DSUM(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -530,9 +530,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(24)
-    database
-      .DSUM(
+    ).to.equal(24)
+    expect(
+      database.DSUM(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -545,9 +545,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DSUM(
+    ).to.equal(error.value)
+    expect(
+      database.DSUM(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -560,12 +560,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(24)
+    ).to.equal(24)
   })
 
   it('DVAR', () => {
-    database
-      .DVAR(
+    expect(
+      database.DVAR(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -578,9 +578,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(8)
-    database
-      .DVAR(
+    ).to.equal(8)
+    expect(
+      database.DVAR(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -593,9 +593,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DVAR(
+    ).to.equal(error.value)
+    expect(
+      database.DVAR(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -608,12 +608,12 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(8)
+    ).to.equal(8)
   })
 
   it('DVARP', () => {
-    database
-      .DVARP(
+    expect(
+      database.DVARP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -626,9 +626,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(4)
-    database
-      .DVARP(
+    ).to.equal(4)
+    expect(
+      database.DVARP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -641,9 +641,9 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(error.value)
-    database
-      .DVARP(
+    ).to.equal(error.value)
+    expect(
+      database.DVARP(
         [
           ['Tree', 'Apple', 'Pear', 'Cherry', 'Apple', 'Pear', 'Apple'],
           ['Height', 18, 12, 13, 14, 9, 12],
@@ -656,6 +656,6 @@ describe('Database', () => {
           ['Age', '>14']
         ]
       )
-      .should.equal(4)
+    ).to.equal(4)
   })
 })

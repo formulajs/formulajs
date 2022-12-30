@@ -1,4 +1,4 @@
-import 'should'
+import { expect } from 'chai'
 
 import * as error from '../../src/utils/error.js'
 import * as utils from '../../src/utils/common.js'
@@ -6,83 +6,76 @@ import * as utils from '../../src/utils/common.js'
 describe('Utils => common', () => {
   describe('flattenShallow', () => {
     it('should flatten an array', () => {
-      should.deepEqual(
+      expect(
         utils.flattenShallow([
           [1, 2],
           [3, 4]
-        ]),
-        [1, 2, 3, 4]
-      )
+        ])
+      ).to.deep.equal([1, 2, 3, 4])
     })
 
     it('should force an array in case of single value', () => {
-      utils.flattenShallow('not array').should.deepEqual(['not array'])
+      expect(utils.flattenShallow('not array')).to.deep.equal(['not array'])
     })
   })
 
   it('isFlat', () => {
-    utils
-      .isFlat([
+    expect(
+      utils.isFlat([
         [1, 2],
         [3, 4]
       ])
-      .should.equal(false)
+    ).to.equal(false)
 
-    utils.isFlat([1, 2, 3]).should.equal(true)
-    utils.isFlat().should.equal(false)
+    expect(utils.isFlat([1, 2, 3])).to.equal(true)
+    expect(utils.isFlat()).to.equal(false)
   })
 
   describe('flatten', () => {
     describe('with direct arguments', () => {
       it('should merge and flatten arguments', () => {
-        should.deepEqual(
+        expect(
           utils.flatten([
             [1, 2],
             [3, 4]
-          ]),
-          [1, 2, 3, 4]
-        )
-
-        should.deepEqual(utils.flatten([1, 2, [3, 4], [[5, 6]]]), [1, 2, 3, 4, 5, 6])
-
-        should.deepEqual(utils.flatten([[1]], 2, [3, 4], [[5, 6]]), [1, 2, 3, 4, 5, 6])
-
-        should.deepEqual(utils.flatten(['test']), ['test'])
-
-        should.deepEqual(utils.flatten([[12]]), [12])
-
-        should.deepEqual(utils.flatten(null), [null])
+          ])
+        ).to.deep.equal([1, 2, 3, 4])
+        expect(utils.flatten([1, 2, [3, 4], [[5, 6]]])).to.deep.equal([1, 2, 3, 4, 5, 6])
+        expect(utils.flatten([[1]], 2, [3, 4], [[5, 6]])).to.deep.equal([1, 2, 3, 4, 5, 6])
+        expect(utils.flatten(['test'])).to.deep.equal(['test'])
+        expect(utils.flatten([[12]])).to.deep.equal([12])
+        expect(utils.flatten(null)).to.deep.equal([null])
       })
 
       it('should force array type return', () => {
-        should.deepEqual(utils.flatten('test'), ['test'])
-        should.deepEqual(utils.flatten(12), [12])
+        expect(utils.flatten('test')).to.deep.equal(['test'])
+        expect(utils.flatten(12)).to.deep.equal([12])
       })
 
       it('should return an empty array', () => {
-        should.deepEqual(utils.flatten(), [])
+        expect(utils.flatten()).to.deep.equal([])
       })
     })
 
     describe('with Arguments as arguments', () => {
       it('should merge and flatten arguments', () => {
         ;(function () {
-          should.deepEqual(utils.flatten(arguments), [1, 2, 3, 4, 5, 6])
+          expect(utils.flatten(arguments)).to.deep.equal([1, 2, 3, 4, 5, 6])
         })([[1]], 2, [3, 4], [[5, 6]])
       })
 
       it('should force array type return', () => {
         ;(function () {
-          should.deepEqual(utils.flatten(arguments), ['test'])
+          expect(utils.flatten(arguments)).to.deep.equal(['test'])
         })('test')
         ;(function () {
-          should.deepEqual(utils.flatten(arguments), [12])
+          expect(utils.flatten(arguments)).to.deep.equal([12])
         })(12)
       })
 
       it('should return an empty array', () => {
         ;(function () {
-          should.deepEqual(utils.flatten(arguments), [])
+          expect(utils.flatten(arguments)).to.deep.equal([])
         })()
       })
     })
@@ -91,234 +84,191 @@ describe('Utils => common', () => {
   it('argsToArray', () => {
     // eslint-disable-next-line no-extra-semi
     ;(function () {
-      should.deepEqual(utils.argsToArray(arguments), [1, 2, 3])
+      expect(utils.argsToArray(arguments)).to.deep.equal([1, 2, 3])
     })(1, 2, 3)
   })
 
   it('cleanFloat', () => {
-    utils.cleanFloat(3.0999999999999996).should.equal(3.1)
+    expect(utils.cleanFloat(3.0999999999999996)).to.equal(3.1)
   })
 
   it('parseBool', () => {
-    utils.parseBool(true).should.equal(true)
-    utils.parseBool(0).should.equal(false)
-    utils.parseBool(1).should.equal(true)
-    utils.parseBool('TRUE').should.equal(true)
-    utils.parseBool('FALSE').should.equal(false)
-    utils.parseBool(new Date()).should.equal(true)
-    utils.parseBool(NaN).should.equal(true)
+    expect(utils.parseBool(true)).to.equal(true)
+    expect(utils.parseBool(0)).to.equal(false)
+    expect(utils.parseBool(1)).to.equal(true)
+    expect(utils.parseBool('TRUE')).to.equal(true)
+    expect(utils.parseBool('FALSE')).to.equal(false)
+    expect(utils.parseBool(new Date())).to.equal(true)
+    expect(utils.parseBool(NaN)).to.equal(true)
     const err = new Error()
-    utils.parseBool(err).should.equal(err)
+    expect(utils.parseBool(err)).to.equal(err)
   })
 
   it('parseNumber', () => {
-    utils.parseNumber().should.equal(0)
-    utils.parseNumber(null).should.equal(0)
-    utils.parseNumber('').should.equal(0)
-    utils.parseNumber(2).should.equal(2)
-    utils.parseNumber(error.na).should.equal(error.na)
-    utils.parseNumber('text').should.equal(error.value)
+    expect(utils.parseNumber()).to.equal(0)
+    expect(utils.parseNumber(null)).to.equal(0)
+    expect(utils.parseNumber('')).to.equal(0)
+    expect(utils.parseNumber(2)).to.equal(2)
+    expect(utils.parseNumber(error.na)).to.equal(error.na)
+    expect(utils.parseNumber('text')).to.equal(error.value)
   })
 
   it('parseNumberArray', () => {
-    utils.parseNumberArray().should.equal(error.value)
-    utils.parseNumberArray([2, 0, '', null, undefined]).should.eql([2, 0, 0, 0, 0])
-    utils.parseNumberArray([2, 'a', 1, error.na]).should.equal(error.na)
-    utils.parseNumberArray([2, 'a', 1]).should.equal(error.value)
+    expect(utils.parseNumberArray()).to.equal(error.value)
+    expect(utils.parseNumberArray([2, 0, '', null, undefined])).to.eql([2, 0, 0, 0, 0])
+    expect(utils.parseNumberArray([2, 'a', 1, error.na])).to.equal(error.na)
+    expect(utils.parseNumberArray([2, 'a', 1])).to.equal(error.value)
   })
 
   it('parseString', () => {
-    utils.parseString().should.equal('')
-    utils.parseString(null).should.equal('')
-    utils.parseString('').should.equal('')
-    utils.parseString('text').should.equal('text')
-    utils.parseString(2).should.equal('2')
-    utils.parseString(error.na).should.equal(error.na)
+    expect(utils.parseString()).to.equal('')
+    expect(utils.parseString(null)).to.equal('')
+    expect(utils.parseString('')).to.equal('')
+    expect(utils.parseString('text')).to.equal('text')
+    expect(utils.parseString(2)).to.equal('2')
+    expect(utils.parseString(error.na)).to.equal(error.na)
   })
 
   it('parseMatrix', () => {
-    utils.parseMatrix().should.equal(error.value)
-    utils
-      .parseMatrix([
+    expect(utils.parseMatrix()).to.equal(error.value)
+    expect(
+      utils.parseMatrix([
         [1, 2, 3],
         [4, 5, 6]
       ])
-      .should.deepEqual([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-    utils
-      .parseMatrix([
+    ).to.deep.equal([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+    expect(
+      utils.parseMatrix([
         [1, 2, 3],
         ['4', 5, 6]
       ])
-      .should.deepEqual([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-    utils
-      .parseMatrix([
+    ).to.deep.equal([
+      [1, 2, 3],
+      [4, 5, 6]
+    ])
+    expect(
+      utils.parseMatrix([
         [1, 2, 3],
         ['foo', 5, 6]
       ])
-      .should.equal(error.value)
+    ).to.deep.equal(error.value)
   })
 
   it('parseDateArray', () => {
-    utils.parseDateArray(['01/jan/2009', 'invalid']).should.equal(error.value)
+    expect(utils.parseDateArray(['01/jan/2009', 'invalid'])).to.equal(error.value)
   })
 
   it('arrayValuesToNumbers', () => {
-    should.deepEqual(utils.arrayValuesToNumbers(['1.4']), [1.4])
-    should.deepEqual(utils.arrayValuesToNumbers(['not convertible']), [0])
+    expect(utils.arrayValuesToNumbers(['1.4'])).to.deep.equal([1.4])
+    expect(utils.arrayValuesToNumbers(['not convertible'])).to.deep.equal([0])
   })
 
   it('rest', () => {
-    utils.rest([1, 2, 3], 2).length.should.equal(1)
-    utils.rest('abc', 2).length.should.equal(1)
-    utils.rest(true, 2).should.equal(true)
+    expect(utils.rest([1, 2, 3], 2).length).to.equal(1)
+    expect(utils.rest('abc', 2).length).to.equal(1)
+    expect(utils.rest(true, 2)).to.equal(true)
   })
 
   it('initial', () => {
-    utils.initial([1, 2, 3], 1).length.should.equal(2)
-    utils.initial('abc', 2).length.should.equal(1)
-    utils.initial(true, 1).should.equal(true)
+    expect(utils.initial([1, 2, 3], 1).length).to.equal(2)
+    expect(utils.initial('abc', 2).length).to.equal(1)
+    expect(utils.initial(true, 1)).to.equal(true)
   })
 
   it('transpose', () => {
-    utils.transpose().should.equal(error.value)
-    utils.transpose([[1], [2]]).should.deepEqual([[1, 2]])
-    utils
-      .transpose([
+    expect(utils.transpose()).to.equal(error.value)
+    expect(utils.transpose([[1], [2]])).to.deep.equal([[1, 2]])
+    expect(
+      utils.transpose([
         [1, 2, 3, 4],
         [5, 6, 7, 8],
         [9, 10, 11, 12]
       ])
-      .should.deepEqual([
-        [1, 5, 9],
-        [2, 6, 10],
-        [3, 7, 11],
-        [4, 8, 12]
-      ])
+    ).to.deep.equal([
+      [1, 5, 9],
+      [2, 6, 10],
+      [3, 7, 11],
+      [4, 8, 12]
+    ])
   })
 
   it('anyError', () => {
-    should(utils.anyError()).be.undefined
-    should(utils.anyError(undefined, null, 1, '', 'text')).be.undefined
-    utils.anyError(error.na).should.be.equal(error.na)
-    utils.anyError(1, error.na).should.be.equal(error.na)
-    utils.anyError(error.value, error.na).should.be.equal(error.value)
+    expect(utils.anyError()).to.be.undefined
+    expect(utils.anyError(undefined, null, 1, '', 'text')).to.be.undefined
+    expect(utils.anyError(error.na)).to.be.equal(error.na)
+    expect(utils.anyError(1, error.na)).to.be.equal(error.na)
+    expect(utils.anyError(error.value, error.na)).to.be.equal(error.value)
   })
 
   it('anyIsError', () => {
-    utils.anyIsError().should.be.false
-    utils.anyIsError(undefined, null, 1, '', 'text').should.be.false
-    utils.anyIsError(error.na).should.be.true
-    utils.anyIsError(1, error.na).should.be.true
-    utils.anyIsError(error.value, error.na).should.be.true
+    expect(utils.anyIsError()).to.be.false
+    expect(utils.anyIsError(undefined, null, 1, '', 'text')).to.be.false
+    expect(utils.anyIsError(error.na)).to.be.true
+    expect(utils.anyIsError(1, error.na)).to.be.true
+    expect(utils.anyIsError(error.value, error.na)).to.be.true
   })
 
   it('anyIsString', () => {
-    utils.anyIsString().should.be.false
-    utils.anyIsString(undefined, null, 1, 2.5).should.be.false
-    utils.anyIsString(1, '').should.be.true
-    utils.anyIsString(1, 'text').should.be.true
+    expect(utils.anyIsString()).to.be.false
+    expect(utils.anyIsString(undefined, null, 1, 2.5)).to.be.false
+    expect(utils.anyIsString(1, '')).to.be.true
+    expect(utils.anyIsString(1, 'text')).to.be.true
   })
 
   describe('parseDate', () => {
     it('should thrown an error in case of malformed input', () => {
-      utils.parseDate('a').should.equal(error.value)
-      utils.parseDate('2009 -07-01').should.equal(error.value)
-      utils.parseDate('31/12/2009').should.equal(error.value)
-      utils.parseDate('2009-31-12').should.equal(error.value)
+      expect(utils.parseDate('a')).to.equal(error.value)
+      expect(utils.parseDate('2009 -07-01')).to.equal(error.value)
+      expect(utils.parseDate('31/12/2009')).to.equal(error.value)
+      expect(utils.parseDate('2009-31-12')).to.equal(error.value)
     })
 
     it('should thrown an error in case of out of range input', () => {
-      utils.parseDate(-1).should.equal(error.num)
-      utils.parseDate(2958466).should.equal(error.num)
+      expect(utils.parseDate(-1)).to.equal(error.num)
+      expect(utils.parseDate(2958466)).to.equal(error.num)
     })
 
     it('should parse date from serial number', () => {
-      utils.parseDate(1).getTime().should.equal(new Date('1/1/1900').getTime())
-      utils.parseDate(61).getTime().should.equal(new Date('3/1/1900').getTime())
-      utils.parseDate(60.05).getTime().should.equal(new Date('2/29/1900 01:12:00').getTime())
-      utils.parseDate(40729).getTime().should.equal(new Date('7/5/2011').getTime())
-      utils.parseDate(40729.1805555556).getTime().should.equal(new Date('7/5/2011 04:20:00').getTime())
+      expect(utils.parseDate(1).getTime()).to.equal(new Date('1/1/1900').getTime())
+      expect(utils.parseDate(61).getTime()).to.equal(new Date('3/1/1900').getTime())
+      expect(utils.parseDate(60.05).getTime()).to.equal(new Date('2/29/1900 01:12:00').getTime())
+      expect(utils.parseDate(40729).getTime()).to.equal(new Date('7/5/2011').getTime())
+      expect(utils.parseDate(40729.1805555556).getTime()).to.equal(new Date('7/5/2011 04:20:00').getTime())
     })
 
     xit('should parse non-iso formatted string', () => {
-      utils
-        .parseDate('2009-7-1')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate('2009-7-1').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
     })
 
     it('should parse date from string', () => {
-      utils
-        .parseDate('7/1/2009')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
-      utils
-        .parseDate('07/01/2009')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
-      utils
-        .parseDate('2009/07-01')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate('7/1/2009').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate('07/01/2009').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate('2009/07-01').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
     })
 
     it('should parse date with time from string', () => {
-      utils
-        .parseDate('2009-12-31  12:13')
-        .getTime()
-        .should.equal(new Date(2009, 12 - 1, 31, 12, 13).getTime())
-      utils
-        .parseDate('2009-7-1 11:11')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
-      utils
-        .parseDate('7/1/2009 11:11:11')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
-      utils
-        .parseDate('2009-07-01 11:11')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
-      utils
-        .parseDate('07/01/2009 11:11:11')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
-      utils
-        .parseDate('07/01/2009 11:11:11')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
-      utils
-        .parseDate('11/11/11 12:12:12')
-        .getTime()
-        .should.equal(new Date(2011, 11 - 1, 11, 12, 12, 12).getTime())
+      expect(utils.parseDate('2009-12-31  12:13').getTime()).to.equal(new Date(2009, 12 - 1, 31, 12, 13).getTime())
+      expect(utils.parseDate('2009-7-1 11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
+      expect(utils.parseDate('7/1/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+      expect(utils.parseDate('2009-07-01 11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
+      expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+      expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+      expect(utils.parseDate('11/11/11 12:12:12').getTime()).to.equal(new Date(2011, 11 - 1, 11, 12, 12, 12).getTime())
     })
 
     it('should parse date from Date', () => {
-      utils
-        .parseDate(new Date(2009, 7 - 1, 1))
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
-      utils
-        .parseDate(new Date(2009, 7 - 1, 1, 11, 11, 11))
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+      expect(utils.parseDate(new Date(2009, 7 - 1, 1)).getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate(new Date(2009, 7 - 1, 1, 11, 11, 11)).getTime()).to.equal(
+        new Date(2009, 7 - 1, 1, 11, 11, 11).getTime()
+      )
     })
 
     xit('should parse date when day start with zero', () => {
-      utils
-        .parseDate('2009-07-01')
-        .getTime()
-        .should.equal(new Date(2009, 7 - 1, 1).getTime())
-      utils
-        .parseDate('2020-05-02')
-        .getTime()
-        .should.equal(new Date(2020, 5 - 1, 2).getTime())
+      expect(utils.parseDate('2009-07-01').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
+      expect(utils.parseDate('2020-05-02').getTime()).to.equal(new Date(2020, 5 - 1, 2).getTime())
     })
   })
 })
