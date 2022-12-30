@@ -373,3 +373,140 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
 
   return result
 }
+
+/**
+ * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The range, or array to sort.
+ * @param {*} sort_index Optional. A number indicating the row or column to sort by. Default is 1.
+ * @param {*} sort_order Optional. A number indicating the sort order. 1 for ascending, -1 for descending. Default is 1.
+ * @param {*} by_col Optional. A logical value indicating the desired sort direction. FALSE to sort by row. TRUE to sort by column. Default is FALSE.
+ * @returns
+ */
+ export function SORT(array, sort_index, sort_order, by_col) {
+  if (!array) {
+    return error.na
+  }
+
+  if (!(array instanceof Array)) {
+    return error.na
+  }
+
+  if (array.length === 0) {
+    return error.na
+  }
+
+  for (let i = 0; i < array.length; i++) {
+    if (!(array[i] instanceof Array)) {
+      return error.na
+    }
+
+    if (array[i].length === 0) {
+      return error.na
+    }
+
+    if (array[i].length !== array[0].length) {
+      return error.na
+    }
+  }
+
+  const arrayWidth = array[0].length
+  const arrayHeight = array.length
+
+   if (by_col == null) {
+    by_col = "FALSE"
+  }
+
+  const byCol = utils.parseBool(by_col)
+  if (typeof byCol !== 'boolean') {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  if (sort_index == null) {
+    sort_index = 1
+  }
+
+  if (typeof sort_index !== 'number') {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  if (sort_index < 1) {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  if (byCol && sort_index > arrayHeight) {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  if (!byCol && sort_index > arrayWidth) {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  if (sort_order == null) {
+    sort_order = 1
+  }
+
+  if (sort_order !== 1 && sort_order !== -1) {
+    return utils.addEmptyValuesToArray([[error.value]], arrayWidth, arrayHeight)
+  }
+
+  let result = []
+  if (byCol) {
+    let columns = []
+    for (let i = 0; i < arrayWidth; i++) {
+      const column = []
+      for (let j = 0; j < arrayHeight; j++) {
+        column.push(array[j][i])
+      }
+      columns.push(column)
+    }
+
+    const sortedColumns = columns.sort((a, b) => {
+      // NOTE: Excel sorts all values as strings, e.g. 1 => "1"
+      if (a[sort_index - 1].toString() < b[sort_index - 1].toString()) {
+        return -1 * sort_order
+      }
+
+      if (a[sort_index - 1].toString() > b[sort_index - 1].toString()) {
+        return 1 * sort_order
+      }
+
+      return 0
+    })
+
+    for (let i = 0; i < arrayHeight; i++) {
+      const row = []
+      for (let j = 0; j < arrayWidth; j++) {
+        row.push(sortedColumns[j][i])
+      }
+
+      result.push(row)
+    }
+  } else {
+    result = array.sort((a, b) => {
+      // NOTE: Excel sorts all values as strings, e.g. 1 => "1"
+      if (a[sort_index - 1].toString() < b[sort_index - 1].toString()) {
+        return -1 * sort_order
+      }
+
+      if (a[sort_index - 1].toString() > b[sort_index - 1].toString()) {
+        return 1 * sort_order
+      }
+
+      return 0
+    })
+  }
+
+  // replace empty strings with zeros
+  for (let i = 0; i < result.length; i++) {
+    for (let j = 0; j < result[i].length; j++) {
+      if (result[i][j] === '') {
+        result[i][j] = 0
+      }
+    }
+  }
+
+  return result
+}
