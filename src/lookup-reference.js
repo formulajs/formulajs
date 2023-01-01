@@ -281,6 +281,76 @@ export function ROWS(array) {
 
   return jStat.rows(array)
 }
+/**
+ * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array Array to sort
+ * @param {*} sort_index Optional. A number indicating the row or column to sort by
+ * @param {*} sort_order Optional. A number indicating the desired sort order; 1 for ascending order (default), -1 for descending order
+ * @param {*} by_col Optional. A logical value indicating the desired sort direction; FALSE to sort by row (default), TRUE to sort by column
+ * @returns
+ */
+export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
+  if (!array || !Array.isArray(array)) {
+    return error.na
+  }
+
+  if (array.length === 0) {
+    return 0
+  }
+
+  for (let arr of array) {
+    if (!arr || !Array.isArray(arr)) {
+      return error.na
+    }
+  }
+
+  array.map((arr, i) => {
+    arr.map((a, j) => {
+      if (!a) {
+        array[i][j] = 0
+      }
+    })
+  })
+
+  sort_index = utils.parseNumber(sort_index)
+  if (!sort_index || sort_index < 1) {
+    return error.value
+  }
+
+  sort_order = utils.parseNumber(sort_order)
+  if (sort_order !== 1 && sort_order !== -1) {
+    return error.value
+  }
+
+  by_col = utils.parseBool(by_col)
+  if (typeof by_col !== 'boolean') {
+    return error.name
+  }
+
+  const sortIndexOK = (arr) => sort_index >= 1 && sort_index <= arr[0].length
+  const transposeArray = (arr) => arr[0].map((_, col) => arr.map((row) => row[col]))
+  const sortArray = (arr) =>
+    arr.sort((a, b) => {
+      a = utils.parseString(a[sort_index - 1])
+      b = utils.parseString(b[sort_index - 1])
+
+      return sort_order === 1 ? (a < b ? -1 * sort_order : 1 * sort_order) : a > b ? 1 * sort_order : -1 * sort_order
+    })
+
+  const longestArrayIndex = array.reduce((acc, arr, i) => (arr.length > array[acc].length ? i : acc), 0)
+  const longestArrayLength = array[longestArrayIndex].length
+  const fullArray = array.map((el) => [...el, ...Array(longestArrayLength - el.length).fill(0)])
+  const resultArray = by_col ? transposeArray(fullArray) : fullArray
+
+  return sortIndexOK(resultArray)
+    ? by_col
+      ? transposeArray(sortArray(resultArray))
+      : sortArray(resultArray)
+    : error.value
+}
 
 /**
  * Returns the transpose of an array.
