@@ -258,6 +258,282 @@ export function MATCH(lookup_value, lookup_array, match_type) {
   return index || error.na
 }
 
+const xMatchSearch = ({
+  lookup_value,
+  lookup_array,
+  match_mode,
+  matchedIndex,
+  matchedIndexValue,
+  idx,
+  isBinarySearchAscending = undefined,
+  binarySearchHigh = undefined,
+  binarySearchLow = undefined
+}) => {
+  const isBinarySearch = isBinarySearchAscending != null && binarySearchHigh != null && binarySearchLow != null
+
+  //  exact match or next largest item
+  if (match_mode === 1) {
+    if (lookup_array[idx] === lookup_value) {
+      return {
+        newMatchedIndex: idx + 1,
+        isExactMatch: true,
+        newMatchedIndexValue: matchedIndexValue,
+        binarySearchHigh,
+        binarySearchLow
+      }
+    } else if (lookup_array[idx] > lookup_value) {
+      if (!matchedIndexValue) {
+        matchedIndex = idx + 1
+        matchedIndexValue = lookup_array[idx]
+      } else if (lookup_array[idx] < matchedIndexValue) {
+        matchedIndex = idx + 1
+        matchedIndexValue = lookup_array[idx]
+      }
+
+      if (isBinarySearch) {
+        if (isBinarySearchAscending) binarySearchHigh = idx - 1
+        else binarySearchLow = idx + 1
+      }
+    } else if (isBinarySearch) {
+      if (isBinarySearchAscending) binarySearchLow = idx + 1
+      else binarySearchHigh = idx - 1
+    }
+  }
+  // exact match
+  else if (match_mode === 0) {
+    if (lookup_array[idx] === lookup_value) {
+      return {
+        newMatchedIndex: idx + 1,
+        isExactMatch: true,
+        newMatchedIndexValue: matchedIndexValue,
+        binarySearchHigh,
+        binarySearchLow
+      }
+    } else if (isBinarySearch) {
+      if (lookup_array[idx] > lookup_value) {
+        if (isBinarySearchAscending) binarySearchHigh = idx - 1
+        else binarySearchLow = idx + 1
+      } else {
+        if (isBinarySearchAscending) binarySearchLow = idx + 1
+        else binarySearchHigh = idx - 1
+      }
+    }
+  }
+  // exact match or next smallest item
+  else if (match_mode === -1) {
+    if (lookup_array[idx] === lookup_value) {
+      return {
+        newMatchedIndex: idx + 1,
+        isExactMatch: true,
+        newMatchedIndexValue: matchedIndexValue,
+        binarySearchHigh,
+        binarySearchLow
+      }
+    } else if (lookup_array[idx] < lookup_value) {
+      if (!matchedIndexValue) {
+        matchedIndex = idx + 1
+        matchedIndexValue = lookup_array[idx]
+      } else if (lookup_array[idx] > matchedIndexValue) {
+        matchedIndex = idx + 1
+        matchedIndexValue = lookup_array[idx]
+      }
+
+      if (isBinarySearch) {
+        if (isBinarySearchAscending) binarySearchLow = idx + 1
+        else binarySearchHigh = idx - 1
+      }
+    } else if (isBinarySearch) {
+      if (isBinarySearchAscending) binarySearchHigh = idx - 1
+      else binarySearchLow = idx + 1
+    }
+  }
+  // a wildcard match where '?', "~", and "*" have special meaning
+  else if (match_mode === 2) {
+    if (typeof lookup_value === 'string') {
+      const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
+      const regex = new RegExp('^' + lookupValueStr + '$')
+
+      if (regex.test(lookup_array[idx].toLowerCase())) {
+        return {
+          newMatchedIndex: idx + 1,
+          isExactMatch: true,
+          newMatchedIndexValue: matchedIndexValue,
+          binarySearchHigh,
+          binarySearchLow
+        }
+      }
+    } else {
+      if (lookup_array[idx] === lookup_value) {
+        return {
+          newMatchedIndex: idx + 1,
+          isExactMatch: true,
+          newMatchedIndexValue: matchedIndexValue,
+          binarySearchHigh,
+          binarySearchLow
+        }
+      }
+    }
+
+    if (isBinarySearch) {
+      if (lookup_array[idx] > lookup_value) {
+        if (isBinarySearchAscending) binarySearchHigh = idx - 1
+        else binarySearchLow = idx + 1
+      } else {
+        if (isBinarySearchAscending) binarySearchLow = idx + 1
+        else binarySearchHigh = idx - 1
+      }
+    }
+  }
+
+  return {
+    newMatchedIndex: matchedIndex,
+    isExactMatch: false,
+    newMatchedIndexValue: matchedIndexValue,
+    binarySearchHigh,
+    binarySearchLow
+  }
+}
+
+/**
+ * Looks up values in a reference or array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} lookup_value The value that you want to match in lookup_array. For example, when you look up someone's number in a telephone book, you are using the person's name as the lookup value, but the telephone number is the value you want.The lookup_value argument can be a value (number, text, or logical value) or a value reference to a number, text, or logical value.
+ * @param {*} lookup_array The range of values being searched.
+ * @param {*} match_mode Optional. The number -1, 0, 1 or 2. The match_mode argument specifies how Excel matches lookup_value with values in lookup_array. The default value for this argument is 0.
+ * @param {*} search_mode Optional. The number -2, -1, 1 or 2. The search_mode argument specifies how Excel searches for lookup_value in lookup_array. The default value for this argument is 1.
+ * @returns
+ */
+export function XMATCH(lookup_value, lookup_array, match_mode, search_mode) {
+  if (!lookup_value && !lookup_array) {
+    return error.na
+  }
+
+  if (arguments.length === 2) {
+    match_mode = 0
+    search_mode = 1
+  }
+
+  if (arguments.length === 3) {
+    search_mode = 1
+  }
+
+  if (!(lookup_array instanceof Array)) {
+    return error.na
+  }
+
+  lookup_array = utils.flatten(lookup_array)
+
+  if (match_mode !== -1 && match_mode !== 0 && match_mode !== 1 && match_mode !== 2) {
+    return error.na
+  }
+
+  if (search_mode !== -2 && search_mode !== -1 && search_mode !== 1 && search_mode !== 2) {
+    return error.na
+  }
+
+  let matchedIndex
+  let matchedIndexValue
+
+  // first to last
+  if (search_mode === 1) {
+    for (let idx = 0; idx < lookup_array.length; idx++) {
+      const { newMatchedIndex, newMatchedIndexValue, isExactMatch } = xMatchSearch({
+        lookup_value,
+        lookup_array,
+        match_mode,
+        matchedIndex,
+        matchedIndexValue,
+        idx
+      })
+
+      matchedIndex = newMatchedIndex
+      matchedIndexValue = newMatchedIndexValue
+
+      if (isExactMatch || (idx === lookup_array.length - 1 && matchedIndex)) return matchedIndex
+    }
+  }
+  // last to first
+  else if (search_mode === -1) {
+    for (let idx = lookup_array.length - 1; idx >= 0; idx--) {
+      const { newMatchedIndex, newMatchedIndexValue, isExactMatch } = xMatchSearch({
+        lookup_value,
+        lookup_array,
+        match_mode,
+        matchedIndex,
+        matchedIndexValue,
+        idx
+      })
+
+      matchedIndex = newMatchedIndex
+      matchedIndexValue = newMatchedIndexValue
+
+      if (isExactMatch || (idx === 0 && matchedIndex)) return matchedIndex
+    }
+  }
+  // binary search where the lookup_array is sorted in ascending order
+  else if (search_mode === 2) {
+    let low = 0
+    let high = lookup_array.length - 1
+    let mid
+
+    while (low <= high) {
+      mid = Math.floor((low + high) / 2)
+
+      const { newMatchedIndex, newMatchedIndexValue, isExactMatch, binarySearchHigh, binarySearchLow } = xMatchSearch({
+        lookup_value,
+        lookup_array,
+        match_mode,
+        matchedIndex,
+        matchedIndexValue,
+        idx: mid,
+        isBinarySearchAscending: true,
+        binarySearchLow: low,
+        binarySearchHigh: high
+      })
+
+      matchedIndex = newMatchedIndex
+      matchedIndexValue = newMatchedIndexValue
+      low = binarySearchLow
+      high = binarySearchHigh
+
+      if (isExactMatch) return matchedIndex
+    }
+  }
+  // binary search where the lookup_array is sorted in descending order
+  else if (search_mode === -2) {
+    let low = 0
+    let high = lookup_array.length - 1
+    let mid
+
+    while (low <= high) {
+      mid = Math.floor((low + high) / 2)
+
+      const { newMatchedIndex, newMatchedIndexValue, isExactMatch, binarySearchHigh, binarySearchLow } = xMatchSearch({
+        lookup_value,
+        lookup_array,
+        match_mode,
+        matchedIndex,
+        matchedIndexValue,
+        idx: mid,
+        isBinarySearchAscending: false,
+        binarySearchLow: low,
+        binarySearchHigh: high
+      })
+
+      matchedIndex = newMatchedIndex
+      matchedIndexValue = newMatchedIndexValue
+      low = binarySearchLow
+      high = binarySearchHigh
+
+      if (isExactMatch) return matchedIndex
+    }
+  }
+
+  return matchedIndex || error.na
+}
+
 /**
  * Returns the number of rows in a reference.
  *
