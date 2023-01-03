@@ -331,7 +331,6 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
   }
 
   const sortIndexOK = (arr) => sort_index >= 1 && sort_index <= arr[0].length
-  const transposeArray = (arr) => arr[0].map((_, col) => arr.map((row) => row[col]))
   const sortArray = (arr) =>
     arr.sort((a, b) => {
       a = utils.parseString(a[sort_index - 1])
@@ -342,14 +341,10 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
 
   const longestArrayIndex = array.reduce((acc, arr, i) => (arr.length > array[acc].length ? i : acc), 0)
   const longestArrayLength = array[longestArrayIndex].length
-  const fullArray = array.map((el) => [...el, ...Array(longestArrayLength - el.length).fill(0)])
-  const resultArray = by_col ? transposeArray(fullArray) : fullArray
+  const matrix = array.map((el) => [...el, ...Array(longestArrayLength - el.length).fill(0)])
+  const result = by_col ? utils.transpose(matrix) : matrix
 
-  return sortIndexOK(resultArray)
-    ? by_col
-      ? transposeArray(sortArray(resultArray))
-      : sortArray(resultArray)
-    : error.value
+  return sortIndexOK(result) ? (by_col ? utils.transpose(sortArray(result)) : sortArray(result)) : error.value
 }
 
 /**
