@@ -475,83 +475,24 @@ export function DDB(cost, salvage, life, period, factor) {
   return current
 }
 
-  /**
-   * Returns the discount rate for a security.
-   *
-   * Category: Financial
-   *
-   * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
-   * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
-   * @param {*} pr The security's price per $100 face value.
-   * @param {*} redemption The security's redemption value per $100 face value.
-   * @param {*} basis Optional. The type of day count basis to use.
-   * @returns
-   */
-  export function DISC (
-    settlement,
-    maturity,
-    pr,
-    redemption,
-    basis
-  ) {
-    settlement = utils.parseDate(settlement)
-    maturity = utils.parseDate(maturity)
-    pr = utils.parseNumber(pr)
-    redemption = utils.parseNumber(redemption)
-    basis = utils.parseNumber(basis)
-
-    basis = basis || 0;
-
-    if (utils.anyIsError(settlement, maturity, pr, redemption, basis)) {
-      return error.value
-    }
-
-    // Return error if price is less than or equal to zero
-    if (pr <= 0) {
-      return error.num
-    }
-
-    // Return error if redemption is less than or equal to zero
-    if (redemption <= 0) {
-      return error.num
-    }
-
-    // Return error if basis is neither 0, 1, 2, 3, or 4
-    if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
-      return error.num
-    }
-
-    // Return error if settlement is greater than maturity
-    if (settlement >= maturity) {
-      return error.value
-    }
-
-    let basisVal = 0
-    if (basis === 0) {
-      // Error: Basis value 0/null is not implemented
-      // throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
-      return error.num
-    } else if (basis === 1) {
-      basisVal = 365
-    } else if (basis === 2) {
-      basisVal = 360
-    } else if (basis === 3) {
-      basisVal = 365
-    } else if (basis === 4) {
-      // Error: Basis value 4 is not implemented
-      // throw new Error('European 30/360 day count convention is not yet implemented')
-      return error.num
-    } else {
-      // Unsupported basis value
-      return error.num
-    }
-
-    // Calculate difference between settlement and maturity in days
-    const diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
-
-    // Calculate and return discount
-    return (((redemption - pr) / redemption) * basisVal) / diff
-  };
+// TODO
+/**
+ * -- Not implemented --
+ *
+ * Returns the discount rate for a security.
+ *
+ * Category: Financial
+ *
+ * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
+ * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
+ * @param {*} pr The security's price per $100 face value.
+ * @param {*} redemption The security's redemption value per $100 face value.
+ * @param {*} basis Optional. The type of day count basis to use.
+ * @returns
+ */
+export function DISC() {
+  throw new Error('DISC is not implemented')
+}
 
 /**
  * Converts a dollar price, expressed as a fraction, into a dollar price, expressed as a decimal number.
@@ -1698,7 +1639,7 @@ export function TBILLYIELD(settlement, maturity, pr) {
 // TODO
 /**
  * -- Not implemented --
- *
+ * 
  * Returns the depreciation of an asset for a specified or partial period by using a declining balance method.
  *
  * Category: Financial
