@@ -612,4 +612,380 @@ describe('Lookup Reference', () => {
       })
     })
   })
-})
+
+  describe('FILTER', () => {
+    it('should return 3 dimensional filtered array', () => {
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true], [false], [true]]
+        )
+        .should.eql([
+          [1, 2, 3],
+          [7, 8, 9],
+          ["", "", ""]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true], [true], [true]]
+        )
+        .should.eql([
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[false], [false], [false]]
+        )
+        .should.eql([[error.calc, "", ""], ["", "", ""], ["", "", ""]])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true, false, true]]
+        )
+        .should.eql([
+          [1, 3, ""],
+          [4, 6, ""],
+          [7, 9, ""]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true, true, true]]
+        )
+        .should.eql([
+          [1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[false, false, false]]
+        )
+        .should.eql([[error.calc, "", ""], ["", "", ""], ["", "", ""]])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[false, false, false]],
+          'No data'
+        )
+        .should.eql([
+          ["No data", "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[false, false, false]],
+          ''
+        )
+        .should.eql([
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
+
+      lookup.FILTER([[1], [2], [3]], [[true], [false], [true]]).should.eql([[1], [3], [""]])
+
+      lookup.FILTER([[1], [2], [3]], [[true], [true], [true]]).should.eql([[1], [2], [3]])
+
+      lookup.FILTER([[1], [2], [3]], [[false], [false], [false]]).should.eql([[error.calc], [""], [""]])
+
+      lookup.FILTER([[1], [2], [3]], [[true]]).should.eql([[1], [2], [3]])
+
+      lookup.FILTER([[1], [2], [3]], [[false]]).should.eql([[error.calc], [""], [""]])
+    })
+
+    it('should return 2 dimensional filtered array', () => {
+      lookup.FILTER([[1, 2, 3]], [[true]]).should.eql([[1, 2, 3]])
+
+      lookup.FILTER([[1, 2, 3]], [[false]]).should.eql([[error.calc, "", ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[true, true, true]]).should.eql([[1, 2, 3]])
+
+      lookup.FILTER([[1, 2, 3]], [[false, false, false]]).should.eql([[error.calc, "", ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[true, false, true]]).should.eql([[1, 3, ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[false, false, false]], 'No data').should.eql([['No data', "", ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[false, false, false]], '').should.eql([["", "", ""]])
+
+      lookup.FILTER([[1]], [[true]]).should.eql([[1]])
+
+      lookup.FILTER([[1]], [[false]]).should.eql([[error.calc]])
+
+      lookup.FILTER([[1]], [[false, false, false]], 'No data').should.eql([['No data']])
+
+      lookup.FILTER([[1]], [[false, false, false]], '').should.eql([[""]])
+    })
+
+    it('should return error if filter array has invalid size', () => {
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [
+            [true, false, true],
+            [true, false, true]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [
+            [true, false],
+            [true, false],
+            [true, false]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [
+            [true, false, true],
+            [true, false]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[], [], []]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[]]
+        )
+        .should.equal(error.na)
+
+      lookup.FILTER([[1], [2], [3]], [[true, false, true]]).should.equal(error.na)
+
+      lookup.FILTER([[1], [2], [3]], [[true], [false]]).should.equal(error.na)
+    })
+
+    it('should return error if inputs are invalid', () => {
+      lookup.FILTER('foo', [[true]]).should.equal(error.na)
+      lookup.FILTER(1, [[true]]).should.equal(error.na)
+      lookup.FILTER(true, [[true]]).should.equal(error.na)
+      lookup.FILTER(null, [[true]]).should.equal(error.na)
+      lookup.FILTER(undefined, [[true]]).should.equal(error.na)
+      lookup.FILTER([[]], [[true]]).should.equal(error.na)
+      lookup.FILTER([[]], [[true]]).should.equal(error.na)
+      lookup.FILTER([[1]], 'foo').should.equal(error.na)
+      lookup.FILTER([[1]], 1).should.equal(error.na)
+      lookup.FILTER([[1]], true).should.equal(error.na)
+      lookup.FILTER([[1]], null).should.equal(error.na)
+      lookup.FILTER([[1]], undefined).should.equal(error.na)
+      lookup.FILTER([[1]], [[]]).should.equal(error.na)
+      lookup.FILTER([[1], [1, 2]], [[true]]).should.equal(error.na)
+      lookup
+        .FILTER(
+          [
+            [1, 2],
+            [1, 2],
+            [1, 2, 3]
+          ],
+          [
+            [true, true, true],
+            [true, true, true]
+          ]
+        )
+        .should.eql(error.na)
+    })
+
+    it('should return error if filter array contains invalid non-boolean values', () => {
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true, false, 'a']]
+        )
+        .should.eql([
+          [error.value, "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true, 'falsee', 'truee']]
+        )
+        .should.eql([
+          [error.value, "", ""],
+          ["", "", ""],
+          ["", "", ""]
+        ])
+
+      lookup.FILTER([[1, 2, 3]], [[true, false, 'TRUEE']]).should.eql([[error.value, "", ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[true, '', false]]).should.eql([[error.value, "", ""]])
+    })
+
+    it('should return filtered array if filter array contains valid non-boolean values', () => {
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[true, 1, 0]]
+        )
+        .should.eql([
+          [1, 2, ""],
+          [4, 5, ""],
+          [7, 8, ""]
+        ])
+
+      lookup.FILTER([[1, 2, 3]], [[1, 1, 1]]).should.eql([[1, 2, 3]])
+
+      lookup.FILTER([[1, 2, 3]], [[true, 0, false]]).should.eql([[1, "", ""]])
+
+      lookup.FILTER([[1, 2, 3]], [[true, 0, 'TRUE']]).should.eql([[1, 3, ""]])
+
+      lookup.FILTER([[1, 2, 3]], [['TRUE', 0, 'FALSE']]).should.eql([[1, "", ""]])
+    })
+
+    it('should return error if arrays are empty', () => {
+      lookup.FILTER([], []).should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [],
+          [
+            [true, false, true],
+            [true, false, true],
+            [true, false, true]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          []
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [[], [], []],
+          [
+            [true, false, true],
+            [true, false, true],
+            [true, false, true]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [[], [1, 2, 3], []],
+          [
+            [true, false, true],
+            [true, false, true]
+          ]
+        )
+        .should.equal(error.na)
+
+      lookup
+        .FILTER(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          [[], [], [true]]
+        )
+        .should.equal(error.na)
+
+      lookup.FILTER().should.equal(error.na)
+
+      lookup.FILTER([[1, 2, 3]]).should.equal(error.na)
+    })
+  })
+});
