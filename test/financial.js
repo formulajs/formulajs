@@ -642,6 +642,7 @@ describe('Financial', () => {
     // expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 4)).to.approximately(95.68555556, 1e-8)
     expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, -1, 1)).to.equal(error.num)
     expect(financial.PRICEDISC('01/05/2023', '01/31/2023', -1, 100, 1)).to.equal(error.num)
+    expect(financial.PRICEDISC('01/05/2023', '01/04/2023', 0.038, 100, 1)).to.equal(error.value)
     expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, -1)).to.equal(error.num)
     expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 0)).to.equal(error.num)
     expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100)).to.equal(error.num)
