@@ -440,6 +440,7 @@ describe('Financial', () => {
     expect(financial.DISC('01/04/2023', '01/03/2023', 99.71275, 100, 0)).to.equal(error.value)
     expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, -1)).to.equal(error.num)
     expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 0)).to.equal(error.num);
+    expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100)).to.equal(error.num);
     expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 4)).to.equal(error.num);
     expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 5)).to.equal(error.num)
     expect(financial.DISC('Hello World!', '01/31/2023', 99.71275, 100, 0)).to.equal(error.value)
