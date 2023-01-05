@@ -132,32 +132,6 @@ describe('Lookup Reference', () => {
     expect(lookup.ROWS([1, 2])).to.equal(2)
   })
 
-  it('TRANSPOSE', () => {
-    expect(lookup.TRANSPOSE()).to.equal(error.na)
-    expect(lookup.TRANSPOSE([])).to.eql([])
-    expect(lookup.TRANSPOSE([1, 2, 3])).to.eql([[1], [2], [3]])
-    expect(
-      lookup.TRANSPOSE([
-        [1, 2],
-        [3, 4],
-        [5, 6]
-      ])
-    ).to.eql([
-      [1, 3, 5],
-      [2, 4, 6]
-    ])
-    expect(
-      lookup.TRANSPOSE([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-    ).to.eql([
-      [1, 4],
-      [2, 5],
-      [3, 6]
-    ])
-  })
-
   describe('SORT', () => {
     it('should sort array containing numbers by column in ascending order with sort index of 1', () => {
       expect(
@@ -1253,11 +1227,10 @@ describe('Lookup Reference', () => {
         ['a', 0, 0]
       ])
 
-      expect(lookup.SORT([1, 2, 3])).to.eql(error.na)
-      expect(lookup.SORT([1, 2, 3], 1, -1)).to.eql(error.na)
-      expect(lookup.SORT([1, 2, 3], 1, 1, true)).to.eql(error.na)
-      expect(lookup.SORT([1, 2, 3], 1, -1, true)).to.eql(error.na)
-
+      expect(lookup.SORT([1, 2, 3])).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([1, 2, 3], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([1, 2, 3], 1, -1)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([1, 2, 3], 1, -1, true)).to.eql([[3, 2, 1]])
       expect(lookup.SORT([[1, 2, 3]], 1, -1, true)).to.eql([[3, 2, 1]])
 
       expect(
@@ -1284,6 +1257,43 @@ describe('Lookup Reference', () => {
         )
       ).to.eql(error.name)
     })
+  })
+
+  it('TRANSPOSE', () => {
+    expect(lookup.TRANSPOSE()).to.equal(error.na)
+    expect(lookup.TRANSPOSE([])).to.eql([])
+    expect(lookup.TRANSPOSE([1, 2, 3])).to.eql([[1], [2], [3]])
+    expect(lookup.TRANSPOSE([[1, 2, 3]])).to.eql([[1], [2], [3]])
+    expect(
+      lookup.TRANSPOSE([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+      ])
+    ).to.eql([
+      [1, 3, 5],
+      [2, 4, 6]
+    ])
+    expect(
+      lookup.TRANSPOSE([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+    ).to.eql([
+      [1, 4],
+      [2, 5],
+      [3, 6]
+    ])
+    expect(
+      lookup.TRANSPOSE([
+        [1, null, 3],
+        [4, 5, undefined]
+      ])
+    ).to.eql([
+      [1, 4],
+      [0, 5],
+      [3, 0]
+    ])
   })
 
   it('UNIQUE', () => {
