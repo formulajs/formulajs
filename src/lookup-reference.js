@@ -301,20 +301,6 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
     return 0
   }
 
-  for (let arr of array) {
-    if (!arr || !Array.isArray(arr)) {
-      return error.na
-    }
-  }
-
-  array.map((arr, i) => {
-    arr.map((a, j) => {
-      if (!a) {
-        array[i][j] = 0
-      }
-    })
-  })
-
   sort_index = utils.parseNumber(sort_index)
   if (!sort_index || sort_index < 1) {
     return error.value
@@ -330,21 +316,22 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
     return error.name
   }
 
-  const sortIndexOK = (arr) => sort_index >= 1 && sort_index <= arr[0].length
   const sortArray = (arr) =>
     arr.sort((a, b) => {
       a = utils.parseString(a[sort_index - 1])
       b = utils.parseString(b[sort_index - 1])
 
-      return sort_order === 1 ? (a < b ? -1 * sort_order : 1 * sort_order) : a > b ? 1 * sort_order : -1 * sort_order
+      return sort_order === 1 ? (a < b ? sort_order * -1 : sort_order) : a > b ? sort_order : sort_order * -1
     })
 
-  const longestArrayIndex = array.reduce((acc, arr, i) => (arr.length > array[acc].length ? i : acc), 0)
-  const longestArrayLength = array[longestArrayIndex].length
-  const matrix = array.map((el) => [...el, ...Array(longestArrayLength - el.length).fill(0)])
+  const matrix = utils.fillMatrix(array)
   const result = by_col ? utils.transpose(matrix) : matrix
 
-  return sortIndexOK(result) ? (by_col ? utils.transpose(sortArray(result)) : sortArray(result)) : error.value
+  return sort_index >= 1 && sort_index <= result[0].length
+    ? by_col
+      ? utils.transpose(sortArray(result))
+      : sortArray(result)
+    : error.value
 }
 
 /**
@@ -360,7 +347,9 @@ export function TRANSPOSE(array) {
     return error.na
   }
 
-  return jStat.transpose(array)
+  const matrix = utils.fillMatrix(array)
+
+  return utils.transpose(matrix)
 }
 
 /**
