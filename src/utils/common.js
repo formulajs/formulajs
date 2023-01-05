@@ -374,3 +374,26 @@ export function transpose(matrix) {
 
   return matrix[0].map((col, i) => matrix.map((row) => row[i]))
 }
+
+export function fillMatrix(matrix, fill_value) {
+  if (!matrix) {
+    return error.value
+  }
+
+  if (!matrix.every((el) => Array.isArray(el)) || matrix.length === 0) {
+    matrix = [[...matrix]]
+  }
+
+  matrix.map((arr, i) => {
+    arr.map((a, j) => {
+      if (!a) {
+        matrix[i][j] = 0
+      }
+    })
+  })
+
+  const longestArrayIndex = matrix.reduce((acc, arr, i) => (arr.length > matrix[acc].length ? i : acc), 0)
+  const longestArrayLength = matrix[longestArrayIndex].length
+
+  return matrix.map((el) => [...el, ...Array(longestArrayLength - el.length).fill(fill_value ? fill_value : 0)])
+}
