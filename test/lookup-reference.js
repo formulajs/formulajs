@@ -150,7 +150,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -167,7 +166,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -184,7 +182,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(lookup.SORT([[1, 2, 3]], 1, 1, true)).to.eql([[1, 2, 3]])
       expect(lookup.SORT([[3, 2, 1]], 1, 1, true)).to.eql([[1, 2, 3]])
       expect(lookup.SORT([[2, 3, 1]], 1, 1, true)).to.eql([[1, 2, 3]])
@@ -211,7 +208,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -228,7 +224,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -245,7 +240,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(lookup.SORT([['a', 'b', 'c']], 1, 1, true)).to.eql([['a', 'b', 'c']])
       expect(lookup.SORT([['c', 'b', 'a']], 1, 1, true)).to.eql([['a', 'b', 'c']])
       expect(lookup.SORT([['b', 'c', 'a']], 1, 1, true)).to.eql([['a', 'b', 'c']])
@@ -272,7 +266,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -289,7 +282,6 @@ describe('Lookup Reference', () => {
         ['e', 'f', 6],
         [8, 9, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -306,7 +298,6 @@ describe('Lookup Reference', () => {
         [5, 6, 'd'],
         [8, 9, 'g']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -323,7 +314,6 @@ describe('Lookup Reference', () => {
         [5, 6, 'd'],
         [8, 9, 'g']
       ])
-
       expect(lookup.SORT([[2, 3, 'a']], 1, 1, true)).to.eql([[2, 3, 'a']])
       expect(lookup.SORT([['a', 2, 3]], 1, 1, true)).to.eql([[2, 3, 'a']])
       expect(lookup.SORT([['a'], [2], [3]], 1, 1, true)).to.eql([['a'], [2], [3]])
@@ -346,7 +336,6 @@ describe('Lookup Reference', () => {
         [6, 5, 4],
         [9, 8, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -363,7 +352,6 @@ describe('Lookup Reference', () => {
         [6, 5, 4],
         [9, 8, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -380,7 +368,6 @@ describe('Lookup Reference', () => {
         [6, 5, 4],
         [9, 8, 7]
       ])
-
       expect(lookup.SORT([[1, 2, 3]], 1, -1, true)).to.eql([[3, 2, 1]])
       expect(lookup.SORT([[3, 2, 1]], 1, -1, true)).to.eql([[3, 2, 1]])
       expect(lookup.SORT([[2, 3, 1]], 1, -1, true)).to.eql([[3, 2, 1]])
@@ -407,7 +394,6 @@ describe('Lookup Reference', () => {
         ['f', 'e', 'd'],
         ['i', 'h', 'g']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -424,7 +410,6 @@ describe('Lookup Reference', () => {
         ['f', 'e', 'd'],
         ['i', 'h', 'g']
       ])
-
       expect(lookup.SORT([['a', 'b', 'c']], 1, -1, true)).to.eql([['c', 'b', 'a']])
       expect(lookup.SORT([['c', 'b', 'a']], 1, -1, true)).to.eql([['c', 'b', 'a']])
       expect(lookup.SORT([['b', 'c', 'a']], 1, -1, true)).to.eql([['c', 'b', 'a']])
@@ -451,7 +436,6 @@ describe('Lookup Reference', () => {
         ['f', 'e', 'd'],
         [9, 8, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -468,7 +452,6 @@ describe('Lookup Reference', () => {
         [6, 'f', 'e'],
         [7, 9, 8]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -485,7 +468,6 @@ describe('Lookup Reference', () => {
         ['d', 6, 5],
         ['g', 9, 8]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -502,7 +484,6 @@ describe('Lookup Reference', () => {
         ['d', 6, 5],
         ['g', 9, 8]
       ])
-
       expect(lookup.SORT([[2, 3, 'a']], 1, -1, true)).to.eql([['a', 3, 2]])
       expect(lookup.SORT([['a', 2, 3]], 1, -1, true)).to.eql([['a', 3, 2]])
       expect(lookup.SORT([['a'], [2], [3]], 1, -1, true)).to.eql([['a'], [2], [3]])
@@ -525,7 +506,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -542,7 +522,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -559,7 +538,6 @@ describe('Lookup Reference', () => {
         [6, 5, 4],
         [9, 8, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -576,7 +554,6 @@ describe('Lookup Reference', () => {
         ['f', 'e', 6],
         [9, 8, 7]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -593,7 +570,6 @@ describe('Lookup Reference', () => {
         [5, 6, 'd'],
         [8, 9, 'g']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -610,7 +586,6 @@ describe('Lookup Reference', () => {
         ['f', 'e', 'd'],
         ['i', 'h', 'g']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -627,7 +602,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(lookup.SORT([[1], [2], [3]], 2, -1, true)).to.eql([[1], [2], [3]])
       expect(lookup.SORT([[3], [2], [1]], 2, -1, true)).to.eql([[3], [2], [1]])
       expect(lookup.SORT([[2], [3], [1]], 3, -1, true)).to.eql([[2], [3], [1]])
@@ -654,7 +628,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT([
           [7, 8, 9],
@@ -666,7 +639,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(
         lookup.SORT([
           [4, 5, 6],
@@ -678,7 +650,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [7, 8, 9]
       ])
-
       expect(lookup.SORT([[1, 2, 3]])).to.eql([[1, 2, 3]])
       expect(lookup.SORT([[3, 2, 1]], 1, 1)).to.eql([[3, 2, 1]])
       expect(lookup.SORT([[2, 3, 1]], 1)).to.eql([[2, 3, 1]])
@@ -705,7 +676,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT([
           ['g', 'h', 'i'],
@@ -717,7 +687,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT([
           ['d', 'e', 'f'],
@@ -729,7 +698,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(lookup.SORT([['a', 'b', 'c']])).to.eql([['a', 'b', 'c']])
       expect(lookup.SORT([['c', 'b', 'a']], 1, 1)).to.eql([['c', 'b', 'a']])
       expect(lookup.SORT([['b', 'c', 'a']], 1)).to.eql([['b', 'c', 'a']])
@@ -756,7 +724,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         ['a', 'b', 'c']
       ])
-
       expect(
         lookup.SORT([
           ['a', 'b', 'c'],
@@ -768,7 +735,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         ['a', 'b', 'c']
       ])
-
       expect(
         lookup.SORT([
           [4, 5, 6],
@@ -780,11 +746,9 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         ['a', 'b', 'c']
       ])
-
       expect(lookup.SORT([[1, 'a', 2]])).to.eql([[1, 'a', 2]])
       expect(lookup.SORT([[2, 'a', 1]], 1, 1)).to.eql([[2, 'a', 1]])
       expect(lookup.SORT([['a', 2, 1]], 1)).to.eql([['a', 2, 1]])
-
       expect(
         lookup.SORT(
           [
@@ -801,7 +765,6 @@ describe('Lookup Reference', () => {
         [2, 'b'],
         [3, 'c']
       ])
-
       expect(lookup.SORT([['a'], ['b'], [1]])).to.eql([[1], ['a'], ['b']])
       expect(lookup.SORT([[2], ['b'], ['a']], 1)).to.eql([[2], ['a'], ['b']])
     })
@@ -823,7 +786,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [1, 2, 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -839,7 +801,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [1, 2, 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -856,7 +817,6 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [1, 2, 3]
       ])
-
       expect(lookup.SORT([[1, 2, 3]], 1, -1)).to.eql([[1, 2, 3]])
       expect(lookup.SORT([[3, 2, 1]], 1, -1)).to.eql([[3, 2, 1]])
       expect(lookup.SORT([[2, 3, 1]], 1, -1)).to.eql([[2, 3, 1]])
@@ -883,7 +843,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['a', 'b', 'c']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -899,7 +858,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['a', 'b', 'c']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -916,7 +874,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['a', 'b', 'c']
       ])
-
       expect(lookup.SORT([['a', 'b', 'c']], 1, -1)).to.eql([['a', 'b', 'c']])
       expect(lookup.SORT([['c', 'b', 'a']], 1, -1)).to.eql([['c', 'b', 'a']])
       expect(lookup.SORT([['b', 'c', 'a']], 1, -1)).to.eql([['b', 'c', 'a']])
@@ -943,7 +900,6 @@ describe('Lookup Reference', () => {
         [4, 'b', 6],
         [1, 'a', 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -959,7 +915,6 @@ describe('Lookup Reference', () => {
         [4, 'b', 6],
         [1, 'a', 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -976,7 +931,6 @@ describe('Lookup Reference', () => {
         [4, 'b', 6],
         [1, 'a', 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -993,7 +947,6 @@ describe('Lookup Reference', () => {
         ['a', 'b', 'c'],
         [1, 2, 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1010,7 +963,6 @@ describe('Lookup Reference', () => {
         ['a', 'b', 'c'],
         [1, 2, 3]
       ])
-
       expect(lookup.SORT([['a', 'b', 1]], 1, -1)).to.eql([['a', 'b', 1]])
       expect(lookup.SORT([[1, 'b', 'a']], 1, -1)).to.eql([[1, 'b', 'a']])
       expect(lookup.SORT([['b', 1, 'a']], 1, -1)).to.eql([['b', 1, 'a']])
@@ -1035,7 +987,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1051,7 +1002,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['g', 'h', 'i']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1067,7 +1017,6 @@ describe('Lookup Reference', () => {
         ['d', 'e', 'f'],
         ['a', 'b', 'c']
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1083,7 +1032,6 @@ describe('Lookup Reference', () => {
         [4, 'b', 6],
         [7, 'c', 9]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1099,7 +1047,6 @@ describe('Lookup Reference', () => {
         [7, 'c', 9],
         [1, 'a', 3]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1113,9 +1060,7 @@ describe('Lookup Reference', () => {
         [4, 5, 6],
         [1, 2, 3]
       ])
-
       expect(lookup.SORT([[1, 2, 3]], 2, -1)).to.eql([[1, 2, 3]])
-
       expect(
         lookup.SORT(
           [
@@ -1129,7 +1074,6 @@ describe('Lookup Reference', () => {
         [1, 2, 3],
         [4, 5, 6]
       ])
-
       expect(lookup.SORT([[1, 2, 3]], 3, 1)).to.eql([[1, 2, 3]])
     })
 
@@ -1149,7 +1093,6 @@ describe('Lookup Reference', () => {
         ['a', 'b', 'c'],
         [0, 0, 0]
       ])
-
       expect(
         lookup.SORT(
           [
@@ -1166,47 +1109,7 @@ describe('Lookup Reference', () => {
         ['d', 0, 'f'],
         [0, 0, 0]
       ])
-
       expect(lookup.SORT([[''], ['a'], ['b'], [1]], 1, -1, false)).to.eql([['b'], ['a'], [1], [0]])
-
-      expect(
-        lookup.SORT(
-          [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-          ],
-          1,
-          -1,
-          false
-        )
-      ).to.eql([
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0]
-      ])
-
-      expect(
-        lookup.SORT(
-          [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-          ],
-          3,
-          1,
-          true
-        )
-      ).to.eql([
-        [0, 0, 0],
-        [0, 0, 0],
-        [0, 0, 0]
-      ])
-    })
-
-    it('should return error with invalid inputs', () => {
-      expect(lookup.SORT([[1, 2, 3]], 2, 1, true)).to.eql(error.value)
-      expect(lookup.SORT([[1, 2, 3]], 0, 1, true)).to.eql(error.value)
       expect(lookup.SORT([[1, 2, 3], [], [4, 5, 6]])).to.eql([
         [0, 0, 0],
         [1, 2, 3],
@@ -1226,13 +1129,54 @@ describe('Lookup Reference', () => {
         [1, 2, 3],
         ['a', 0, 0]
       ])
+      expect(
+        lookup.SORT(
+          [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+          ],
+          3,
+          1,
+          true
+        )
+      ).to.eql([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ])
+    })
 
+    it('should sort one dimensional arrays', () => {
       expect(lookup.SORT([1, 2, 3])).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([3, 2, 1])).to.eql([[3, 2, 1]])
       expect(lookup.SORT([1, 2, 3], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([3, 2, 1], 1, 1, true)).to.eql([[1, 2, 3]])
       expect(lookup.SORT([1, 2, 3], 1, -1)).to.eql([[1, 2, 3]])
       expect(lookup.SORT([1, 2, 3], 1, -1, true)).to.eql([[3, 2, 1]])
-      expect(lookup.SORT([[1, 2, 3]], 1, -1, true)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([3, 2, 1]), 1, -1, false).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([3, 2, 1]), 1, -1, true).to.eql([[3, 2, 1]])
+    })
 
+    it('should return error with invalid inputs', () => {
+      expect(lookup.SORT([[1, 2, 3]], 2, 1, true)).to.eql(error.value)
+      expect(lookup.SORT([[1, 2, 3]], 0, 1, true)).to.eql(error.value)
       expect(
         lookup.SORT(
           [
@@ -1244,7 +1188,6 @@ describe('Lookup Reference', () => {
           true
         )
       ).to.eql(error.value)
-
       expect(
         lookup.SORT(
           [
