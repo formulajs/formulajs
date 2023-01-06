@@ -1,13 +1,13 @@
-import fs from 'fs'
-import pkg from './package.json'
+import * as fs from 'fs'
 
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import { terser } from 'rollup-plugin-terser'
 import { getBabelOutputPlugin } from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
+import terser from '@rollup/plugin-terser'
 
 fs.rmSync('lib', { recursive: true, force: true })
 
+const pkg = JSON.parse(fs.readFileSync('./package.json'))
 const banner = `/* ${pkg.name} v${pkg.version} */`
 
 const baseConfig = {
