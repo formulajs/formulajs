@@ -324,23 +324,39 @@ describe('Text', () => {
     expect(text.T(true)).to.equal('')
   })
 
-  it('TEXT', () => {
-    expect(text.TEXT(1234.59, '###0.0')).to.equal('1234.6')
-    expect(text.TEXT(1234.52, '###0.0')).to.equal('1234.5')
-    expect(text.TEXT(1234.56, '###0.00')).to.equal('1234.56')
-    expect(text.TEXT(1234, '###0.0000')).to.equal('1234.0000')
-    expect(text.TEXT(123456.9, '#,##0.0000')).to.equal('123,456.9000')
-    expect(text.TEXT()).to.equal(error.na)
+  describe('TEXT', () => {
+    it('should use fixed number of decimals and include commas if specified', () => {
+      expect(text.TEXT(1234.59, '###0.0')).to.equal('1234.6')
+      expect(text.TEXT(1234.52, '###0.0')).to.equal('1234.5')
+      expect(text.TEXT(1234.56, '###0.00')).to.equal('1234.56')
+      expect(text.TEXT(1234, '###0.0000')).to.equal('1234.0000')
+      expect(text.TEXT(123456.9, '#,##0.0000')).to.equal('123,456.9000')
+      expect(text.TEXT()).to.equal(error.na)
+    })
 
-    expect(text.TEXT(1234567.89, '$#,##0.00')).to.equal('$1,234,567.89')
-    expect(text.TEXT(1234.59, '$#,##0.00')).to.equal('$1,234.59')
-    expect(text.TEXT(-1234567.89, '$#,##0.00')).to.equal('-$1,234,567.89')
-    expect(text.TEXT(-1234.59, '$#,##0.00')).to.equal('-$1,234.59')
-    expect(text.TEXT(0, '$#,##0.00')).to.equal('$0.00')
+    it('should format numbers with $ sign', () => {
+      expect(text.TEXT(1234567.89, '$#,##0.00')).to.equal('$1,234,567.89')
+      expect(text.TEXT(1234.59, '$#,##0.00')).to.equal('$1,234.59')
+      expect(text.TEXT(-1234567.89, '$#,##0.00')).to.equal('-$1,234,567.89')
+      expect(text.TEXT(-1234.59, '$#,##0.00')).to.equal('-$1,234.59')
+      expect(text.TEXT(0, '$#,##0.00')).to.equal('$0.00')
+    })
 
-    expect(text.TEXT(0.89, '0.00%')).to.equal('89.00%')
-    expect(text.TEXT(0.1234, '0.00%')).to.equal('12.34%')
-    expect(text.TEXT(1, '0.00%')).to.equal('100.00%')
+    it('should format percentages', () => {
+      expect(text.TEXT(0.89, '0.00%')).to.equal('89.00%')
+      expect(text.TEXT(0.1234, '0.00%')).to.equal('12.34%')
+      expect(text.TEXT(1, '0.00%')).to.equal('100.00%')
+    })
+
+    it('should handle errors', () => {
+      expect(text.TEXT(error.value, '0.00%')).to.equal(error.na)
+      expect(text.TEXT(0.89, error.na)).to.equal(error.na)
+      expect(text.TEXT(error.value, error.na)).to.equal(error.na)
+      expect(text.TEXT(123, undefined)).to.equal('')
+      expect(text.TEXT(123, null)).to.equal('')
+      expect(text.TEXT(123, 111)).to.equal('111')
+      expect(text.TEXT(123, true)).to.equal(error.value)
+    })
   })
 
   it('TEXTJOIN', () => {

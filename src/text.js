@@ -683,40 +683,54 @@ export function T(value) {
  *
  * Category: Text
  *
- * @param {*} number The number you want to format.
- * @param {*} format The format you want to use.
+ * @param {*} value A numeric value that you want to be converted into text.
+ * @param {*} format_text A text string that defines the formatting that you want to be applied to the supplied value.
  * @returns
  */
-export function TEXT(number, format) {
-  if (number === undefined || format === undefined) return error.na
+export function TEXT(value, format_text) {
+  if (value === undefined || value instanceof Error || format_text instanceof Error) {
+    return error.na
+  }
 
-  const currencySymbol = format.startsWith('$') ? '$' : ''
-  const isPercent = format.endsWith('%')
-  format = format.replace(/%/g, '').replace(/\$/g, '')
+  if (format_text === undefined || format_text === null) {
+    return ''
+  }
+
+  if (typeof format_text === 'number') {
+    return String(format_text)
+  }
+
+  if (typeof format_text !== 'string') {
+    return error.value
+  }
+
+  const currencySymbol = format_text.startsWith('$') ? '$' : ''
+  const isPercent = format_text.endsWith('%')
+  format_text = format_text.replace(/%/g, '').replace(/\$/g, '')
 
   // count all 0s after the decimal point
-  const decimalPlaces = format.split('.')[1].match(/0/g).length
+  const decimalPlaces = format_text.split('.')[1].match(/0/g).length
 
-  const noCommas = !format.includes(',')
+  const noCommas = !format_text.includes(',')
 
   if (isPercent) {
-    number = number * 100
+    value = value * 100
   }
 
-  number = FIXED(number, decimalPlaces, noCommas)
+  value = FIXED(value, decimalPlaces, noCommas)
 
-  if (number.startsWith('-')) {
-    number = number.replace('-', '')
-    number = '-' + currencySymbol + number
+  if (value.startsWith('-')) {
+    value = value.replace('-', '')
+    value = '-' + currencySymbol + value
   } else {
-    number = currencySymbol + number
+    value = currencySymbol + value
   }
 
   if (isPercent) {
-    number = number + '%'
+    value = value + '%'
   }
 
-  return number
+  return value
 }
 
 /**
