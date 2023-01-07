@@ -476,6 +476,8 @@ export function DDB(cost, salvage, life, period, factor) {
 }
 
   /**
+   * -- Limited Implementation: Basis values 0 & 4 are not yet supported (30/360 day count conventions) --
+   *
    * Returns the discount rate for a security.
    *
    * Category: Financial
@@ -506,18 +508,7 @@ export function DDB(cost, salvage, life, period, factor) {
       return error.value
     }
 
-    // Return error if price is less than or equal to zero
-    if (pr <= 0) {
-      return error.num
-    }
-
-    // Return error if redemption is less than or equal to zero
-    if (redemption <= 0) {
-      return error.num
-    }
-
-    // Return error if basis is neither 0, 1, 2, 3, or 4
-    if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
+    if (pr <= 0 || redemption <= 0) {
       return error.num
     }
 
@@ -529,8 +520,7 @@ export function DDB(cost, salvage, life, period, factor) {
     let basisVal = 0
     if (basis === 0) {
       // Error: Basis value 0/null is not implemented
-      // throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
-      return error.num
+      throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
     } else if (basis === 1) {
       basisVal = 365
     } else if (basis === 2) {
@@ -539,8 +529,7 @@ export function DDB(cost, salvage, life, period, factor) {
       basisVal = 365
     } else if (basis === 4) {
       // Error: Basis value 4 is not implemented
-      // throw new Error('European 30/360 day count convention is not yet implemented')
-      return error.num
+      throw new Error('European 30/360 day count convention is not yet implemented')
     } else {
       // Unsupported basis value
       return error.num
