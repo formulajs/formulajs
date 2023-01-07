@@ -1266,88 +1266,77 @@ export function PRICE() {
   throw new Error('PRICE is not implemented')
 }
 
-// TODO
-  /**
-   * Returns the price per $100 face value of a discounted security.
-   *
-   * Category: Financial
-   *
-   * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
-   * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
-   * @param {*} discount The security's discount rate.
-   * @param {*} redemption The security's redemption value per $100 face value.
-   * @param {*} basis Optional. The type of day count basis to use.
-   * @returns
-   */
-  export function PRICEDISC (
-    settlement,
-    maturity,
-    discount,
-    redemption,
-    basis
-  ) {
-    console.log("Basis before: ", basis);
-    settlement = utils.parseDate(settlement)
-    maturity = utils.parseDate(maturity)
-    discount = utils.parseNumber(discount)
-    redemption = utils.parseNumber(redemption)
-    basis = utils.parseNumber(basis)
+/**
+ * -- Limited Implementation: Basis values 0 & 4 are not yet supported (30/360 day count conventions) --
+ *
+ * Returns the price per $100 face value of a discounted security.
+ *
+ * Category: Financial
+ *
+ * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
+ * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
+ * @param {*} discount The security's discount rate.
+ * @param {*} redemption The security's redemption value per $100 face value.
+ * @param {*} basis Optional. The type of day count basis to use.
+ * @returns
+ */
+export function PRICEDISC (
+  settlement,
+  maturity,
+  discount,
+  redemption,
+  basis
+) {
+  console.log("Basis before: ", basis);
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+  discount = utils.parseNumber(discount)
+  redemption = utils.parseNumber(redemption)
+  basis = utils.parseNumber(basis)
 
-    basis = basis || 0;
+  basis = basis || 0;
 
-    if (utils.anyIsError(settlement, maturity, discount, redemption, basis)) {
-      return error.value
-    }
+  if (utils.anyIsError(settlement, maturity, discount, redemption, basis)) {
+    return error.value
+  }
 
-    // Return error if discount is less than or equal to zero
-    if (discount <= 0) {
-      return error.num
-    }
+  if (discount <= 0 || redemption <= 0) {
+    return error.num
+  }
 
-    // Return error if redemption is less than or equal to zero
-    if (redemption <= 0) {
-      return error.num
-    }
+  // Return error if settlement is greater than maturity
+  if (settlement >= maturity) {
+    return error.value
+  }
 
-    // Return error if basis is neither 0, 1, 2, 3, or 4
-    if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
-      return error.num
-    }
+  let basisVal = 0
+  if (basis === 0) {
+    // Error: Basis value 0/null is not implemented
+    throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
+  } else if (basis === 1) {
+    basisVal = 365
+  } else if (basis === 2) {
+    basisVal = 360
+  } else if (basis === 3) {
+    basisVal = 365
+  } else if (basis === 4) {
+    // Error: Basis value 4 is not implemented
+    throw new Error('European 30/360 day count convention is not yet implemented')
+  } else {
+    // Unsupported basis value
+    return error.num
+  }
 
-    // Return error if settlement is greater than maturity
-    if (settlement >= maturity) {
-      return error.value
-    }
+  // Calculate and return price
+  return (
+    redemption -
+    (discount *
+      redemption *
+      dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')) /
+      basisVal
+  );
+};
 
-    let basisVal = 0
-    if (basis === 0) {
-      // Error: Basis value 0/null is not implemented
-      // throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
-      return error.num
-    } else if (basis === 1) {
-      basisVal = 365
-    } else if (basis === 2) {
-      basisVal = 360
-    } else if (basis === 3) {
-      basisVal = 365
-    } else if (basis === 4) {
-      // Error: Basis value 4 is not implemented
-      // throw new Error('European 30/360 day count convention is not yet implemented')
-      return error.num
-    } else {
-      // Unsupported basis value
-      return error.num
-    }
-
-    // Calculate and return price
-    return (
-      redemption -
-      (discount *
-        redemption *
-        dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')) /
-        basisVal
-    );
-  };
 // TODO
 /**
  * -- Not implemented --
