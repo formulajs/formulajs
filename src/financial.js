@@ -1267,8 +1267,6 @@ export function PRICE() {
 }
 
 /**
- * -- Limited Implementation: Basis values 0 & 4 are not yet supported (30/360 day count conventions) --
- *
  * Returns the price per $100 face value of a discounted security.
  *
  * Category: Financial
