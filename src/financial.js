@@ -1287,7 +1287,6 @@ export function PRICEDISC (
   redemption,
   basis
 ) {
-  console.log("Basis before: ", basis);
   settlement = utils.parseDate(settlement)
   maturity = utils.parseDate(maturity)
   discount = utils.parseNumber(discount)
@@ -1310,31 +1309,35 @@ export function PRICEDISC (
   }
 
   let basisVal = 0
-  if (basis === 0) {
-    // Error: Basis value 0/null is not implemented
-    throw new Error('US (NASD) 30/360 day count convention is not yet implemented')
-  } else if (basis === 1) {
-    basisVal = 365
-  } else if (basis === 2) {
-    basisVal = 360
-  } else if (basis === 3) {
-    basisVal = 365
-  } else if (basis === 4) {
-    // Error: Basis value 4 is not implemented
-    throw new Error('European 30/360 day count convention is not yet implemented')
-  } else {
-    // Unsupported basis value
-    return error.num
+  let diff = 0;
+  switch (basis) {
+    case 0:
+      basisVal = 360
+      diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 0)
+      break;
+    case 1:
+      basisVal = 365
+      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      break;
+    case 2:
+      basisVal = 360
+      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      break;
+    case 3:
+      basisVal = 365
+      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      break;
+    case 4:
+      basisVal = 360
+      diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 4)
+      break;
+    default:
+      // Unsupported basis value
+      return error.num;
   }
 
   // Calculate and return price
-  return (
-    redemption -
-    (discount *
-      redemption *
-      dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')) /
-      basisVal
-  );
+  return (redemption - (discount * redemption * diff) / basisVal);
 };
 
 // TODO
