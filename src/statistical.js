@@ -663,27 +663,6 @@ export function COUNTA() {
 }
 
 /**
- * Formula.js only
- *
- * @param {*} range
- * @param {*} value
- * @returns
- */
-export function COUNTIN(range, value) {
-  let result = 0
-
-  range = utils.flatten(range)
-
-  for (let i = 0; i < range.length; i++) {
-    if (range[i] === value) {
-      result++
-    }
-  }
-
-  return result
-}
-
-/**
  * Counts the number of blank values within a range.
  *
  * Category: Statistical
@@ -780,15 +759,6 @@ export function COUNTIFS() {
   }
 
   return result
-}
-
-/**
- * Formula.js only
- *
- * @returns
- */
-export function COUNTUNIQUE() {
-  return lookup.UNIQUE.apply(null, utils.flatten(arguments)).length
 }
 
 export const COVARIANCE = {}

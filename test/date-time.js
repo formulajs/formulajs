@@ -124,12 +124,6 @@ describe('Date & Time', () => {
     expect(dateTime.HOUR('a')).to.equal(error.value)
   })
 
-  it('INTERVAL', () => {
-    expect(dateTime.INTERVAL(undefined)).to.equal(error.value)
-    expect(dateTime.INTERVAL(10000000)).to.equal('P3M25DT17H46M40S')
-    expect(dateTime.INTERVAL('10000000')).to.equal('P3M25DT17H46M40S')
-  })
-
   it('ISOWEEKNUM', () => {
     expect(dateTime.ISOWEEKNUM('1/1/1901')).to.equal(1)
     expect(dateTime.ISOWEEKNUM('1/8/1901')).to.equal(2)

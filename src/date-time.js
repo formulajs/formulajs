@@ -373,42 +373,6 @@ export function HOUR(serial_number) {
 }
 
 /**
- * Formula.js only
- *
- * @param {*} second
- * @returns
- */
-export function INTERVAL(second) {
-  if (typeof second !== 'number' && typeof second !== 'string') {
-    return error.value
-  } else {
-    second = parseInt(second, 10)
-  }
-
-  let year = Math.floor(second / 946080000)
-  second = second % 946080000
-  let month = Math.floor(second / 2592000)
-  second = second % 2592000
-  let day = Math.floor(second / 86400)
-  second = second % 86400
-
-  let hour = Math.floor(second / 3600)
-  second = second % 3600
-  let min = Math.floor(second / 60)
-  second = second % 60
-  let sec = second
-
-  year = year > 0 ? year + 'Y' : ''
-  month = month > 0 ? month + 'M' : ''
-  day = day > 0 ? day + 'D' : ''
-  hour = hour > 0 ? hour + 'H' : ''
-  min = min > 0 ? min + 'M' : ''
-  sec = sec > 0 ? sec + 'S' : ''
-
-  return 'P' + year + month + day + 'T' + hour + min + sec
-}
-
-/**
  * Returns the number of the ISO week number of the year for a given date.
  *
  * Category: Date and time
