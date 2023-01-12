@@ -1,5 +1,77 @@
 import * as error from './error.js'
 
+// Arrays
+export function argsToArray(args) {
+  const result = []
+
+  arrayEach(args, (value) => {
+    result.push(value)
+  })
+
+  return result
+}
+
+export function arrayEach(array, iteratee) {
+  let index = -1
+  const length = array.length
+
+  while (++index < length) {
+    if (iteratee(array[index], index, array) === false) {
+      break
+    }
+  }
+
+  return array
+}
+
+export function arrayValuesToNumbers(arr) {
+  let n = arr.length
+  let el
+
+  while (n--) {
+    el = arr[n]
+
+    if (typeof el === 'number') {
+      continue
+    }
+
+    if (el === true) {
+      arr[n] = 1
+      continue
+    }
+
+    if (el === false) {
+      arr[n] = 0
+      continue
+    }
+
+    if (typeof el === 'string') {
+      const number = parseNumber(el)
+
+      arr[n] = number instanceof Error ? 0 : number
+    }
+  }
+
+  return arr
+}
+
+export function flatten() {
+  let result
+
+  if (arguments.length === 1) {
+    const argument = arguments[0]
+    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : [argument]
+  } else {
+    result = Array.from(arguments)
+  }
+
+  while (!isFlat(result)) {
+    result = flattenShallow(result)
+  }
+
+  return result
+}
+
 export function flattenShallow(array) {
   if (!array || !array.reduce) {
     return [array]
@@ -27,6 +99,20 @@ export function flattenShallow(array) {
   })
 }
 
+export function initial(array, idx) {
+  idx = idx || 1
+
+  if (!array || typeof array.slice !== 'function') {
+    return array
+  }
+
+  return array.slice(0, array.length - idx)
+}
+
+export function isArrayLike(a) {
+  return a != null && typeof a.length === 'number' && typeof a !== 'string'
+}
+
 export function isFlat(array) {
   if (!array) {
     return false
@@ -41,35 +127,72 @@ export function isFlat(array) {
   return true
 }
 
-export function flatten() {
-  let result
+export function rest(array, idx) {
+  idx = idx || 1
 
-  if (arguments.length === 1) {
-    const argument = arguments[0]
-    result = isArrayLike(argument) ? argsToArray.apply(null, arguments) : [argument]
-  } else {
-    result = Array.from(arguments)
+  if (!array || typeof array.slice !== 'function') {
+    return array
   }
 
-  while (!isFlat(result)) {
-    result = flattenShallow(result)
+  return array.slice(idx)
+}
+
+export function transpose(matrix) {
+  if (!matrix) {
+    return error.value
   }
 
-  return result
+  return matrix[0].map((col, i) => matrix.map((row) => row[i]))
 }
 
-function isArrayLike(a) {
-  return a != null && typeof a.length === 'number' && typeof a !== 'string'
-}
+// Databases
+export function findField(database, title) {
+  let index = null
 
-export function argsToArray(args) {
-  const result = []
+  arrayEach(database, (value, i) => {
+    if (value[0] === title) {
+      index = i
 
-  arrayEach(args, (value) => {
-    result.push(value)
+      return false
+    }
   })
 
-  return result
+  // Return error if the input field title is incorrect
+  if (index == null) {
+    return error.value
+  }
+
+  return index
+}
+
+// Errors
+export function anyError() {
+  for (let n = 0; n < arguments.length; n++) {
+    if (arguments[n] instanceof Error) {
+      return arguments[n]
+    }
+  }
+
+  return undefined
+}
+
+export function anyIsError() {
+  let n = arguments.length
+
+  while (n--) {
+    if (arguments[n] instanceof Error) {
+      return true
+    }
+  }
+
+  return false
+}
+
+// Numbers
+export function cleanFloat(number) {
+  const power = 1e14
+
+  return Math.round(number * power) / power
 }
 
 export function numbers() {
@@ -78,12 +201,36 @@ export function numbers() {
   return possibleNumbers.filter((el) => typeof el === 'number')
 }
 
-export function cleanFloat(number) {
-  const power = 1e14
+export function serialNumberToDate(serial) {
+  if (serial < 60) {
+    serial += 1
+  }
 
-  return Math.round(number * power) / power
+  const utc_days = Math.floor(serial - 25569)
+  const utc_value = utc_days * 86400
+  const date_info = new Date(utc_value * 1000)
+  const fractional_day = serial - Math.floor(serial) + 0.0000001
+
+  let total_seconds = Math.floor(86400 * fractional_day)
+
+  const seconds = total_seconds % 60
+
+  total_seconds -= seconds
+
+  const hours = Math.floor(total_seconds / (60 * 60))
+  const minutes = Math.floor(total_seconds / 60) % 60
+  let days = date_info.getUTCDate()
+  let month = date_info.getUTCMonth()
+
+  if (serial >= 60 && serial < 61) {
+    days = 29
+    month = 1
+  }
+
+  return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
 }
 
+// Parsers
 export function parseBool(bool) {
   if (typeof bool === 'boolean') {
     return bool
@@ -114,112 +261,6 @@ export function parseBool(bool) {
   }
 
   return error.value
-}
-
-export function parseNumber(string) {
-  if (string instanceof Error) {
-    return string
-  }
-
-  if (string === undefined || string === null || string === '') {
-    return 0
-  }
-
-  if (typeof string === 'boolean') {
-    string = +string
-  }
-
-  if (!isNaN(string)) {
-    return parseFloat(string)
-  }
-
-  return error.value
-}
-
-export function parseString(string) {
-  if (string instanceof Error) {
-    return string
-  }
-
-  if (string === undefined || string === null) {
-    return ''
-  }
-
-  return string.toString()
-}
-
-export function parseNumberArray(arr) {
-  let len
-
-  if (!arr || (len = arr.length) === 0) {
-    return error.value
-  }
-
-  let parsed
-
-  while (len--) {
-    if (arr[len] instanceof Error) {
-      return arr[len]
-    }
-
-    parsed = parseNumber(arr[len])
-
-    if (parsed instanceof Error) {
-      return parsed
-    }
-
-    arr[len] = parsed
-  }
-
-  return arr
-}
-
-export function parseMatrix(matrix) {
-  if (!matrix || (matrix.length && matrix.length === 0)) {
-    return error.value
-  }
-
-  let pnarr
-
-  for (let i = 0; i < matrix.length; i++) {
-    pnarr = parseNumberArray(matrix[i])
-    matrix[i] = pnarr
-
-    if (pnarr instanceof Error) {
-      return pnarr
-    }
-  }
-
-  return matrix
-}
-
-function serialNumberToDate(serial) {
-  if (serial < 60) {
-    serial += 1
-  }
-
-  const utc_days = Math.floor(serial - 25569)
-  const utc_value = utc_days * 86400
-  const date_info = new Date(utc_value * 1000)
-  const fractional_day = serial - Math.floor(serial) + 0.0000001
-
-  let total_seconds = Math.floor(86400 * fractional_day)
-
-  const seconds = total_seconds % 60
-
-  total_seconds -= seconds
-
-  const hours = Math.floor(total_seconds / (60 * 60))
-  const minutes = Math.floor(total_seconds / 60) % 60
-  let days = date_info.getUTCDate()
-  let month = date_info.getUTCMonth()
-
-  if (serial >= 60 && serial < 61) {
-    days = 29
-    month = 1
-  }
-
-  return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
 }
 
 export function parseDate(date) {
@@ -265,32 +306,84 @@ export function parseDateArray(arr) {
   return arr
 }
 
-export function anyError() {
-  for (let n = 0; n < arguments.length; n++) {
-    if (arguments[n] instanceof Error) {
-      return arguments[n]
+export function parseMatrix(matrix) {
+  if (!matrix || (matrix.length && matrix.length === 0)) {
+    return error.value
+  }
+
+  let pnarr
+
+  for (let i = 0; i < matrix.length; i++) {
+    pnarr = parseNumberArray(matrix[i])
+    matrix[i] = pnarr
+
+    if (pnarr instanceof Error) {
+      return pnarr
     }
   }
 
-  return undefined
+  return matrix
 }
 
-export function isDefined(arg) {
-  return arg !== undefined && arg !== null
-}
-
-export function anyIsError() {
-  let n = arguments.length
-
-  while (n--) {
-    if (arguments[n] instanceof Error) {
-      return true
-    }
+export function parseNumber(string) {
+  if (string instanceof Error) {
+    return string
   }
 
-  return false
+  if (string === undefined || string === null || string === '') {
+    return 0
+  }
+
+  if (typeof string === 'boolean') {
+    string = +string
+  }
+
+  if (!isNaN(string)) {
+    return parseFloat(string)
+  }
+
+  return error.value
 }
 
+export function parseNumberArray(arr) {
+  let len
+
+  if (!arr || (len = arr.length) === 0) {
+    return error.value
+  }
+
+  let parsed
+
+  while (len--) {
+    if (arr[len] instanceof Error) {
+      return arr[len]
+    }
+
+    parsed = parseNumber(arr[len])
+
+    if (parsed instanceof Error) {
+      return parsed
+    }
+
+    arr[len] = parsed
+  }
+
+  return arr
+}
+
+export function parseString(string) {
+  if (string instanceof Error) {
+    return string
+  }
+
+  if (string === undefined || string === null) {
+    return ''
+  }
+
+  return string.toString()
+}
+
+// Strings
 export function anyIsString() {
   let n = arguments.length
 
@@ -303,74 +396,7 @@ export function anyIsString() {
   return false
 }
 
-export function arrayValuesToNumbers(arr) {
-  let n = arr.length
-  let el
-
-  while (n--) {
-    el = arr[n]
-
-    if (typeof el === 'number') {
-      continue
-    }
-
-    if (el === true) {
-      arr[n] = 1
-      continue
-    }
-
-    if (el === false) {
-      arr[n] = 0
-      continue
-    }
-
-    if (typeof el === 'string') {
-      const number = parseNumber(el)
-
-      arr[n] = number instanceof Error ? 0 : number
-    }
-  }
-
-  return arr
-}
-
-export function rest(array, idx) {
-  idx = idx || 1
-
-  if (!array || typeof array.slice !== 'function') {
-    return array
-  }
-
-  return array.slice(idx)
-}
-
-export function initial(array, idx) {
-  idx = idx || 1
-
-  if (!array || typeof array.slice !== 'function') {
-    return array
-  }
-
-  return array.slice(0, array.length - idx)
-}
-
-export function arrayEach(array, iteratee) {
-  let index = -1
-  const length = array.length
-
-  while (++index < length) {
-    if (iteratee(array[index], index, array) === false) {
-      break
-    }
-  }
-
-  return array
-}
-
-export function transpose(matrix) {
-  if (!matrix) {
-    return error.value
-  }
-
-  return matrix[0].map((col, i) => matrix.map((row) => row[i]))
+// Misc
+export function isDefined(arg) {
+  return arg !== undefined && arg !== null
 }
