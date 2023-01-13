@@ -475,10 +475,7 @@ export function DDB(cost, salvage, life, period, factor) {
   return current
 }
 
-// TODO
 /**
- * -- Not implemented --
- *
  * Returns the discount rate for a security.
  *
  * Category: Financial
@@ -490,8 +487,54 @@ export function DDB(cost, salvage, life, period, factor) {
  * @param {*} basis Optional. The type of day count basis to use.
  * @returns
  */
-export function DISC() {
-  throw new Error('DISC is not implemented')
+export function DISC(settlement, maturity, pr, redemption, basis) {
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+  pr = utils.parseNumber(pr)
+  redemption = utils.parseNumber(redemption)
+  basis = utils.parseNumber(basis)
+
+  basis = basis || 0
+
+  if (utils.anyIsError(settlement, maturity, pr, redemption, basis)) {
+    return error.value
+  }
+
+  if (pr <= 0 || redemption <= 0) {
+    return error.num
+  }
+
+  if (settlement >= maturity) {
+    return error.value
+  }
+
+  let basisVal, diff
+  switch (basis) {
+    case 0:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, false)
+      break
+    case 1:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 2:
+      basisVal = 360
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 3:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 4:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, true)
+      break
+    default:
+      return error.num
+  }
+
+  return (((redemption - pr) / redemption) * basisVal) / diff
 }
 
 /**
@@ -1639,7 +1682,7 @@ export function TBILLYIELD(settlement, maturity, pr) {
 // TODO
 /**
  * -- Not implemented --
- * 
+ *
  * Returns the depreciation of an asset for a specified or partial period by using a declining balance method.
  *
  * Category: Financial

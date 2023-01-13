@@ -404,9 +404,39 @@ describe('Financial', () => {
     expect(financial.DDB(100000, 1000000, 6, 1, 1.5)).to.equal(0)
   })
 
-  // TODO: implement
-  it('DISC', () => {
-    expect(financial.DISC).to.throw('DISC is not implemented')
+  describe('DISC', () => {
+    it('should calculate the discount rate for a security', () => {
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 0)).to.approximately(0.0383, 1e-11)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 1)).to.approximately(0.03883194444, 1e-11)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 2)).to.approximately(0.0383, 1e-11)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 3)).to.approximately(0.03883194444, 1e-11)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 4)).to.approximately(0.03977307692, 1e-11)
+      expect(financial.DISC('01/04/2023', '12/28/2023', 95.6145, 100, 0)).to.approximately(0.04459830508, 1e-11)
+      expect(financial.DISC('01/04/2023', '12/28/2023', 95.6145, 100, 1)).to.approximately(0.0447125, 1e-11)
+      expect(financial.DISC('01/04/2023', '12/28/2023', 95.6145, 100, 2)).to.approximately(0.0441, 1e-11)
+      expect(financial.DISC('01/04/2023', '12/28/2023', 95.6145, 100, 3)).to.approximately(0.0447125, 1e-11)
+      expect(financial.DISC('01/04/2023', '12/28/2023', 95.6145, 100, 4)).to.approximately(0.04459830508, 1e-11)
+    })
+
+    it('should throw an error if input is out-of-bounds', () => {
+      expect(financial.DISC('01/04/2023', '01/31/2023', -1, 100, 1)).to.equal(error.num)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, -1, 1)).to.equal(error.num)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, -1)).to.equal(error.num)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 5)).to.equal(error.num)
+    })
+
+    it('should throw an error if input is of unsupported type/format', () => {
+      expect(financial.DISC('Hello World!', '01/31/2023', 99.71275, 100, 1)).to.equal(error.value)
+      expect(financial.DISC('01/04/2023', 'Hello World!', 99.71275, 100, 1)).to.equal(error.value)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 'Hello World!', 100, 1)).to.equal(error.value)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 'Hello World!', 1)).to.equal(error.value)
+      expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 'Hello World!')).to.equal(error.value)
+
+    })
+
+    it('should throw an error if maturity is earlier than settlement', () => {
+      expect(financial.DISC('01/04/2023', '01/03/2023', 99.71275, 100, 1)).to.equal(error.value)
+    })
   })
 
   it('DOLLARDE', () => {
