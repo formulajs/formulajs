@@ -1309,10 +1309,7 @@ export function PRICE() {
   throw new Error('PRICE is not implemented')
 }
 
-// TODO
 /**
- * -- Not implemented --
- *
  * Returns the price per $100 face value of a discounted security.
  *
  * Category: Financial
@@ -1324,9 +1321,61 @@ export function PRICE() {
  * @param {*} basis Optional. The type of day count basis to use.
  * @returns
  */
-export function PRICEDISC() {
-  throw new Error('PRICEDISC is not implemented')
-}
+export function PRICEDISC (
+  settlement,
+  maturity,
+  discount,
+  redemption,
+  basis
+) {
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+  discount = utils.parseNumber(discount)
+  redemption = utils.parseNumber(redemption)
+  basis = utils.parseNumber(basis)
+
+  basis = basis || 0;
+
+  if (utils.anyIsError(settlement, maturity, discount, redemption, basis)) {
+    return error.value
+  }
+
+  if (discount <= 0 || redemption <= 0) {
+    return error.num
+  }
+
+  if (settlement >= maturity) {
+    return error.value
+  }
+
+  let basisVal, diff;
+  switch (basis) {
+    case 0:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, false)
+      break;
+    case 1:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break;
+    case 2:
+      basisVal = 360
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break;
+    case 3:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break;
+    case 4:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, true)
+      break;
+    default:
+      return error.num;
+  }
+
+  return (redemption - (discount * redemption * diff) / basisVal);
+};
 
 // TODO
 /**

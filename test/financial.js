@@ -639,10 +639,40 @@ describe('Financial', () => {
     expect(financial.PRICE).to.throw('PRICE is not implemented')
   })
 
-  // TODO: implement
-  it('PRICEDISC', () => {
-    expect(financial.PRICEDISC).to.throw('PRICEDISC is not implemented')
+  describe('PRICEDISC', () => {
+    it('should calculate the price of a discounted security', () => {
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 0)).to.approximately(99.72555556, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 1)).to.approximately(99.72931507, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 2)).to.approximately(99.72555556, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 3)).to.approximately(99.72931507, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 4)).to.approximately(99.73611111, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 0)).to.approximately(95.68555556, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 1)).to.approximately(95.69643836, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 2)).to.approximately(95.63666667, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 3)).to.approximately(95.69643836, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 4)).to.approximately(95.68555556, 1e-8)
+    })
+
+    it('should throw an error if input is out-of-bounds', () => {
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', -1, 100, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, -1, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, -1)).to.equal(error.num)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 5)).to.equal(error.num)
+    })
+
+    it('should throw an error if input is of unsupported type/format', () => {
+      expect(financial.PRICEDISC('Hello World!', '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', 'Hello World!', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 'Hello World!', 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 'Hello World!', 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 'Hello World!')).to.equal(error.value)
+    })
+
+    it('should throw an error if maturity is earlier than settlement', () => {
+      expect(financial.PRICEDISC('01/05/2023', '01/04/2023', 0.038, 100, 1)).to.equal(error.value)
+    })
   })
+
 
   // TODO: implement
   it('PRICEMAT', () => {
