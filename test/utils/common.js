@@ -58,6 +58,55 @@ describe('Utils => Common', () => {
       ])
     })
 
+    describe('fillMatrix', () => {
+      it('should fill empty/null/undefined values in a matrix with 0s', () => {
+        expect(
+          utils.fillMatrix([
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+          ])
+        ).to.eql([
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ])
+        expect(
+          utils.fillMatrix([
+            [1, 2, ''],
+            [4, '', 6],
+            ['', 8, 9]
+          ])
+        ).to.eql([
+          [1, 2, 0],
+          [4, 0, 6],
+          [0, 8, 9]
+        ])
+        expect(
+          utils.fillMatrix([
+            [1, 2],
+            [4, '', 6],
+            [8, 9]
+          ])
+        ).to.eql([
+          [1, 2, 0],
+          [4, 0, 6],
+          [8, 9, 0]
+        ])
+        expect(
+          utils.fillMatrix([
+            [1, 2, null],
+            [4, undefined, 6],
+            ['', 8, 9]
+          ])
+        ).to.eql([
+          [1, 2, 0],
+          [4, 0, 6],
+          [0, 8, 9]
+        ])
+      })
+    })
+
     describe('flatten', () => {
       describe('with direct arguments', () => {
         it('should merge and flatten arguments', () => {
