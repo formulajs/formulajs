@@ -317,31 +317,6 @@ describe('Statistical', () => {
     expect(statistical.COUNTIFS([[1], [null]], '1', [[2], [1]], '2')).to.equal(1)
   })
 
-  it('COUNTIN', () => {
-    expect(statistical.COUNTIN([1, 1, 2, 2, 2], 1)).to.equal(2)
-    expect(statistical.COUNTIN([1, 1, 2, 2, 2], 2)).to.equal(3)
-    expect(statistical.COUNTIN([[1], 1, 2, [2], 2], 2)).to.equal(3)
-  })
-
-  it('COUNTUNIQUE', () => {
-    expect(statistical.COUNTUNIQUE()).to.equal(0)
-    expect(statistical.COUNTUNIQUE(1, 1, 2, 2, 3, 3)).to.equal(3)
-    expect(statistical.COUNTUNIQUE([1, 1, 2, 2, 3, 3])).to.equal(3)
-    expect(statistical.COUNTUNIQUE([1, 1, 2], [2, 3, 3])).to.equal(3)
-    expect(
-      statistical.COUNTUNIQUE(
-        [
-          [1, 1],
-          [2, 5]
-        ],
-        [
-          [2, 3],
-          [3, 4]
-        ]
-      )
-    ).to.equal(5)
-  })
-
   it('COVARIANCE.P', () => {
     expect(statistical.COVARIANCE.P([3, 2, 4, 5, 6], [9, 7, 12, 15, 17])).to.approximately(5.2, 1e-9)
     expect(statistical.COVARIANCE.P([3, 2, 4, 5, 6], [9, 'invalid', 12, 15, 17])).to.equal(error.value)

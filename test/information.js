@@ -26,16 +26,6 @@ describe('Information', () => {
     expect(information.INFO).to.throw('INFO is not implemented')
   })
 
-  it('ISBINARY', () => {
-    expect(information.ISBINARY(1)).to.equal(true)
-    expect(information.ISBINARY(0)).to.equal(true)
-    expect(information.ISBINARY(1000)).to.equal(true)
-    expect(information.ISBINARY('1')).to.equal(true)
-    expect(information.ISBINARY('0')).to.equal(true)
-    expect(information.ISBINARY('1000')).to.equal(true)
-    expect(information.ISBINARY('invalid')).to.equal(false)
-  })
-
   it('ISBLANK', () => {
     expect(information.ISBLANK(null)).to.equal(true)
     expect(information.ISBLANK(1)).to.equal(false)

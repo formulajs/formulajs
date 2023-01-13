@@ -47,25 +47,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.ACOTH('invalid')).to.equal(error.value)
   })
 
-  it('ADD', () => {
-    expect(mathTrig.ADD(10, 4)).to.equal(14)
-    expect(mathTrig.ADD(1.2, 4)).to.equal(5.2)
-    expect(mathTrig.ADD(1, 'string')).to.equal(error.value)
-
-    expect(mathTrig.ADD()).to.equal(error.na)
-    expect(mathTrig.ADD(undefined, undefined)).to.equal(0)
-    expect(mathTrig.ADD(1, undefined)).to.equal(1)
-    expect(mathTrig.ADD(undefined, 1)).to.equal(1)
-    expect(mathTrig.ADD(null, undefined)).to.equal(0)
-    expect(mathTrig.ADD(undefined, null)).to.equal(0)
-    expect(mathTrig.ADD(null, null)).to.equal(0)
-    expect(mathTrig.ADD(null, 1)).to.equal(1)
-    expect(mathTrig.ADD(error.na, undefined)).to.equal(error.na)
-    expect(mathTrig.ADD(error.na, null)).to.equal(error.na)
-    expect(mathTrig.ADD(error.na, 1)).to.equal(error.na)
-    expect(mathTrig.ADD(true, false)).to.equal(1)
-  })
-
   // TODO: more edge cases, explore the second argument (options)
   it('AGGREGATE', () => {
     expect(mathTrig.AGGREGATE(1, 4, [1, 2, 3])).to.equal(2)
@@ -294,52 +275,11 @@ describe('Math & Trig', () => {
     expect(mathTrig.DEGREES('invalid')).to.equal(error.value)
   })
 
-  it('DIVIDE', () => {
-    expect(mathTrig.DIVIDE(10, 4)).to.equal(2.5)
-    expect(mathTrig.DIVIDE(12, -6)).to.equal(-2)
-    expect(mathTrig.DIVIDE(0, 0)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(1, 0)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(0, 1)).to.equal(0)
-    expect(mathTrig.DIVIDE(1, 'string')).to.equal(error.value)
-
-    expect(mathTrig.DIVIDE()).to.equal(error.na)
-    expect(mathTrig.DIVIDE(undefined, undefined)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(1, undefined)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(undefined, 1)).to.equal(0)
-    expect(mathTrig.DIVIDE(null, undefined)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(undefined, null)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(null, null)).to.equal(error.div0)
-    expect(mathTrig.DIVIDE(null, 1)).to.equal(0)
-    expect(mathTrig.DIVIDE(error.na, undefined)).to.equal(error.na)
-    expect(mathTrig.DIVIDE(error.na, null)).to.equal(error.na)
-    expect(mathTrig.DIVIDE(error.na, 1)).to.equal(error.na)
-    expect(mathTrig.DIVIDE(false, true)).to.equal(0)
-  })
-
   it('EVEN', () => {
     expect(mathTrig.EVEN(undefined)).to.equal(0)
     expect(mathTrig.EVEN(error.na)).to.equal(error.na)
     expect(mathTrig.EVEN(3)).to.equal(4)
     expect(mathTrig.EVEN('invalid')).to.equal(error.value)
-  })
-
-  it('EQ', () => {
-    expect(mathTrig.EQ(10, 10)).to.equal(true)
-    expect(mathTrig.EQ(1.2, 1.2)).to.equal(true)
-    expect(mathTrig.EQ('hello', 'jim')).to.equal(false)
-    expect(mathTrig.EQ('hello', 'hello')).to.equal(true)
-    expect(mathTrig.EQ(123, 'hello')).to.equal(false)
-    expect(mathTrig.EQ(true, true)).to.equal(true)
-    expect(mathTrig.EQ(false, false)).to.equal(true)
-    expect(mathTrig.EQ(false, 0)).to.equal(false)
-
-    expect(mathTrig.EQ()).to.equal(error.na)
-    expect(mathTrig.EQ(undefined, undefined)).to.equal(true)
-    expect(mathTrig.EQ(null, null)).to.equal(true)
-    expect(mathTrig.EQ(undefined, null)).to.equal(true)
-    expect(mathTrig.EQ(error.na)).to.equal(error.na)
-    expect(mathTrig.EQ(1, undefined)).to.equal(false)
-    expect(mathTrig.EQ(1, 'string')).to.equal(false)
   })
 
   it('EXP', () => {
@@ -427,40 +367,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.GCD(5, 'invalid')).to.equal(error.value)
   })
 
-  it('GT', () => {
-    expect(mathTrig.GT(10, 4)).to.equal(true)
-    expect(mathTrig.GT(10, 10)).to.equal(false)
-    expect(mathTrig.GT(10, 12)).to.equal(false)
-    expect(mathTrig.GT()).to.equal(error.na)
-    expect(mathTrig.GT(undefined, undefined)).to.equal(false)
-    expect(mathTrig.GT(1, undefined)).to.equal(true)
-    expect(mathTrig.GT(0, undefined)).to.equal(false)
-    expect(mathTrig.GT(-1, undefined)).to.equal(false)
-    expect(mathTrig.GT(error.na)).to.equal(error.na)
-    expect(mathTrig.GT(1, 'string')).to.equal(false)
-    expect(mathTrig.GT('string', 2)).to.equal(true)
-    expect(mathTrig.GT('a', 'a')).to.equal(false)
-    expect(mathTrig.GT('a', 'ab')).to.equal(false)
-    expect(mathTrig.GT('ab', 'a')).to.equal(true)
-  })
-
-  it('GTE', () => {
-    expect(mathTrig.GTE(10, 4)).to.equal(true)
-    expect(mathTrig.GTE(10, 10)).to.equal(true)
-    expect(mathTrig.GTE(10, 12)).to.equal(false)
-    expect(mathTrig.GTE()).to.equal(error.na)
-    expect(mathTrig.GTE(undefined, undefined)).to.equal(true)
-    expect(mathTrig.GTE(1, undefined)).to.equal(true)
-    expect(mathTrig.GTE(0, undefined)).to.equal(true)
-    expect(mathTrig.GTE(-1, undefined)).to.equal(false)
-    expect(mathTrig.GTE(error.na)).to.equal(error.na)
-    expect(mathTrig.GTE(1, 'string')).to.equal(false)
-    expect(mathTrig.GTE('string', 2)).to.equal(true)
-    expect(mathTrig.GTE('a', 'a')).to.equal(true)
-    expect(mathTrig.GTE('a', 'ab')).to.equal(false)
-    expect(mathTrig.GTE('ab', 'a')).to.equal(true)
-  })
-
   it('INT', () => {
     expect(mathTrig.INT(undefined)).to.equal(0)
     expect(mathTrig.INT(error.na)).to.equal(error.na)
@@ -500,22 +406,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.LN('invalid')).to.equal(error.value)
   })
 
-  it('LN10', () => {
-    expect(mathTrig.LN10()).to.equal(Math.log(10))
-  })
-
-  it('LN2', () => {
-    expect(mathTrig.LN2()).to.equal(Math.log(2))
-  })
-
-  it('LOG10E', () => {
-    expect(mathTrig.LOG10E()).to.equal(Math.LOG10E)
-  })
-
-  it('LOG2E', () => {
-    expect(mathTrig.LOG2E()).to.equal(Math.LOG2E)
-  })
-
   it('LOG', () => {
     expect(mathTrig.LOG(undefined, undefined)).to.equal(error.num)
     expect(mathTrig.LOG(1, undefined)).to.equal(error.num)
@@ -532,59 +422,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.LOG10(error.na)).to.equal(error.na)
     expect(mathTrig.LOG10(10)).to.equal(1)
     expect(mathTrig.LOG10('invalid')).to.equal(error.value)
-  })
-
-  it('LT', () => {
-    expect(mathTrig.LT(10, 4)).to.equal(false)
-    expect(mathTrig.LT(10, 10)).to.equal(false)
-    expect(mathTrig.LT(10, 12)).to.equal(true)
-    expect(mathTrig.LT()).to.equal(error.na)
-    expect(mathTrig.LT(undefined, undefined)).to.equal(false)
-    expect(mathTrig.LT(1, undefined)).to.equal(false)
-    expect(mathTrig.LT(0, undefined)).to.equal(false)
-    expect(mathTrig.LT(-1, undefined)).to.equal(true)
-    expect(mathTrig.LT(error.na)).to.equal(error.na)
-    expect(mathTrig.LT(1, 'string')).to.equal(true)
-    expect(mathTrig.LT('string', 2)).to.equal(false)
-    expect(mathTrig.LT('a', 'a')).to.equal(false)
-    expect(mathTrig.LT('a', 'ab')).to.equal(true)
-    expect(mathTrig.LT('ab', 'a')).to.equal(false)
-  })
-
-  it('LTE', () => {
-    expect(mathTrig.LTE(10, 4)).to.equal(false)
-    expect(mathTrig.LTE(10, 10)).to.equal(true)
-    expect(mathTrig.LTE(10, 12)).to.equal(true)
-    expect(mathTrig.LTE()).to.equal(error.na)
-    expect(mathTrig.LTE(undefined, undefined)).to.equal(true)
-    expect(mathTrig.LTE(1, undefined)).to.equal(false)
-    expect(mathTrig.LTE(0, undefined)).to.equal(true)
-    expect(mathTrig.LTE(-1, undefined)).to.equal(true)
-    expect(mathTrig.LTE(error.na)).to.equal(error.na)
-    expect(mathTrig.LTE(1, 'string')).to.equal(true)
-    expect(mathTrig.LTE('string', 2)).to.equal(false)
-    expect(mathTrig.LTE('a', 'a')).to.equal(true)
-    expect(mathTrig.LTE('a', 'ab')).to.equal(true)
-    expect(mathTrig.LTE('ab', 'a')).to.equal(false)
-  })
-
-  it('MINUS', () => {
-    expect(mathTrig.MINUS(10, 4)).to.equal(6)
-    expect(mathTrig.MINUS(1.2, 4)).to.equal(-2.8)
-    expect(mathTrig.MINUS(1, 'string')).to.equal(error.value)
-
-    expect(mathTrig.MINUS()).to.equal(error.na)
-    expect(mathTrig.MINUS(undefined, undefined)).to.equal(0)
-    expect(mathTrig.MINUS(1, undefined)).to.equal(1)
-    expect(mathTrig.MINUS(undefined, 1)).to.equal(-1)
-    expect(mathTrig.MINUS(null, undefined)).to.equal(0)
-    expect(mathTrig.MINUS(undefined, null)).to.equal(0)
-    expect(mathTrig.MINUS(null, null)).to.equal(0)
-    expect(mathTrig.MINUS(null, 1)).to.equal(-1)
-    expect(mathTrig.MINUS(error.na, undefined)).to.equal(error.na)
-    expect(mathTrig.MINUS(error.na, null)).to.equal(error.na)
-    expect(mathTrig.MINUS(error.na, 1)).to.equal(error.na)
-    expect(mathTrig.MINUS(false, true)).to.equal(-1)
   })
 
   it('MOD', () => {
@@ -624,46 +461,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.MULTINOMIAL([2, 'invalid', 4])).to.equal(error.value)
   })
 
-  it('MULTIPLY', () => {
-    expect(mathTrig.MULTIPLY(10, 4)).to.equal(40)
-    expect(mathTrig.MULTIPLY(12, -6)).to.equal(-72)
-    expect(mathTrig.MULTIPLY(0, 0)).to.equal(0)
-    expect(mathTrig.MULTIPLY(1, 0)).to.equal(0)
-    expect(mathTrig.MULTIPLY(0, 1)).to.equal(0)
-    expect(mathTrig.MULTIPLY(1, 'string')).to.equal(error.value)
-
-    expect(mathTrig.MULTIPLY()).to.equal(error.na)
-    expect(mathTrig.MULTIPLY(undefined, undefined)).to.equal(0)
-    expect(mathTrig.MULTIPLY(1, undefined)).to.equal(0)
-    expect(mathTrig.MULTIPLY(undefined, 1)).to.equal(0)
-    expect(mathTrig.MULTIPLY(null, undefined)).to.equal(0)
-    expect(mathTrig.MULTIPLY(undefined, null)).to.equal(0)
-    expect(mathTrig.MULTIPLY(null, null)).to.equal(0)
-    expect(mathTrig.MULTIPLY(null, 1)).to.equal(0)
-    expect(mathTrig.MULTIPLY(error.na, undefined)).to.equal(error.na)
-    expect(mathTrig.MULTIPLY(error.na, null)).to.equal(error.na)
-    expect(mathTrig.MULTIPLY(error.na, 1)).to.equal(error.na)
-    expect(mathTrig.MULTIPLY(true, false)).to.equal(0)
-  })
-
-  it('NE', () => {
-    expect(mathTrig.NE(10, 10)).to.equal(false)
-    expect(mathTrig.NE(1.2, 1.2)).to.equal(false)
-    expect(mathTrig.NE('hello', 'jim')).to.equal(true)
-    expect(mathTrig.NE('hello', 'hello')).to.equal(false)
-    expect(mathTrig.NE(123, 'hello')).to.equal(true)
-    expect(mathTrig.NE(true, true)).to.equal(false)
-    expect(mathTrig.NE(false, false)).to.equal(false)
-    expect(mathTrig.NE(false, 0)).to.equal(true)
-    expect(mathTrig.NE()).to.equal(error.na)
-    expect(mathTrig.NE(undefined, undefined)).to.equal(false)
-    expect(mathTrig.NE(null, null)).to.equal(false)
-    expect(mathTrig.NE(undefined, null)).to.equal(false)
-    expect(mathTrig.NE(error.na)).to.equal(error.na)
-    expect(mathTrig.NE(1, undefined)).to.equal(true)
-    expect(mathTrig.NE(1, 'string')).to.equal(true)
-  })
-
   it('ODD', () => {
     expect(mathTrig.ODD(undefined)).to.equal(1)
     expect(mathTrig.ODD(error.na)).to.equal(error.na)
@@ -679,10 +476,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.PI()).to.equal(Math.PI)
   })
 
-  it('E', () => {
-    expect(mathTrig.E()).to.equal(Math.E)
-  })
-
   it('POWER', () => {
     expect(mathTrig.POWER(undefined, undefined)).to.equal(error.num)
     expect(mathTrig.POWER(undefined, 2)).to.equal(0)
@@ -695,20 +488,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.POWER(-1, 0.5)).to.equal(error.num)
     expect(mathTrig.POWER(-1, 'invalid')).to.equal(error.value)
     expect(mathTrig.POWER(true, false)).to.equal(1)
-  })
-
-  it('POW', () => {
-    expect(mathTrig.POW(undefined, undefined)).to.equal(error.num)
-    expect(mathTrig.POW(undefined, 2)).to.equal(0)
-    expect(mathTrig.POW(5, undefined)).to.equal(1)
-    expect(mathTrig.POW(error.na, 2)).to.equal(error.na)
-    expect(mathTrig.POW(5, error.na)).to.equal(error.na)
-    expect(mathTrig.POW(5)).to.equal(error.na)
-    expect(mathTrig.POW(5, 2)).to.equal(25)
-    expect(mathTrig.POW(98.6, 3.2)).to.approximately(2401077.2220695773, 1e-9)
-    expect(mathTrig.POW(4, 5 / 4)).to.approximately(5.656854249492381, 1e-9)
-    expect(mathTrig.POW(-1, 0.5)).to.equal(error.num)
-    expect(mathTrig.POW(-1, 'invalid')).to.equal(error.value)
   })
 
   it('PRODUCT', () => {
@@ -872,14 +651,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.SQRTPI(error.na)).to.equal(error.na)
     expect(mathTrig.SQRTPI(3)).to.approximately(3.0699801238394655, 1e-9)
     expect(mathTrig.SQRTPI('invalid')).to.equal(error.value)
-  })
-
-  it('SQRT1_2', () => {
-    expect(mathTrig.SQRT1_2()).to.approximately(1 / Math.sqrt(2), 1e-9)
-  })
-
-  it('SQRT2', () => {
-    expect(mathTrig.SQRT2()).to.approximately(Math.sqrt(2), 1e-9)
   })
 
   it('SUBTOTAL', () => {
