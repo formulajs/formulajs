@@ -431,7 +431,6 @@ describe('Financial', () => {
       expect(financial.DISC('01/04/2023', '01/31/2023', 'Hello World!', 100, 1)).to.equal(error.value)
       expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 'Hello World!', 1)).to.equal(error.value)
       expect(financial.DISC('01/04/2023', '01/31/2023', 99.71275, 100, 'Hello World!')).to.equal(error.value)
-
     })
 
     it('should throw an error if maturity is earlier than settlement', () => {
@@ -672,7 +671,6 @@ describe('Financial', () => {
       expect(financial.PRICEDISC('01/05/2023', '01/04/2023', 0.038, 100, 1)).to.equal(error.value)
     })
   })
-
 
   // TODO: implement
   it('PRICEMAT', () => {
