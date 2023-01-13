@@ -116,15 +116,6 @@ describe('Text', () => {
     expect(text.FIXED(123456.9, 4)).to.equal('123,456.9000')
   })
 
-  it('HTML2TEXT', () => {
-    expect(text.HTML2TEXT()).to.equal('')
-    expect(text.HTML2TEXT(undefined)).to.equal('')
-    expect(text.HTML2TEXT(error.na)).to.equal(error.na)
-    expect(text.HTML2TEXT('')).to.equal('')
-    expect(text.HTML2TEXT('<i>Hello</i>')).to.equal('Hello')
-    expect(text.HTML2TEXT(['<i>Hello</i>', '<b>Jim</b>'])).to.equal('Hello\nJim')
-  })
-
   it('LEFT', () => {
     expect(text.LEFT(error.na, 2)).to.equal(error.na)
     expect(text.LEFT('text', error.na)).to.equal(error.na)
@@ -206,29 +197,6 @@ describe('Text', () => {
     expect(text.PROPER()).to.equal('')
   })
 
-  it('REGEXEXTRACT', () => {
-    expect(text.REGEXEXTRACT('(Content) between brackets', '(([A-Za-z]+))')).to.equal('Content')
-    expect(text.REGEXEXTRACT('The price today is $826.25', '[0-9]+.[0-9]+[0-9]+')).to.equal('826.25')
-    expect(text.REGEXEXTRACT('Google Doc 101', '[0-9]+')).to.equal('101')
-    expect(text.REGEXEXTRACT('Google Doc 101')).to.equal(error.na)
-    expect(text.REGEXEXTRACT()).to.equal(error.na)
-  })
-
-  it('REGEXREPLACE', () => {
-    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))', 'Me')).to.equal('(Me) between brackets')
-    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))')).to.equal(error.na)
-    expect(text.REGEXREPLACE('(Content) between brackets')).to.equal(error.na)
-    expect(text.REGEXREPLACE()).to.equal(error.na)
-  })
-
-  it('REGEXMATCH', () => {
-    // eslint-disable-next-line no-extra-semi
-    expect(typeof text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', true)).to.equal('object')
-    expect(text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', false)).to.equal(true)
-    expect(text.REGEXMATCH('(Content) between brackets')).to.equal(error.na)
-    expect(text.REGEXMATCH()).to.equal(error.na)
-  })
-
   it('REPLACE', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')
@@ -267,12 +235,6 @@ describe('Text', () => {
     expect(text.SEARCH(true, 'bool')).to.equal(error.value)
     expect(text.SEARCH('foo', 'bar')).to.equal(error.value)
     expect(text.SEARCH('ba', 'bar')).to.equal(1)
-  })
-
-  it('SPLIT', () => {
-    // eslint-disable-next-line no-extra-semi
-    expect(typeof text.SPLIT('123242', '2')).to.equal('object')
-    expect(text.SPLIT('123242', '2') instanceof Array).to.equal(true)
   })
 
   describe('SUBSTITUTE', () => {

@@ -66,16 +66,6 @@ export function ISBLANK(value) {
 }
 
 /**
- * Formula.js only
- *
- * @param {*} number
- * @returns
- */
-export function ISBINARY(number) {
-  return /^[01]{1,10}$/.test(number)
-}
-
-/**
  * Returns TRUE if the value is any error value except #N/A.
  *
  * Category: Information

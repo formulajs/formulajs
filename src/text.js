@@ -269,36 +269,6 @@ export function FIXED(number, decimals = 2, no_commas = false) {
 }
 
 /**
- * Formula.js only
- *
- * @param {*} value
- * @returns
- */
-export function HTML2TEXT(value) {
-  if (utils.anyIsError(value)) {
-    return value
-  }
-
-  let result = ''
-
-  if (value) {
-    if (value instanceof Array) {
-      value.forEach((line) => {
-        if (result !== '') {
-          result += '\n'
-        }
-
-        result += line.replace(/<(?:.|\n)*?>/gm, '')
-      })
-    } else {
-      result = value.replace(/<(?:.|\n)*?>/gm, '')
-    }
-  }
-
-  return result
-}
-
-/**
  * Returns the leftmost characters from a text value.
  *
  * Category: Text
@@ -460,57 +430,6 @@ export function PROPER(text) {
 }
 
 /**
- * Formula.js only
- *
- * @param {*} text
- * @param {*} regular_expression
- * @returns
- */
-export function REGEXEXTRACT(text, regular_expression) {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
-  const match = text.match(new RegExp(regular_expression))
-
-  return match ? match[match.length > 1 ? match.length - 1 : 0] : null
-}
-
-/**
- * Formula.js only
- *
- * @param {*} text
- * @param {*} regular_expression
- * @param {*} full
- * @returns
- */
-export function REGEXMATCH(text, regular_expression, full) {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
-  const match = text.match(new RegExp(regular_expression))
-
-  return full ? match : !!match
-}
-
-/**
- * Formula.js only
- *
- * @param {*} text
- * @param {*} regular_expression
- * @param {*} replacement
- * @returns
- */
-export function REGEXREPLACE(text, regular_expression, replacement) {
-  if (arguments.length < 3) {
-    return error.na
-  }
-
-  return text.replace(new RegExp(regular_expression), replacement)
-}
-
-/**
  * Replaces characters within text
  *
  * Category: Text
@@ -606,17 +525,6 @@ export function SEARCH(find_text, within_text, start_num) {
   foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num - 1) + 1
 
   return foundAt === 0 ? error.value : foundAt
-}
-
-/**
- * Formula.js only
- *
- * @param {*} text
- * @param {*} separator
- * @returns
- */
-export function SPLIT(text, separator) {
-  return text.split(separator)
 }
 
 /**
