@@ -475,77 +475,67 @@ export function DDB(cost, salvage, life, period, factor) {
   return current
 }
 
-  /**
-   * Returns the discount rate for a security.
-   *
-   * Category: Financial
-   *
-   * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
-   * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
-   * @param {*} pr The security's price per $100 face value.
-   * @param {*} redemption The security's redemption value per $100 face value.
-   * @param {*} basis Optional. The type of day count basis to use.
-   * @returns
-   */
-  export function DISC (
-    settlement,
-    maturity,
-    pr,
-    redemption,
-    basis
-  ) {
-    settlement = utils.parseDate(settlement)
-    maturity = utils.parseDate(maturity)
-    pr = utils.parseNumber(pr)
-    redemption = utils.parseNumber(redemption)
-    basis = utils.parseNumber(basis)
+/**
+ * Returns the discount rate for a security.
+ *
+ * Category: Financial
+ *
+ * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
+ * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
+ * @param {*} pr The security's price per $100 face value.
+ * @param {*} redemption The security's redemption value per $100 face value.
+ * @param {*} basis Optional. The type of day count basis to use.
+ * @returns
+ */
+export function DISC(settlement, maturity, pr, redemption, basis) {
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+  pr = utils.parseNumber(pr)
+  redemption = utils.parseNumber(redemption)
+  basis = utils.parseNumber(basis)
 
-    basis = basis || 0;
+  basis = basis || 0
 
-    if (utils.anyIsError(settlement, maturity, pr, redemption, basis)) {
-      return error.value
-    }
+  if (utils.anyIsError(settlement, maturity, pr, redemption, basis)) {
+    return error.value
+  }
 
-    if (pr <= 0 || redemption <= 0) {
+  if (pr <= 0 || redemption <= 0) {
+    return error.num
+  }
+
+  if (settlement >= maturity) {
+    return error.value
+  }
+
+  let basisVal, diff
+  switch (basis) {
+    case 0:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, false)
+      break
+    case 1:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 2:
+      basisVal = 360
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 3:
+      basisVal = 365
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
+      break
+    case 4:
+      basisVal = 360
+      diff = dateTime.DAYS360(settlement, maturity, true)
+      break
+    default:
       return error.num
-    }
+  }
 
-    // Return error if settlement is greater than maturity
-    if (settlement >= maturity) {
-      return error.value
-    }
-
-    let basisVal = 0
-    let diff = 0;
-    switch (basis) {
-      case 0:
-        basisVal = 360
-        diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 0)
-        break;
-      case 1:
-        basisVal = 365
-        diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
-        break;
-      case 2:
-        basisVal = 360
-        diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
-        break;
-      case 3:
-        basisVal = 365
-        diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
-        break;
-      case 4:
-        basisVal = 360
-        diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 4)
-        break;
-      default:
-        // Unsupported basis value
-        return error.num;
-    }
-
-    // Calculate and return discount
-    return (redemption - pr) / redemption * basisVal / diff
-  };
+  return (((redemption - pr) / redemption) * basisVal) / diff
+}
 
 /**
  * Converts a dollar price, expressed as a fraction, into a dollar price, expressed as a decimal number.
