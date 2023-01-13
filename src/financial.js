@@ -1301,40 +1301,36 @@ export function PRICEDISC (
     return error.num
   }
 
-  // Return error if settlement is greater than maturity
   if (settlement >= maturity) {
     return error.value
   }
 
-  let basisVal = 0
-  let diff = 0;
+  let basisVal, diff;
   switch (basis) {
     case 0:
       basisVal = 360
-      diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 0)
+      diff = dateTime.DAYS360(settlement, maturity, false)
       break;
     case 1:
       basisVal = 365
-      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
       break;
     case 2:
       basisVal = 360
-      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
       break;
     case 3:
       basisVal = 365
-      diff = dateTime.DATEDIF(new Date(settlement), new Date(maturity), 'D')
+      diff = dateTime.DATEDIF(settlement, maturity, 'D')
       break;
     case 4:
       basisVal = 360
-      diff = dateTime.DAYS360(new Date(settlement), new Date(maturity), 4)
+      diff = dateTime.DAYS360(settlement, maturity, true)
       break;
     default:
-      // Unsupported basis value
       return error.num;
   }
 
-  // Calculate and return price
   return (redemption - (discount * redemption * diff) / basisVal);
 };
 
