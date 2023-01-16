@@ -979,6 +979,37 @@ export function LOG10(number) {
 }
 
 /**
+ * Returns the matrix product of two arrays. The result is an array with the same number of rows as array1 and the same number of columns as array2.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} array1 Required. 1st array you want to multiply.
+ * @param {*} array2 Required. 2nd array you want to multiply.
+ * @returns
+ */
+export function MMULT(array1, array2) {
+  if (
+    //Arguments are not arrays
+    !Array.isArray(array1) ||
+    !Array.isArray(array2) ||
+    // There are empty arrays
+    array1.some((el) => !el.length) ||
+    array2.some((el) => !el.length) ||
+    // Not all array elements are numbers
+    utils.flattenShallow(array1).some((el) => typeof el !== 'number') ||
+    utils.flattenShallow(array2).some((el) => typeof el !== 'number') ||
+    // Number of columns in array1 is different from the number of rows in array2
+    array1[0].length !== array2.length
+  ) {
+    return error.value
+  }
+
+  const matrix = new Array(array1.length).fill(0).map(() => new Array(array2[0].length).fill(0))
+
+  return matrix.map((row, i) => row.map((_, j) => array1[i].reduce((sum, el, k) => sum + el * array2[k][j], 0)))
+}
+
+/**
  * Returns the remainder from division.
  *
  * Category: Math and trigonometry
