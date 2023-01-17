@@ -1080,7 +1080,7 @@ export function MUNIT(dimension) {
     return error.value
   }
 
-  return new Array(dimension)
+  return Array(dimension)
     .fill(0)
     .map(() => Array(dimension).fill(0))
     .map((el, i) => {
