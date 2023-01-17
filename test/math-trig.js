@@ -461,6 +461,50 @@ describe('Math & Trig', () => {
     expect(mathTrig.MULTINOMIAL([2, 'invalid', 4])).to.equal(error.value)
   })
 
+  describe('MUNIT', () => {
+    it('should return the unit matrix for the specified dimension', () => {
+      expect(mathTrig.MUNIT(1)).to.deep.equal([[1]])
+      expect(mathTrig.MUNIT(2)).to.deep.equal([
+        [1, 0],
+        [0, 1]
+      ])
+      expect(mathTrig.MUNIT(2.345)).to.deep.equal([
+        [1, 0],
+        [0, 1]
+      ])
+      expect(mathTrig.MUNIT('3')).to.deep.equal([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]
+      ])
+      expect(mathTrig.MUNIT('3.99')).to.deep.equal([
+        [1, 0, 0],
+        [0, 1, 0],
+        [0, 0, 1]
+      ])
+      expect(mathTrig.MUNIT(4)).to.deep.equal([
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+      ])
+    })
+    it('should return error if more than one argument is used', () => {
+      expect(mathTrig.MUNIT(1, 2)).to.equal(error.na)
+      expect(mathTrig.MUNIT(1, undefined)).to.equal(error.na)
+      expect(mathTrig.MUNIT(1, '')).to.equal(error.na)
+    })
+    it('should return error if dimension is null, undefined, or equal to or smaller than zero', () => {
+      expect(mathTrig.MUNIT()).to.equal(error.value)
+      expect(mathTrig.MUNIT(null)).to.equal(error.value)
+      expect(mathTrig.MUNIT(undefined)).to.equal(error.value)
+      expect(mathTrig.MUNIT(-1)).to.equal(error.value)
+      expect(mathTrig.MUNIT('-1')).to.equal(error.value)
+      expect(mathTrig.MUNIT(0)).to.equal(error.value)
+      expect(mathTrig.MUNIT(1, 2)).to.equal(error.na)
+    })
+  })
+
   it('ODD', () => {
     expect(mathTrig.ODD(undefined)).to.equal(1)
     expect(mathTrig.ODD(error.na)).to.equal(error.na)
