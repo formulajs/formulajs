@@ -1004,7 +1004,9 @@ export function MMULT(array1, array2) {
     return error.value
   }
 
-  const matrix = new Array(array1.length).fill(0).map(() => new Array(array2[0].length).fill(0))
+  const matrix = Array(array1.length)
+    .fill(0)
+    .map(() => Array(array2[0].length).fill(0))
 
   return matrix.map((row, i) => row.map((_, j) => array1[i].reduce((sum, el, k) => sum + el * array2[k][j], 0)))
 }
