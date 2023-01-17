@@ -425,6 +425,76 @@ describe('Math & Trig', () => {
   })
 
   describe('MMULT', () => {
+    it('should return the matrix product of two arrays', () => {
+      expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5, 6]])).to.deep.equal([
+        [4, 5, 6],
+        [8, 10, 12],
+        [12, 15, 18]
+      ])
+      expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5]])).to.deep.equal([
+        [4, 5],
+        [8, 10],
+        [12, 15]
+      ])
+      expect(mathTrig.MMULT([[1, 2, 3]], [[4], [5], [6]])).to.deep.equal([[32]])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          [[7], [8], [9]]
+        )
+      ).to.deep.equal([[50], [122]])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          [
+            [4, 7],
+            [5, 8],
+            [6, 9]
+          ]
+        )
+      ).to.deep.equal([
+        [32, 50],
+        [77, 122]
+      ])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5],
+            [3, 6]
+          ],
+          [
+            [7, 8, 9],
+            [10, 11, 12]
+          ]
+        )
+      ).to.deep.equal([
+        [47, 52, 57],
+        [64, 71, 78],
+        [81, 90, 99]
+      ])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5]
+          ],
+          [
+            [7, 8, 9],
+            [10, 11, 12]
+          ]
+        )
+      ).to.deep.equal([
+        [47, 52, 57],
+        [64, 71, 78]
+      ])
+    })
     it('should return error if array1 or array 2 are not arrays', () => {
       expect(mathTrig.MMULT()).to.equal(error.value)
       expect(mathTrig.MMULT(undefined)).to.equal(error.value)
@@ -463,66 +533,6 @@ describe('Math & Trig', () => {
         )
       ).to.equal(error.value)
     })
-
-    expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5, 6]])).to.deep.equal([
-      [4, 5, 6],
-      [8, 10, 12],
-      [12, 15, 18]
-    ])
-    expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5]])).to.deep.equal([
-      [4, 5],
-      [8, 10],
-      [12, 15]
-    ])
-    expect(mathTrig.MMULT([[1, 2, 3]], [[4], [5], [6]])).to.deep.equal([[32]])
-    expect(
-      mathTrig.MMULT(
-        [
-          [1, 2, 3],
-          [4, 5, 6]
-        ],
-        [
-          [4, 7],
-          [5, 8],
-          [6, 9]
-        ]
-      )
-    ).to.deep.equal([
-      [32, 50],
-      [77, 122]
-    ])
-    expect(
-      mathTrig.MMULT(
-        [
-          [1, 4],
-          [2, 5],
-          [3, 6]
-        ],
-        [
-          [7, 8, 9],
-          [10, 11, 12]
-        ]
-      )
-    ).to.deep.equal([
-      [47, 52, 57],
-      [64, 71, 78],
-      [81, 90, 99]
-    ])
-    expect(
-      mathTrig.MMULT(
-        [
-          [1, 4],
-          [2, 5]
-        ],
-        [
-          [7, 8, 9],
-          [10, 11, 12]
-        ]
-      )
-    ).to.deep.equal([
-      [47, 52, 57],
-      [64, 71, 78]
-    ])
   })
 
   it('MOD', () => {
