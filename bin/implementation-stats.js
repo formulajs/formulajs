@@ -8,7 +8,6 @@ import * as information from '../src/information.js'
 import * as logical from '../src/logical.js'
 import * as lookupReference from '../src/lookup-reference.js'
 import * as mathTrig from '../src/math-trig.js'
-import * as miscellaneous from '../src/miscellaneous.js'
 import * as statistical from '../src/statistical.js'
 import * as text from '../src/text.js'
 
@@ -21,7 +20,6 @@ const categories = {
   Logical: logical,
   'Loookup Reference': lookupReference,
   'Math Trig': mathTrig,
-  Miscellaneous: miscellaneous,
   Statistical: statistical,
   Text: text
 }
