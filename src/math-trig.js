@@ -1095,6 +1095,34 @@ export function MULTINOMIAL() {
 }
 
 /**
+ * Returns the unit matrix for the specified dimension.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} dimension Required. Dimension is an integer specifying the dimension of the unit matrix that you want to return. It returns an array. The dimension has to be greater than zero.
+ * @returns
+ */
+export function MUNIT(dimension) {
+  if (arguments.length > 1) {
+    return error.na
+  }
+
+  dimension = parseInt(dimension)
+
+  if (!dimension || dimension <= 0) {
+    return error.value
+  }
+
+  return Array(dimension)
+    .fill(0)
+    .map(() => Array(dimension).fill(0))
+    .map((el, i) => {
+      el[i] = 1
+      return el
+    })
+}
+
+/**
  * Rounds a number up to the nearest odd integer.
  *
  * Category: Math and trigonometry
