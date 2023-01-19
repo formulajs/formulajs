@@ -132,10 +132,1081 @@ describe('Lookup Reference', () => {
     expect(lookup.ROWS([1, 2])).to.equal(2)
   })
 
+  describe('SORT', () => {
+    it('should sort array containing numbers by column in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [3, 2, 1],
+            [6, 5, 4],
+            [9, 8, 7]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [2, 3, 1],
+            [5, 6, 4],
+            [8, 9, 7]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(lookup.SORT([[1, 2, 3]], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([[3, 2, 1]], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([[2, 3, 1]], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([[1], [2], [3]], 1, 1, true)).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[3], [2], [1]], 1, 1, true)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[2], [3], [1]], 1, 1, true)).to.eql([[2], [3], [1]])
+      expect(lookup.SORT([[1]], 1, 1, true)).to.eql([[1]])
+    })
+
+    it('should sort array containing strings by column in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['c', 'b', 'a'],
+            ['f', 'e', 'd'],
+            ['i', 'h', 'g']
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['b', 'c', 'a'],
+            ['e', 'f', 'd'],
+            ['h', 'i', 'g']
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(lookup.SORT([['a', 'b', 'c']], 1, 1, true)).to.eql([['a', 'b', 'c']])
+      expect(lookup.SORT([['c', 'b', 'a']], 1, 1, true)).to.eql([['a', 'b', 'c']])
+      expect(lookup.SORT([['b', 'c', 'a']], 1, 1, true)).to.eql([['a', 'b', 'c']])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 1, 1, true)).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['c'], ['b'], ['a']], 1, 1, true)).to.eql([['c'], ['b'], ['a']])
+      expect(lookup.SORT([['b'], ['c'], ['a']], 1, 1, true)).to.eql([['b'], ['c'], ['a']])
+      expect(lookup.SORT([['a']], 1, 1, true)).to.eql([['a']])
+    })
+
+    it('should sort array containing numbers and strings by column in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['d', 'e', 'f'],
+            [7, 8, 9]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        ['d', 'e', 'f'],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            [6, 'e', 'f'],
+            [7, 8, 9]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [2, 3, 'a'],
+        ['e', 'f', 6],
+        [8, 9, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            ['d', 5, 6],
+            ['g', 8, 9]
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [2, 3, 'a'],
+        [5, 6, 'd'],
+        [8, 9, 'g']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [2, 3, 'a'],
+            [5, 6, 'd'],
+            [8, 9, 'g']
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        [2, 3, 'a'],
+        [5, 6, 'd'],
+        [8, 9, 'g']
+      ])
+      expect(lookup.SORT([[2, 3, 'a']], 1, 1, true)).to.eql([[2, 3, 'a']])
+      expect(lookup.SORT([['a', 2, 3]], 1, 1, true)).to.eql([[2, 3, 'a']])
+      expect(lookup.SORT([['a'], [2], [3]], 1, 1, true)).to.eql([['a'], [2], [3]])
+    })
+
+    it('should sort array containing numbers by column in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 1],
+        [6, 5, 4],
+        [9, 8, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [3, 2, 1],
+            [6, 5, 4],
+            [9, 8, 7]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 1],
+        [6, 5, 4],
+        [9, 8, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [2, 3, 1],
+            [5, 6, 4],
+            [8, 9, 7]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 1],
+        [6, 5, 4],
+        [9, 8, 7]
+      ])
+      expect(lookup.SORT([[1, 2, 3]], 1, -1, true)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([[3, 2, 1]], 1, -1, true)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([[2, 3, 1]], 1, -1, true)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([[1], [2], [3]], 1, -1, true)).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[3], [2], [1]], 1, -1, true)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[2], [3], [1]], 1, -1, true)).to.eql([[2], [3], [1]])
+      expect(lookup.SORT([[1]], 1, -1, true)).to.eql([[1]])
+    })
+
+    it('should sort array containing strings by column in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['c', 'b', 'a'],
+        ['f', 'e', 'd'],
+        ['i', 'h', 'g']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['c', 'b', 'a'],
+            ['f', 'e', 'd'],
+            ['i', 'h', 'g']
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['c', 'b', 'a'],
+        ['f', 'e', 'd'],
+        ['i', 'h', 'g']
+      ])
+      expect(lookup.SORT([['a', 'b', 'c']], 1, -1, true)).to.eql([['c', 'b', 'a']])
+      expect(lookup.SORT([['c', 'b', 'a']], 1, -1, true)).to.eql([['c', 'b', 'a']])
+      expect(lookup.SORT([['b', 'c', 'a']], 1, -1, true)).to.eql([['c', 'b', 'a']])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 1, -1, true)).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['c'], ['b'], ['a']], 1, -1, true)).to.eql([['c'], ['b'], ['a']])
+      expect(lookup.SORT([['b'], ['c'], ['a']], 1, -1, true)).to.eql([['b'], ['c'], ['a']])
+      expect(lookup.SORT([['a']], 1, -1, true)).to.eql([['a']])
+    })
+
+    it('should sort array containing numbers and strings by column in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['d', 'e', 'f'],
+            [7, 8, 9]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 1],
+        ['f', 'e', 'd'],
+        [9, 8, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            [6, 'e', 'f'],
+            [7, 8, 9]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['a', 3, 2],
+        [6, 'f', 'e'],
+        [7, 9, 8]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            ['d', 5, 6],
+            ['g', 8, 9]
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['a', 3, 2],
+        ['d', 6, 5],
+        ['g', 9, 8]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [2, 3, 'a'],
+            [5, 6, 'd'],
+            [8, 9, 'g']
+          ],
+          1,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['a', 3, 2],
+        ['d', 6, 5],
+        ['g', 9, 8]
+      ])
+      expect(lookup.SORT([[2, 3, 'a']], 1, -1, true)).to.eql([['a', 3, 2]])
+      expect(lookup.SORT([['a', 2, 3]], 1, -1, true)).to.eql([['a', 3, 2]])
+      expect(lookup.SORT([['a'], [2], [3]], 1, -1, true)).to.eql([['a'], [2], [3]])
+    })
+
+    it('should sort array by column with varying sort index', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          2,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [3, 2, 1],
+            [6, 5, 4],
+            [9, 8, 7]
+          ],
+          3,
+          1,
+          true
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [2, 3, 1],
+            [5, 6, 4],
+            [8, 9, 7]
+          ],
+          3,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 1],
+        [6, 5, 4],
+        [9, 8, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            [6, 'e', 'f'],
+            [7, 8, 9]
+          ],
+          3,
+          -1,
+          true
+        )
+      ).to.eql([
+        [3, 2, 'a'],
+        ['f', 'e', 6],
+        [9, 8, 7]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 2, 3],
+            ['d', 5, 6],
+            ['g', 8, 9]
+          ],
+          2,
+          1,
+          true
+        )
+      ).to.eql([
+        [2, 3, 'a'],
+        [5, 6, 'd'],
+        [8, 9, 'g']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          2,
+          -1,
+          true
+        )
+      ).to.eql([
+        ['c', 'b', 'a'],
+        ['f', 'e', 'd'],
+        ['i', 'h', 'g']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          3,
+          1,
+          true
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(lookup.SORT([[1], [2], [3]], 2, -1, true)).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[3], [2], [1]], 2, -1, true)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[2], [3], [1]], 3, -1, true)).to.eql([[2], [3], [1]])
+      expect(lookup.SORT([['a'], [2], [3]], 2, -1, true)).to.eql([['a'], [2], [3]])
+      expect(lookup.SORT([['a'], [2], [3]], 3, 1, true)).to.eql([['a'], [2], [3]])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 2, -1, true)).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 3, 1, true)).to.eql([['a'], ['b'], ['c']])
+    })
+
+    it('should sort array containing numbers by row in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          1,
+          1,
+          false
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT([
+          [7, 8, 9],
+          [4, 5, 6],
+          [1, 2, 3]
+        ])
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(
+        lookup.SORT([
+          [4, 5, 6],
+          [7, 8, 9],
+          [1, 2, 3]
+        ])
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+      ])
+      expect(lookup.SORT([[1, 2, 3]])).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([[3, 2, 1]], 1, 1)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([[2, 3, 1]], 1)).to.eql([[2, 3, 1]])
+      expect(lookup.SORT([[1], [2], [3]], 1, 1, false)).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[3], [2], [1]])).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[2], [3], [1]], 1)).to.eql([[1], [2], [3]])
+      expect(lookup.SORT([[1]], 1, 1, false)).to.eql([[1]])
+    })
+
+    it('should sort array containing strings by row in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          1,
+          1,
+          false
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT([
+          ['g', 'h', 'i'],
+          ['d', 'e', 'f'],
+          ['a', 'b', 'c']
+        ])
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT([
+          ['d', 'e', 'f'],
+          ['g', 'h', 'i'],
+          ['a', 'b', 'c']
+        ])
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(lookup.SORT([['a', 'b', 'c']])).to.eql([['a', 'b', 'c']])
+      expect(lookup.SORT([['c', 'b', 'a']], 1, 1)).to.eql([['c', 'b', 'a']])
+      expect(lookup.SORT([['b', 'c', 'a']], 1)).to.eql([['b', 'c', 'a']])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 1, 1, false)).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['c'], ['b'], ['a']])).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['b'], ['c'], ['a']], 1)).to.eql([['a'], ['b'], ['c']])
+      expect(lookup.SORT([['a']], 1, 1, false)).to.eql([['a']])
+    })
+
+    it('should sort array containing numbers and strings by row in ascending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['a', 'b', 'c'],
+            [4, 5, 6]
+          ],
+          1,
+          1,
+          false
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        ['a', 'b', 'c']
+      ])
+      expect(
+        lookup.SORT([
+          ['a', 'b', 'c'],
+          [4, 5, 6],
+          [1, 2, 3]
+        ])
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        ['a', 'b', 'c']
+      ])
+      expect(
+        lookup.SORT([
+          [4, 5, 6],
+          ['a', 'b', 'c'],
+          [1, 2, 3]
+        ])
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6],
+        ['a', 'b', 'c']
+      ])
+      expect(lookup.SORT([[1, 'a', 2]])).to.eql([[1, 'a', 2]])
+      expect(lookup.SORT([[2, 'a', 1]], 1, 1)).to.eql([[2, 'a', 1]])
+      expect(lookup.SORT([['a', 2, 1]], 1)).to.eql([['a', 2, 1]])
+      expect(
+        lookup.SORT(
+          [
+            [1, 'a'],
+            [2, 'b'],
+            [3, 'c']
+          ],
+          1,
+          1,
+          false
+        )
+      ).to.eql([
+        [1, 'a'],
+        [2, 'b'],
+        [3, 'c']
+      ])
+      expect(lookup.SORT([['a'], ['b'], [1]])).to.eql([[1], ['a'], ['b']])
+      expect(lookup.SORT([[2], ['b'], ['a']], 1)).to.eql([[2], ['a'], ['b']])
+    })
+
+    it('should sort array containing numbers by row in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [7, 8, 9],
+        [4, 5, 6],
+        [1, 2, 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [7, 8, 9],
+            [4, 5, 6],
+            [1, 2, 3]
+          ],
+          1,
+          -1
+        )
+      ).to.eql([
+        [7, 8, 9],
+        [4, 5, 6],
+        [1, 2, 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [4, 5, 6],
+            [7, 8, 9],
+            [1, 2, 3]
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [7, 8, 9],
+        [4, 5, 6],
+        [1, 2, 3]
+      ])
+      expect(lookup.SORT([[1, 2, 3]], 1, -1)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([[3, 2, 1]], 1, -1)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([[2, 3, 1]], 1, -1)).to.eql([[2, 3, 1]])
+      expect(lookup.SORT([[1], [2], [3]], 1, -1, false)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[3], [2], [1]], 1, -1)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[2], [3], [1]], 1, -1)).to.eql([[3], [2], [1]])
+      expect(lookup.SORT([[1]], 1, -1)).to.eql([[1]])
+    })
+
+    it('should sort array containing strings by row in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        ['g', 'h', 'i'],
+        ['d', 'e', 'f'],
+        ['a', 'b', 'c']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['g', 'h', 'i'],
+            ['d', 'e', 'f'],
+            ['a', 'b', 'c']
+          ],
+          1,
+          -1
+        )
+      ).to.eql([
+        ['g', 'h', 'i'],
+        ['d', 'e', 'f'],
+        ['a', 'b', 'c']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i'],
+            ['a', 'b', 'c']
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        ['g', 'h', 'i'],
+        ['d', 'e', 'f'],
+        ['a', 'b', 'c']
+      ])
+      expect(lookup.SORT([['a', 'b', 'c']], 1, -1)).to.eql([['a', 'b', 'c']])
+      expect(lookup.SORT([['c', 'b', 'a']], 1, -1)).to.eql([['c', 'b', 'a']])
+      expect(lookup.SORT([['b', 'c', 'a']], 1, -1)).to.eql([['b', 'c', 'a']])
+      expect(lookup.SORT([['a'], ['b'], ['c']], 1, -1, false)).to.eql([['c'], ['b'], ['a']])
+      expect(lookup.SORT([['c'], ['b'], ['a']], 1, -1)).to.eql([['c'], ['b'], ['a']])
+      expect(lookup.SORT([['b'], ['c'], ['a']], 1, -1)).to.eql([['c'], ['b'], ['a']])
+      expect(lookup.SORT([['a']], 1, -1)).to.eql([['a']])
+    })
+
+    it('should sort array containing numbers and strings by row in descending order with sort index of 1', () => {
+      expect(
+        lookup.SORT(
+          [
+            [1, 'a', 3],
+            [4, 'b', 6],
+            [7, 'c', 9]
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [7, 'c', 9],
+        [4, 'b', 6],
+        [1, 'a', 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [7, 'c', 9],
+            [4, 'b', 6],
+            [1, 'a', 3]
+          ],
+          1,
+          -1
+        )
+      ).to.eql([
+        [7, 'c', 9],
+        [4, 'b', 6],
+        [1, 'a', 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [4, 'b', 6],
+            [7, 'c', 9],
+            [1, 'a', 3]
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [7, 'c', 9],
+        [4, 'b', 6],
+        [1, 'a', 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 1, 'c'],
+            ['a', 'b', 'c'],
+            [1, 2, 3]
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        ['a', 1, 'c'],
+        ['a', 'b', 'c'],
+        [1, 2, 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['a', 1, 'c'],
+            ['a', 'b', 'c']
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        ['a', 1, 'c'],
+        ['a', 'b', 'c'],
+        [1, 2, 3]
+      ])
+      expect(lookup.SORT([['a', 'b', 1]], 1, -1)).to.eql([['a', 'b', 1]])
+      expect(lookup.SORT([[1, 'b', 'a']], 1, -1)).to.eql([[1, 'b', 'a']])
+      expect(lookup.SORT([['b', 1, 'a']], 1, -1)).to.eql([['b', 1, 'a']])
+      expect(lookup.SORT([['a'], ['b'], [1]], 1, -1, false)).to.eql([['b'], ['a'], [1]])
+      expect(lookup.SORT([[1], ['b'], ['a']], 1, -1)).to.eql([['b'], ['a'], [1]])
+      expect(lookup.SORT([['b']], 1, -1)).to.eql([['b']])
+    })
+
+    it('should sort array by row with varying sort index', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          2,
+          1
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['g', 'h', 'i'],
+            ['d', 'e', 'f'],
+            ['a', 'b', 'c']
+          ],
+          3,
+          1
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 'e', 'f'],
+        ['g', 'h', 'i']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', 'e', 'f'],
+            ['g', 'h', 'i']
+          ],
+          3,
+          -1
+        )
+      ).to.eql([
+        ['g', 'h', 'i'],
+        ['d', 'e', 'f'],
+        ['a', 'b', 'c']
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [1, 'a', 3],
+            [4, 'b', 6],
+            [7, 'c', 9]
+          ],
+          2,
+          1
+        )
+      ).to.eql([
+        [1, 'a', 3],
+        [4, 'b', 6],
+        [7, 'c', 9]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [7, 'c', 9],
+            [4, 6, 'b'],
+            [1, 'a', 3]
+          ],
+          3,
+          -1
+        )
+      ).to.eql([
+        [4, 6, 'b'],
+        [7, 'c', 9],
+        [1, 'a', 3]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          3,
+          -1
+        )
+      ).to.eql([
+        [4, 5, 6],
+        [1, 2, 3]
+      ])
+      expect(lookup.SORT([[1, 2, 3]], 2, -1)).to.eql([[1, 2, 3]])
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          2,
+          1
+        )
+      ).to.eql([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+      expect(lookup.SORT([[1, 2, 3]], 3, 1)).to.eql([[1, 2, 3]])
+    })
+
+    it('should sort array containing empty cells', () => {
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', '', 'f'],
+            ['', '', '']
+          ],
+          1,
+          -1
+        )
+      ).to.eql([
+        ['d', 0, 'f'],
+        ['a', 'b', 'c'],
+        [0, 0, 0]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['a', 'b', 'c'],
+            ['d', '', 'f'],
+            ['', '', '']
+          ],
+          1,
+          1,
+          true
+        )
+      ).to.eql([
+        ['a', 'b', 'c'],
+        ['d', 0, 'f'],
+        [0, 0, 0]
+      ])
+      expect(lookup.SORT([[''], ['a'], ['b'], [1]], 1, -1, false)).to.eql([['b'], ['a'], [1], [0]])
+      expect(lookup.SORT([[1, 2, 3], [], [4, 5, 6]])).to.eql([
+        [0, 0, 0],
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+      expect(lookup.SORT([[1, 2, 3], [], [4, 5, 6]], 1, 1, true)).to.eql([
+        [1, 2, 3],
+        [0, 0, 0],
+        [4, 5, 6]
+      ])
+      expect(lookup.SORT([[1, 2, 3], [], [4, 5, 6]], 1, -1, true)).to.eql([
+        [3, 2, 1],
+        [0, 0, 0],
+        [6, 5, 4]
+      ])
+      expect(lookup.SORT([[1, 2, 3], ['a']], 1, 1, true)).to.eql([
+        [1, 2, 3],
+        ['a', 0, 0]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+          ],
+          1,
+          -1,
+          false
+        )
+      ).to.eql([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ])
+      expect(
+        lookup.SORT(
+          [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+          ],
+          3,
+          1,
+          true
+        )
+      ).to.eql([
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ])
+    })
+
+    it('should sort one dimensional arrays', () => {
+      expect(lookup.SORT([1, 2, 3])).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([3, 2, 1])).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([1, 2, 3], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([3, 2, 1], 1, 1, true)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([1, 2, 3], 1, -1)).to.eql([[1, 2, 3]])
+      expect(lookup.SORT([1, 2, 3], 1, -1, true)).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([3, 2, 1]), 1, -1, false).to.eql([[3, 2, 1]])
+      expect(lookup.SORT([3, 2, 1]), 1, -1, true).to.eql([[3, 2, 1]])
+    })
+
+    it('should return error with invalid inputs', () => {
+      expect(lookup.SORT([[1, 2, 3]], 2, 1, true)).to.eql(error.value)
+      expect(lookup.SORT([[1, 2, 3]], 0, 1, true)).to.eql(error.value)
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['a', 'b', 'c']
+          ],
+          1,
+          100,
+          true
+        )
+      ).to.eql(error.value)
+      expect(
+        lookup.SORT(
+          [
+            [1, 2, 3],
+            ['a', 'b', 'c']
+          ],
+          1,
+          1,
+          'FALSEEE'
+        )
+      ).to.eql(error.name)
+    })
+  })
+
   it('TRANSPOSE', () => {
     expect(lookup.TRANSPOSE()).to.equal(error.na)
     expect(lookup.TRANSPOSE([])).to.eql([])
     expect(lookup.TRANSPOSE([1, 2, 3])).to.eql([[1], [2], [3]])
+    expect(lookup.TRANSPOSE([[1, 2, 3]])).to.eql([[1], [2], [3]])
     expect(
       lookup.TRANSPOSE([
         [1, 2],
@@ -155,6 +1226,16 @@ describe('Lookup Reference', () => {
       [1, 4],
       [2, 5],
       [3, 6]
+    ])
+    expect(
+      lookup.TRANSPOSE([
+        [1, null, 3],
+        [4, 5, undefined]
+      ])
+    ).to.eql([
+      [1, 4],
+      [0, 5],
+      [3, 0]
     ])
   })
 

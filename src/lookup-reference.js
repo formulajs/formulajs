@@ -281,6 +281,58 @@ export function ROWS(array) {
 
   return jStat.rows(array)
 }
+/**
+ * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array Array to sort
+ * @param {*} sort_index Optional. A number indicating the row or column to sort by
+ * @param {*} sort_order Optional. A number indicating the desired sort order; 1 for ascending order (default), -1 for descending order
+ * @param {*} by_col Optional. A logical value indicating the desired sort direction; FALSE to sort by row (default), TRUE to sort by column
+ * @returns
+ */
+export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
+  if (!array || !Array.isArray(array)) {
+    return error.na
+  }
+
+  if (array.length === 0) {
+    return 0
+  }
+
+  sort_index = utils.parseNumber(sort_index)
+  if (!sort_index || sort_index < 1) {
+    return error.value
+  }
+
+  sort_order = utils.parseNumber(sort_order)
+  if (sort_order !== 1 && sort_order !== -1) {
+    return error.value
+  }
+
+  by_col = utils.parseBool(by_col)
+  if (typeof by_col !== 'boolean') {
+    return error.name
+  }
+
+  const sortArray = (arr) =>
+    arr.sort((a, b) => {
+      a = utils.parseString(a[sort_index - 1])
+      b = utils.parseString(b[sort_index - 1])
+
+      return sort_order === 1 ? (a < b ? sort_order * -1 : sort_order) : a > b ? sort_order : sort_order * -1
+    })
+
+  const matrix = utils.fillMatrix(array)
+  const result = by_col ? utils.transpose(matrix) : matrix
+
+  return sort_index >= 1 && sort_index <= result[0].length
+    ? by_col
+      ? utils.transpose(sortArray(result))
+      : sortArray(result)
+    : error.value
+}
 
 /**
  * Returns the transpose of an array.
@@ -295,7 +347,9 @@ export function TRANSPOSE(array) {
     return error.na
   }
 
-  return jStat.transpose(array)
+  const matrix = utils.fillMatrix(array)
+
+  return utils.transpose(matrix)
 }
 
 /**
