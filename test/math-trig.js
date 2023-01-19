@@ -424,6 +424,117 @@ describe('Math & Trig', () => {
     expect(mathTrig.LOG10('invalid')).to.equal(error.value)
   })
 
+  describe('MMULT', () => {
+    it('should return the matrix product of two arrays', () => {
+      expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5, 6]])).to.deep.equal([
+        [4, 5, 6],
+        [8, 10, 12],
+        [12, 15, 18]
+      ])
+      expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5]])).to.deep.equal([
+        [4, 5],
+        [8, 10],
+        [12, 15]
+      ])
+      expect(mathTrig.MMULT([[1, 2, 3]], [[4], [5], [6]])).to.deep.equal([[32]])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          [[7], [8], [9]]
+        )
+      ).to.deep.equal([[50], [122]])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 2, 3],
+            [4, 5, 6]
+          ],
+          [
+            [4, 7],
+            [5, 8],
+            [6, 9]
+          ]
+        )
+      ).to.deep.equal([
+        [32, 50],
+        [77, 122]
+      ])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5],
+            [3, 6]
+          ],
+          [
+            [7, 8, 9],
+            [10, 11, 12]
+          ]
+        )
+      ).to.deep.equal([
+        [47, 52, 57],
+        [64, 71, 78],
+        [81, 90, 99]
+      ])
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5]
+          ],
+          [
+            [7, 8, 9],
+            [10, 11, 12]
+          ]
+        )
+      ).to.deep.equal([
+        [47, 52, 57],
+        [64, 71, 78]
+      ])
+    })
+    it('should return error if array1 or array 2 are not arrays', () => {
+      expect(mathTrig.MMULT()).to.equal(error.value)
+      expect(mathTrig.MMULT(undefined)).to.equal(error.value)
+      expect(mathTrig.MMULT(1, 2)).to.equal(error.value)
+      expect(mathTrig.MMULT(1, [2, 3])).to.equal(error.value)
+      expect(mathTrig.MMULT(true, false)).to.equal(error.value)
+    })
+    it('should return error if both arrays do not contain only numbers', () => {
+      expect(mathTrig.MMULT([[1], [true], [3]], [[4, 5, 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], [null], [3]], [[4, 5, 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], [undefined], [3]], [[4, 5, 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], ['a'], [3]], [[4, 5, 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], [2], [3]], [[4, 'a', 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], [{ a: 'b' }], [3]], [[4, 5, 6]])).to.equal(error.value)
+      expect(mathTrig.MMULT([[1], [[1, 2]], [3]], [[4, 5, 6]])).to.equal(error.value)
+    })
+    it('should return error if number of columns in array1 is not same as the number of rows in array2', () => {
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5],
+            [3, 6]
+          ],
+          [[7, 8, 9], []]
+        )
+      ).to.equal(error.value)
+      expect(
+        mathTrig.MMULT(
+          [
+            [1, 4],
+            [2, 5],
+            [3, 6]
+          ],
+          [[7, 8, 9], [10, 11, 12], []]
+        )
+      ).to.equal(error.value)
+    })
+  })
+
   it('MOD', () => {
     expect(mathTrig.MOD(undefined, undefined)).to.equal(error.div0)
     expect(mathTrig.MOD(1, undefined)).to.equal(error.div0)
