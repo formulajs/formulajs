@@ -332,7 +332,7 @@ describe('Utils => Common', () => {
     it('parseNumber', () => {
       expect(utils.parseNumber()).to.equal(0)
       expect(utils.parseNumber(null)).to.equal(0)
-      expect(utils.parseNumber('')).to.equal(0)
+      expect(utils.parseNumber('')).to.equal(error.value)
       expect(utils.parseNumber(2)).to.equal(2)
       expect(utils.parseNumber(error.na)).to.equal(error.na)
       expect(utils.parseNumber('text')).to.equal(error.value)
@@ -340,7 +340,7 @@ describe('Utils => Common', () => {
 
     it('parseNumberArray', () => {
       expect(utils.parseNumberArray()).to.equal(error.value)
-      expect(utils.parseNumberArray([2, 0, '', null, undefined])).to.eql([2, 0, 0, 0, 0])
+      expect(utils.parseNumberArray([2, 0, '', null, undefined])).to.eql(error.value)
       expect(utils.parseNumberArray([2, 'a', 1, error.na])).to.equal(error.na)
       expect(utils.parseNumberArray([2, 'a', 1])).to.equal(error.value)
     })

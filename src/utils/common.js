@@ -353,7 +353,7 @@ export function parseNumber(string) {
     return string
   }
 
-  if (string === undefined || string === null || string === '') {
+  if (string === undefined || string === null) {
     return 0
   }
 
@@ -361,7 +361,7 @@ export function parseNumber(string) {
     string = +string
   }
 
-  if (!isNaN(string)) {
+  if (!isNaN(string) && string !== '') {
     return parseFloat(string)
   }
 

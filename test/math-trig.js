@@ -372,6 +372,8 @@ describe('Math & Trig', () => {
     expect(mathTrig.INT(error.na)).to.equal(error.na)
     expect(mathTrig.INT(5.5)).to.equal(5)
     expect(mathTrig.INT('invalid')).to.equal(error.value)
+    expect(mathTrig.INT('')).to.equal(error.value)
+    expect(mathTrig.INT(true)).to.equal(1)
   })
 
   it('ISO.CEILING', () => {
