@@ -16,7 +16,4 @@ export * from './text.js'
 // Re-export function T due to conflict in statistical.js
 export { T } from './text.js'
 
-export const utils = {
-  errors,
-  symbols
-}
+export const utils = { errors, symbols }
