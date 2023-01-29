@@ -4,7 +4,12 @@ import * as utils from './common.js'
 import { POWER } from './../math-trig.js'
 
 /**
- * Formula.js only
+ * Following functions are part of Formula.js only and not found in Excel.
+ * Purpose of these functions is to implement an Excel like behaviour for fundamental math symbols such as +, -, /, *, etc.
+ */
+
+/**
+ * Formula.js only.
  *
  * @param {*} num1
  * @param {*} num2
