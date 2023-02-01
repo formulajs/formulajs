@@ -149,7 +149,15 @@ export function ISFORMULA() {
  * @returns
  */
 export function ISLOGICAL(value) {
-  return value === true || value === false
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISLOGICAL(item))
+  }
+
+  return typeof value === 'boolean'
 }
 
 /**

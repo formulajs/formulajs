@@ -142,9 +142,36 @@ describe('Information', () => {
   it('ISLOGICAL', () => {
     expect(information.ISLOGICAL(true)).to.equal(true)
     expect(information.ISLOGICAL(false)).to.equal(true)
+
+    expect(information.ISLOGICAL()).to.equal(error.na)
+    expect(information.ISLOGICAL(true, false)).to.equal(error.na)
+
     expect(information.ISLOGICAL(1)).to.equal(false)
+    expect(information.ISLOGICAL('')).to.equal(false)
+    expect(information.ISLOGICAL(' ')).to.equal(false)
     expect(information.ISLOGICAL('true')).to.equal(false)
+    expect(information.ISLOGICAL('false')).to.equal(false)
+    expect(information.ISLOGICAL('2021-03-01')).to.equal(false)
+    expect(information.ISLOGICAL('08:45 AM')).to.equal(false)
     expect(information.ISLOGICAL(null)).to.equal(false)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISLOGICAL(err)).to.equal(false)
+    })
+
+    expect(information.ISLOGICAL([false, 2, 3])).to.eql([true, false, false])
+    expect(information.ISLOGICAL([[1], [2], [true]])).to.eql([[false], [false], [true]])
+    expect(
+      information.ISLOGICAL([
+        [1, error.div0],
+        [true, 5],
+        [3, 6]
+      ])
+    ).to.eql([
+      [false, false],
+      [true, false],
+      [false, false]
+    ])
   })
 
   it('ISNA', () => {
