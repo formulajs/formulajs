@@ -91,9 +91,39 @@ describe('Information', () => {
   })
 
   it('ISERROR', () => {
+    expect(information.ISERROR(NaN)).to.equal(true)
+    expect(information.ISERROR(1 / 0)).to.equal(true)
+    expect(information.ISERROR(-1 / 0)).to.equal(true)
+
     expect(information.ISERROR(1)).to.equal(false)
-    expect(information.ISERROR(error.na)).to.equal(true)
-    expect(information.ISERROR(error.value)).to.equal(true)
+    expect(information.ISERROR('text')).to.equal(false)
+    expect(information.ISERROR('')).to.equal(false)
+    expect(information.ISERROR(' ')).to.equal(false)
+    expect(information.ISERROR('1')).to.equal(false)
+    expect(information.ISERROR('1f')).to.equal(false)
+    expect(information.ISERROR('2021-03-01')).to.equal(false)
+    expect(information.ISERROR('08:45 AM')).to.equal(false)
+
+    expect(information.ISERROR()).to.equal(error.na)
+    expect(information.ISERROR(1, 'text')).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISERROR(err)).to.equal(true)
+    })
+
+    expect(information.ISERROR([1, error.calc, 3])).to.eql([false, true, false])
+    expect(information.ISERROR([[1], [2], [error.div0]])).to.eql([[false], [false], [true]])
+    expect(
+      information.ISERROR([
+        [error.na, error.div0],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.eql([
+      [true, true],
+      [false, false],
+      [false, false]
+    ])
   })
 
   it('ISEVEN', () => {

@@ -102,6 +102,14 @@ export function ISERR(value) {
  * @returns
  */
 export function ISERROR(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISERROR(item))
+  }
+
   return ISERR(value) || value === error.na
 }
 
