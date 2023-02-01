@@ -78,10 +78,19 @@ export function ISBLANK(value) {
  * @returns
  */
 export function ISERR(value) {
-  return (
-    [error.value, error.ref, error.div0, error.num, error.name, error.nil].indexOf(value) >= 0 ||
-    (typeof value === 'number' && (isNaN(value) || !isFinite(value)))
-  )
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISERR(item))
+  }
+
+  if (value === error.na) {
+    return false
+  }
+
+  return Object.values(error).includes(value) || (typeof value === 'number' && (isNaN(value) || !isFinite(value)))
 }
 
 /**

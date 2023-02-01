@@ -48,11 +48,46 @@ describe('Information', () => {
   })
 
   it('ISERR', () => {
-    expect(information.ISERR(1)).to.equal(false)
-    expect(information.ISERR(error.na)).to.equal(false)
-    expect(information.ISERR(error.value)).to.equal(true)
     expect(information.ISERR(NaN)).to.equal(true)
     expect(information.ISERR(1 / 0)).to.equal(true)
+    expect(information.ISERR(-1 / 0)).to.equal(true)
+
+    expect(information.ISERR(1)).to.equal(false)
+    expect(information.ISERR('text')).to.equal(false)
+    expect(information.ISERR('')).to.equal(false)
+    expect(information.ISERR(' ')).to.equal(false)
+    expect(information.ISERR('1')).to.equal(false)
+    expect(information.ISERR('1f')).to.equal(false)
+    expect(information.ISERR('2021-03-01')).to.equal(false)
+    expect(information.ISERR('08:45 AM')).to.equal(false)
+
+    expect(information.ISERR()).to.equal(error.na)
+    expect(information.ISERR(1, 'text')).to.equal(error.na)
+
+    const errorsExceptNa = Object.values(error)
+    const naIndex = errorsExceptNa.indexOf(error.na)
+
+    errorsExceptNa.splice(naIndex, 1)
+
+    errorsExceptNa.forEach((err) => {
+      expect(information.ISERR(err)).to.equal(true)
+    })
+
+    expect(information.ISERR(error.na)).to.equal(false)
+
+    expect(information.ISERR([1, error.calc, 3])).to.eql([false, true, false])
+    expect(information.ISERR([[1], [2], [error.div0]])).to.eql([[false], [false], [true]])
+    expect(
+      information.ISERR([
+        [error.na, error.div0],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.eql([
+      [false, true],
+      [false, false],
+      [false, false]
+    ])
   })
 
   it('ISERROR', () => {
