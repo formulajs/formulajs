@@ -176,7 +176,38 @@ describe('Information', () => {
 
   it('ISNA', () => {
     expect(information.ISNA(error.na)).to.equal(true)
+
+    const errorsExceptNa = Object.values(error).filter((err) => err !== error.na)
+    errorsExceptNa.forEach((err) => {
+      expect(information.ISNA(err)).to.equal(false)
+    })
+
     expect(information.ISNA(1)).to.equal(false)
+    expect(information.ISNA(true)).to.equal(false)
+    expect(information.ISNA(false)).to.equal(false)
+    expect(information.ISNA('')).to.equal(false)
+    expect(information.ISNA(' ')).to.equal(false)
+    expect(information.ISNA('true')).to.equal(false)
+    expect(information.ISNA('1-Mar-2021')).to.equal(false)
+    expect(information.ISNA('8:45 AM')).to.equal(false)
+    expect(information.ISNA(null)).to.equal(false)
+
+    expect(information.ISNA()).to.equal(error.na)
+    expect(information.ISNA(1, 2)).to.equal(error.na)
+
+    expect(information.ISNA([1, error.calc, error.na])).to.eql([false, false, true])
+    expect(information.ISNA([[error.na], [2], [error.data]])).to.eql([[true], [false], [false]])
+    expect(
+      information.ISNA([
+        [1, error.na],
+        [error.div0, 5],
+        [3, 6]
+      ])
+    ).to.eql([
+      [false, true],
+      [false, false],
+      [false, false]
+    ])
   })
 
   it('ISNONTEXT', () => {

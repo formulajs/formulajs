@@ -169,6 +169,14 @@ export function ISLOGICAL(value) {
  * @returns
  */
 export function ISNA(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNA(item))
+  }
+
   return value === error.na
 }
 
