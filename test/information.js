@@ -346,11 +346,29 @@ describe('Information', () => {
 
   it('N', () => {
     expect(information.N(1)).to.equal(1)
-    expect(information.N(new Date(0))).to.equal(new Date(0).getTime())
+
     expect(information.N(true)).to.equal(1)
     expect(information.N(false)).to.equal(0)
-    expect(information.N(error.na)).to.equal(error.na)
+
     expect(information.N('a')).to.equal(0)
+    expect(information.N('1')).to.equal(0)
+    expect(information.N('true')).to.equal(0)
+
+    expect(information.N(new Date(0))).to.equal(new Date(0).getTime())
+
+    Object.values(error).forEach((err) => {
+      expect(information.N(err)).to.equal(err)
+    })
+
+    expect(information.N([12, 1, 'text'])).to.equal(12)
+    expect(information.N([['true'], [3], [6]])).to.equal(0)
+    expect(
+      information.N([
+        [5, false],
+        [false, false],
+        [false, false]
+      ])
+    ).to.equal(5)
   })
 
   it('NA', () => {
