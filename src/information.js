@@ -62,6 +62,10 @@ export function INFO() {
  * @returns
  */
 export function ISBLANK(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   return value === null
 }
 
