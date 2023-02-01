@@ -178,9 +178,28 @@ describe('Information', () => {
 
   it('TYPE', () => {
     expect(information.TYPE(1)).to.equal(1)
+    expect(information.TYPE(6.12)).to.equal(1)
+
     expect(information.TYPE('a')).to.equal(2)
+    expect(information.TYPE('3')).to.equal(2)
+
     expect(information.TYPE(true)).to.equal(4)
-    expect(information.TYPE(error.na)).to.equal(16)
+    expect(information.TYPE(false)).to.equal(4)
+
+    Object.values(error).forEach((err) => {
+      expect(information.TYPE(err)).to.equal(16)
+    })
+
     expect(information.TYPE([1])).to.equal(64)
+    expect(information.TYPE([1, 'text', 3])).to.equal(64)
+    expect(information.TYPE([[true], [2], [3]])).to.equal(64)
+
+    expect(
+      information.TYPE([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.equal(64)
   })
 })
