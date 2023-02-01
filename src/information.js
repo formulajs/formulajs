@@ -209,6 +209,14 @@ export function ISNONTEXT(value) {
  * @returns
  */
 export function ISNUMBER(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNUMBER(item))
+  }
+
   return typeof value === 'number' && !isNaN(value) && isFinite(value)
 }
 

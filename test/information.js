@@ -252,8 +252,45 @@ describe('Information', () => {
 
   it('ISNUMBER', () => {
     expect(information.ISNUMBER(1)).to.equal(true)
+    expect(information.ISNUMBER(0)).to.equal(true)
+    expect(information.ISNUMBER(-1)).to.equal(true)
+    expect(information.ISNUMBER(2.5)).to.equal(true)
+    expect(information.ISNUMBER(3.4)).to.equal(true)
+
+    expect(information.ISNUMBER(true)).to.equal(false)
+    expect(information.ISNUMBER(false)).to.equal(false)
+
+    expect(information.ISNUMBER('text')).to.equal(false)
+    expect(information.ISNUMBER('')).to.equal(false)
+    expect(information.ISNUMBER(' ')).to.equal(false)
     expect(information.ISNUMBER('1')).to.equal(false)
+    expect(information.ISNUMBER('1f')).to.equal(false)
+
     expect(information.ISNUMBER(1 / 0)).to.equal(false)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISNUMBER(err)).to.equal(false)
+    })
+
+    expect(information.ISNUMBER()).to.equal(error.na)
+    expect(information.ISNUMBER(1, 'text')).to.equal(error.na)
+
+    expect(information.ISNUMBER('2021-03-01')).to.equal(false)
+    expect(information.ISNUMBER('08:45 AM')).to.equal(false)
+
+    expect(information.ISNUMBER([1, error.div0, 'teste'])).to.eql([true, false, false])
+    expect(information.ISNUMBER([['1'], [2], [3]])).to.eql([[false], [true], [true]])
+    expect(
+      information.ISNUMBER([
+        [1, 4],
+        [2, 'test'],
+        [3, 6]
+      ])
+    ).to.eql([
+      [true, true],
+      [true, false],
+      [true, true]
+    ])
   })
 
   it('ISODD', () => {
