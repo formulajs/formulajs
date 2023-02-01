@@ -211,9 +211,43 @@ describe('Information', () => {
   })
 
   it('ISNONTEXT', () => {
+    expect(information.ISNONTEXT(0)).to.equal(true)
     expect(information.ISNONTEXT(1)).to.equal(true)
+    expect(information.ISNONTEXT(-1)).to.equal(true)
+    expect(information.ISNONTEXT(2.3)).to.equal(true)
+    expect(information.ISNONTEXT(5.8)).to.equal(true)
+
     expect(information.ISNONTEXT(true)).to.equal(true)
+    expect(information.ISNONTEXT(false)).to.equal(true)
+
     expect(information.ISNONTEXT('a')).to.equal(false)
+    expect(information.ISNONTEXT('2')).to.equal(false)
+    expect(information.ISNONTEXT('false')).to.equal(false)
+    expect(information.ISNONTEXT('true')).to.equal(false)
+    expect(information.ISNONTEXT('    2')).to.equal(false)
+    expect(information.ISNONTEXT('2      ')).to.equal(false)
+    expect(information.ISNONTEXT('    2   ')).to.equal(false)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISNONTEXT(err)).to.equal(true)
+    })
+
+    expect(information.ISNONTEXT()).to.equal(error.na)
+    expect(information.ISNONTEXT(1, 2)).to.equal(error.na)
+
+    expect(information.ISNONTEXT([1, 'test', '3'])).to.eql([true, false, false])
+    expect(information.ISNONTEXT([['something'], [2], [3]])).to.eql([[false], [true], [true]])
+    expect(
+      information.ISNONTEXT([
+        [1, 4],
+        ['two', 5],
+        [3, '6']
+      ])
+    ).to.eql([
+      [true, true],
+      [false, true],
+      [true, false]
+    ])
   })
 
   it('ISNUMBER', () => {

@@ -189,6 +189,14 @@ export function ISNA(value) {
  * @returns
  */
 export function ISNONTEXT(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNONTEXT(item))
+  }
+
   return typeof value !== 'string'
 }
 
