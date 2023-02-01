@@ -256,6 +256,14 @@ export function ISREF() {
  * @returns
  */
 export function ISTEXT(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISTEXT(item))
+  }
+
   return typeof value === 'string'
 }
 

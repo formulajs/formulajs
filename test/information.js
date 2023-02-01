@@ -306,10 +306,42 @@ describe('Information', () => {
   })
 
   it('ISTEXT', () => {
+    expect(information.ISTEXT()).to.equal(error.na)
+    expect(information.ISTEXT('text', 2)).to.equal(error.na)
+    expect(information.ISTEXT(1, 2)).to.equal(error.na)
+    expect(information.ISTEXT('', 2)).to.equal(error.na)
+
+    expect(information.ISTEXT(null)).to.equal(false)
+    expect(information.ISTEXT('')).to.equal(true)
+    expect(information.ISTEXT(' ')).to.equal(true)
     expect(information.ISTEXT('a')).to.equal(true)
+    expect(information.ISTEXT('text')).to.equal(true)
     expect(information.ISTEXT(1)).to.equal(false)
     expect(information.ISTEXT(true)).to.equal(false)
-    expect(information.ISTEXT()).to.equal(false)
+    expect(information.ISTEXT(false)).to.equal(false)
+    expect(information.ISTEXT('1')).to.equal(true)
+    expect(information.ISTEXT('1ff')).to.equal(true)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISTEXT(err)).to.equal(false)
+    })
+
+    expect(information.ISTEXT('2001-01-01')).to.equal(true)
+
+    expect(information.ISTEXT([1, '2', 3])).to.eql([false, true, false])
+
+    expect(information.ISTEXT([[true], [2], ['text']])).to.eql([[false], [false], [true]])
+    expect(
+      information.ISTEXT([
+        [1, 4],
+        ['false', '5'],
+        [3, 6]
+      ])
+    ).to.eql([
+      [false, false],
+      [true, true],
+      [false, false]
+    ])
   })
 
   it('N', () => {
