@@ -178,10 +178,33 @@ describe('Logical', () => {
   })
 
   it('IFS', () => {
-    expect(logical.IFS(true, 1)).to.equal(1)
+    expect(logical.IFS(true, 1, true, 2)).to.equal(1)
     expect(logical.IFS(false, 1, true, 2)).to.equal(2)
     expect(logical.IFS(false, 1, false, 2)).to.equal(error.na)
+
     expect(logical.IFS(0, 1, true, 2)).to.equal(2)
+    expect(logical.IFS(5, 1, true, 2)).to.equal(1)
+    expect(logical.IFS(-6, 1, true, 2)).to.equal(1)
+
+    expect(logical.IFS(true, null)).to.equal(0)
+    expect(logical.IFS(null, 2)).to.equal(error.na)
+
+    expect(logical.IFS('true', 1, true, 2)).to.equal(1)
+    expect(logical.IFS('false', 1, true, 2)).to.equal(2)
+
+    expect(logical.IFS('   true', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('1', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('text', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('08:45 AM', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('1900-01-01', 1, true, 2)).to.equal(error.value)
+
+    expect(logical.IFS()).to.equal(error.na)
+    expect(logical.IFS(true)).to.equal(error.na)
+    expect(logical.IFS(true, 1, true)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IFS(err, 1, true, 2)).to.equal(err)
+    })
   })
 
   it('IFERROR', () => {

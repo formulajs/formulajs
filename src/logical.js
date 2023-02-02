@@ -110,9 +110,31 @@ export function IF(logical_test, value_if_true, value_if_false) {
  * @returns
  */
 export function IFS() {
+  if (arguments.length < 2 || arguments.length % 2 === 1) {
+    return error.na
+  }
+
   for (let i = 0; i < arguments.length / 2; i++) {
-    if (arguments[i * 2]) {
-      return arguments[i * 2 + 1]
+    let test = arguments[i * 2]
+
+    if (Object.values(error).includes(test)) {
+      return test
+    }
+
+    if (test === 'true') {
+      test = true
+    } else if (test === 'false') {
+      test = false
+    } else if (typeof test === 'string') {
+      return error.value
+    }
+
+    if (test) {
+      if (arguments[i * 2 + 1] == undefined || arguments[i * 2 + 1] == null) {
+        return 0
+      } else {
+        return arguments[i * 2 + 1]
+      }
     }
   }
 
