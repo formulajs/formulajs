@@ -209,7 +209,33 @@ describe('Logical', () => {
 
   it('IFERROR', () => {
     expect(logical.IFERROR(1, 2)).to.equal(1)
-    expect(logical.IFERROR(error.value, 2)).to.equal(2)
+    expect(logical.IFERROR(-46, 2)).to.equal(-46)
+    expect(logical.IFERROR(0, 2)).to.equal(0)
+
+    expect(logical.IFERROR('0', 2)).to.equal('0')
+    expect(logical.IFERROR('1', 2)).to.equal('1')
+    expect(logical.IFERROR('-34', 2)).to.equal('-34')
+
+    expect(logical.IFERROR(true, 2)).to.equal(true)
+    expect(logical.IFERROR(false, 2)).to.equal(false)
+
+    expect(logical.IFERROR(null, 2)).to.equal(0)
+
+    expect(logical.IFERROR('true', 2)).to.equal('true')
+    expect(logical.IFERROR('false', 2)).to.equal('false')
+
+    expect(logical.IFERROR('', 2)).to.equal('')
+    expect(logical.IFERROR('text', 2)).to.equal('text')
+
+    expect(logical.IFERROR('08:45 AM', 2)).to.equal('08:45 AM')
+    expect(logical.IFERROR('1900-01-01', 2)).to.equal('1900-01-01')
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IFERROR(err, 'text')).to.equal('text')
+    })
+
+    expect(logical.IFERROR()).to.equal(error.na)
+    expect(logical.IFERROR(1, 2, 3)).to.equal(error.na)
   })
 
   it('IFNA', () => {

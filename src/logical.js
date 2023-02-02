@@ -151,11 +151,15 @@ export function IFS() {
  * @returns
  */
 export function IFERROR(value, value_if_error) {
-  if (information.ISERROR(value)) {
-    return value_if_error
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  return value
+  if (value === null) {
+    return 0
+  }
+
+  return information.ISERROR(value) ? value_if_error : value
 }
 
 /**
