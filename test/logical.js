@@ -13,11 +13,121 @@ describe('Logical', () => {
     expect(logical.AND(undefined, false)).to.equal(false)
     expect(logical.AND(false, undefined)).to.equal(false)
     expect(logical.AND(error.na, true)).to.equal(error.na)
+
+    expect(logical.AND(0)).to.equal(false)
+    expect(logical.AND(4)).to.equal(true)
+    expect(logical.AND(-5)).to.equal(true)
+
+    expect(logical.AND(1.5)).to.equal(true)
+    expect(logical.AND(0.1)).to.equal(true)
+
+    expect(logical.AND(true)).to.equal(true)
+    expect(logical.AND(false)).to.equal(false)
+
+    expect(logical.AND('text')).to.equal(error.value)
+    expect(logical.AND('')).to.equal(error.value)
+
+    expect(logical.AND('true')).to.equal(error.value)
+    expect(logical.AND('false')).to.equal(error.value)
+
+    expect(logical.AND('0')).to.equal(error.value)
+    expect(logical.AND('4')).to.equal(error.value)
+    expect(logical.AND('-5')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.AND(err)).to.equal(err)
+    })
+
+    expect(logical.AND(null)).to.equal(error.value)
+
+    expect(logical.AND(null, null)).to.equal(error.value)
+    expect(logical.AND('', null)).to.equal(error.value)
+    expect(logical.AND('text', null)).to.equal(error.value)
+    expect(logical.AND(null, true)).to.equal(true)
+    expect(logical.AND(true, null)).to.equal(true)
+    expect(logical.AND(null, false)).to.equal(false)
+    expect(logical.AND(false, null)).to.equal(false)
+
     expect(logical.AND(true, true)).to.equal(true)
+    expect(logical.AND(false, false)).to.equal(false)
     expect(logical.AND(true, false)).to.equal(false)
     expect(logical.AND(false, true)).to.equal(false)
+
+    expect(logical.AND(0, 0)).to.equal(false)
+    expect(logical.AND(4, 4)).to.equal(true)
+    expect(logical.AND(4, 0)).to.equal(false)
+    expect(logical.AND(0, 4)).to.equal(false)
+
     expect(logical.AND(42, true)).to.equal(true)
     expect(logical.AND(0, true)).to.equal(false)
+
+    expect(logical.AND('text', true)).to.equal(true)
+    expect(logical.AND(true, 'text')).to.equal(true)
+    expect(logical.AND('text', false)).to.equal(false)
+    expect(logical.AND(false, 'text')).to.equal(false)
+
+    expect(logical.AND(error.nil, error.value)).to.equal(error.nil)
+    expect(logical.AND(error.value, error.nil)).to.equal(error.value)
+
+    expect(logical.AND(error.div0, true)).to.equal(error.div0)
+    expect(logical.AND(true, error.data)).to.equal(error.data)
+    expect(logical.AND(error.name, false)).to.equal(error.name)
+    expect(logical.AND(false, error.nil)).to.equal(error.nil)
+
+    expect(logical.AND('text', error.num)).to.equal(error.num)
+    expect(logical.AND(error.calc, 'text')).to.equal(error.calc)
+
+    expect(logical.AND('', '', '')).to.equal(error.value)
+    expect(logical.AND(true, 1, true)).to.equal(true)
+    expect(logical.AND(4, true, 0)).to.equal(false)
+
+    expect(logical.AND()).to.equal(error.na)
+
+    expect(logical.AND([1, true, 'text'])).to.equal(true)
+    expect(logical.AND(['text', true, 0])).to.equal(false)
+    expect(logical.AND([true, 'text', error.div0])).to.equal(error.div0)
+    expect(logical.AND([true, error.nil, error.div0])).to.equal(error.nil)
+
+    expect(logical.AND([[1], [true], ['text']])).to.equal(true)
+    expect(logical.AND([['text'], [true], [0]])).to.equal(false)
+    expect(logical.AND([[true], ['text'], [error.div0]])).to.equal(error.div0)
+    expect(logical.AND([[error.data], ['text'], [error.div0]])).to.equal(error.data)
+
+    expect(
+      logical.AND([
+        [1, 'something'],
+        [true, 4],
+        [6, 'text']
+      ])
+    ).to.equal(true)
+    expect(
+      logical.AND([
+        ['text', 1],
+        [true, false],
+        [0, true]
+      ])
+    ).to.equal(false)
+    expect(
+      logical.AND([
+        [true, false],
+        [1, 'text'],
+        [error.div0, 4]
+      ])
+    ).to.equal(error.div0)
+    expect(
+      logical.AND([
+        [true, error.value],
+        [error.div0, error.data],
+        [0, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      logical.AND([
+        [true, false],
+        [error.div0, error.data],
+        [0, 4]
+      ])
+    ).to.equal(error.div0)
   })
 
   it('FALSE', () => {

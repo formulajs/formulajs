@@ -10,6 +10,10 @@ import * as utils from './utils/common.js'
  * @returns
  */
 export function AND() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const args = utils.flatten(arguments)
   let result = error.value
 
