@@ -280,8 +280,28 @@ describe('Logical', () => {
   it('NOT', () => {
     expect(logical.NOT(true)).to.equal(false)
     expect(logical.NOT(false)).to.equal(true)
+
+    expect(logical.NOT('trUe')).to.equal(false)
+    expect(logical.NOT('fAlse')).to.equal(true)
+
+    expect(logical.NOT(null)).to.equal(true)
+
+    expect(logical.NOT(0)).to.equal(true)
+    expect(logical.NOT(-2)).to.equal(false)
+    expect(logical.NOT(0.1)).to.equal(false)
+
+    expect(logical.NOT('')).to.equal(error.value)
     expect(logical.NOT('text')).to.equal(error.value)
-    expect(logical.NOT(error.na)).to.equal(error.na)
+
+    expect(logical.NOT('08:45 AM')).to.equal(error.value)
+    expect(logical.NOT('1900-02-01')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.NOT(err)).to.equal(err)
+    })
+
+    expect(logical.NOT()).to.equal(error.na)
+    expect(logical.NOT(2, 0)).to.equal(error.na)
   })
 
   it('OR', () => {

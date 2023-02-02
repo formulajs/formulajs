@@ -189,12 +189,25 @@ export function IFNA(value, value_if_na) {
  * @returns
  */
 export function NOT(logical) {
-  if (typeof logical === 'string') {
-    return error.value
+  if (arguments.length !== 1) {
+    return error.na
   }
 
   if (logical instanceof Error) {
     return logical
+  }
+
+  if (typeof logical === 'string') {
+    const upperCase = logical.toUpperCase()
+
+    if (upperCase === 'TRUE') {
+      return false
+    }
+    if (upperCase === 'FALSE') {
+      return true
+    }
+
+    return error.value
   }
 
   return !logical
