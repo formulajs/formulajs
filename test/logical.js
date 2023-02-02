@@ -240,7 +240,41 @@ describe('Logical', () => {
 
   it('IFNA', () => {
     expect(logical.IFNA(1, 2)).to.equal(1)
-    expect(logical.IFNA(error.na, 2)).to.equal(2)
+    expect(logical.IFNA(0, 2)).to.equal(0)
+    expect(logical.IFNA(-4, 2)).to.equal(-4)
+
+    expect(logical.IFNA('0', 2)).to.equal('0')
+    expect(logical.IFNA('-31', 2)).to.equal('-31')
+    expect(logical.IFNA('164', 2)).to.equal('164')
+
+    expect(logical.IFNA(true, 2)).to.equal(true)
+    expect(logical.IFNA(false, 2)).to.equal(false)
+
+    expect(logical.IFNA(null, 2)).to.equal(0)
+
+    expect(logical.IFNA('true', 2)).to.equal('true')
+    expect(logical.IFNA('false', 2)).to.equal('false')
+
+    expect(logical.IFNA('', 2)).to.equal('')
+    expect(logical.IFNA('text', 2)).to.equal('text')
+
+    expect(logical.IFNA('1900-02-01', 2)).to.equal('1900-02-01')
+    expect(logical.IFNA('08:45 AM', 2)).to.equal('08:45 AM')
+
+    const errorsExceptNa = Object.values(error)
+    const naIndex = errorsExceptNa.indexOf(error.na)
+
+    errorsExceptNa.splice(naIndex, 1)
+
+    errorsExceptNa.forEach((err) => {
+      expect(logical.IFNA(err, 'text')).to.equal(err)
+    })
+
+    expect(logical.IFNA(error.na, 'text')).to.equal('text')
+
+    expect(logical.IFNA()).to.equal(error.na)
+    expect(logical.IFNA('text')).to.equal(error.na)
+    expect(logical.IFNA(1, 2, 3)).to.equal(error.na)
   })
 
   it('NOT', () => {

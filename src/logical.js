@@ -170,6 +170,14 @@ export function IFERROR(value, value_if_error) {
  * @returns
  */
 export function IFNA(value, value_if_na) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (value === null) {
+    return 0
+  }
+
   return value === error.na ? value_if_na : value
 }
 
