@@ -62,6 +62,10 @@ export function INFO() {
  * @returns
  */
 export function ISBLANK(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   return value === null
 }
 
@@ -74,10 +78,19 @@ export function ISBLANK(value) {
  * @returns
  */
 export function ISERR(value) {
-  return (
-    [error.value, error.ref, error.div0, error.num, error.name, error.nil].indexOf(value) >= 0 ||
-    (typeof value === 'number' && (isNaN(value) || !isFinite(value)))
-  )
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISERR(item))
+  }
+
+  if (value === error.na) {
+    return false
+  }
+
+  return Object.values(error).includes(value) || (typeof value === 'number' && (isNaN(value) || !isFinite(value)))
 }
 
 /**
@@ -89,6 +102,14 @@ export function ISERR(value) {
  * @returns
  */
 export function ISERROR(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISERROR(item))
+  }
+
   return ISERR(value) || value === error.na
 }
 
@@ -128,7 +149,15 @@ export function ISFORMULA() {
  * @returns
  */
 export function ISLOGICAL(value) {
-  return value === true || value === false
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISLOGICAL(item))
+  }
+
+  return typeof value === 'boolean'
 }
 
 /**
@@ -140,6 +169,14 @@ export function ISLOGICAL(value) {
  * @returns
  */
 export function ISNA(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNA(item))
+  }
+
   return value === error.na
 }
 
@@ -152,6 +189,14 @@ export function ISNA(value) {
  * @returns
  */
 export function ISNONTEXT(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNONTEXT(item))
+  }
+
   return typeof value !== 'string'
 }
 
@@ -164,6 +209,14 @@ export function ISNONTEXT(value) {
  * @returns
  */
 export function ISNUMBER(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISNUMBER(item))
+  }
+
   return typeof value === 'number' && !isNaN(value) && isFinite(value)
 }
 
@@ -203,6 +256,14 @@ export function ISREF() {
  * @returns
  */
 export function ISTEXT(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => ISTEXT(item))
+  }
+
   return typeof value === 'string'
 }
 
@@ -215,6 +276,10 @@ export function ISTEXT(value) {
  * @returns
  */
 export function N(value) {
+  if (Array.isArray(value)) {
+    return N(value[0])
+  }
+
   if (ISNUMBER(value)) {
     return value
   }
@@ -288,6 +353,10 @@ export function SHEETS() {
  * @returns
  */
 export function TYPE(value) {
+  if (Array.isArray(value)) {
+    return 64
+  }
+
   if (ISNUMBER(value)) {
     return 1
   }
@@ -302,9 +371,5 @@ export function TYPE(value) {
 
   if (ISERROR(value)) {
     return 16
-  }
-
-  if (Array.isArray(value)) {
-    return 64
   }
 }
