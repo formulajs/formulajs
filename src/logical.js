@@ -46,6 +46,10 @@ export function AND() {
  * @returns
  */
 export function FALSE() {
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
   return false
 }
 

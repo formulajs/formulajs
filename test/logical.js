@@ -132,6 +132,8 @@ describe('Logical', () => {
 
   it('FALSE', () => {
     expect(logical.FALSE()).to.equal(false)
+
+    expect(logical.FALSE(1)).to.equal(error.na)
   })
 
   it('IF', () => {
