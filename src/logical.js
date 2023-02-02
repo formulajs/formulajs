@@ -10,6 +10,10 @@ import * as utils from './utils/common.js'
  * @returns
  */
 export function AND() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const args = utils.flatten(arguments)
   let result = error.value
 
@@ -42,6 +46,10 @@ export function AND() {
  * @returns
  */
 export function FALSE() {
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
   return false
 }
 
@@ -57,20 +65,38 @@ export function FALSE() {
  * @returns
  */
 export function IF(logical_test, value_if_true, value_if_false) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   if (logical_test instanceof Error) {
     return logical_test
   }
 
-  value_if_true = arguments.length >= 2 ? value_if_true : true
+  if (typeof logical_test === 'string') {
+    if (logical_test === 'true') {
+      logical_test = true
+    } else if (logical_test === 'false') {
+      logical_test = false
+    } else {
+      return error.value
+    }
+  }
 
   if (value_if_true === undefined || value_if_true === null) {
     value_if_true = 0
   }
 
-  value_if_false = arguments.length === 3 ? value_if_false : false
+  if (arguments.length !== 3) {
+    value_if_false = false
+  }
 
   if (value_if_false === undefined || value_if_false === null) {
     value_if_false = 0
+  }
+
+  if (Array.isArray(logical_test)) {
+    return logical_test.map((item) => IF(item, value_if_true, value_if_false))
   }
 
   return logical_test ? value_if_true : value_if_false
@@ -84,9 +110,31 @@ export function IF(logical_test, value_if_true, value_if_false) {
  * @returns
  */
 export function IFS() {
+  if (arguments.length < 2 || arguments.length % 2 === 1) {
+    return error.na
+  }
+
   for (let i = 0; i < arguments.length / 2; i++) {
-    if (arguments[i * 2]) {
-      return arguments[i * 2 + 1]
+    let test = arguments[i * 2]
+
+    if (Object.values(error).includes(test)) {
+      return test
+    }
+
+    if (test === 'true') {
+      test = true
+    } else if (test === 'false') {
+      test = false
+    } else if (typeof test === 'string') {
+      return error.value
+    }
+
+    if (test) {
+      if (arguments[i * 2 + 1] == undefined || arguments[i * 2 + 1] == null) {
+        return 0
+      } else {
+        return arguments[i * 2 + 1]
+      }
     }
   }
 
@@ -103,11 +151,15 @@ export function IFS() {
  * @returns
  */
 export function IFERROR(value, value_if_error) {
-  if (information.ISERROR(value)) {
-    return value_if_error
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  return value
+  if (value === null) {
+    return 0
+  }
+
+  return information.ISERROR(value) ? value_if_error : value
 }
 
 /**
@@ -118,6 +170,14 @@ export function IFERROR(value, value_if_error) {
  * @returns
  */
 export function IFNA(value, value_if_na) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (value === null) {
+    return 0
+  }
+
   return value === error.na ? value_if_na : value
 }
 
@@ -129,12 +189,25 @@ export function IFNA(value, value_if_na) {
  * @returns
  */
 export function NOT(logical) {
-  if (typeof logical === 'string') {
-    return error.value
+  if (arguments.length !== 1) {
+    return error.na
   }
 
   if (logical instanceof Error) {
     return logical
+  }
+
+  if (typeof logical === 'string') {
+    const upperCase = logical.toUpperCase()
+
+    if (upperCase === 'TRUE') {
+      return false
+    }
+    if (upperCase === 'FALSE') {
+      return true
+    }
+
+    return error.value
   }
 
   return !logical
@@ -148,6 +221,10 @@ export function NOT(logical) {
  * @returns
  */
 export function OR() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   const args = utils.flatten(arguments)
   let result = error.value
 
