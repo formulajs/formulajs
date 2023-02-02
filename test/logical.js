@@ -140,14 +140,41 @@ describe('Logical', () => {
     expect(logical.IF(undefined, undefined, undefined)).to.equal(0)
     expect(logical.IF(undefined, 1, 2)).to.equal(2)
     expect(logical.IF(error.na, undefined)).to.equal(error.na)
+
     expect(logical.IF(true, error.na)).to.equal(error.na)
+
+    expect(logical.IF(null, 1, 2)).to.equal(2)
+    expect(logical.IF(true, null, 2)).to.equal(0)
+    expect(logical.IF(false, 1, null)).to.equal(0)
+
+    expect(logical.IF(1, 1, 2)).to.equal(1)
+    expect(logical.IF(0, 1, 2)).to.equal(2)
+    expect(logical.IF(-4, 1, 2)).to.equal(1)
+    expect(logical.IF(0.4, 1, 2)).to.equal(1)
 
     expect(logical.IF(true, 1, 2)).to.equal(1)
     expect(logical.IF(false, 1, 2)).to.equal(2)
-    expect(logical.IF(true)).to.equal(true)
-    expect(logical.IF(false)).to.equal(false)
     expect(logical.IF(true, 1)).to.equal(1)
     expect(logical.IF(false, 1)).to.equal(false)
+
+    expect(logical.IF('true', 1, 2)).to.equal(1)
+    expect(logical.IF('false', 1, 2)).to.equal(2)
+
+    expect(logical.IF('  true', 1, 2)).to.equal(error.value)
+    expect(logical.IF('text', 1, 2)).to.equal(error.value)
+    expect(logical.IF('', 1, 2)).to.equal(error.value)
+    expect(logical.IF('   ', 1, 2)).to.equal(error.value)
+    expect(logical.IF('1', 1, 2)).to.equal(error.value)
+    expect(logical.IF('1900-02-01', 1, 2)).to.equal(error.value)
+    expect(logical.IF('08:45 AM', 1, 2)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IF(err, 1, 2)).to.equal(err)
+    })
+
+    expect(logical.IF()).to.equal(error.na)
+    expect(logical.IF(true)).to.equal(error.na)
+    expect(logical.IF(true, 1, 2, 3)).to.equal(error.na)
   })
 
   it('IFS', () => {

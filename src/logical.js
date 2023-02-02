@@ -65,20 +65,38 @@ export function FALSE() {
  * @returns
  */
 export function IF(logical_test, value_if_true, value_if_false) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   if (logical_test instanceof Error) {
     return logical_test
   }
 
-  value_if_true = arguments.length >= 2 ? value_if_true : true
+  if (typeof logical_test === 'string') {
+    if (logical_test === 'true') {
+      logical_test = true
+    } else if (logical_test === 'false') {
+      logical_test = false
+    } else {
+      return error.value
+    }
+  }
 
   if (value_if_true === undefined || value_if_true === null) {
     value_if_true = 0
   }
 
-  value_if_false = arguments.length === 3 ? value_if_false : false
+  if (arguments.length !== 3) {
+    value_if_false = false
+  }
 
   if (value_if_false === undefined || value_if_false === null) {
     value_if_false = 0
+  }
+
+  if (Array.isArray(logical_test)) {
+    return logical_test.map((item) => IF(item, value_if_true, value_if_false))
   }
 
   return logical_test ? value_if_true : value_if_false
