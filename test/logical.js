@@ -312,12 +312,46 @@ describe('Logical', () => {
     expect(logical.OR(false, undefined)).to.equal(false)
     expect(logical.OR(undefined, true)).to.equal(true)
     expect(logical.OR(true, undefined)).to.equal(true)
-    expect(logical.OR(error.na, false)).to.equal(error.na)
+
+    expect(logical.OR(0)).to.equal(false)
+    expect(logical.OR(1)).to.equal(true)
+    expect(logical.OR(-4)).to.equal(true)
     expect(logical.OR(true)).to.equal(true)
     expect(logical.OR(false)).to.equal(false)
+
+    expect(logical.OR(null)).to.equal(error.value)
+    expect(logical.OR('')).to.equal(error.value)
+    expect(logical.OR('4')).to.equal(error.value)
+    expect(logical.OR('text')).to.equal(error.value)
+    expect(logical.OR('true')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.OR(err)).to.equal(err)
+    })
+
+    expect(logical.OR(null, null)).to.equal(error.value)
+    expect(logical.OR('', null)).to.equal(error.value)
+    expect(logical.OR('text', null)).to.equal(error.value)
+    expect(logical.OR(null, false)).to.equal(false)
+    expect(logical.OR(false, null)).to.equal(false)
+    expect(logical.OR(null, true)).to.equal(true)
+    expect(logical.OR(true, null)).to.equal(true)
+
+    expect(logical.OR(error.data, false)).to.equal(error.data)
+    expect(logical.OR(false, error.div0)).to.equal(error.div0)
+
     expect(logical.OR(true, false)).to.equal(true)
-    expect(logical.OR(1)).to.equal(true)
     expect(logical.OR(0, false)).to.equal(false)
+
+    expect(logical.OR(0, 0)).to.equal(false)
+    expect(logical.OR(4, 4)).to.equal(true)
+    expect(logical.OR(4, 0)).to.equal(true)
+    expect(logical.OR(0, 4)).to.equal(true)
+
+    expect(logical.OR('')).to.equal(error.value)
+    expect(logical.OR('', '', '')).to.equal(error.value)
+
+    expect(logical.OR()).to.equal(error.na)
   })
 
   it('TRUE', () => {

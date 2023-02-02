@@ -221,6 +221,10 @@ export function NOT(logical) {
  * @returns
  */
 export function OR() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   const args = utils.flatten(arguments)
   let result = error.value
 
