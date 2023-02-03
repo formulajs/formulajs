@@ -1,7 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
-const d1900 = new Date(Date.UTC(1900, 0, 1))
 const WEEK_STARTS = [
   undefined,
   0,
@@ -343,18 +342,26 @@ function startOfDay(date) {
  * @returns
  */
 export function DAYS(end_date, start_date) {
-  end_date = utils.parseDate(end_date)
-  start_date = utils.parseDate(start_date)
-
-  if (end_date instanceof Error) {
-    return end_date
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (start_date instanceof Error) {
-    return start_date
+  const someError = utils.anyError(start_date, end_date)
+  if (someError) {
+    return someError
   }
 
-  return serial(startOfDay(end_date)) - serial(startOfDay(start_date))
+  start_date = utils.getNumber(start_date)
+  end_date = utils.getNumber(end_date)
+
+  if (typeof start_date === 'string' || typeof end_date === 'string') {
+    return error.value
+  }
+
+  start_date = Math.trunc(start_date)
+  end_date = Math.trunc(end_date)
+
+  return end_date - start_date
 }
 
 /**
@@ -1002,10 +1009,4 @@ export function YEARFRAC(start_date, end_date, basis) {
 
       return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
   }
-}
-
-function serial(date) {
-  const addOn = date > -2203891200000 ? 2 : 1
-
-  return Math.ceil((date - d1900) / 86400000) + addOn
 }

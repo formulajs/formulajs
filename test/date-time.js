@@ -185,13 +185,32 @@ describe('Date & Time', () => {
   })
 
   it('DAYS', () => {
-    expect(dateTime.DAYS(2, 1)).to.equal(1)
-    expect(dateTime.DAYS('1/2/1900', '1/1/1900')).to.equal(1)
-    expect(dateTime.DAYS(new Date(1900, 1, 2), new Date(1900, 1, 1))).to.equal(1)
+    expect(dateTime.DAYS(36526, 1)).to.equal(36525)
+    expect(dateTime.DAYS(1, '36526')).to.equal(-36525)
+    expect(dateTime.DAYS(2, 1.16)).to.equal(dateTime.DAYS(2.37, 1))
+
+    expect(dateTime.DAYS('2022-11-19', '2004-05-13')).to.equal(6764)
+
+    expect(dateTime.DAYS(0, null)).to.equal(0)
+    expect(dateTime.DAYS('0', false)).to.equal(0)
+    expect(dateTime.DAYS(1, true)).to.equal(0)
+
     expect(dateTime.DAYS('a', 1)).to.equal(error.value)
     expect(dateTime.DAYS(1, 'a')).to.equal(error.value)
-    expect(dateTime.DAYS('1/1/1900 00:20', '1/1/1900 01:30')).to.equal(0)
-    expect(dateTime.DAYS(dateTime.NOW(), dateTime.TODAY())).to.equal(0)
+    expect(dateTime.DAYS('', 46)).to.equal(error.value)
+    expect(dateTime.DAYS(46, '')).to.equal(error.value)
+
+    expect(dateTime.DAYS('true', 1)).to.equal(error.value)
+    expect(dateTime.DAYS(1, 'false')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.DAYS(err, 0)).to.equal(err)
+      expect(dateTime.DAYS(0, err)).to.equal(err)
+    })
+
+    expect(dateTime.DAYS()).to.equal(error.na)
+    expect(dateTime.DAYS(1)).to.equal(error.na)
+    expect(dateTime.DAYS(1, 1, 1)).to.equal(error.na)
   })
 
   it('DAYS360', () => {
