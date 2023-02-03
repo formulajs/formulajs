@@ -100,26 +100,19 @@ export function flattenShallow(array) {
     return [array]
   }
 
-  return array.reduce((a, b) => {
-    const aIsArray = Array.isArray(a)
-    const bIsArray = Array.isArray(b)
+  const newArray = []
 
-    if (aIsArray && bIsArray) {
-      return a.concat(b)
+  for (let i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) {
+      for (let j = 0; j < array[i].length; j++) {
+        newArray.push(array[i][j])
+      }
+    } else {
+      newArray.push(array[i])
     }
+  }
 
-    if (aIsArray) {
-      a.push(b)
-
-      return a
-    }
-
-    if (bIsArray) {
-      return [a].concat(b)
-    }
-
-    return [a, b]
-  })
+  return newArray
 }
 
 export function initial(array, idx) {
