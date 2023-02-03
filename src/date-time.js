@@ -272,17 +272,23 @@ export function DATEDIF(start_date, end_date, unit) {
  * @returns
  */
 export function DATEVALUE(date_text) {
-  if (typeof date_text !== 'string') {
-    return error.value
+  if (arguments.length !== 1) {
+    return error.na
   }
 
-  const date = Date.parse(date_text)
-
-  if (isNaN(date)) {
-    return error.value
+  if (date_text instanceof Error) {
+    return date_text
   }
 
-  return new Date(date_text)
+  if (typeof date_text === 'string') {
+    const date = new Date(date_text)
+
+    if (!Number.isNaN(date.getTime())) {
+      return utils.dateToSerialNumber(date)
+    }
+  }
+
+  return error.value
 }
 
 /**

@@ -134,10 +134,25 @@ describe('Date & Time', () => {
   })
 
   it('DATEVALUE', () => {
-    expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
-    expect(dateTime.DATEVALUE('12/31/9999')).to.deep.equal(new Date(9999, 11, 31))
-    expect(dateTime.DATEVALUE('foo bar')).to.equal(error.value)
+    expect(dateTime.DATEVALUE('2022-01-01')).to.equal(44562)
+    expect(dateTime.DATEVALUE('1900-01-01')).to.equal(1)
+    expect(dateTime.DATEVALUE('1900-02-28')).to.equal(59)
+    expect(dateTime.DATEVALUE('1900-03-01')).to.equal(61)
+    // expect(dateTime.DATEVALUE('5-JUL')).to.equal(39634)
+
+    expect(dateTime.DATEVALUE('2022-01-01L')).to.equal(error.value)
+    expect(dateTime.DATEVALUE('test')).to.equal(error.value)
     expect(dateTime.DATEVALUE(1)).to.equal(error.value)
+    expect(dateTime.DATEVALUE(true)).to.equal(error.value)
+    expect(dateTime.DATEVALUE(false)).to.equal(error.value)
+    expect(dateTime.DATEVALUE(null)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.DATEVALUE(err)).to.equal(err)
+    })
+
+    expect(dateTime.DATEVALUE()).to.equal(error.na)
+    expect(dateTime.DATEVALUE('2022-01-01', true)).to.equal(error.na)
   })
 
   it('DAY', () => {
