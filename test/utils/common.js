@@ -301,34 +301,6 @@ describe('Utils => Common', () => {
       expect(utils.parseDateArray(['01/jan/2009', 'invalid'])).to.equal(error.value)
     })
 
-    it('parseMatrix', () => {
-      expect(utils.parseMatrix()).to.equal(error.value)
-      expect(
-        utils.parseMatrix([
-          [1, 2, 3],
-          [4, 5, 6]
-        ])
-      ).to.deep.equal([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-      expect(
-        utils.parseMatrix([
-          [1, 2, 3],
-          ['4', 5, 6]
-        ])
-      ).to.deep.equal([
-        [1, 2, 3],
-        [4, 5, 6]
-      ])
-      expect(
-        utils.parseMatrix([
-          [1, 2, 3],
-          ['foo', 5, 6]
-        ])
-      ).to.deep.equal(error.value)
-    })
-
     it('parseNumber', () => {
       expect(utils.parseNumber()).to.equal(0)
       expect(utils.parseNumber(null)).to.equal(0)

@@ -324,25 +324,6 @@ export function parseDateArray(arr) {
   return arr
 }
 
-export function parseMatrix(matrix) {
-  if (!matrix || (matrix.length && matrix.length === 0)) {
-    return error.value
-  }
-
-  let pnarr
-
-  for (let i = 0; i < matrix.length; i++) {
-    pnarr = parseNumberArray(matrix[i])
-    matrix[i] = pnarr
-
-    if (pnarr instanceof Error) {
-      return pnarr
-    }
-  }
-
-  return matrix
-}
-
 export function parseNumber(string) {
   if (string instanceof Error) {
     return string
