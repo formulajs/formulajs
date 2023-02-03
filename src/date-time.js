@@ -118,6 +118,92 @@ export function DATE(year, month, day) {
   return result
 }
 
+var dateDifFunctions = {
+  Y: function (start, end) {
+    const startYear = start.getUTCFullYear()
+    const endYear = end.getUTCFullYear()
+
+    let yearDifference = endYear - startYear
+
+    if (end.getUTCMonth() < start.getUTCMonth() || end.getUTCDate() < start.getUTCDate()) {
+      yearDifference--
+    }
+
+    return yearDifference
+  },
+  M: function (start, end) {
+    const startYear = start.getUTCFullYear()
+    const endYear = end.getUTCFullYear()
+
+    const startMonth = start.getUTCMonth()
+    const endMonth = end.getUTCMonth()
+
+    const startDay = start.getUTCDate()
+    const endDay = end.getUTCDate()
+
+    let monthsDif = endMonth - startMonth
+    let daysDif = endDay - startDay
+
+    let result = (endYear - startYear) * 12 + monthsDif
+
+    if (daysDif < 0) {
+      result--
+    }
+
+    return result
+  },
+  D: function (start, end) {
+    const startDay = utils.dateToSerialNumber(start)
+    const endDay = utils.dateToSerialNumber(end)
+
+    return endDay - startDay
+  },
+  MD: function (start, end) {
+    const startDay = start.getUTCDate()
+    const endDay = end.getUTCDate()
+
+    if (endDay >= startDay) {
+      return endDay - startDay
+    }
+    return 31 - (startDay - endDay)
+  },
+  YM: function (start, end) {
+    const startMonth = start.getUTCMonth()
+    const endMonth = end.getUTCMonth()
+
+    let monthDifference = endMonth >= startMonth ? endMonth - startMonth : 12 - (startMonth - endMonth)
+
+    if (end.getUTCDate() < start.getUTCDate()) {
+      monthDifference--
+    }
+
+    return monthDifference
+  },
+  YD: function (start, end) {
+    const startDay = start.getUTCDate()
+    const startMonth = start.getUTCMonth()
+
+    const endDay = end.getUTCDate()
+    const endMonth = end.getUTCMonth()
+
+    if (endMonth > startMonth || (endMonth === startMonth && endDay >= startDay)) {
+      const year = start.getUTCFullYear()
+
+      const tempStart = utils.dateToSerialNumber(new Date(Date.UTC(year, startMonth, startDay)))
+      const tempEnd = utils.dateToSerialNumber(new Date(Date.UTC(year, endMonth, endDay)))
+
+      return tempEnd - tempStart
+    } else {
+      const year = end.getUTCFullYear()
+
+      const tempStart = utils.dateToSerialNumber(new Date(Date.UTC(year - 1, startMonth, startDay)))
+      const tempEnd = utils.dateToSerialNumber(new Date(Date.UTC(year, endMonth, endDay)))
+
+      return tempEnd - tempStart
+    }
+  }
+}
+
 /**
  * Calculates the number of days, months, or years between two dates. This function is useful in formulas where you need to calculate an age.
  *
@@ -135,71 +221,46 @@ export function DATE(year, month, day) {
  * @returns
  */
 export function DATEDIF(start_date, end_date, unit) {
-  unit = unit.toUpperCase()
-  start_date = utils.parseDate(start_date)
-  end_date = utils.parseDate(end_date)
-
-  const start_date_year = start_date.getFullYear()
-  const start_date_month = start_date.getMonth()
-  const start_date_day = start_date.getDate()
-  const end_date_year = end_date.getFullYear()
-  const end_date_month = end_date.getMonth()
-  const end_date_day = end_date.getDate()
-
-  let result
-
-  switch (unit) {
-    case 'Y':
-      result = Math.floor(YEARFRAC(start_date, end_date))
-      break
-    case 'D':
-      result = DAYS(end_date, start_date)
-      break
-    case 'M':
-      result = end_date_month - start_date_month + 12 * (end_date_year - start_date_year)
-
-      if (end_date_day < start_date_day) {
-        result--
-      }
-
-      break
-    case 'MD':
-      if (start_date_day <= end_date_day) {
-        result = end_date_day - start_date_day
-      } else {
-        if (end_date_month === 0) {
-          start_date.setFullYear(end_date_year - 1)
-          start_date.setMonth(12)
-        } else {
-          start_date.setFullYear(end_date_year)
-          start_date.setMonth(end_date_month - 1)
-        }
-
-        result = DAYS(end_date, start_date)
-      }
-
-      break
-    case 'YM':
-      result = end_date_month - start_date_month + 12 * (end_date_year - start_date_year)
-
-      if (end_date_day < start_date_day) {
-        result--
-      }
-
-      result = result % 12
-      break
-    case 'YD':
-      if (end_date_month > start_date_month || (end_date_month === start_date_month && end_date_day < start_date_day)) {
-        start_date.setFullYear(end_date_year)
-      } else {
-        start_date.setFullYear(end_date_year - 1)
-      }
-
-      result = DAYS(end_date, start_date)
-      break
+  if (arguments.length !== 3) {
+    return error.na
   }
 
-  return result
+  const someError = utils.anyError(start_date, end_date, unit)
+  if (someError) {
+    return someError
+  }
+
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
+
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0 || start_date > end_date) {
+    return error.num
+  }
+
+  if (typeof unit !== 'string') {
+    return error.num
+  }
+
+  unit = unit.toUpperCase()
+
+  const chosenOperation = dateDifFunctions[unit]
+  if (chosenOperation === undefined) {
+    return error.num
+  }
+
+  const start = utils.serialNumberToDate(start_date)
+  const end = utils.serialNumberToDate(end_date)
+
+  return chosenOperation(start, end)
 }
 
 /**

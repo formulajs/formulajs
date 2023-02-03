@@ -62,26 +62,75 @@ describe('Date & Time', () => {
     })
   })
 
-  it('DATEDIF', () => {
-    expect(dateTime.DATEDIF('1/1/2001', '1/1/2003', 'Y')).to.equal(2)
-    expect(dateTime.DATEDIF('1/1/2001', '3/1/2003', 'Y')).to.equal(2)
-    expect(dateTime.DATEDIF('6/1/2001', '8/15/2002', 'D')).to.equal(440)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-01-10', 'd')).to.equal(9)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-01-31', 'm')).to.equal(0)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-02-01', 'm')).to.equal(1)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-02-28', 'm')).to.equal(1)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-12-31', 'd')).to.equal(364)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-01-31', 'y')).to.equal(0)
-    expect(dateTime.DATEDIF('2007-01-01', '2008-07-01', 'd')).to.equal(547)
-    expect(dateTime.DATEDIF('2007-01-01', '2008-07-01', 'm')).to.equal(18)
-    expect(dateTime.DATEDIF('2007-01-01', '2008-07-01', 'ym')).to.equal(6)
-    expect(dateTime.DATEDIF('2007-01-01', '2008-07-01', 'yd')).to.equal(182)
-    expect(dateTime.DATEDIF('2008-01-01', '2009-07-01', 'yd')).to.equal(181)
-    expect(dateTime.DATEDIF('2007-01-01', '2007-01-31', 'md')).to.equal(30)
-    expect(dateTime.DATEDIF('2007-02-01', '2009-03-01', 'md')).to.equal(0)
-    expect(dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md')).to.equal(0)
-    expect(dateTime.DATEDIF('2008-02-01', '2009-03-01', 'md')).to.equal(0)
-    expect(dateTime.DATEDIF('1959-07-20', '2020-05-04', 'md')).to.equal(14)
+  describe('DATEDIF', () => {
+    it('Tests with the Y option', () => {
+      expect(dateTime.DATEDIF(38046, 39141, 'Y')).to.equal(2)
+      expect(dateTime.DATEDIF(38045, 39141, 'y')).to.equal(3)
+    })
+
+    it('Tests with the M option', () => {
+      expect(dateTime.DATEDIF(38046, 39141, 'M')).to.equal(35)
+      expect(dateTime.DATEDIF(38045, 39141, 'm')).to.equal(36)
+
+      expect(dateTime.DATEDIF(38136, 39123, 'M')).to.equal(32)
+      expect(dateTime.DATEDIF(38027, 39231, 'M')).to.equal(39)
+    })
+
+    it('Tests with the D option', () => {
+      expect(dateTime.DATEDIF(38046, 39141, 'D')).to.equal(1095)
+      expect(dateTime.DATEDIF(38045, 39141, 'D')).to.equal(1096)
+    })
+
+    it('Tests with strings representing dates', () => {
+      expect(dateTime.DATEDIF('2004-02-29', 39141, 'D')).to.equal(1095)
+      expect(dateTime.DATEDIF(38045, '2007-02-28', 'D')).to.equal(1096)
+    })
+
+    it('Tests with the MD option', () => {
+      expect(dateTime.DATEDIF(91, 399, 'MD')).to.equal(2)
+      expect(dateTime.DATEDIF(61, 425, 'md')).to.equal(27)
+    })
+
+    it('Tests with the YM option', () => {
+      expect(dateTime.DATEDIF(64, 1130, 'YM')).to.equal(10)
+      expect(dateTime.DATEDIF(34, 1432, 'ym')).to.equal(9)
+    })
+
+    it('Tests with the YD option', () => {
+      expect(dateTime.DATEDIF(96, 1159, 'YD')).to.equal(333)
+      expect(dateTime.DATEDIF(34, 1158, 'yd')).to.equal(29)
+      expect(dateTime.DATEDIF(1526, 1890, 'Yd')).to.equal(364)
+      expect(dateTime.DATEDIF(400, 3350, 'Yd')).to.equal(28)
+    })
+
+    it('tests with incorrect number of arguments', () => {
+      expect(dateTime.DATEDIF()).to.equal(error.na)
+      expect(dateTime.DATEDIF(96)).to.equal(error.na)
+      expect(dateTime.DATEDIF(96, 1159)).to.equal(error.na)
+
+      expect(dateTime.DATEDIF(96, 1159, 'YD', true)).to.equal(error.na)
+    })
+
+    it('Tests with different arguments than expected', () => {
+      expect(dateTime.DATEDIF(null, 0, 'D')).to.equal(0)
+      expect(dateTime.DATEDIF(false, '0', 'D')).to.equal(0)
+      expect(dateTime.DATEDIF(true, 1, 'D')).to.equal(0)
+
+      expect(dateTime.DATEDIF('', 1, 'D')).to.equal(error.value)
+      expect(dateTime.DATEDIF(1, 'text', 'D')).to.equal(error.value)
+
+      expect(dateTime.DATEDIF(1, 1, 1)).to.equal(error.num)
+      expect(dateTime.DATEDIF(1, 1, 'text')).to.equal(error.num)
+    })
+
+    it('Test with end date less than start date', () => {
+      expect(dateTime.DATEDIF(5, 1, 'D')).to.equal(error.num)
+    })
+
+    it('Test with invalid date', () => {
+      expect(dateTime.DATEDIF(-1, 1, 'D')).to.equal(error.num)
+      expect(dateTime.DATEDIF(5, -20, 'D')).to.equal(error.num)
+    })
   })
 
   it('DATEVALUE', () => {
