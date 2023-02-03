@@ -248,19 +248,21 @@ export function serialNumberToDate(serial) {
 
 // Parsers
 export function parseBool(bool) {
-  if (typeof bool === 'boolean') {
+  const type = typeof bool
+
+  if (type === 'boolean' || bool instanceof Error) {
     return bool
   }
 
-  if (bool instanceof Error) {
-    return bool
+  if (bool === null) {
+    return false
   }
 
-  if (typeof bool === 'number') {
+  if (type === 'number') {
     return bool !== 0
   }
 
-  if (typeof bool === 'string') {
+  if (type === 'string') {
     const up = bool.toUpperCase()
 
     if (up === 'TRUE') {
@@ -272,7 +274,7 @@ export function parseBool(bool) {
     }
   }
 
-  if (bool instanceof Date && !isNaN(bool)) {
+  if (bool instanceof Date) {
     return true
   }
 
