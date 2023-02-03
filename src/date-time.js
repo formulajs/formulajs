@@ -300,13 +300,30 @@ export function DATEVALUE(date_text) {
  * @returns
  */
 export function DAY(serial_number) {
-  const date = utils.parseDate(serial_number)
-
-  if (date instanceof Error) {
-    return date
+  if (arguments.length !== 1) {
+    return error.na
   }
 
-  return date.getDate()
+  if (serial_number instanceof Error) {
+    return serial_number
+  }
+
+  serial_number = utils.getNumber(serial_number)
+
+  if (typeof serial_number === 'string') {
+    return error.value
+  }
+
+  if (serial_number < 0) {
+    return error.num
+  }
+  if (serial_number === 0) {
+    return 0
+  }
+
+  const date = utils.serialNumberToDate(serial_number)
+
+  return date.getUTCDate()
 }
 
 function startOfDay(date) {

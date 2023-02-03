@@ -158,11 +158,30 @@ describe('Date & Time', () => {
   it('DAY', () => {
     expect(dateTime.DAY(1)).to.equal(1)
     expect(dateTime.DAY(2958465)).to.equal(31)
+    expect(dateTime.DAY(76)).to.equal(dateTime.DAY(76.43))
+
+    expect(dateTime.DAY('9999-12-31')).to.equal(31)
+
     expect(dateTime.DAY('1')).to.equal(1)
-    expect(dateTime.DAY('1/1/1900')).to.equal(1)
-    expect(dateTime.DAY(new Date(1900, 0, 1))).to.equal(1)
+    expect(dateTime.DAY('10')).to.equal(10)
+
     expect(dateTime.DAY(-1)).to.equal(error.num)
+    expect(dateTime.DAY('-10')).to.equal(error.num)
+
+    expect(dateTime.DAY('true')).to.equal(error.value)
     expect(dateTime.DAY('a')).to.equal(error.value)
+    expect(dateTime.DAY('')).to.equal(error.value)
+
+    expect(dateTime.DAY(null)).to.equal(0)
+    expect(dateTime.DAY(true)).to.equal(1)
+    expect(dateTime.DAY(false)).to.equal(0)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.DAY(err)).to.equal(err)
+    })
+
+    expect(dateTime.DAY()).to.equal(error.na)
+    expect(dateTime.DAY(30, 4)).to.equal(error.na)
   })
 
   it('DAYS', () => {
