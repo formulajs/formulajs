@@ -5,35 +5,60 @@ import * as error from '../src/utils/error.js'
 
 describe('Date & Time', () => {
   describe('DATE', () => {
-    it('should thrown an error in case of malformed input', () => {
-      expect(dateTime.DATE(10, 1, 1).getFullYear()).to.equal(1910)
-      expect(dateTime.DATE(-1, 1, 1)).to.equal(error.num)
-      expect(dateTime.DATE('invalid')).to.equal(error.value)
+    it('should return an error in case of incorrect number of arguments', () => {
+      expect(dateTime.DATE()).to.equal(error.na)
+      expect(dateTime.DATE(5)).to.equal(error.na)
+      expect(dateTime.DATE(5, 5)).to.equal(error.na)
+
+      expect(dateTime.DATE(5, 5, 5, 5)).to.equal(error.na)
+    })
+
+    it('should thrown an error in case non-numeric strings', () => {
+      expect(dateTime.DATE('df5', 1, 1)).to.equal(error.value)
+      expect(dateTime.DATE(1, 'text', 1)).to.equal(error.value)
+      expect(dateTime.DATE(1, 1, '1l')).to.equal(error.value)
     })
 
     it('should create date', () => {
-      const date = dateTime.DATE(1900, 1, 1)
-      expect(date.getFullYear()).to.equal(1900)
-      expect(date.getMonth()).to.equal(1 - 1)
-      expect(date.getDate()).to.equal(1)
+      expect(dateTime.DATE(1900, 1, 1)).to.equal(1)
+
+      expect(dateTime.DATE(1900, 2, 28)).to.equal(59)
+      expect(dateTime.DATE(1900, 3, 1)).to.equal(61)
+
+      expect(dateTime.DATE(0, 1, 1)).to.equal(1)
+
+      expect(dateTime.DATE(1899, 12, 31)).to.equal(693962)
     })
 
-    it('should accept negative day number', () => {
-      const date = dateTime.DATE(1900, 1, -1)
-      expect(date.getFullYear()).to.equal(1899)
-      expect(date.getMonth()).to.equal(12 - 1)
-      expect(date.getDate()).to.equal(30)
+    it('should accept negative values', () => {
+      expect(dateTime.DATE(-1, 13, 1)).to.equal(1)
+      expect(dateTime.DATE(2000, -1, 5)).to.equal(36469)
+      expect(dateTime.DATE(2000, 5, -1)).to.equal(36645)
     })
 
-    it('should accept negative month number', () => {
-      const date = dateTime.DATE(2000, -36, 1)
-      expect(date.getFullYear()).to.equal(1996)
-      expect(date.getMonth()).to.equal(12 - 1)
-      expect(date.getDate()).to.equal(1)
+    it('should return an error in case of sending an error', () => {
+      expect(dateTime.DATE(error.calc, 1, 1)).to.equal(error.calc)
+      expect(dateTime.DATE(1, error.data, 1)).to.equal(error.data)
+      expect(dateTime.DATE(1, 1, error.div0)).to.equal(error.div0)
+      expect(dateTime.DATE(error.name, error.na, error.div0)).to.equal(error.name)
     })
 
-    xit('should be Excel behaviour, but we do not want to recreate it', () => {
-      expect(dateTime.DATE(1899, 1, 1).getFullYear()).to.equal(3799)
+    it('should create a date with numeric strings', () => {
+      expect(dateTime.DATE('1900', 12, 1)).to.equal(336)
+      expect(dateTime.DATE(1900, '12', 1)).to.equal(336)
+      expect(dateTime.DATE(1900, 12, '1')).to.equal(336)
+    })
+
+    it('should create a date with a boolean', () => {
+      expect(dateTime.DATE(true, 5, 5)).to.equal(491)
+      expect(dateTime.DATE(2000, false, 5)).to.equal(36499)
+      expect(dateTime.DATE(2000, 5, true)).to.equal(36647)
+    })
+
+    it('should return an error in case of date before 00/01/1900', () => {
+      expect(dateTime.DATE(-1, 1, 1)).to.equal(error.num)
+      expect(dateTime.DATE(1900, 0, 1)).to.equal(error.num)
+      expect(dateTime.DATE(1900, 1, -1)).to.equal(error.num)
     })
   })
 

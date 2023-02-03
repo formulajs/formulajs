@@ -75,20 +75,44 @@ const WEEKEND_TYPES = [
  * @returns
  */
 export function DATE(year, month, day) {
-  let result
+  if (arguments.length !== 3) {
+    return error.na
+  }
 
-  year = utils.parseNumber(year)
-  month = utils.parseNumber(month)
-  day = utils.parseNumber(day)
+  year = utils.getNumber(year)
+  if (year instanceof Error) {
+    return year
+  }
+  if (typeof year === 'string') {
+    return error.value
+  }
 
-  if (utils.anyIsError(year, month, day)) {
-    result = error.value
-  } else {
-    result = new Date(year, month - 1, day)
+  month = utils.getNumber(month)
+  if (month instanceof Error) {
+    return month
+  }
+  if (typeof month === 'string') {
+    return error.value
+  }
 
-    if (result.getFullYear() < 0) {
-      result = error.num
-    }
+  day = utils.getNumber(day)
+  if (day instanceof Error) {
+    return day
+  }
+  if (typeof day === 'string') {
+    return error.value
+  }
+
+  if (year < 1900) {
+    year += 1900
+  }
+
+  let result = new Date(Date.UTC(year, month - 1, day))
+
+  result = utils.dateToSerialNumber(result)
+
+  if (result < 0) {
+    return error.num
   }
 
   return result

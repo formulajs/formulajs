@@ -217,6 +217,13 @@ export function numbers() {
   return possibleNumbers.filter((el) => typeof el === 'number')
 }
 
+const millisecondsPerDay = 86400000
+const excelInitialTime = Date.UTC(1900, 0, 0)
+
+// !IMPORTANT!
+// Excel incorrectly considers 1900 to be a leap year
+const excelLeapYearBug = Date.UTC(1900, 1, 29)
+
 export function serialNumberToDate(serial) {
   if (serial < 60) {
     serial += 1
@@ -244,6 +251,18 @@ export function serialNumberToDate(serial) {
   }
 
   return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
+}
+
+export const dateToSerialNumber = function (jsDate) {
+  let jsDateInMilliseconds = jsDate.getTime()
+
+  if (jsDateInMilliseconds >= excelLeapYearBug) {
+    jsDateInMilliseconds += millisecondsPerDay
+  }
+
+  jsDateInMilliseconds -= excelInitialTime
+
+  return jsDateInMilliseconds / millisecondsPerDay
 }
 
 // Parsers
@@ -398,4 +417,82 @@ export function anyIsString() {
 // Misc
 export function isDefined(arg) {
   return arg !== undefined && arg !== null
+}
+
+export const validNumber = /^-?\d+(\.\d+)?$/
+
+export function getNumber(something) {
+  if (something instanceof Date) {
+    return dateToSerialNumber(something)
+  }
+
+  var type = typeof something
+  if (type === 'number') {
+    return something
+  }
+  if (type === 'boolean') {
+    return +something
+  }
+  if (type === 'string') {
+    const trimmed = something.trim()
+    if (validNumber.test(trimmed)) {
+      return parseFloat(trimmed)
+    }
+
+    const date = new Date(something)
+    if (!Number.isNaN(date.getTime())) {
+      return dateToSerialNumber(date)
+    }
+
+    const hour = hourToNumber(something)
+    if (hour !== null) {
+      return hour
+    }
+
+    return something
+  }
+  if (something === null) {
+    return 0
+  }
+
+  return something
+}
+
+const hourRegex = /^(\d{2}):(\d{2})(?:(?::(\d{2}))|((?: AM)|(?: PM)))?$/
+
+const hourToNumber = function (something) {
+  const pieces = hourRegex.exec(something)
+
+  if (!hourRegex.test(something)) {
+    return null
+  }
+
+  // Hours
+  let hours = parseInt(pieces[1])
+  if (pieces[4]) {
+    if (hours < 1 || hours > 12) {
+      return something
+    }
+
+    if (pieces[4] === ' PM' && hours < 12) {
+      hours += 12
+    } else if (pieces[4] === ' AM' && hours === 12) {
+      hours = 0
+    }
+  } else if (hours < 0 || hours > 23) {
+    return something
+  }
+
+  let milliseconds = 0
+  milliseconds += hours * 3600000
+
+  // Minutes
+  milliseconds += parseInt(pieces[2]) * 60000
+
+  // Seconds
+  if (pieces[3]) {
+    milliseconds += parseInt(pieces[3]) * 1000
+  }
+
+  return milliseconds / millisecondsPerDay
 }
