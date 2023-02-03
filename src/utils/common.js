@@ -100,26 +100,19 @@ export function flattenShallow(array) {
     return [array]
   }
 
-  return array.reduce((a, b) => {
-    const aIsArray = Array.isArray(a)
-    const bIsArray = Array.isArray(b)
+  const newArray = []
 
-    if (aIsArray && bIsArray) {
-      return a.concat(b)
+  for (let i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) {
+      for (let j = 0; j < array[i].length; j++) {
+        newArray.push(array[i][j])
+      }
+    } else {
+      newArray.push(array[i])
     }
+  }
 
-    if (aIsArray) {
-      a.push(b)
-
-      return a
-    }
-
-    if (bIsArray) {
-      return [a].concat(b)
-    }
-
-    return [a, b]
-  })
+  return newArray
 }
 
 export function initial(array, idx) {
@@ -255,19 +248,21 @@ export function serialNumberToDate(serial) {
 
 // Parsers
 export function parseBool(bool) {
-  if (typeof bool === 'boolean') {
+  const type = typeof bool
+
+  if (type === 'boolean' || bool instanceof Error) {
     return bool
   }
 
-  if (bool instanceof Error) {
-    return bool
+  if (bool === null) {
+    return false
   }
 
-  if (typeof bool === 'number') {
+  if (type === 'number') {
     return bool !== 0
   }
 
-  if (typeof bool === 'string') {
+  if (type === 'string') {
     const up = bool.toUpperCase()
 
     if (up === 'TRUE') {
@@ -279,7 +274,7 @@ export function parseBool(bool) {
     }
   }
 
-  if (bool instanceof Date && !isNaN(bool)) {
+  if (bool instanceof Date) {
     return true
   }
 
@@ -327,25 +322,6 @@ export function parseDateArray(arr) {
   }
 
   return arr
-}
-
-export function parseMatrix(matrix) {
-  if (!matrix || (matrix.length && matrix.length === 0)) {
-    return error.value
-  }
-
-  let pnarr
-
-  for (let i = 0; i < matrix.length; i++) {
-    pnarr = parseNumberArray(matrix[i])
-    matrix[i] = pnarr
-
-    if (pnarr instanceof Error) {
-      return pnarr
-    }
-  }
-
-  return matrix
 }
 
 export function parseNumber(string) {
