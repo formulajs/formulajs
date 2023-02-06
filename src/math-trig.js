@@ -870,7 +870,7 @@ FLOOR.MATH = (number, significance, mode) => {
  * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
  * @returns
  */
-FLOOR.PRECISE = FLOOR['MATH']
+FLOOR.PRECISE = FLOOR.MATH
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
 /**
