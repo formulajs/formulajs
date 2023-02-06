@@ -13,53 +13,295 @@ describe('Logical', () => {
     expect(logical.AND(undefined, false)).to.equal(false)
     expect(logical.AND(false, undefined)).to.equal(false)
     expect(logical.AND(error.na, true)).to.equal(error.na)
+
+    expect(logical.AND(0)).to.equal(false)
+    expect(logical.AND(4)).to.equal(true)
+    expect(logical.AND(-5)).to.equal(true)
+
+    expect(logical.AND(1.5)).to.equal(true)
+    expect(logical.AND(0.1)).to.equal(true)
+
+    expect(logical.AND(true)).to.equal(true)
+    expect(logical.AND(false)).to.equal(false)
+
+    expect(logical.AND('text')).to.equal(error.value)
+    expect(logical.AND('')).to.equal(error.value)
+
+    expect(logical.AND('true')).to.equal(error.value)
+    expect(logical.AND('false')).to.equal(error.value)
+
+    expect(logical.AND('0')).to.equal(error.value)
+    expect(logical.AND('4')).to.equal(error.value)
+    expect(logical.AND('-5')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.AND(err)).to.equal(err)
+    })
+
+    expect(logical.AND(null)).to.equal(error.value)
+
+    expect(logical.AND(null, null)).to.equal(error.value)
+    expect(logical.AND('', null)).to.equal(error.value)
+    expect(logical.AND('text', null)).to.equal(error.value)
+    expect(logical.AND(null, true)).to.equal(true)
+    expect(logical.AND(true, null)).to.equal(true)
+    expect(logical.AND(null, false)).to.equal(false)
+    expect(logical.AND(false, null)).to.equal(false)
+
     expect(logical.AND(true, true)).to.equal(true)
+    expect(logical.AND(false, false)).to.equal(false)
     expect(logical.AND(true, false)).to.equal(false)
     expect(logical.AND(false, true)).to.equal(false)
+
+    expect(logical.AND(0, 0)).to.equal(false)
+    expect(logical.AND(4, 4)).to.equal(true)
+    expect(logical.AND(4, 0)).to.equal(false)
+    expect(logical.AND(0, 4)).to.equal(false)
+
     expect(logical.AND(42, true)).to.equal(true)
     expect(logical.AND(0, true)).to.equal(false)
+
+    expect(logical.AND('text', true)).to.equal(true)
+    expect(logical.AND(true, 'text')).to.equal(true)
+    expect(logical.AND('text', false)).to.equal(false)
+    expect(logical.AND(false, 'text')).to.equal(false)
+
+    expect(logical.AND(error.nil, error.value)).to.equal(error.nil)
+    expect(logical.AND(error.value, error.nil)).to.equal(error.value)
+
+    expect(logical.AND(error.div0, true)).to.equal(error.div0)
+    expect(logical.AND(true, error.data)).to.equal(error.data)
+    expect(logical.AND(error.name, false)).to.equal(error.name)
+    expect(logical.AND(false, error.nil)).to.equal(error.nil)
+
+    expect(logical.AND('text', error.num)).to.equal(error.num)
+    expect(logical.AND(error.calc, 'text')).to.equal(error.calc)
+
+    expect(logical.AND('', '', '')).to.equal(error.value)
+    expect(logical.AND(true, 1, true)).to.equal(true)
+    expect(logical.AND(4, true, 0)).to.equal(false)
+
+    expect(logical.AND()).to.equal(error.na)
+
+    expect(logical.AND([1, true, 'text'])).to.equal(true)
+    expect(logical.AND(['text', true, 0])).to.equal(false)
+    expect(logical.AND([true, 'text', error.div0])).to.equal(error.div0)
+    expect(logical.AND([true, error.nil, error.div0])).to.equal(error.nil)
+
+    expect(logical.AND([[1], [true], ['text']])).to.equal(true)
+    expect(logical.AND([['text'], [true], [0]])).to.equal(false)
+    expect(logical.AND([[true], ['text'], [error.div0]])).to.equal(error.div0)
+    expect(logical.AND([[error.data], ['text'], [error.div0]])).to.equal(error.data)
+
+    expect(
+      logical.AND([
+        [1, 'something'],
+        [true, 4],
+        [6, 'text']
+      ])
+    ).to.equal(true)
+    expect(
+      logical.AND([
+        ['text', 1],
+        [true, false],
+        [0, true]
+      ])
+    ).to.equal(false)
+    expect(
+      logical.AND([
+        [true, false],
+        [1, 'text'],
+        [error.div0, 4]
+      ])
+    ).to.equal(error.div0)
+    expect(
+      logical.AND([
+        [true, error.value],
+        [error.div0, error.data],
+        [0, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      logical.AND([
+        [true, false],
+        [error.div0, error.data],
+        [0, 4]
+      ])
+    ).to.equal(error.div0)
   })
 
   it('FALSE', () => {
     expect(logical.FALSE()).to.equal(false)
+
+    expect(logical.FALSE(1)).to.equal(error.na)
   })
 
   it('IF', () => {
     expect(logical.IF(undefined, undefined, undefined)).to.equal(0)
     expect(logical.IF(undefined, 1, 2)).to.equal(2)
     expect(logical.IF(error.na, undefined)).to.equal(error.na)
+
     expect(logical.IF(true, error.na)).to.equal(error.na)
+
+    expect(logical.IF(null, 1, 2)).to.equal(2)
+    expect(logical.IF(true, null, 2)).to.equal(0)
+    expect(logical.IF(false, 1, null)).to.equal(0)
+
+    expect(logical.IF(1, 1, 2)).to.equal(1)
+    expect(logical.IF(0, 1, 2)).to.equal(2)
+    expect(logical.IF(-4, 1, 2)).to.equal(1)
+    expect(logical.IF(0.4, 1, 2)).to.equal(1)
 
     expect(logical.IF(true, 1, 2)).to.equal(1)
     expect(logical.IF(false, 1, 2)).to.equal(2)
-    expect(logical.IF(true)).to.equal(true)
-    expect(logical.IF(false)).to.equal(false)
     expect(logical.IF(true, 1)).to.equal(1)
     expect(logical.IF(false, 1)).to.equal(false)
+
+    expect(logical.IF('true', 1, 2)).to.equal(1)
+    expect(logical.IF('false', 1, 2)).to.equal(2)
+
+    expect(logical.IF('  true', 1, 2)).to.equal(error.value)
+    expect(logical.IF('text', 1, 2)).to.equal(error.value)
+    expect(logical.IF('', 1, 2)).to.equal(error.value)
+    expect(logical.IF('   ', 1, 2)).to.equal(error.value)
+    expect(logical.IF('1', 1, 2)).to.equal(error.value)
+    expect(logical.IF('1900-02-01', 1, 2)).to.equal(error.value)
+    expect(logical.IF('08:45 AM', 1, 2)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IF(err, 1, 2)).to.equal(err)
+    })
+
+    expect(logical.IF()).to.equal(error.na)
+    expect(logical.IF(true)).to.equal(error.na)
+    expect(logical.IF(true, 1, 2, 3)).to.equal(error.na)
   })
 
   it('IFS', () => {
-    expect(logical.IFS(true, 1)).to.equal(1)
+    expect(logical.IFS(true, 1, true, 2)).to.equal(1)
     expect(logical.IFS(false, 1, true, 2)).to.equal(2)
     expect(logical.IFS(false, 1, false, 2)).to.equal(error.na)
+
     expect(logical.IFS(0, 1, true, 2)).to.equal(2)
+    expect(logical.IFS(5, 1, true, 2)).to.equal(1)
+    expect(logical.IFS(-6, 1, true, 2)).to.equal(1)
+
+    expect(logical.IFS(true, null)).to.equal(0)
+    expect(logical.IFS(null, 2)).to.equal(error.na)
+
+    expect(logical.IFS('true', 1, true, 2)).to.equal(1)
+    expect(logical.IFS('false', 1, true, 2)).to.equal(2)
+
+    expect(logical.IFS('   true', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('1', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('text', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('08:45 AM', 1, true, 2)).to.equal(error.value)
+    expect(logical.IFS('1900-01-01', 1, true, 2)).to.equal(error.value)
+
+    expect(logical.IFS()).to.equal(error.na)
+    expect(logical.IFS(true)).to.equal(error.na)
+    expect(logical.IFS(true, 1, true)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IFS(err, 1, true, 2)).to.equal(err)
+    })
   })
 
   it('IFERROR', () => {
     expect(logical.IFERROR(1, 2)).to.equal(1)
-    expect(logical.IFERROR(error.value, 2)).to.equal(2)
+    expect(logical.IFERROR(-46, 2)).to.equal(-46)
+    expect(logical.IFERROR(0, 2)).to.equal(0)
+
+    expect(logical.IFERROR('0', 2)).to.equal('0')
+    expect(logical.IFERROR('1', 2)).to.equal('1')
+    expect(logical.IFERROR('-34', 2)).to.equal('-34')
+
+    expect(logical.IFERROR(true, 2)).to.equal(true)
+    expect(logical.IFERROR(false, 2)).to.equal(false)
+
+    expect(logical.IFERROR(null, 2)).to.equal(0)
+
+    expect(logical.IFERROR('true', 2)).to.equal('true')
+    expect(logical.IFERROR('false', 2)).to.equal('false')
+
+    expect(logical.IFERROR('', 2)).to.equal('')
+    expect(logical.IFERROR('text', 2)).to.equal('text')
+
+    expect(logical.IFERROR('08:45 AM', 2)).to.equal('08:45 AM')
+    expect(logical.IFERROR('1900-01-01', 2)).to.equal('1900-01-01')
+
+    Object.values(error).forEach((err) => {
+      expect(logical.IFERROR(err, 'text')).to.equal('text')
+    })
+
+    expect(logical.IFERROR()).to.equal(error.na)
+    expect(logical.IFERROR(1, 2, 3)).to.equal(error.na)
   })
 
   it('IFNA', () => {
     expect(logical.IFNA(1, 2)).to.equal(1)
-    expect(logical.IFNA(error.na, 2)).to.equal(2)
+    expect(logical.IFNA(0, 2)).to.equal(0)
+    expect(logical.IFNA(-4, 2)).to.equal(-4)
+
+    expect(logical.IFNA('0', 2)).to.equal('0')
+    expect(logical.IFNA('-31', 2)).to.equal('-31')
+    expect(logical.IFNA('164', 2)).to.equal('164')
+
+    expect(logical.IFNA(true, 2)).to.equal(true)
+    expect(logical.IFNA(false, 2)).to.equal(false)
+
+    expect(logical.IFNA(null, 2)).to.equal(0)
+
+    expect(logical.IFNA('true', 2)).to.equal('true')
+    expect(logical.IFNA('false', 2)).to.equal('false')
+
+    expect(logical.IFNA('', 2)).to.equal('')
+    expect(logical.IFNA('text', 2)).to.equal('text')
+
+    expect(logical.IFNA('1900-02-01', 2)).to.equal('1900-02-01')
+    expect(logical.IFNA('08:45 AM', 2)).to.equal('08:45 AM')
+
+    const errorsExceptNa = Object.values(error)
+    const naIndex = errorsExceptNa.indexOf(error.na)
+
+    errorsExceptNa.splice(naIndex, 1)
+
+    errorsExceptNa.forEach((err) => {
+      expect(logical.IFNA(err, 'text')).to.equal(err)
+    })
+
+    expect(logical.IFNA(error.na, 'text')).to.equal('text')
+
+    expect(logical.IFNA()).to.equal(error.na)
+    expect(logical.IFNA('text')).to.equal(error.na)
+    expect(logical.IFNA(1, 2, 3)).to.equal(error.na)
   })
 
   it('NOT', () => {
     expect(logical.NOT(true)).to.equal(false)
     expect(logical.NOT(false)).to.equal(true)
+
+    expect(logical.NOT('trUe')).to.equal(false)
+    expect(logical.NOT('fAlse')).to.equal(true)
+
+    expect(logical.NOT(null)).to.equal(true)
+
+    expect(logical.NOT(0)).to.equal(true)
+    expect(logical.NOT(-2)).to.equal(false)
+    expect(logical.NOT(0.1)).to.equal(false)
+
+    expect(logical.NOT('')).to.equal(error.value)
     expect(logical.NOT('text')).to.equal(error.value)
-    expect(logical.NOT(error.na)).to.equal(error.na)
+
+    expect(logical.NOT('08:45 AM')).to.equal(error.value)
+    expect(logical.NOT('1900-02-01')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.NOT(err)).to.equal(err)
+    })
+
+    expect(logical.NOT()).to.equal(error.na)
+    expect(logical.NOT(2, 0)).to.equal(error.na)
   })
 
   it('OR', () => {
@@ -70,12 +312,46 @@ describe('Logical', () => {
     expect(logical.OR(false, undefined)).to.equal(false)
     expect(logical.OR(undefined, true)).to.equal(true)
     expect(logical.OR(true, undefined)).to.equal(true)
-    expect(logical.OR(error.na, false)).to.equal(error.na)
+
+    expect(logical.OR(0)).to.equal(false)
+    expect(logical.OR(1)).to.equal(true)
+    expect(logical.OR(-4)).to.equal(true)
     expect(logical.OR(true)).to.equal(true)
     expect(logical.OR(false)).to.equal(false)
+
+    expect(logical.OR(null)).to.equal(error.value)
+    expect(logical.OR('')).to.equal(error.value)
+    expect(logical.OR('4')).to.equal(error.value)
+    expect(logical.OR('text')).to.equal(error.value)
+    expect(logical.OR('true')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(logical.OR(err)).to.equal(err)
+    })
+
+    expect(logical.OR(null, null)).to.equal(error.value)
+    expect(logical.OR('', null)).to.equal(error.value)
+    expect(logical.OR('text', null)).to.equal(error.value)
+    expect(logical.OR(null, false)).to.equal(false)
+    expect(logical.OR(false, null)).to.equal(false)
+    expect(logical.OR(null, true)).to.equal(true)
+    expect(logical.OR(true, null)).to.equal(true)
+
+    expect(logical.OR(error.data, false)).to.equal(error.data)
+    expect(logical.OR(false, error.div0)).to.equal(error.div0)
+
     expect(logical.OR(true, false)).to.equal(true)
-    expect(logical.OR(1)).to.equal(true)
     expect(logical.OR(0, false)).to.equal(false)
+
+    expect(logical.OR(0, 0)).to.equal(false)
+    expect(logical.OR(4, 4)).to.equal(true)
+    expect(logical.OR(4, 0)).to.equal(true)
+    expect(logical.OR(0, 4)).to.equal(true)
+
+    expect(logical.OR('')).to.equal(error.value)
+    expect(logical.OR('', '', '')).to.equal(error.value)
+
+    expect(logical.OR()).to.equal(error.na)
   })
 
   it('TRUE', () => {

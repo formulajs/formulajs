@@ -100,26 +100,19 @@ export function flattenShallow(array) {
     return [array]
   }
 
-  return array.reduce((a, b) => {
-    const aIsArray = Array.isArray(a)
-    const bIsArray = Array.isArray(b)
+  const newArray = []
 
-    if (aIsArray && bIsArray) {
-      return a.concat(b)
+  for (let i = 0; i < array.length; i++) {
+    if (Array.isArray(array[i])) {
+      for (let j = 0; j < array[i].length; j++) {
+        newArray.push(array[i][j])
+      }
+    } else {
+      newArray.push(array[i])
     }
+  }
 
-    if (aIsArray) {
-      a.push(b)
-
-      return a
-    }
-
-    if (bIsArray) {
-      return [a].concat(b)
-    }
-
-    return [a, b]
-  })
+  return newArray
 }
 
 export function initial(array, idx) {
@@ -224,50 +217,53 @@ export function numbers() {
   return possibleNumbers.filter((el) => typeof el === 'number')
 }
 
+export const millisecondsPerDay = 86400000
+
+const excelInitialTime = Date.UTC(1900, 0, 0)
+
+// !IMPORTANT!
+// Excel incorrectly considers 1900 to be a leap year
+const excelLeapYearBug = Date.UTC(1900, 1, 29)
+
 export function serialNumberToDate(serial) {
-  if (serial < 60) {
-    serial += 1
+  let jsDateInMilliseconds = excelInitialTime + serial * millisecondsPerDay
+
+  if (jsDateInMilliseconds >= excelLeapYearBug + millisecondsPerDay) {
+    jsDateInMilliseconds -= millisecondsPerDay
   }
 
-  const utc_days = Math.floor(serial - 25569)
-  const utc_value = utc_days * 86400
-  const date_info = new Date(utc_value * 1000)
-  const fractional_day = serial - Math.floor(serial) + 0.0000001
+  return new Date(jsDateInMilliseconds)
+}
 
-  let total_seconds = Math.floor(86400 * fractional_day)
+export const dateToSerialNumber = function (jsDate) {
+  let jsDateInMilliseconds = jsDate.getTime()
 
-  const seconds = total_seconds % 60
-
-  total_seconds -= seconds
-
-  const hours = Math.floor(total_seconds / (60 * 60))
-  const minutes = Math.floor(total_seconds / 60) % 60
-  let days = date_info.getUTCDate()
-  let month = date_info.getUTCMonth()
-
-  if (serial >= 60 && serial < 61) {
-    days = 29
-    month = 1
+  if (jsDateInMilliseconds >= excelLeapYearBug) {
+    jsDateInMilliseconds += millisecondsPerDay
   }
 
-  return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
+  jsDateInMilliseconds -= excelInitialTime
+
+  return jsDateInMilliseconds / millisecondsPerDay
 }
 
 // Parsers
 export function parseBool(bool) {
-  if (typeof bool === 'boolean') {
+  const type = typeof bool
+
+  if (type === 'boolean' || bool instanceof Error) {
     return bool
   }
 
-  if (bool instanceof Error) {
-    return bool
+  if (bool === null) {
+    return false
   }
 
-  if (typeof bool === 'number') {
+  if (type === 'number') {
     return bool !== 0
   }
 
-  if (typeof bool === 'string') {
+  if (type === 'string') {
     const up = bool.toUpperCase()
 
     if (up === 'TRUE') {
@@ -279,7 +275,7 @@ export function parseBool(bool) {
     }
   }
 
-  if (bool instanceof Date && !isNaN(bool)) {
+  if (bool instanceof Date) {
     return true
   }
 
@@ -302,7 +298,7 @@ export function parseDate(date) {
   }
 
   if (typeof date === 'string') {
-    date = /(\d{4})-(\d\d?)-(\d\d?)$/.test(date) ? new Date(date + 'T00:00:00.000') : new Date(date)
+    date = new Date(date)
 
     if (!isNaN(date)) {
       return date
@@ -327,25 +323,6 @@ export function parseDateArray(arr) {
   }
 
   return arr
-}
-
-export function parseMatrix(matrix) {
-  if (!matrix || (matrix.length && matrix.length === 0)) {
-    return error.value
-  }
-
-  let pnarr
-
-  for (let i = 0; i < matrix.length; i++) {
-    pnarr = parseNumberArray(matrix[i])
-    matrix[i] = pnarr
-
-    if (pnarr instanceof Error) {
-      return pnarr
-    }
-  }
-
-  return matrix
 }
 
 export function parseNumber(string) {
@@ -422,4 +399,98 @@ export function anyIsString() {
 // Misc
 export function isDefined(arg) {
   return arg !== undefined && arg !== null
+}
+
+export const validNumber = /^-?\d+(\.\d+)?$/
+
+export function getNumber(something) {
+  if (something instanceof Date) {
+    return dateToSerialNumber(something)
+  }
+
+  var type = typeof something
+  if (type === 'number') {
+    return something
+  }
+  if (type === 'boolean') {
+    return +something
+  }
+  if (type === 'string') {
+    const trimmed = something.trim()
+    if (validNumber.test(trimmed)) {
+      return parseFloat(trimmed)
+    }
+
+    const date = new Date(something)
+    if (!Number.isNaN(date.getTime())) {
+      return dateToSerialNumber(date)
+    }
+
+    const hour = hourToNumber(something)
+    if (hour !== null) {
+      return hour
+    }
+
+    return something
+  }
+  if (something === null) {
+    return 0
+  }
+
+  return something
+}
+
+const hourRegex = /^(\d{2}):(\d{2})(?:(?::(\d{2}))|((?: AM)|(?: PM)))?$/
+
+const hourToNumber = function (something) {
+  const pieces = hourRegex.exec(something)
+
+  if (!hourRegex.test(something)) {
+    return null
+  }
+
+  // Hours
+  let hours = parseInt(pieces[1])
+  if (pieces[4]) {
+    if (hours < 1 || hours > 12) {
+      return something
+    }
+
+    if (pieces[4] === ' PM' && hours < 12) {
+      hours += 12
+    } else if (pieces[4] === ' AM' && hours === 12) {
+      hours = 0
+    }
+  } else if (hours < 0 || hours > 23) {
+    return something
+  }
+
+  let milliseconds = 0
+  milliseconds += hours * 3600000
+
+  // Minutes
+  milliseconds += parseInt(pieces[2]) * 60000
+
+  // Seconds
+  if (pieces[3]) {
+    milliseconds += parseInt(pieces[3]) * 1000
+  }
+
+  return milliseconds / millisecondsPerDay
+}
+
+export function getHour(something) {
+  if (typeof something === 'string') {
+    const hour = hourToNumber(something)
+
+    if (hour !== null) {
+      return hour
+    }
+  }
+
+  something = getNumber(something)
+  if (typeof something === 'number' && something >= 0) {
+    return something % 1
+  }
+  return something
 }
