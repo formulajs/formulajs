@@ -1306,9 +1306,16 @@ describe('Lookup Reference', () => {
   })
 
   it('TRANSPOSE', () => {
-    expect(lookup.TRANSPOSE()).to.equal(error.na)
-    expect(lookup.TRANSPOSE([])).to.eql([])
-    expect(lookup.TRANSPOSE([1, 2, 3])).to.eql([[1], [2], [3]])
+    expect(lookup.TRANSPOSE(1)).to.equal(1)
+    expect(lookup.TRANSPOSE(0)).to.equal(0)
+    expect(lookup.TRANSPOSE(-5)).to.equal(-5)
+    expect(lookup.TRANSPOSE(true)).to.equal(true)
+    expect(lookup.TRANSPOSE(false)).to.equal(false)
+    expect(lookup.TRANSPOSE('')).to.equal('')
+    expect(lookup.TRANSPOSE('text')).to.equal('text')
+    expect(lookup.TRANSPOSE('1')).to.equal('1')
+    expect(lookup.TRANSPOSE('true')).to.equal('true')
+
     expect(lookup.TRANSPOSE([[1, 2, 3]])).to.eql([[1], [2], [3]])
     expect(
       lookup.TRANSPOSE([
@@ -1330,16 +1337,9 @@ describe('Lookup Reference', () => {
       [2, 5],
       [3, 6]
     ])
-    expect(
-      lookup.TRANSPOSE([
-        [1, null, 3],
-        [4, 5, undefined]
-      ])
-    ).to.eql([
-      [1, 4],
-      [0, 5],
-      [3, 0]
-    ])
+
+    expect(lookup.TRANSPOSE()).to.equal(error.na)
+    expect(lookup.TRANSPOSE(1, 1)).to.equal(error.na)
   })
 
   it('UNIQUE', () => {

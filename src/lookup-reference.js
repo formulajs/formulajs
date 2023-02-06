@@ -480,13 +480,15 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
  * @returns
  */
 export function TRANSPOSE(array) {
-  if (!array) {
+  if (arguments.length !== 1) {
     return error.na
   }
 
-  const matrix = utils.fillMatrix(array)
+  if (!Array.isArray(array)) {
+    return array
+  }
 
-  return utils.transpose(matrix)
+  return jStat.transpose(array)
 }
 
 /**
