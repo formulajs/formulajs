@@ -323,10 +323,30 @@ describe('Date & Time', () => {
   })
 
   it('EOMONTH', () => {
+    expect(dateTime.EOMONTH(1, 1)).to.equal(59)
+    expect(dateTime.EOMONTH(4000, '-10')).to.equal(3712)
+    expect(dateTime.EOMONTH('32', 1)).to.equal(91)
+
+    expect(dateTime.EOMONTH('2022-01-01', '2022-01-01')).to.equal(1400918)
+
+    expect(dateTime.EOMONTH(true, 30)).to.equal(error.value)
+    expect(dateTime.EOMONTH(1, false)).to.equal(error.value)
+
+    expect(dateTime.EOMONTH(-1, 5)).to.equal(error.num)
+
     expect(dateTime.EOMONTH('a', 0)).to.equal(error.value)
-    expect(dateTime.EOMONTH('1/1/1900', 'a')).to.equal(error.value)
-    expect(dateTime.EOMONTH('1/1/2005', 12)).to.deep.equal(new Date(2006, 0, 31))
-    expect(dateTime.EOMONTH(new Date(2011, 0, 2), 1)).to.deep.equal(new Date(2011, 1, 28))
+    expect(dateTime.EOMONTH(1, 'true')).to.equal(error.value)
+    expect(dateTime.EOMONTH('', 2)).to.equal(error.value)
+
+    Object.values(error).forEach((err, index, array) => {
+      expect(dateTime.EOMONTH(err, 1)).to.equal(err)
+      expect(dateTime.EOMONTH(1, err)).to.equal(err)
+      expect(dateTime.EOMONTH(err, array[(index + 1) % array.length])).to.equal(err)
+    })
+
+    expect(dateTime.EOMONTH()).to.equal(error.na)
+    expect(dateTime.EOMONTH(1)).to.equal(error.na)
+    expect(dateTime.EOMONTH(1, 1, true)).to.equal(error.na)
   })
 
   it('HOUR', () => {

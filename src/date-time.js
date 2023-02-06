@@ -500,20 +500,19 @@ export function EDATE(start_date, months) {
  * @param {*} months The number of months before or after start_date. A positive value for months yields a future date; a negative value yields a past date.
  * @returns
  */
-export function EOMONTH(start_date, months) {
-  start_date = utils.parseDate(start_date)
+export function EOMONTH() {
+  const result = EDATE(...arguments)
 
-  if (start_date instanceof Error) {
-    return start_date
+  if (result instanceof Error) {
+    return result
   }
 
-  if (isNaN(months)) {
-    return error.value
-  }
+  const date = utils.serialNumberToDate(result)
 
-  months = parseInt(months, 10)
+  date.setUTCMonth(date.getUTCMonth() + 1)
+  date.setUTCDate(0)
 
-  return new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0)
+  return utils.dateToSerialNumber(date)
 }
 
 /**
