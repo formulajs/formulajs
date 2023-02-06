@@ -191,3 +191,128 @@ export function parse(expression) {
 }
 
 export const compute = computeExpression
+
+export function countIfComputeExpression(tokens) {
+  const values = []
+  let operator
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i]
+
+    switch (token.type) {
+      case TOKEN_TYPE_OPERATOR:
+        operator = token.value
+        break
+      case TOKEN_TYPE_LITERAL:
+        values.push(token.value)
+        break
+    }
+  }
+
+  return countIfEvaluate(values, operator)
+}
+
+const stringCompare = function (value, criteria) {
+  const splittedCriteria = criteria.split('')
+
+  let analyzedPosition = 0
+  for (let i = 0; i < splittedCriteria.length; i++) {
+    if (splittedCriteria[i] === '~') {
+      if (splittedCriteria[i + 1] === '?') {
+        if (value[analyzedPosition] !== '?') {
+          return false
+        }
+
+        analyzedPosition++
+        i++
+      } else if (splittedCriteria[i + 1] === '*') {
+        if (value[analyzedPosition] !== '*') {
+          return false
+        }
+
+        analyzedPosition++
+        i++
+      } else if (splittedCriteria[i + 1] === '~') {
+        if (value[analyzedPosition] !== '~') {
+          return false
+        }
+
+        analyzedPosition++
+        i++
+      }
+    } else if (splittedCriteria[i] === '?') {
+      if (analyzedPosition >= value.length) {
+        return false
+      }
+
+      analyzedPosition++
+    } else if (splittedCriteria[i] === '*') {
+      if (i === splittedCriteria.length - 1) {
+        return true
+      }
+
+      let result = stringCompare(value.slice(analyzedPosition), criteria.slice(i + 1))
+
+      while (analyzedPosition < value.length && !result) {
+        analyzedPosition++
+
+        result = stringCompare(value.slice(analyzedPosition), criteria.slice(i + 1))
+      }
+
+      return result
+    } else {
+      if (value[analyzedPosition] !== splittedCriteria[i]) {
+        return false
+      }
+
+      analyzedPosition++
+    }
+  }
+
+  if (analyzedPosition !== value.length) {
+    return false
+  }
+
+  return true
+}
+
+const compare = {
+  '>': function (values) {
+    return values[0] > values[1]
+  },
+  '>=': function (values) {
+    return values[0] >= values[1]
+  },
+  '<': function (values) {
+    return values[0] < values[1]
+  },
+  '<=': function (values) {
+    return values[0] <= values[1]
+  },
+  '=': function (values) {
+    if (typeof values[0] !== 'string') {
+      return values[0] === values[1]
+    }
+
+    return stringCompare(values[0], values[1])
+  },
+  '<>': function (values) {
+    if (values.length === 1) {
+      return values[0] !== null
+    }
+
+    if (typeof values[0] === 'string' && typeof values[1] === 'string') {
+      return !stringCompare(values[0], values[1])
+    }
+
+    return values[0] !== values[1]
+  }
+}
+
+function countIfEvaluate(values, operator) {
+  if (operator !== '<>' && typeof values[0] !== typeof values[1]) {
+    return false
+  }
+
+  return compare[operator](values)
+}

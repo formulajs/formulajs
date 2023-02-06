@@ -2,6 +2,48 @@ import jStat from 'jstat'
 
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import * as advance from './advance.js'
+import * as evalExpression from './utils/criteria-eval.js'
+
+const approximateBinarySearch = (lookupValue, lookupArray) => {
+  const valueType = typeof lookupValue
+  let highestValidValue = null
+
+  let start = 0
+  let end = lookupArray.length - 1
+
+  while (end >= start) {
+    let middle = start + Math.trunc((end - start) / 2)
+
+    while (middle <= end && valueType !== typeof lookupArray[middle]) {
+      middle++
+    }
+
+    if (middle > end) {
+      middle--
+
+      while (middle >= start && valueType !== typeof lookupArray[middle]) {
+        middle--
+      }
+    }
+
+    if (middle < start) {
+      break
+    }
+
+    if (lookupValue > lookupArray[middle]) {
+      highestValidValue = middle
+
+      start = middle + 1
+    } else if (lookupValue < lookupArray[middle]) {
+      end = middle - 1
+    } else {
+      return middle
+    }
+  }
+
+  return highestValidValue
+}
 
 /**
  * Chooses a value from a list of values.
@@ -20,7 +62,31 @@ export function CHOOSE() {
     return error.na
   }
 
-  const index = arguments[0]
+  let index = arguments[0]
+
+  if (Array.isArray(index)) {
+    const options = Array.from(arguments).slice(1)
+
+    return index.map((item) => CHOOSE(item, ...options))
+  }
+
+  if (Object.values(error).includes(index)) {
+    return index
+  }
+
+  if (typeof index === 'string') {
+    index = index.trim()
+
+    if (!utils.validNumber.test(index)) {
+      return error.value
+    }
+
+    index = parseFloat(index)
+  }
+
+  if (!Number.isInteger(index)) {
+    index = Math.trunc(index)
+  }
 
   if (index < 1 || index > 254) {
     return error.value
@@ -76,14 +142,10 @@ export function COLUMNS(array) {
   }
 
   if (!(array instanceof Array)) {
-    return error.value
+    return 1
   }
 
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.cols(array)
+  return array[0].length
 }
 
 /**
@@ -98,7 +160,15 @@ export function COLUMNS(array) {
  * @returns
  */
 export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) {
-  return VLOOKUP(lookup_value, utils.transpose(table_array), row_index_num, range_lookup)
+  if (arguments.length < 3 || arguments.length > 4) {
+    return error.na
+  }
+
+  if (Array.isArray(table_array)) {
+    table_array = utils.transpose(table_array)
+  }
+
+  return VLOOKUP(lookup_value, table_array, row_index_num, range_lookup)
 }
 
 /**
@@ -114,37 +184,74 @@ export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) 
  * @returns
  */
 export function INDEX(array, row_num, column_num) {
-  const someError = utils.anyError(array, row_num, column_num)
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
 
+  const someError = utils.anyError(array, row_num, column_num)
   if (someError) {
     return someError
   }
 
   if (!Array.isArray(array)) {
+    array = [array]
+  }
+
+  if (!Array.isArray(array[0])) {
+    array[0] = [array[0]]
+  }
+
+  const isRow = array.length === 1
+
+  if (column_num === undefined) {
+    if (isRow) {
+      column_num = row_num
+      row_num = 1
+    } else {
+      column_num = 1
+    }
+  }
+
+  column_num = utils.getNumber(column_num)
+  if (typeof column_num !== 'number') {
     return error.value
   }
 
-  const isOneDimensionRange = array.length > 0 && !Array.isArray(array[0])
+  column_num = Math.trunc(column_num)
 
-  if (isOneDimensionRange && !column_num) {
-    column_num = row_num
-    row_num = 1
-  } else {
-    column_num = column_num || 1
-    row_num = row_num || 1
+  row_num = utils.getNumber(row_num)
+  if (typeof row_num !== 'number') {
+    return error.value
   }
+
+  row_num = Math.trunc(row_num)
 
   if (column_num < 0 || row_num < 0) {
     return error.value
   }
 
-  if (isOneDimensionRange && row_num === 1 && column_num <= array.length) {
-    return array[column_num - 1]
-  } else if (row_num <= array.length && column_num <= array[row_num - 1].length) {
+  const numOfRows = array.length
+  const numOfColumns = array[0].length
+
+  if (row_num > numOfRows || column_num > numOfColumns) {
+    return error.ref
+  }
+
+  let result
+  if (column_num === 0 && row_num === 0) {
+    result = array
+  } else if (column_num === 0) {
+    result = [array[row_num - 1]]
+  } else if (row_num === 0) {
+    result = array.map((row) => [row[column_num - 1]])
+  } else {
     return array[row_num - 1][column_num - 1]
   }
 
-  return error.ref
+  if (result.length === 1 && result[0].length === 1) {
+    return result[0][0]
+  }
+  return result
 }
 
 /**
@@ -160,26 +267,60 @@ export function INDEX(array, row_num, column_num) {
  * @returns
  */
 export function LOOKUP(lookup_value, array, result_array) {
-  array = utils.flatten(array)
-  result_array = result_array ? utils.flatten(result_array) : array
-
-  const isNumberLookup = typeof lookup_value === 'number'
-  let result = error.na
-
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === lookup_value) {
-      return result_array[i]
-    } else if (
-      (isNumberLookup && array[i] <= lookup_value) ||
-      (typeof array[i] === 'string' && array[i].localeCompare(lookup_value) < 0)
-    ) {
-      result = result_array[i]
-    } else if (isNumberLookup && array[i] > lookup_value) {
-      return result
-    }
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  return result
+  if (lookup_value instanceof Error) {
+    return lookup_value
+  }
+
+  if (!Array.isArray(array)) {
+    array = [array]
+  }
+  if (!Array.isArray(array[0])) {
+    array[0] = [array[0]]
+  }
+
+  if (array[0].length > array.length) {
+    if (result_array === undefined) {
+      result_array = array[array.length - 1]
+    }
+
+    array = array[0]
+  } else {
+    if (result_array === undefined) {
+      result_array = array.map((row) => row[row.length - 1])
+    }
+
+    array = array.map((row) => row[0])
+  }
+
+  if (!Array.isArray(result_array)) {
+    result_array = [result_array]
+  }
+  if (!Array.isArray(result_array[0])) {
+    result_array[0] = [result_array[0]]
+  }
+
+  if (result_array.length > 1 && result_array[0].length > 1) {
+    return error.na
+  }
+
+  array = utils.flatten(array)
+  result_array = utils.flatten(result_array)
+
+  const index = approximateBinarySearch(lookup_value, array)
+
+  if (index === null) {
+    return error.na
+  }
+
+  if (index >= result_array.length) {
+    return error.ref
+  }
+
+  return result_array[index]
 }
 
 /**
@@ -192,70 +333,78 @@ export function LOOKUP(lookup_value, array, result_array) {
  * @param {*} match_type Optional. The number -1, 0, or 1. The match_type argument specifies how Excel matches lookup_value with values in lookup_array. The default value for this argument is 1.
  * @returns
  */
-export function MATCH(lookup_value, lookup_array, match_type) {
-  if (!lookup_value || !lookup_array) {
+export function MATCH(lookup_value, lookup_array, match_type = 1) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
   }
-
-  if (arguments.length === 2) {
-    match_type = 1
-  }
-
-  lookup_array = utils.flatten(lookup_array)
 
   if (!(lookup_array instanceof Array)) {
     return error.na
   }
 
-  if (match_type !== -1 && match_type !== 0 && match_type !== 1) {
+  if (lookup_value instanceof Error) {
+    return lookup_value
+  }
+  if (match_type instanceof Error) {
+    return error.ref
+  }
+
+  if (lookup_array.length > 1 && lookup_array[0].length > 1) {
     return error.na
   }
 
-  let index
-  let indexValue
+  lookup_array = utils.flatten(lookup_array)
 
-  for (let idx = 0; idx < lookup_array.length; idx++) {
-    if (match_type === 1) {
-      if (lookup_array[idx] === lookup_value) {
-        return idx + 1
-      } else if (lookup_array[idx] < lookup_value) {
-        if (!indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        } else if (lookup_array[idx] > indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        }
-      }
-    } else if (match_type === 0) {
-      if (typeof lookup_value === 'string' && typeof lookup_array[idx] === 'string') {
-        const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
-        const regex = new RegExp('^' + lookupValueStr + '$')
+  match_type = utils.getNumber(match_type)
+  if (typeof match_type !== 'number') {
+    return error.value
+  }
 
-        if (regex.test(lookup_array[idx].toLowerCase())) {
-          return idx + 1
-        }
-      } else {
-        if (lookup_array[idx] === lookup_value) {
-          return idx + 1
-        }
-      }
-    } else if (match_type === -1) {
-      if (lookup_array[idx] === lookup_value) {
-        return idx + 1
-      } else if (lookup_array[idx] > lookup_value) {
-        if (!indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        } else if (lookup_array[idx] < indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        }
-      }
+  const valueType = typeof lookup_value
+
+  if (match_type > 0) {
+    const result = approximateBinarySearch(lookup_value, lookup_array)
+    if (result !== null) {
+      return result + 1
+    }
+    return error.na
+  } else if (match_type === 0) {
+    const tokenizedCriteria = evalExpression.parse(lookup_value + '')
+
+    const result = lookup_array.findIndex((item) => {
+      const tokens = [evalExpression.createToken(item, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+
+      return evalExpression.countIfComputeExpression(tokens)
+    })
+
+    return result >= 0 ? result + 1 : error.na
+  }
+
+  let lowestValidValue = null
+  for (let i = 0; i < lookup_array.length; i++) {
+    if (valueType !== typeof lookup_array[i]) {
+      continue
+    }
+    if (lookup_value > lookup_array[i]) {
+      break
+    }
+
+    if (lookup_value < lookup_array[i]) {
+      lowestValidValue = i
+    } else {
+      return i + 1
     }
   }
 
-  return index || error.na
+  if (lowestValidValue !== null) {
+    while (lowestValidValue >= 0 && lookup_array[lowestValidValue] instanceof Error) {
+      lowestValidValue--
+    }
+
+    return lowestValidValue >= 0 ? lowestValidValue + 1 : error.na
+  }
+
+  return error.na
 }
 
 /**
@@ -272,15 +421,12 @@ export function ROWS(array) {
   }
 
   if (!(array instanceof Array)) {
-    return error.value
+    return 1
   }
 
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.rows(array)
+  return array.length
 }
+
 /**
  * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
  *
@@ -343,13 +489,15 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
  * @returns
  */
 export function TRANSPOSE(array) {
-  if (!array) {
+  if (arguments.length !== 1) {
     return error.na
   }
 
-  const matrix = utils.fillMatrix(array)
+  if (!Array.isArray(array)) {
+    return array
+  }
 
-  return utils.transpose(matrix)
+  return jStat.transpose(array)
 }
 
 /**
@@ -396,34 +544,176 @@ export function UNIQUE() {
  * @param {*} range_lookup Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
  * @returns
  */
-export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) {
-  if (!table_array || !col_index_num) {
+export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup = true) {
+  if (arguments.length < 3 || arguments.length > 4) {
     return error.na
   }
 
-  range_lookup = !(range_lookup === 0 || range_lookup === false)
-  let result = error.na
-  const isNumberLookup = typeof lookup_value === 'number'
-  let exactMatchOnly = false
+  if (!table_array) {
+    return error.na
+  }
 
-  for (let i = 0; i < table_array.length; i++) {
-    const row = table_array[i]
+  col_index_num = utils.getNumber(col_index_num)
+  if (typeof col_index_num !== 'number' || col_index_num < 1) {
+    return error.value
+  }
 
-    if (row[0] === lookup_value) {
-      result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
-      break
-    } else if (
-      !exactMatchOnly &&
-      ((isNumberLookup && range_lookup && row[0] <= lookup_value) ||
-        (range_lookup && typeof row[0] === 'string' && row[0].localeCompare(lookup_value) < 0))
-    ) {
-      result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
+  if (col_index_num > table_array[0].length) {
+    return error.ref
+  }
+
+  if (range_lookup instanceof Error) {
+    return range_lookup
+  }
+
+  range_lookup = utils.parseBool(range_lookup)
+  if (typeof range_lookup !== 'boolean') {
+    return error.value
+  }
+
+  if (range_lookup) {
+    const rowIndex = approximateBinarySearch(lookup_value, utils.flatten(table_array.map((row) => row[0])))
+
+    if (rowIndex === null) {
+      return error.na
     }
 
-    if (isNumberLookup && row[0] > lookup_value) {
-      exactMatchOnly = true
+    return table_array[rowIndex][col_index_num - 1]
+  }
+
+  for (let i = 0; i < table_array.length; i++) {
+    if (table_array[i][0] === lookup_value) {
+      return table_array[i][col_index_num - 1]
     }
   }
 
-  return result
+  return error.na
+}
+
+const startsWithNumber = /^-*\d/
+const startWithLetterOrNumber = /^\w/
+
+const a1Absolute = {
+  1: function (row, column) {
+    return '$' + column + '$' + row
+  },
+  2: function (row, column) {
+    return column + '$' + row
+  },
+  3: function (row, column) {
+    return '$' + column + row
+  },
+  4: function (row, column) {
+    return column + row
+  }
+}
+
+const r1c1Absolute = {
+  1: function (row, column) {
+    return 'R' + row + 'C' + column
+  },
+  2: function (row, column) {
+    return 'R' + row + 'C[' + column + ']'
+  },
+  3: function (row, column) {
+    return 'R[' + row + ']C' + column
+  },
+  4: function (row, column) {
+    return 'R[' + row + ']C[' + column + ']'
+  }
+}
+
+export function ADDRESS(row, column, absoluteNum = 1, a1Style = true, sheetName) {
+  if (arguments.length < 2 || arguments.length > 5) {
+    return error.na
+  }
+
+  const someError = utils.anyError(row, column, absoluteNum, a1Style, sheetName)
+  if (someError) {
+    return someError
+  }
+
+  row = utils.getNumber(row)
+  column = utils.getNumber(column)
+
+  if (typeof row === 'string') {
+    row = row.toUpperCase()
+
+    if (row === 'TRUE') {
+      row = 1
+    } else if (row === 'FALSE') {
+      row = 0
+    } else {
+      return error.value
+    }
+  }
+
+  if (typeof column === 'string') {
+    column = column.toUpperCase()
+
+    if (column === 'TRUE') {
+      column = 1
+    } else if (column === 'FALSE') {
+      column = 0
+    } else {
+      return error.value
+    }
+  }
+
+  row = Math.trunc(row)
+  column = Math.trunc(column)
+
+  if (row < 1 || column < 1) {
+    return error.value
+  }
+
+  absoluteNum = utils.getNumber(absoluteNum)
+  if (typeof absoluteNum !== 'number') {
+    return error.value
+  }
+
+  absoluteNum = Math.trunc(absoluteNum)
+
+  if (absoluteNum < 1 || absoluteNum > 4) {
+    return error.value
+  }
+
+  a1Style = utils.parseBool(a1Style)
+  if (typeof a1Style !== 'boolean') {
+    return error.value
+  }
+
+  let result = ''
+
+  if (sheetName !== undefined) {
+    const sheetNameType = typeof sheetName
+
+    if (sheetName === null) {
+      sheetName = ''
+    } else {
+      if (sheetNameType !== 'string') {
+        sheetName = sheetName.toString()
+      }
+
+      const upperCase = sheetName.toUpperCase()
+
+      if (upperCase === 'TRUE' || upperCase === 'FALSE') {
+        sheetName = "'" + upperCase + "'"
+      } else if (
+        sheetName.length > 0 &&
+        (startsWithNumber.test(sheetName) || !startWithLetterOrNumber.test(sheetName))
+      ) {
+        sheetName = "'" + sheetName + "'"
+      }
+    }
+
+    result = sheetName + '!'
+  }
+
+  if (a1Style) {
+    const columnsLetter = advance.getColumnName(column - 1)
+
+    return result + a1Absolute[absoluteNum](row, columnsLetter)
+  }
+  return result + r1c1Absolute[absoluteNum](row, column)
 }
