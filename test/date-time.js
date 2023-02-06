@@ -609,10 +609,35 @@ describe('Date & Time', () => {
   })
 
   it('TIME', () => {
-    expect(dateTime.TIME(0, 0, 0)).to.equal(0)
-    expect(dateTime.TIME(1, 1, 1)).to.approximately(0.04237268518518519, 1e-9)
-    expect(dateTime.TIME(-1, -1, -1)).to.equal(error.num)
-    expect(dateTime.TIME('invalid')).to.equal(error.value)
+    expect(dateTime.TIME(1, true, 1)).to.approximately(0.042372685, 1e-9)
+    expect(dateTime.TIME(6, 0, 0)).to.equal(0.25)
+
+    expect(dateTime.TIME(null, false, 0)).to.equal(0)
+
+    expect(dateTime.TIME(6, 'a', 0)).to.equal(error.value)
+
+    expect(dateTime.TIME(-1, 0, 0)).to.equal(error.num)
+    expect(dateTime.TIME(-1, 70, 4)).to.approximately(0.006990741, 1e-9)
+    expect(dateTime.TIME(70, -1, 4)).to.approximately(0.916018519, 1e-9)
+    expect(dateTime.TIME(70, 4, -1)).to.approximately(0.91943287, 1e-9)
+
+    expect(dateTime.TIME('', 1, 1)).to.equal(error.value)
+    expect(dateTime.TIME('text', 1, 1)).to.equal(error.value)
+    expect(dateTime.TIME(1, '', 1)).to.equal(error.value)
+    expect(dateTime.TIME(1, 'text', 1)).to.equal(error.value)
+    expect(dateTime.TIME(1, 1, '')).to.equal(error.value)
+    expect(dateTime.TIME(1, 1, 'text')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.TIME(err, 1, 1)).to.equal(err)
+      expect(dateTime.TIME(1, err, 1)).to.equal(err)
+      expect(dateTime.TIME(1, 1, err)).to.equal(err)
+    })
+
+    expect(dateTime.TIME()).to.equal(error.na)
+    expect(dateTime.TIME(1)).to.equal(error.na)
+    expect(dateTime.TIME(1, 1)).to.equal(error.na)
+    expect(dateTime.TIME(1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('TIMEVALUE', () => {

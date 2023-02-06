@@ -920,19 +920,37 @@ export function SECOND(serial_number) {
  * @returns
  */
 export function TIME(hour, minute, second) {
-  hour = utils.parseNumber(hour)
-  minute = utils.parseNumber(minute)
-  second = utils.parseNumber(second)
+  if (arguments.length !== 3) {
+    return error.na
+  }
 
-  if (utils.anyIsError(hour, minute, second)) {
+  const someError = utils.anyError(hour, minute, second)
+  if (someError) {
+    return someError
+  }
+
+  hour = utils.getNumber(hour)
+  if (typeof hour !== 'number') {
     return error.value
   }
 
-  if (hour < 0 || minute < 0 || second < 0) {
+  minute = utils.getNumber(minute)
+  if (typeof minute !== 'number') {
+    return error.value
+  }
+
+  second = utils.getNumber(second)
+  if (typeof second !== 'number') {
+    return error.value
+  }
+
+  const result = (3600 * hour + 60 * minute + second) / 86400
+
+  if (result < 0) {
     return error.num
   }
 
-  return (3600 * hour + 60 * minute + second) / 86400
+  return result % 1
 }
 
 /**
