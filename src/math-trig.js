@@ -13,10 +13,24 @@ import * as utils from './utils/common.js'
  * @returns
  */
 export function ABS(number) {
-  number = utils.parseNumber(number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(number)) {
+    return number.map((item) => ABS(item))
+  }
 
   if (number instanceof Error) {
     return number
+  }
+  if (number === '') {
+    return error.value
+  }
+
+  number = utils.parseNumber(number)
+  if (isNaN(number)) {
+    return error.value
   }
 
   const result = Math.abs(number)

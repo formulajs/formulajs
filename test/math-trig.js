@@ -5,11 +5,37 @@ import * as mathTrig from '../src/math-trig.js'
 
 describe('Math & Trig', () => {
   it('ABS', () => {
-    expect(mathTrig.ABS()).to.equal(0)
-    expect(mathTrig.ABS(undefined)).to.equal(0)
+    expect(mathTrig.ABS(null)).to.equal(0)
+    expect(mathTrig.ABS(0)).to.equal(0)
+
+    expect(mathTrig.ABS()).to.equal(error.na)
+    expect(mathTrig.ABS(2, 5)).to.equal(error.na)
     expect(mathTrig.ABS(error.na)).to.equal(error.na)
-    expect(mathTrig.ABS(-1)).to.equal(1)
+
+    expect(mathTrig.ABS('TRUE')).to.equal(error.value)
+    expect(mathTrig.ABS(' ')).to.equal(error.value)
     expect(mathTrig.ABS('invalid')).to.equal(error.value)
+    expect(mathTrig.ABS('')).to.equal(error.value)
+
+    expect(mathTrig.ABS(1)).to.equal(1)
+    expect(mathTrig.ABS(-1)).to.equal(1)
+    expect(mathTrig.ABS(-0.5)).to.equal(0.5)
+    expect(mathTrig.ABS('-1.5')).to.equal(1.5)
+
+    expect(mathTrig.ABS(true)).to.equal(1)
+    expect(mathTrig.ABS(false)).to.equal(0)
+
+    expect(mathTrig.ABS([-2, -5, -8.3])).to.eql([2, 5, 8.3])
+
+    expect(
+      mathTrig.ABS([
+        [-0.5, 'text'],
+        ['-05', true]
+      ])
+    ).to.eql([
+      [0.5, error.value],
+      [5, 1]
+    ])
   })
 
   it('ACOS', () => {
