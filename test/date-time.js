@@ -668,10 +668,13 @@ describe('Date & Time', () => {
   })
 
   it('TODAY', () => {
-    expect(dateTime.TODAY()).to.instanceof(Date)
-    expect(dateTime.TODAY().getHours()).to.equal(0)
-    expect(dateTime.TODAY().getMinutes()).to.equal(0)
-    expect(dateTime.TODAY().getSeconds()).to.equal(0)
+    const today = new Date()
+    const utcToday = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()))
+
+    expect(dateTime.TODAY()).to.equal(dateToSerialNumber(utcToday))
+
+    expect(dateTime.TODAY('text')).to.equal(error.na)
+    expect(dateTime.TODAY(1)).to.equal(error.na)
   })
 
   it('WEEKDAY', () => {

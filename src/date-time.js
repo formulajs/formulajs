@@ -342,13 +342,6 @@ export function DAY(serial_number) {
   return date.getUTCDate()
 }
 
-function startOfDay(date) {
-  const newDate = new Date(date)
-  newDate.setHours(0, 0, 0, 0)
-
-  return newDate
-}
-
 /**
  * Returns the number of days between two dates.
  *
@@ -989,7 +982,16 @@ export function TIMEVALUE(time_text) {
  * @returns
  */
 export function TODAY() {
-  return startOfDay(new Date())
+  if (arguments.length > 0) {
+    return error.na
+  }
+
+  const today = new Date()
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+
+  today.setUTCHours(0, 0, 0, 0)
+
+  return utils.dateToSerialNumber(today)
 }
 
 /**
