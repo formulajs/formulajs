@@ -641,9 +641,30 @@ describe('Date & Time', () => {
   })
 
   it('TIMEVALUE', () => {
-    expect(dateTime.TIMEVALUE('1/1/1900 00:00:00')).to.equal(0)
-    expect(dateTime.TIMEVALUE('1/1/1900 12:00:00')).to.approximately(0.5, 1e-9)
+    expect(dateTime.TIMEVALUE('1900-01-01 00:00:00 GMT')).to.equal(0)
+    expect(dateTime.TIMEVALUE('09:00 AM')).to.equal(0.375)
+    expect(dateTime.TIMEVALUE('09:00 PM')).to.equal(0.875)
+
+    expect(dateTime.TIMEVALUE('18:00')).to.equal(0.75)
+    expect(dateTime.TIMEVALUE('12:00 AM')).to.equal(0)
+    expect(dateTime.TIMEVALUE('12:00 PM')).to.equal(0.5)
+    expect(dateTime.TIMEVALUE('15:00:45')).to.approximately(0.625520833, 1e-9)
+
+    expect(dateTime.TIMEVALUE(null)).to.equal(error.value)
+    expect(dateTime.TIMEVALUE(true)).to.equal(error.value)
+    expect(dateTime.TIMEVALUE(false)).to.equal(error.value)
     expect(dateTime.TIMEVALUE('a')).to.equal(error.value)
+    expect(dateTime.TIMEVALUE(1)).to.equal(error.value)
+
+    expect(dateTime.TIMEVALUE('2022-12-12 18:00:00 GMT')).to.equal(0.75)
+    expect(dateTime.TIMEVALUE('1900-01-01 12:00:00 GMT')).to.approximately(0.5, 1e-9)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.TIMEVALUE(err)).to.equal(err)
+    })
+
+    expect(dateTime.TIMEVALUE()).to.equal(error.na)
+    expect(dateTime.TIMEVALUE('18:00', true)).to.equal(error.na)
   })
 
   it('TODAY', () => {

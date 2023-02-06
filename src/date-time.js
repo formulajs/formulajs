@@ -962,13 +962,23 @@ export function TIME(hour, minute, second) {
  * @returns
  */
 export function TIMEVALUE(time_text) {
-  time_text = utils.parseDate(time_text)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (time_text instanceof Error) {
     return time_text
   }
+  if (typeof time_text !== 'string') {
+    return error.value
+  }
 
-  return (3600 * time_text.getHours() + 60 * time_text.getMinutes() + time_text.getSeconds()) / 86400
+  time_text = utils.getHour(time_text)
+  if (typeof time_text !== 'number') {
+    return error.value
+  }
+
+  return time_text % 1
 }
 
 /**
