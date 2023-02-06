@@ -582,9 +582,30 @@ describe('Date & Time', () => {
   })
 
   it('SECOND', () => {
-    expect(dateTime.SECOND('1/1/1900')).to.equal(0)
-    expect(dateTime.SECOND('1/1/1900 1:00:01')).to.equal(1)
+    expect(dateTime.SECOND('1900-01-01')).to.equal(0)
+    expect(dateTime.SECOND('1900-01-01 01:00:01 GMT')).to.equal(1)
+    expect(dateTime.SECOND('2022-01-01 16:48:19 GMT')).to.equal(19)
+
+    expect(dateTime.SECOND('20:23')).to.equal(0)
+    expect(dateTime.SECOND('20:23:59')).to.equal(59)
+
+    expect(dateTime.SECOND(1)).to.equal(0)
+    expect(dateTime.SECOND(null)).to.equal(0)
+    expect(dateTime.SECOND(true)).to.equal(0)
+    expect(dateTime.SECOND(false)).to.equal(0)
+
+    expect(dateTime.SECOND(1980.366)).to.equal(2)
+    expect(dateTime.SECOND(0.366)).to.equal(2)
+    expect(dateTime.SECOND('0.366')).to.equal(2)
+
+    expect(dateTime.SECOND(-10)).to.equal(error.num)
+
+    expect(dateTime.SECOND('')).to.equal(error.value)
     expect(dateTime.SECOND('a')).to.equal(error.value)
+    expect(dateTime.SECOND('true')).to.equal(error.value)
+
+    expect(dateTime.SECOND()).to.equal(error.na)
+    expect(dateTime.SECOND('20:23:59', '11:40:50')).to.equal(error.na)
   })
 
   it('TIME', () => {

@@ -888,13 +888,25 @@ export function NOW() {
  * @returns
  */
 export function SECOND(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getSeconds()
+  serial_number = utils.getHour(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  const seconds = (serial_number * 24 * 60 * 60) % 60
+
+  return Math.round(seconds)
 }
 
 /**
