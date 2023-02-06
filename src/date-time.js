@@ -1,68 +1,46 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
-const d1900 = new Date(Date.UTC(1900, 0, 1))
-const WEEK_STARTS = [
-  undefined,
-  0,
-  1,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  0
-]
-const WEEK_TYPES = [
-  [],
-  [1, 2, 3, 4, 5, 6, 7],
-  [7, 1, 2, 3, 4, 5, 6],
-  [6, 0, 1, 2, 3, 4, 5],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [7, 1, 2, 3, 4, 5, 6],
-  [6, 7, 1, 2, 3, 4, 5],
-  [5, 6, 7, 1, 2, 3, 4],
-  [4, 5, 6, 7, 1, 2, 3],
-  [3, 4, 5, 6, 7, 1, 2],
-  [2, 3, 4, 5, 6, 7, 1],
-  [1, 2, 3, 4, 5, 6, 7]
-]
-const WEEKEND_TYPES = [
-  [],
-  [6, 0],
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 4],
-  [4, 5],
-  [5, 6],
-  undefined,
-  undefined,
-  undefined,
-  [0, 0],
-  [1, 1],
-  [2, 2],
-  [3, 3],
-  [4, 4],
-  [5, 5],
-  [6, 6]
-]
+const WEEK_STARTS = {
+  1: 0,
+  2: 1,
+  11: 1,
+  12: 2,
+  13: 3,
+  14: 4,
+  15: 5,
+  16: 6,
+  17: 0
+}
+const WEEK_TYPES = {
+  1: [1, 2, 3, 4, 5, 6, 7],
+  2: [7, 1, 2, 3, 4, 5, 6],
+  3: [6, 0, 1, 2, 3, 4, 5],
+  11: [7, 1, 2, 3, 4, 5, 6],
+  12: [6, 7, 1, 2, 3, 4, 5],
+  13: [5, 6, 7, 1, 2, 3, 4],
+  14: [4, 5, 6, 7, 1, 2, 3],
+  15: [3, 4, 5, 6, 7, 1, 2],
+  16: [2, 3, 4, 5, 6, 7, 1],
+  17: [1, 2, 3, 4, 5, 6, 7]
+}
+
+const weekendPerCode = {
+  1: [6, 0],
+  2: [0, 1],
+  3: [1, 2],
+  4: [2, 3],
+  5: [3, 4],
+  6: [4, 5],
+  7: [5, 6],
+  11: [0],
+  12: [1],
+  13: [2],
+  14: [3],
+  15: [4],
+  16: [5],
+  17: [6]
+}
 
 /**
  * Returns the serial number of a particular date.
@@ -75,23 +53,133 @@ const WEEKEND_TYPES = [
  * @returns
  */
 export function DATE(year, month, day) {
-  let result
+  if (arguments.length !== 3) {
+    return error.na
+  }
 
-  year = utils.parseNumber(year)
-  month = utils.parseNumber(month)
-  day = utils.parseNumber(day)
+  year = utils.getNumber(year)
+  if (year instanceof Error) {
+    return year
+  }
+  if (typeof year === 'string') {
+    return error.value
+  }
 
-  if (utils.anyIsError(year, month, day)) {
-    result = error.value
-  } else {
-    result = new Date(year, month - 1, day)
+  month = utils.getNumber(month)
+  if (month instanceof Error) {
+    return month
+  }
+  if (typeof month === 'string') {
+    return error.value
+  }
 
-    if (result.getFullYear() < 0) {
-      result = error.num
-    }
+  day = utils.getNumber(day)
+  if (day instanceof Error) {
+    return day
+  }
+  if (typeof day === 'string') {
+    return error.value
+  }
+
+  if (year < 1900) {
+    year += 1900
+  }
+
+  let result = new Date(Date.UTC(year, month - 1, day))
+
+  result = utils.dateToSerialNumber(result)
+
+  if (result < 0) {
+    return error.num
   }
 
   return result
+}
+
+var dateDifFunctions = {
+  Y: function (start, end) {
+    const startYear = start.getUTCFullYear()
+    const endYear = end.getUTCFullYear()
+
+    let yearDifference = endYear - startYear
+
+    if (end.getUTCMonth() < start.getUTCMonth() || end.getUTCDate() < start.getUTCDate()) {
+      yearDifference--
+    }
+
+    return yearDifference
+  },
+  M: function (start, end) {
+    const startYear = start.getUTCFullYear()
+    const endYear = end.getUTCFullYear()
+
+    const startMonth = start.getUTCMonth()
+    const endMonth = end.getUTCMonth()
+
+    const startDay = start.getUTCDate()
+    const endDay = end.getUTCDate()
+
+    let monthsDif = endMonth - startMonth
+    let daysDif = endDay - startDay
+
+    let result = (endYear - startYear) * 12 + monthsDif
+
+    if (daysDif < 0) {
+      result--
+    }
+
+    return result
+  },
+  D: function (start, end) {
+    const startDay = utils.dateToSerialNumber(start)
+    const endDay = utils.dateToSerialNumber(end)
+
+    return endDay - startDay
+  },
+  MD: function (start, end) {
+    const startDay = start.getUTCDate()
+    const endDay = end.getUTCDate()
+
+    if (endDay >= startDay) {
+      return endDay - startDay
+    }
+    return 31 - (startDay - endDay)
+  },
+  YM: function (start, end) {
+    const startMonth = start.getUTCMonth()
+    const endMonth = end.getUTCMonth()
+
+    let monthDifference = endMonth >= startMonth ? endMonth - startMonth : 12 - (startMonth - endMonth)
+
+    if (end.getUTCDate() < start.getUTCDate()) {
+      monthDifference--
+    }
+
+    return monthDifference
+  },
+  YD: function (start, end) {
+    const startDay = start.getUTCDate()
+    const startMonth = start.getUTCMonth()
+
+    const endDay = end.getUTCDate()
+    const endMonth = end.getUTCMonth()
+
+    if (endMonth > startMonth || (endMonth === startMonth && endDay >= startDay)) {
+      const year = start.getUTCFullYear()
+
+      const tempStart = utils.dateToSerialNumber(new Date(Date.UTC(year, startMonth, startDay)))
+      const tempEnd = utils.dateToSerialNumber(new Date(Date.UTC(year, endMonth, endDay)))
+
+      return tempEnd - tempStart
+    } else {
+      const year = end.getUTCFullYear()
+
+      const tempStart = utils.dateToSerialNumber(new Date(Date.UTC(year - 1, startMonth, startDay)))
+      const tempEnd = utils.dateToSerialNumber(new Date(Date.UTC(year, endMonth, endDay)))
+
+      return tempEnd - tempStart
+    }
+  }
 }
 
 /**
@@ -111,71 +199,46 @@ export function DATE(year, month, day) {
  * @returns
  */
 export function DATEDIF(start_date, end_date, unit) {
-  unit = unit.toUpperCase()
-  start_date = utils.parseDate(start_date)
-  end_date = utils.parseDate(end_date)
-
-  const start_date_year = start_date.getFullYear()
-  const start_date_month = start_date.getMonth()
-  const start_date_day = start_date.getDate()
-  const end_date_year = end_date.getFullYear()
-  const end_date_month = end_date.getMonth()
-  const end_date_day = end_date.getDate()
-
-  let result
-
-  switch (unit) {
-    case 'Y':
-      result = Math.floor(YEARFRAC(start_date, end_date))
-      break
-    case 'D':
-      result = DAYS(end_date, start_date)
-      break
-    case 'M':
-      result = end_date_month - start_date_month + 12 * (end_date_year - start_date_year)
-
-      if (end_date_day < start_date_day) {
-        result--
-      }
-
-      break
-    case 'MD':
-      if (start_date_day <= end_date_day) {
-        result = end_date_day - start_date_day
-      } else {
-        if (end_date_month === 0) {
-          start_date.setFullYear(end_date_year - 1)
-          start_date.setMonth(12)
-        } else {
-          start_date.setFullYear(end_date_year)
-          start_date.setMonth(end_date_month - 1)
-        }
-
-        result = DAYS(end_date, start_date)
-      }
-
-      break
-    case 'YM':
-      result = end_date_month - start_date_month + 12 * (end_date_year - start_date_year)
-
-      if (end_date_day < start_date_day) {
-        result--
-      }
-
-      result = result % 12
-      break
-    case 'YD':
-      if (end_date_month > start_date_month || (end_date_month === start_date_month && end_date_day < start_date_day)) {
-        start_date.setFullYear(end_date_year)
-      } else {
-        start_date.setFullYear(end_date_year - 1)
-      }
-
-      result = DAYS(end_date, start_date)
-      break
+  if (arguments.length !== 3) {
+    return error.na
   }
 
-  return result
+  const someError = utils.anyError(start_date, end_date, unit)
+  if (someError) {
+    return someError
+  }
+
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
+
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0 || start_date > end_date) {
+    return error.num
+  }
+
+  if (typeof unit !== 'string') {
+    return error.num
+  }
+
+  unit = unit.toUpperCase()
+
+  const chosenOperation = dateDifFunctions[unit]
+  if (chosenOperation === undefined) {
+    return error.num
+  }
+
+  const start = utils.serialNumberToDate(start_date)
+  const end = utils.serialNumberToDate(end_date)
+
+  return chosenOperation(start, end)
 }
 
 /**
@@ -187,17 +250,23 @@ export function DATEDIF(start_date, end_date, unit) {
  * @returns
  */
 export function DATEVALUE(date_text) {
-  if (typeof date_text !== 'string') {
-    return error.value
+  if (arguments.length !== 1) {
+    return error.na
   }
 
-  const date = Date.parse(date_text)
-
-  if (isNaN(date)) {
-    return error.value
+  if (date_text instanceof Error) {
+    return date_text
   }
 
-  return new Date(date_text)
+  if (typeof date_text === 'string') {
+    const date = new Date(date_text)
+
+    if (!Number.isNaN(date.getTime())) {
+      return utils.dateToSerialNumber(date)
+    }
+  }
+
+  return error.value
 }
 
 /**
@@ -209,20 +278,30 @@ export function DATEVALUE(date_text) {
  * @returns
  */
 export function DAY(serial_number) {
-  const date = utils.parseDate(serial_number)
-
-  if (date instanceof Error) {
-    return date
+  if (arguments.length !== 1) {
+    return error.na
   }
 
-  return date.getDate()
-}
+  if (serial_number instanceof Error) {
+    return serial_number
+  }
 
-function startOfDay(date) {
-  const newDate = new Date(date)
-  newDate.setHours(0, 0, 0, 0)
+  serial_number = utils.getNumber(serial_number)
 
-  return newDate
+  if (typeof serial_number === 'string') {
+    return error.value
+  }
+
+  if (serial_number < 0) {
+    return error.num
+  }
+  if (serial_number === 0) {
+    return 0
+  }
+
+  const date = utils.serialNumberToDate(serial_number)
+
+  return date.getUTCDate()
 }
 
 /**
@@ -235,18 +314,26 @@ function startOfDay(date) {
  * @returns
  */
 export function DAYS(end_date, start_date) {
-  end_date = utils.parseDate(end_date)
-  start_date = utils.parseDate(start_date)
-
-  if (end_date instanceof Error) {
-    return end_date
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (start_date instanceof Error) {
-    return start_date
+  const someError = utils.anyError(start_date, end_date)
+  if (someError) {
+    return someError
   }
 
-  return serial(startOfDay(end_date)) - serial(startOfDay(start_date))
+  start_date = utils.getNumber(start_date)
+  end_date = utils.getNumber(end_date)
+
+  if (typeof start_date === 'string' || typeof end_date === 'string') {
+    return error.value
+  }
+
+  start_date = Math.trunc(start_date)
+  end_date = Math.trunc(end_date)
+
+  return end_date - start_date
 }
 
 /**
@@ -259,36 +346,57 @@ export function DAYS(end_date, start_date) {
  * @param {*} method Optional. A logical value that specifies whether to use the U.S. or European method in the calculation.
  * @returns
  */
-export function DAYS360(start_date, end_date, method) {
-  method = utils.parseBool(method || 'false')
-  start_date = utils.parseDate(start_date)
-  end_date = utils.parseDate(end_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+export function DAYS360(start_date, end_date, method = false) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  if (end_date instanceof Error) {
-    return end_date
+  const someError = utils.anyError(start_date, end_date, method)
+  if (someError) {
+    return someError
   }
 
-  if (method instanceof Error) {
-    return method
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
   }
 
-  const sm = start_date.getMonth()
-  let em = end_date.getMonth()
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0) {
+    return error.num
+  }
+
+  method = utils.parseBool(method)
+  if (typeof method !== 'boolean') {
+    return error.value
+  }
+
+  start_date = utils.serialNumberToDate(start_date)
+  end_date = utils.serialNumberToDate(end_date)
+
+  const sm = start_date.getUTCMonth()
+  let em = end_date.getUTCMonth()
   let sd, ed
 
   if (method) {
-    sd = start_date.getDate() === 31 ? 30 : start_date.getDate()
-    ed = end_date.getDate() === 31 ? 30 : end_date.getDate()
+    sd = start_date.getUTCDate() === 31 ? 30 : start_date.getUTCDate()
+    ed = end_date.getUTCDate() === 31 ? 30 : end_date.getUTCDate()
   } else {
-    const smd = new Date(start_date.getFullYear(), sm + 1, 0).getDate()
-    const emd = new Date(end_date.getFullYear(), em + 1, 0).getDate()
-    sd = start_date.getDate() === smd ? 30 : start_date.getDate()
+    const nextStartDay = new Date(start_date.getTime())
+    nextStartDay.setDate(nextStartDay.getDate() + 1)
 
-    if (end_date.getDate() === emd) {
+    sd = sm !== nextStartDay.getUTCMonth() ? 30 : start_date.getUTCDate()
+
+    const nextEndDay = new Date(end_date.getTime())
+    nextEndDay.setDate(nextEndDay.getDate() + 1)
+
+    if (end_date.getUTCDate() >= 30 && end_date.getUTCMonth() !== nextEndDay.getUTCMonth()) {
       if (sd < 30) {
         em++
         ed = 1
@@ -296,11 +404,11 @@ export function DAYS360(start_date, end_date, method) {
         ed = 30
       }
     } else {
-      ed = end_date.getDate()
+      ed = end_date.getUTCDate()
     }
   }
 
-  return 360 * (end_date.getFullYear() - start_date.getFullYear()) + 30 * (em - sm) + (ed - sd)
+  return 360 * (end_date.getUTCFullYear() - start_date.getUTCFullYear()) + 30 * (em - sm) + (ed - sd)
 }
 
 /**
@@ -313,20 +421,46 @@ export function DAYS360(start_date, end_date, method) {
  * @returns
  */
 export function EDATE(start_date, months) {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (isNaN(months)) {
+  const someError = utils.anyError(start_date, months)
+  if (someError) {
+    return someError
+  }
+
+  const someBoolean = [start_date, months].some((argument) => typeof argument === 'boolean')
+  if (someBoolean) {
     return error.value
   }
 
-  months = parseInt(months, 10)
-  start_date.setMonth(start_date.getMonth() + months)
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date === 'string') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
 
-  return start_date
+  months = utils.getNumber(months)
+  if (typeof months === 'string') {
+    return error.value
+  }
+
+  start_date = Math.trunc(start_date)
+  months = Math.trunc(months)
+
+  start_date = utils.serialNumberToDate(start_date)
+
+  const resultMonth = start_date.getUTCMonth() + months
+  start_date.setUTCMonth(resultMonth)
+
+  if (start_date.getUTCMonth() !== resultMonth % 12) {
+    start_date.setDate(-1)
+  }
+
+  return utils.dateToSerialNumber(start_date)
 }
 
 /**
@@ -338,20 +472,19 @@ export function EDATE(start_date, months) {
  * @param {*} months The number of months before or after start_date. A positive value for months yields a future date; a negative value yields a past date.
  * @returns
  */
-export function EOMONTH(start_date, months) {
-  start_date = utils.parseDate(start_date)
+export function EOMONTH() {
+  const result = EDATE(...arguments)
 
-  if (start_date instanceof Error) {
-    return start_date
+  if (result instanceof Error) {
+    return result
   }
 
-  if (isNaN(months)) {
-    return error.value
-  }
+  const date = utils.serialNumberToDate(result)
 
-  months = parseInt(months, 10)
+  date.setUTCMonth(date.getUTCMonth() + 1)
+  date.setUTCDate(0)
 
-  return new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0)
+  return utils.dateToSerialNumber(date)
 }
 
 /**
@@ -363,13 +496,34 @@ export function EOMONTH(start_date, months) {
  * @returns
  */
 export function HOUR(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getHours()
+  serial_number = utils.getHour(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  return Math.trunc(Math.round(serial_number * 24 * 1e8) / 1e8)
+}
+
+const weeksPerYear = (year) => {
+  const p = (y) => {
+    return Math.round(y + y / 4 - y / 100 + y / 400) % 7
+  }
+
+  if (p(year) === 4 || p(year - 1) === 3) {
+    return 53
+  }
+  return 52
 }
 
 /**
@@ -381,17 +535,44 @@ export function HOUR(serial_number) {
  * @returns
  */
 export function ISOWEEKNUM(date) {
-  date = utils.parseDate(date)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (date instanceof Error) {
     return date
   }
 
-  date = startOfDay(date)
-  date.setDate(date.getDate() + 4 - (date.getDay() || 7))
-  const yearStart = new Date(date.getFullYear(), 0, 1)
+  date = utils.getNumber(date)
+  if (typeof date !== 'number') {
+    return error.value
+  }
+  if (date < 0) {
+    return error.num
+  }
 
-  return Math.ceil(((date - yearStart) / 86400000 + 1) / 7)
+  const jsDate = utils.serialNumberToDate(date)
+
+  var yearStart = new Date(Date.UTC(jsDate.getUTCFullYear(), 0, 1))
+
+  const milliseconds = jsDate.getTime() - yearStart.getTime() + utils.millisecondsPerDay
+  const dayOfYear = milliseconds / utils.millisecondsPerDay
+
+  let dayOfWeek = jsDate.getUTCDay()
+  dayOfWeek--
+  if (dayOfWeek < 0) {
+    dayOfWeek += 7
+  }
+  dayOfWeek++
+
+  let temp = Math.trunc((10 + dayOfYear - dayOfWeek) / 7)
+
+  if (temp === 0) {
+    return weeksPerYear(jsDate.getUTCFullYear() - 1)
+  } else if (temp > weeksPerYear(jsDate.getUTCFullYear())) {
+    return 1
+  }
+  return temp
 }
 
 /**
@@ -403,13 +584,25 @@ export function ISOWEEKNUM(date) {
  * @returns
  */
 export function MINUTE(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getMinutes()
+  serial_number = utils.getHour(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  const minutes = (serial_number * 24 * 60) % 60
+
+  return Math.trunc(minutes)
 }
 
 /**
@@ -421,13 +614,28 @@ export function MINUTE(serial_number) {
  * @returns
  */
 export function MONTH(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getMonth() + 1
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+  if (serial_number === 0) {
+    return 1
+  }
+
+  serial_number = utils.serialNumberToDate(serial_number)
+
+  return serial_number.getUTCMonth() + 1
 }
 
 /**
@@ -441,6 +649,10 @@ export function MONTH(serial_number) {
  * @returns
  */
 export function NETWORKDAYS(start_date, end_date, holidays) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   return NETWORKDAYS.INTL(start_date, end_date, 1, holidays)
 }
 
@@ -455,88 +667,153 @@ export function NETWORKDAYS(start_date, end_date, holidays) {
  * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
  * @returns
  */
-NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+NETWORKDAYS.INTL = function (start_date, end_date, weekend, holidays) {
+  if (arguments.length < 2 || arguments.length > 4) {
+    return error.na
   }
 
-  end_date = utils.parseDate(end_date)
-
-  if (end_date instanceof Error) {
-    return end_date
+  const someError = utils.anyError(start_date, end_date)
+  if (someError) {
+    return someError
   }
 
-  let isMask = false
-  const maskDays = []
-  const maskIndex = [1, 2, 3, 4, 5, 6, 0]
-  const maskRegex = new RegExp('^[0|1]{7}$')
+  start_date = utils.getNumber(start_date)
+  end_date = utils.getNumber(end_date)
 
-  if (weekend === undefined) {
-    weekend = WEEKEND_TYPES[1]
-  } else if (typeof weekend === 'string' && maskRegex.test(weekend)) {
-    isMask = true
-    weekend = weekend.split('')
-
-    for (let i = 0; i < weekend.length; i++) {
-      if (weekend[i] === '1') {
-        maskDays.push(maskIndex[i])
-      }
-    }
-  } else {
-    weekend = WEEKEND_TYPES[weekend]
-  }
-
-  if (!(weekend instanceof Array)) {
+  if (typeof start_date !== 'number' || typeof end_date !== 'number') {
     return error.value
   }
-
-  if (holidays === undefined) {
-    holidays = []
-  } else if (!(holidays instanceof Array)) {
-    holidays = [holidays]
+  if (start_date < 0 || end_date < 0) {
+    return error.num
   }
 
-  for (let i = 0; i < holidays.length; i++) {
-    const h = utils.parseDate(holidays[i])
-
-    if (h instanceof Error) {
-      return h
+  if (weekend instanceof Error) {
+    return error.value
+  }
+  if (weekend === null) {
+    return error.num
+  }
+  if (weekend === undefined) {
+    weekend = 1
+  } else if (typeof weekend === 'boolean') {
+    if (weekend === false) {
+      return error.num
     }
 
-    holidays[i] = h
+    weekend = 1
   }
 
-  const days = Math.round((end_date - start_date) / (1000 * 60 * 60 * 24)) + 1
-  let total = days
-  const day = start_date
+  const weekendType = typeof weekend
 
-  for (let i = 0; i < days; i++) {
-    const d = new Date().getTimezoneOffset() > 0 ? day.getUTCDay() : day.getDay()
-    let dec = isMask ? maskDays.includes(d) : d === weekend[0] || d === weekend[1]
+  let ignoredWeekdays
+  if (weekendType === 'number') {
+    ignoredWeekdays = weekendPerCode[weekend]
 
-    for (let j = 0; j < holidays.length; j++) {
-      const holiday = holidays[j]
+    if (ignoredWeekdays === undefined) {
+      return error.num
+    }
+  } else if (weekendType === 'string') {
+    if (weekend.length !== 7) {
+      return error.value
+    }
 
-      if (
-        holiday.getDate() === day.getDate() &&
-        holiday.getMonth() === day.getMonth() &&
-        holiday.getFullYear() === day.getFullYear()
-      ) {
-        dec = true
-        break
+    weekend = weekend.split('')
+
+    const invalid = weekend.some((day) => day !== '0' && day !== '1')
+    if (invalid) {
+      return error.value
+    }
+
+    ignoredWeekdays = []
+    for (let i = 0; i < weekend.length; i++) {
+      if (weekend[i] === '1') {
+        ignoredWeekdays.push(i)
       }
     }
 
-    if (dec) {
-      total--
-    }
+    ignoredWeekdays = ignoredWeekdays.map((ignoredWeekday) => {
+      let result = ignoredWeekday + 1
+      if (result > 6) {
+        result -= 7
+      }
 
-    day.setDate(day.getDate() + 1)
+      return result
+    })
   }
 
-  return total
+  let inverted = false
+  if (end_date < start_date) {
+    let temp = start_date
+
+    start_date = end_date
+    end_date = temp
+
+    inverted = true
+  }
+
+  let totalDays = 0
+
+  const jsStartDay = utils.serialNumberToDate(start_date)
+  const jsEndDay = utils.serialNumberToDate(end_date)
+
+  let tempStartDate = start_date
+  const startDay = jsStartDay.getUTCDay()
+  if (startDay !== 0) {
+    const numberOfDaysSkipped = ignoredWeekdays.filter((day) => day >= startDay)
+
+    totalDays = 7 - startDay - numberOfDaysSkipped.length
+
+    tempStartDate = tempStartDate + 7 - startDay
+  }
+
+  let tempEndDate = end_date
+  const endDay = jsEndDay.getUTCDay()
+  if (endDay !== 6) {
+    const numberOfDaysSkipped = ignoredWeekdays.filter((day) => day <= endDay)
+
+    totalDays += endDay + 1 - numberOfDaysSkipped.length
+
+    tempEndDate = tempEndDate - endDay - 1
+  }
+
+  const numberOfCompleteWeeks = (tempEndDate - tempStartDate + 1) / 7
+  totalDays += numberOfCompleteWeeks * (7 - ignoredWeekdays.length)
+
+  if (holidays !== undefined) {
+    if (!Array.isArray(holidays)) {
+      holidays = [holidays]
+    }
+    holidays = holidays.flat(2)
+
+    for (let i = 0; i < holidays.length; i++) {
+      if (holidays[i] instanceof Error) {
+        return holidays[i]
+      }
+
+      let holiday = utils.getNumber(holidays[i])
+      if (typeof holiday !== 'number') {
+        return error.value
+      }
+      if (holiday < 0) {
+        return error.num
+      }
+
+      if (holiday >= start_date && holiday <= end_date) {
+        const jsHoliday = utils.serialNumberToDate(holiday)
+
+        const alreadyIgnored = ignoredWeekdays.includes(jsHoliday.getUTCDay())
+        if (!alreadyIgnored) {
+          totalDays--
+        }
+      }
+    }
+  }
+
+  if (inverted) {
+    totalDays *= -1
+  }
+
+  return totalDays
 }
 
 /**
@@ -547,7 +824,14 @@ NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
  * @returns
  */
 export function NOW() {
-  return new Date()
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
+  const now = new Date()
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+
+  return utils.dateToSerialNumber(now)
 }
 
 /**
@@ -559,13 +843,25 @@ export function NOW() {
  * @returns
  */
 export function SECOND(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getSeconds()
+  serial_number = utils.getHour(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  const seconds = (serial_number * 24 * 60 * 60) % 60
+
+  return Math.round(seconds)
 }
 
 /**
@@ -579,19 +875,37 @@ export function SECOND(serial_number) {
  * @returns
  */
 export function TIME(hour, minute, second) {
-  hour = utils.parseNumber(hour)
-  minute = utils.parseNumber(minute)
-  second = utils.parseNumber(second)
+  if (arguments.length !== 3) {
+    return error.na
+  }
 
-  if (utils.anyIsError(hour, minute, second)) {
+  const someError = utils.anyError(hour, minute, second)
+  if (someError) {
+    return someError
+  }
+
+  hour = utils.getNumber(hour)
+  if (typeof hour !== 'number') {
     return error.value
   }
 
-  if (hour < 0 || minute < 0 || second < 0) {
+  minute = utils.getNumber(minute)
+  if (typeof minute !== 'number') {
+    return error.value
+  }
+
+  second = utils.getNumber(second)
+  if (typeof second !== 'number') {
+    return error.value
+  }
+
+  const result = (3600 * hour + 60 * minute + second) / 86400
+
+  if (result < 0) {
     return error.num
   }
 
-  return (3600 * hour + 60 * minute + second) / 86400
+  return result % 1
 }
 
 /**
@@ -603,13 +917,23 @@ export function TIME(hour, minute, second) {
  * @returns
  */
 export function TIMEVALUE(time_text) {
-  time_text = utils.parseDate(time_text)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (time_text instanceof Error) {
     return time_text
   }
+  if (typeof time_text !== 'string') {
+    return error.value
+  }
 
-  return (3600 * time_text.getHours() + 60 * time_text.getMinutes() + time_text.getSeconds()) / 86400
+  time_text = utils.getHour(time_text)
+  if (typeof time_text !== 'number') {
+    return error.value
+  }
+
+  return time_text % 1
 }
 
 /**
@@ -620,7 +944,16 @@ export function TIMEVALUE(time_text) {
  * @returns
  */
 export function TODAY() {
-  return startOfDay(new Date())
+  if (arguments.length > 0) {
+    return error.na
+  }
+
+  const today = new Date()
+  today.setMinutes(today.getMinutes() - today.getTimezoneOffset())
+
+  today.setUTCHours(0, 0, 0, 0)
+
+  return utils.dateToSerialNumber(today)
 }
 
 /**
@@ -633,17 +966,40 @@ export function TODAY() {
  * @returns
  */
 export function WEEKDAY(serial_number, return_type) {
-  serial_number = utils.parseDate(serial_number)
-
-  if (serial_number instanceof Error) {
-    return serial_number
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
   }
 
+  const someError = utils.anyError(serial_number, return_type)
+  if (someError) {
+    return someError
+  }
+
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  if (return_type === null) {
+    return error.num
+  }
   if (return_type === undefined) {
     return_type = 1
   }
 
-  const day = serial_number.getDay()
+  return_type = utils.getNumber(return_type)
+  if (typeof return_type !== 'number') {
+    return error.value
+  }
+
+  if (!WEEK_TYPES[return_type]) {
+    return error.num
+  }
+
+  const day = utils.serialNumberToDate(serial_number).getUTCDay()
 
   return WEEK_TYPES[return_type][day]
 }
@@ -658,26 +1014,55 @@ export function WEEKDAY(serial_number, return_type) {
  * @returns
  */
 export function WEEKNUM(serial_number, return_type) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
 
-  if (serial_number instanceof Error) {
-    return serial_number
+  const someError = utils.anyError(serial_number, return_type)
+  if (someError) {
+    return someError
+  }
+
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
   }
 
   if (return_type === undefined) {
     return_type = 1
   }
 
+  return_type = utils.getNumber(return_type)
+  if (typeof return_type !== 'number') {
+    return error.value
+  }
   if (return_type === 21) {
     return ISOWEEKNUM(serial_number)
   }
 
-  const week_start = WEEK_STARTS[return_type]
-  let jan = new Date(serial_number.getFullYear(), 0, 1)
-  const inc = jan.getDay() < week_start ? 1 : 0
-  jan -= Math.abs(jan.getDay() - week_start) * 24 * 60 * 60 * 1000
+  const weekStart = WEEK_STARTS[return_type]
+  if (weekStart === undefined) {
+    return error.num
+  }
 
-  return Math.floor((serial_number - jan) / (1000 * 60 * 60 * 24) / 7 + 1) + inc
+  const jsDate = utils.serialNumberToDate(serial_number)
+
+  const jsFirstDayOfTheYear = new Date(Date.UTC(jsDate.getUTCFullYear(), 0, 1))
+  const firstDayOfTheYear = utils.dateToSerialNumber(jsFirstDayOfTheYear)
+
+  let daysDif = jsFirstDayOfTheYear.getUTCDay() - weekStart
+  if (daysDif < 0) {
+    daysDif += 7
+  }
+
+  const dayOfTheYear = serial_number - firstDayOfTheYear + 1
+
+  const week = Math.trunc((dayOfTheYear - 1 + daysDif) / 7) + 1
+
+  return week
 }
 
 /**
@@ -691,6 +1076,10 @@ export function WEEKNUM(serial_number, return_type) {
  * @returns
  */
 export function WORKDAY(start_date, days, holidays) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   return WORKDAY.INTL(start_date, days, 1, holidays)
 }
 
@@ -705,76 +1094,170 @@ export function WORKDAY(start_date, days, holidays) {
  * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. Holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
  * @returns
  */
-WORKDAY.INTL = (start_date, days, weekend, holidays) => {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+WORKDAY.INTL = function (start_date, days, weekend, holidays) {
+  if (arguments.length < 2 || arguments.length > 4) {
+    return error.na
   }
 
-  days = utils.parseNumber(days)
-
-  if (days instanceof Error) {
-    return days
+  const someError = utils.anyError(start_date, days, weekend)
+  if (someError) {
+    return someError
   }
 
-  if (days < 0) {
-    return error.num
-  }
-
-  if (weekend === undefined) {
-    weekend = WEEKEND_TYPES[1]
-  } else {
-    weekend = WEEKEND_TYPES[weekend]
-  }
-
-  if (!(weekend instanceof Array)) {
+  if (typeof start_date === 'boolean') {
     return error.value
   }
 
-  if (holidays === undefined) {
-    holidays = []
-  } else if (!(holidays instanceof Array)) {
-    holidays = [holidays]
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
   }
 
-  for (let i = 0; i < holidays.length; i++) {
-    const h = utils.parseDate(holidays[i])
-
-    if (h instanceof Error) {
-      return h
-    }
-
-    holidays[i] = h
+  if (typeof days === 'boolean') {
+    return error.value
+  }
+  days = utils.getNumber(days)
+  if (typeof days !== 'number') {
+    return error.value
   }
 
-  let d = 0
+  const jsStartDate = utils.serialNumberToDate(start_date)
 
-  while (d < days) {
-    start_date.setDate(start_date.getDate() + 1)
-    const day = start_date.getDay()
+  if (weekend === undefined || weekend === true) {
+    weekend = 1
+  }
 
-    if (day === weekend[0] || day === weekend[1]) {
-      continue
+  let ignoredWeekdays
+
+  const weekendType = typeof weekend
+  if (weekendType === 'string') {
+    if (weekend.length !== 7) {
+      return error.value
     }
 
-    for (let j = 0; j < holidays.length; j++) {
-      const holiday = holidays[j]
+    weekend = weekend.split('')
 
-      if (
-        holiday.getDate() === start_date.getDate() &&
-        holiday.getMonth() === start_date.getMonth() &&
-        holiday.getFullYear() === start_date.getFullYear()
-      ) {
-        d--
-        break
+    const invalid = weekend.some((day) => day !== '0' && day !== '1') || weekend.every((day) => day === '1')
+    if (invalid) {
+      return error.value
+    }
+
+    ignoredWeekdays = []
+    for (let i = 0; i < weekend.length; i++) {
+      if (weekend[i] === '1') {
+        ignoredWeekdays.push(i)
       }
     }
 
-    d++
+    ignoredWeekdays = ignoredWeekdays.map((ignoredWeekday) => {
+      let result = ignoredWeekday + 1
+      if (result > 6) {
+        result -= 7
+      }
+
+      return result
+    })
+  } else {
+    ignoredWeekdays = weekendPerCode[weekend]
   }
 
-  return start_date
+  if (ignoredWeekdays === undefined) {
+    return error.num
+  }
+
+  let result = start_date
+
+  const workingDaysAWeek = 7 - ignoredWeekdays.length
+
+  const signal = days < 0 ? -1 : 1
+
+  let wholeWeeks = Math.trunc(days / workingDaysAWeek)
+
+  let daysRemaining = days % workingDaysAWeek
+  if (!daysRemaining) {
+    wholeWeeks -= signal
+    daysRemaining = days - wholeWeeks * workingDaysAWeek
+  }
+
+  if (wholeWeeks) {
+    result += 7 * wholeWeeks
+  }
+
+  const tempDate = new Date(jsStartDate.getTime())
+
+  while (daysRemaining !== 0) {
+    tempDate.setUTCDate(tempDate.getUTCDate() + signal)
+    result += signal
+
+    if (!ignoredWeekdays.includes(tempDate.getUTCDay())) {
+      daysRemaining -= signal
+    }
+  }
+
+  if (holidays) {
+    if (!Array.isArray(holidays)) {
+      holidays = [holidays]
+    }
+
+    holidays = holidays.flat(2)
+
+    const someError = utils.anyError(...holidays)
+    if (someError) {
+      return someError
+    }
+
+    try {
+      holidays = holidays.map((holiday) => {
+        if (holiday instanceof Error) {
+          throw holiday
+        }
+        const result = utils.getNumber(holiday)
+        if (typeof result !== 'number') {
+          throw error.value
+        }
+        if (result < 0) {
+          throw error.num
+        }
+
+        return result
+      })
+    } catch (err) {
+      return err
+    }
+
+    let relevantDate = holidays.find((holiday) => {
+      return (holiday >= start_date && holiday <= result) || (holiday >= result && holiday <= start_date)
+    })
+    while (relevantDate) {
+      const jsRelevantDate = utils.serialNumberToDate(relevantDate)
+      if (!ignoredWeekdays.includes(jsRelevantDate.getUTCDay())) {
+        var accounted = false
+        while (!accounted) {
+          tempDate.setUTCDate(tempDate.getUTCDate() + signal)
+          result += signal
+
+          if (!ignoredWeekdays.includes(tempDate.getUTCDay())) {
+            accounted = true
+          }
+        }
+      }
+
+      holidays = holidays.filter((holiday) => holiday !== relevantDate)
+
+      relevantDate = holidays.find((holiday) => {
+        return (holiday >= start_date && holiday <= result) || (holiday >= result && holiday <= start_date)
+      })
+    }
+  }
+
+  if (result < 0) {
+    return error.num
+  }
+
+  return result
 }
 
 /**
@@ -786,22 +1269,29 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
  * @returns
  */
 export function YEAR(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getFullYear()
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  const date = utils.serialNumberToDate(serial_number)
+
+  return date.getUTCFullYear()
 }
 
 function isLeapYear(year) {
   return new Date(year, 1, 29).getMonth() === 1
-}
-
-// TODO : Use DAYS ?
-function daysBetween(start_date, end_date) {
-  return Math.ceil((end_date - start_date) / 1000 / 60 / 60 / 24)
 }
 
 /**
@@ -815,43 +1305,67 @@ function daysBetween(start_date, end_date) {
  * @returns
  */
 export function YEARFRAC(start_date, end_date, basis) {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  end_date = utils.parseDate(end_date)
-
-  if (end_date instanceof Error) {
-    return end_date
+  const someError = utils.anyError(start_date, end_date, basis)
+  if (someError) {
+    return someError
   }
 
-  basis = basis || 0
-  let sd = start_date.getDate()
-  const sm = start_date.getMonth() + 1
-  const sy = start_date.getFullYear()
-  let ed = end_date.getDate()
-  const em = end_date.getMonth() + 1
-  const ey = end_date.getFullYear()
+  if (typeof start_date === 'boolean' || typeof end_date === 'boolean' || typeof basis === 'boolean') {
+    return error.value
+  }
+
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
+
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0) {
+    return error.num
+  }
+
+  if (start_date > end_date) {
+    const temp = end_date
+    end_date = start_date
+    start_date = temp
+  }
+
+  const jsStartDate = utils.serialNumberToDate(start_date)
+  const jsEndDate = utils.serialNumberToDate(end_date)
+  if (basis == undefined || basis == null) {
+    basis = 0
+  }
+  basis = utils.getNumber(basis)
+  if (typeof basis !== 'number') {
+    return error.value
+  }
 
   switch (basis) {
     case 0:
       // US (NASD) 30/360
-      if (sd === 31 && ed === 31) {
-        sd = 30
-        ed = 30
-      } else if (sd === 31) {
-        sd = 30
-      } else if (sd === 30 && ed === 31) {
-        ed = 30
-      }
 
-      return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
+      return DAYS360(start_date, end_date) / 360
     case 1: {
       // Actual/actual
+      let sd = jsStartDate.getUTCDate()
+      const sm = jsStartDate.getUTCMonth() + 1
+      const sy = jsStartDate.getUTCFullYear()
+      let ed = jsEndDate.getUTCDate()
+      const em = jsEndDate.getUTCMonth() + 1
+      const ey = jsEndDate.getUTCFullYear()
+
       const feb29Between = (date1, date2) => {
-        const year1 = date1.getFullYear()
+        const year1 = date1.getUTCFullYear()
         const mar1year1 = new Date(year1, 2, 1)
 
         if (isLeapYear(year1) && date1 < mar1year1 && date2 >= mar1year1) {
@@ -864,40 +1378,35 @@ export function YEARFRAC(start_date, end_date, basis) {
         return isLeapYear(year2) && date2 >= mar1year2 && date1 < mar1year2
       }
 
-      let ylength = 365
-
       if (sy === ey || (sy + 1 === ey && (sm > em || (sm === em && sd >= ed)))) {
-        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 1 && ed === 29)) {
+        let ylength = 365
+        if ((sy === ey && isLeapYear(sy)) || feb29Between(jsStartDate, jsEndDate) || (em === 1 && ed === 29)) {
           ylength = 366
         }
 
-        return daysBetween(start_date, end_date) / ylength
+        return (end_date - start_date) / ylength
       }
 
       const years = ey - sy + 1
-      const days = (new Date(ey + 1, 0, 1) - new Date(sy, 0, 1)) / 1000 / 60 / 60 / 24
+      const days =
+        utils.dateToSerialNumber(new Date(Date.UTC(ey + 1, 0, 1))) -
+        utils.dateToSerialNumber(new Date(Date.UTC(sy, 0, 1)))
       const average = days / years
 
-      return daysBetween(start_date, end_date) / average
+      return (end_date - start_date) / average
     }
 
     case 2:
       // Actual/360
 
-      return daysBetween(start_date, end_date) / 360
+      return (end_date - start_date) / 360
     case 3:
       // Actual/365
 
-      return daysBetween(start_date, end_date) / 365
+      return (end_date - start_date) / 365
     case 4:
       // European 30/360
 
-      return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
+      return DAYS360(start_date, end_date, true) / 360
   }
-}
-
-function serial(date) {
-  const addOn = date > -2203891200000 ? 2 : 1
-
-  return Math.ceil((date - d1900) / 86400000) + addOn
 }

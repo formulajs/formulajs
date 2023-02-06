@@ -244,53 +244,44 @@ describe('Utils => Common', () => {
         expect(utils.parseDate('31/12/2009')).to.equal(error.value)
         expect(utils.parseDate('2009-31-12')).to.equal(error.value)
       })
-
+  
       it('should thrown an error in case of out of range input', () => {
         expect(utils.parseDate(-1)).to.equal(error.num)
         expect(utils.parseDate(2958466)).to.equal(error.num)
       })
-
+  
       it('should parse date from serial number', () => {
-        expect(utils.parseDate(1).getTime()).to.equal(new Date('1/1/1900').getTime())
-        expect(utils.parseDate(61).getTime()).to.equal(new Date('3/1/1900').getTime())
-        expect(utils.parseDate(60.05).getTime()).to.equal(new Date('2/29/1900 01:12:00').getTime())
-        expect(utils.parseDate(40729).getTime()).to.equal(new Date('7/5/2011').getTime())
-        expect(utils.parseDate(40729.1805555556).getTime()).to.equal(new Date('7/5/2011 04:20:00').getTime())
+        expect(utils.parseDate(1).getTime()).to.equal(new Date('1900-01-01 00:00:00 GMT').getTime())
+        expect(utils.parseDate(61).getTime()).to.equal(new Date('1900-03-01 00:00:00 GMT').getTime())
+        expect(utils.parseDate(60.05).getTime()).to.equal(new Date('1900-02-29 01:12:00 GMT').getTime())
+        expect(utils.parseDate(40729).getTime()).to.equal(new Date('2011-07-05').getTime())
+        expect(utils.parseDate(40729.1805555556).getTime()).to.equal(new Date('2011-07-05 04:20:00 GMT').getTime())
       })
-
-      xit('should parse non-iso formatted string', () => {
-        expect(utils.parseDate('2009-7-1').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
-      })
-
+  
       it('should parse date from string', () => {
+        expect(utils.parseDate('2009-7-1').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
         expect(utils.parseDate('7/1/2009').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
         expect(utils.parseDate('07/01/2009').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
         expect(utils.parseDate('2009/07-01').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
       })
-
+  
       it('should parse date with time from string', () => {
         expect(utils.parseDate('2009-12-31  12:13').getTime()).to.equal(new Date(2009, 12 - 1, 31, 12, 13).getTime())
         expect(utils.parseDate('2009-7-1 11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
         expect(utils.parseDate('7/1/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
         expect(utils.parseDate('2009-07-01 11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11).getTime())
-        expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(
-          new Date(2009, 7 - 1, 1, 11, 11, 11).getTime()
-        )
-        expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(
-          new Date(2009, 7 - 1, 1, 11, 11, 11).getTime()
-        )
-        expect(utils.parseDate('11/11/11 12:12:12').getTime()).to.equal(
-          new Date(2011, 11 - 1, 11, 12, 12, 12).getTime()
-        )
+        expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+        expect(utils.parseDate('07/01/2009 11:11:11').getTime()).to.equal(new Date(2009, 7 - 1, 1, 11, 11, 11).getTime())
+        expect(utils.parseDate('11/11/11 12:12:12').getTime()).to.equal(new Date(2011, 11 - 1, 11, 12, 12, 12).getTime())
       })
-
+  
       it('should parse date from Date', () => {
         expect(utils.parseDate(new Date(2009, 7 - 1, 1)).getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
         expect(utils.parseDate(new Date(2009, 7 - 1, 1, 11, 11, 11)).getTime()).to.equal(
           new Date(2009, 7 - 1, 1, 11, 11, 11).getTime()
         )
       })
-
+  
       xit('should parse date when day start with zero', () => {
         expect(utils.parseDate('2009-07-01').getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
         expect(utils.parseDate('2020-05-02').getTime()).to.equal(new Date(2020, 5 - 1, 2).getTime())
