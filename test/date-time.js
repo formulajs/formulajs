@@ -494,13 +494,52 @@ describe('Date & Time', () => {
   })
 
   it('NETWORKDAYS.INTL', () => {
-    expect(dateTime.NETWORKDAYS.INTL('12/4/2013', '12/5/2013')).to.equal(2)
-    expect(dateTime.NETWORKDAYS.INTL('12/8/2013', '12/9/2013', 2)).to.equal(0)
-    expect(dateTime.NETWORKDAYS.INTL('12/4/2013', '12/4/2013', -1)).to.equal(error.value)
-    expect(dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', 'smlkml')).to.equal(error.value)
-    expect(dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '00011')).to.equal(error.value)
-    expect(dateTime.NETWORKDAYS.INTL('1/1/2021', '2/24/2021', '0001101')).to.equal(32)
-    expect(dateTime.NETWORKDAYS.INTL('11/01/2021', '11/30/2021', '1110111')).to.equal(4)
+    expect(dateTime.NETWORKDAYS.INTL(44562, 44580)).to.equal(13)
+    expect(dateTime.NETWORKDAYS.INTL(44562, 44656)).to.equal(67)
+    expect(dateTime.NETWORKDAYS.INTL(36526, 44656)).to.equal(5807)
+    expect(dateTime.NETWORKDAYS.INTL(44656, 36526)).to.equal(-5807)
+
+    expect(dateTime.NETWORKDAYS.INTL(44565, 44568)).to.equal(4)
+    expect(dateTime.NETWORKDAYS.INTL(44565, 44568, 1, 44566)).to.equal(3)
+
+    // expect(dateTime.NETWORKDAYS.INTL(null, 1)).to.equal(0)
+    // expect(dateTime.NETWORKDAYS.INTL(true, 0)).to.equal(0)
+
+    expect(dateTime.NETWORKDAYS.INTL('2000-01-31', '2022-04-05', 3)).to.equal(5785)
+    expect(dateTime.NETWORKDAYS.INTL('2000-01-31', '2022-04-05', '1900-01-00')).to.equal(error.value)
+
+    expect(dateTime.NETWORKDAYS.INTL(36556, '44656', 3)).to.equal(5785)
+    expect(dateTime.NETWORKDAYS.INTL('43435', 44656)).to.equal(dateTime.NETWORKDAYS.INTL(43435, 44656, true))
+    expect(dateTime.NETWORKDAYS.INTL(44656, 36616, 12)).to.equal(-6892)
+
+    expect(dateTime.NETWORKDAYS.INTL(61, 44656, '0100011')).to.equal(25483)
+    expect(dateTime.NETWORKDAYS.INTL('2022-01-03', '2022-01-31', '0111111')).to.equal(5)
+    expect(dateTime.NETWORKDAYS.INTL(61, 44656, '0100011', [62, 63, 64])).to.equal(25482)
+    expect(dateTime.NETWORKDAYS.INTL(61, 44656, '0100011', [62, 63, 64])).to.equal(25482)
+
+    expect(dateTime.NETWORKDAYS.INTL(61, 44656, '1111111')).to.equal(0)
+
+    expect(dateTime.NETWORKDAYS.INTL(33, 44656, '010001')).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS.INTL(33, 44656, '0100210')).to.equal(error.value)
+
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, null)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, false)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, 0)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, -5)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, 8)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, 10)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS.INTL(36556, 44656, 18)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.NETWORKDAYS.INTL(err, 1)).to.equal(err)
+      expect(dateTime.NETWORKDAYS.INTL(1, err)).to.equal(err)
+      expect(dateTime.NETWORKDAYS.INTL(1, 1, err)).to.equal(error.value)
+      expect(dateTime.NETWORKDAYS.INTL(1, 1, 1, err)).to.equal(err)
+    })
+
+    expect(dateTime.NETWORKDAYS.INTL()).to.equal(error.na)
+    expect(dateTime.NETWORKDAYS.INTL(1)).to.equal(error.na)
+    expect(dateTime.NETWORKDAYS.INTL(1, 1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('NOW', () => {
