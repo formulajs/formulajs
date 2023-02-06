@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 
 import * as dateTime from '../src/date-time.js'
+import { dateToSerialNumber } from '../src/utils/common.js'
 import * as error from '../src/utils/error.js'
 
 describe('Date & Time', () => {
@@ -571,7 +572,13 @@ describe('Date & Time', () => {
   })
 
   it('NOW', () => {
-    expect(dateTime.NOW()).to.instanceof(Date)
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+
+    expect(dateTime.NOW()).to.approximately(dateToSerialNumber(now), 1e-5)
+
+    expect(dateTime.NOW('text')).to.equal(error.na)
+    expect(dateTime.NOW(1)).to.equal(error.na)
   })
 
   it('SECOND', () => {

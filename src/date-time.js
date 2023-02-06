@@ -869,7 +869,14 @@ NETWORKDAYS.INTL = function (start_date, end_date, weekend, holidays) {
  * @returns
  */
 export function NOW() {
-  return new Date()
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
+  const now = new Date()
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+
+  return utils.dateToSerialNumber(now)
 }
 
 /**
