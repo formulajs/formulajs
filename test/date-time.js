@@ -779,9 +779,93 @@ describe('Date & Time', () => {
   })
 
   it('WORKDAY.INTL', () => {
-    expect(dateTime.WORKDAY.INTL('1/1/1900', 1).getDate()).to.equal(2)
-    expect(dateTime.WORKDAY.INTL('1/1/1905', 1, 2).getDate()).to.equal(3)
-    expect(dateTime.WORKDAY.INTL('1/1/1900', 1, 'a')).to.equal(error.value)
+    expect(dateTime.WORKDAY.INTL(44692, 30)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 1)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 2)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 3)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 4)).to.equal(44732)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 5)).to.equal(44733)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 6)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 7)).to.equal(44734)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 8)).to.equal(error.num)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 11)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 12)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 13)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 14)).to.equal(44726)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 15)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 16)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 17)).to.equal(44727)
+    expect(dateTime.WORKDAY.INTL(44692, 30, 18)).to.equal(error.num)
+
+    expect(dateTime.WORKDAY.INTL('2022-05-11', '1900-01-30', 14)).to.equal(44726)
+    expect(dateTime.WORKDAY.INTL('2022-05-11', '1900-01-30', '1900-01-14')).to.equal(error.value)
+
+    expect(dateTime.WORKDAY.INTL(44692, 39)).to.equal(44747)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 1)).to.equal(44747)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 2)).to.equal(44747)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 3)).to.equal(44745)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 4)).to.equal(44745)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 5)).to.equal(44746)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 6)).to.equal(44747)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 7)).to.equal(44747)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 8)).to.equal(error.num)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 11)).to.equal(44737)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 12)).to.equal(44737)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 13)).to.equal(44737)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 14)).to.equal(44737)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 15)).to.equal(44738)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 16)).to.equal(44738)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 17)).to.equal(44738)
+    expect(dateTime.WORKDAY.INTL(44692, 39, 18)).to.equal(error.num)
+
+    expect(dateTime.WORKDAY.INTL(39748, 0, 5)).to.equal(39748)
+    expect(dateTime.WORKDAY.INTL(39748, 3, 5)).to.equal(39753)
+
+    expect(
+      dateTime.WORKDAY.INTL(38397, 19, 13, [
+        [38347, 38380],
+        [38398, 38413],
+        [38347, 38380],
+        [38398, 38413]
+      ])
+    ).to.equal(38421)
+    expect(dateTime.WORKDAY.INTL(38397, -26, 13, [38347, 38380])).to.equal(38366)
+
+    expect(dateTime.WORKDAY.INTL(44692, 30, true)).to.equal(dateTime.WORKDAY.INTL(44692, 30, 1))
+
+    expect(dateTime.WORKDAY.INTL(44692, -30, 17)).to.equal(44657)
+    expect(dateTime.WORKDAY.INTL(44692, -39, 17)).to.equal(44647)
+
+    expect(dateTime.WORKDAY.INTL(44692, 4, '1111110')).to.equal(44717)
+    expect(dateTime.WORKDAY.INTL(44692, 39, '1111111')).to.equal(error.value)
+    expect(dateTime.WORKDAY.INTL(44692, 39, '111111')).to.equal(error.value)
+
+    expect(dateTime.WORKDAY.INTL(-1, 30, 17)).to.equal(error.num)
+
+    // expect(dateTime.WORKDAY.INTL(null, 26, 13)).to.equal(30)
+    expect(dateTime.WORKDAY.INTL('44692', -39, 17)).to.equal(44647)
+
+    expect(dateTime.WORKDAY.INTL(400, 26, true)).to.equal(436)
+    expect(dateTime.WORKDAY.INTL(400, true, 1)).to.equal(error.value)
+
+    expect(dateTime.WORKDAY.INTL(44692, 30, 0)).to.equal(error.num)
+    expect(dateTime.WORKDAY.INTL(44692, 30, false)).to.equal(error.num)
+
+    expect(dateTime.WORKDAY.INTL(44692, 1, 'a')).to.equal(error.value)
+    expect(dateTime.WORKDAY.INTL(44692, 1, '1')).to.equal(error.value)
+    expect(dateTime.WORKDAY.INTL(44692, 1, null)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.WORKDAY.INTL(err, 1)).to.equal(err)
+      expect(dateTime.WORKDAY.INTL(1, err)).to.equal(err)
+      expect(dateTime.WORKDAY.INTL(1, 1, err)).to.equal(err)
+      expect(dateTime.WORKDAY.INTL(1, 1, 1, err)).to.equal(err)
+      expect(dateTime.WORKDAY.INTL(1, 1, 1, [err])).to.equal(err)
+    })
+
+    expect(dateTime.WORKDAY.INTL()).to.equal(error.na)
+    expect(dateTime.WORKDAY.INTL(44692)).to.equal(error.na)
+    expect(dateTime.WORKDAY.INTL(44692, 1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('YEAR', () => {

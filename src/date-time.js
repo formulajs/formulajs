@@ -24,26 +24,6 @@ const WEEK_TYPES = {
   16: [2, 3, 4, 5, 6, 7, 1],
   17: [1, 2, 3, 4, 5, 6, 7]
 }
-const WEEKEND_TYPES = [
-  [],
-  [6, 0],
-  [0, 1],
-  [1, 2],
-  [2, 3],
-  [3, 4],
-  [4, 5],
-  [5, 6],
-  undefined,
-  undefined,
-  undefined,
-  [0, 0],
-  [1, 1],
-  [2, 2],
-  [3, 3],
-  [4, 4],
-  [5, 5],
-  [6, 6]
-]
 
 const weekendPerCode = {
   1: [6, 0],
@@ -1110,76 +1090,170 @@ export function WORKDAY(start_date, days, holidays) {
  * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. Holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
  * @returns
  */
-WORKDAY.INTL = (start_date, days, weekend, holidays) => {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+WORKDAY.INTL = function (start_date, days, weekend, holidays) {
+  if (arguments.length < 2 || arguments.length > 4) {
+    return error.na
   }
 
-  days = utils.parseNumber(days)
-
-  if (days instanceof Error) {
-    return days
+  const someError = utils.anyError(start_date, days, weekend)
+  if (someError) {
+    return someError
   }
 
-  if (days < 0) {
-    return error.num
-  }
-
-  if (weekend === undefined) {
-    weekend = WEEKEND_TYPES[1]
-  } else {
-    weekend = WEEKEND_TYPES[weekend]
-  }
-
-  if (!(weekend instanceof Array)) {
+  if (typeof start_date === 'boolean') {
     return error.value
   }
 
-  if (holidays === undefined) {
-    holidays = []
-  } else if (!(holidays instanceof Array)) {
-    holidays = [holidays]
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
   }
 
-  for (let i = 0; i < holidays.length; i++) {
-    const h = utils.parseDate(holidays[i])
-
-    if (h instanceof Error) {
-      return h
-    }
-
-    holidays[i] = h
+  if (typeof days === 'boolean') {
+    return error.value
+  }
+  days = utils.getNumber(days)
+  if (typeof days !== 'number') {
+    return error.value
   }
 
-  let d = 0
+  const jsStartDate = utils.serialNumberToDate(start_date)
 
-  while (d < days) {
-    start_date.setDate(start_date.getDate() + 1)
-    const day = start_date.getDay()
+  if (weekend === undefined || weekend === true) {
+    weekend = 1
+  }
 
-    if (day === weekend[0] || day === weekend[1]) {
-      continue
+  let ignoredWeekdays
+
+  const weekendType = typeof weekend
+  if (weekendType === 'string') {
+    if (weekend.length !== 7) {
+      return error.value
     }
 
-    for (let j = 0; j < holidays.length; j++) {
-      const holiday = holidays[j]
+    weekend = weekend.split('')
 
-      if (
-        holiday.getDate() === start_date.getDate() &&
-        holiday.getMonth() === start_date.getMonth() &&
-        holiday.getFullYear() === start_date.getFullYear()
-      ) {
-        d--
-        break
+    const invalid = weekend.some((day) => day !== '0' && day !== '1') || weekend.every((day) => day === '1')
+    if (invalid) {
+      return error.value
+    }
+
+    ignoredWeekdays = []
+    for (let i = 0; i < weekend.length; i++) {
+      if (weekend[i] === '1') {
+        ignoredWeekdays.push(i)
       }
     }
 
-    d++
+    ignoredWeekdays = ignoredWeekdays.map((ignoredWeekday) => {
+      let result = ignoredWeekday + 1
+      if (result > 6) {
+        result -= 7
+      }
+
+      return result
+    })
+  } else {
+    ignoredWeekdays = weekendPerCode[weekend]
   }
 
-  return start_date
+  if (ignoredWeekdays === undefined) {
+    return error.num
+  }
+
+  let result = start_date
+
+  const workingDaysAWeek = 7 - ignoredWeekdays.length
+
+  const signal = days < 0 ? -1 : 1
+
+  let wholeWeeks = Math.trunc(days / workingDaysAWeek)
+
+  let daysRemaining = days % workingDaysAWeek
+  if (!daysRemaining) {
+    wholeWeeks -= signal
+    daysRemaining = days - wholeWeeks * workingDaysAWeek
+  }
+
+  if (wholeWeeks) {
+    result += 7 * wholeWeeks
+  }
+
+  const tempDate = new Date(jsStartDate.getTime())
+
+  while (daysRemaining !== 0) {
+    tempDate.setUTCDate(tempDate.getUTCDate() + signal)
+    result += signal
+
+    if (!ignoredWeekdays.includes(tempDate.getUTCDay())) {
+      daysRemaining -= signal
+    }
+  }
+
+  if (holidays) {
+    if (!Array.isArray(holidays)) {
+      holidays = [holidays]
+    }
+
+    holidays = holidays.flat(2)
+
+    const someError = utils.anyError(...holidays)
+    if (someError) {
+      return someError
+    }
+
+    try {
+      holidays = holidays.map((holiday) => {
+        if (holiday instanceof Error) {
+          throw holiday
+        }
+        const result = utils.getNumber(holiday)
+        if (typeof result !== 'number') {
+          throw error.value
+        }
+        if (result < 0) {
+          throw error.num
+        }
+
+        return result
+      })
+    } catch (err) {
+      return err
+    }
+
+    let relevantDate = holidays.find((holiday) => {
+      return (holiday >= start_date && holiday <= result) || (holiday >= result && holiday <= start_date)
+    })
+    while (relevantDate) {
+      const jsRelevantDate = utils.serialNumberToDate(relevantDate)
+      if (!ignoredWeekdays.includes(jsRelevantDate.getUTCDay())) {
+        var accounted = false
+        while (!accounted) {
+          tempDate.setUTCDate(tempDate.getUTCDate() + signal)
+          result += signal
+
+          if (!ignoredWeekdays.includes(tempDate.getUTCDay())) {
+            accounted = true
+          }
+        }
+      }
+
+      holidays = holidays.filter((holiday) => holiday !== relevantDate)
+
+      relevantDate = holidays.find((holiday) => {
+        return (holiday >= start_date && holiday <= result) || (holiday >= result && holiday <= start_date)
+      })
+    }
+  }
+
+  if (result < 0) {
+    return error.num
+  }
+
+  return result
 }
 
 /**
