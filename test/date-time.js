@@ -414,10 +414,38 @@ describe('Date & Time', () => {
   })
 
   it('MINUTE', () => {
-    expect(dateTime.MINUTE('1/1/1901')).to.equal(0)
-    expect(dateTime.MINUTE('1/1/1901 1:01')).to.equal(1)
-    // expect(dateTime.MINUTE('1:01')).to.equal(1);
+    expect(dateTime.MINUTE('1901-01-01')).to.equal(0)
+    expect(dateTime.MINUTE('1901-01-01 01:01 GMT')).to.equal(1)
+    expect(dateTime.MINUTE('2022-11-01 19:30 GMT')).to.equal(30)
+
+    expect(dateTime.MINUTE('20:23')).to.equal(23)
+    expect(dateTime.MINUTE('01:01')).to.equal(1)
+
+    expect(dateTime.MINUTE('1:01')).to.equal(error.value)
+
+    expect(dateTime.MINUTE(0.735)).to.equal(38)
+    expect(dateTime.MINUTE('0.735')).to.equal(38)
+
+    expect(dateTime.MINUTE(1)).to.equal(0)
+    expect(dateTime.MINUTE(0.010416667)).to.equal(15)
+
+    expect(dateTime.MINUTE(null)).to.equal(0)
+    expect(dateTime.MINUTE(true)).to.equal(0)
+    expect(dateTime.MINUTE(false)).to.equal(0)
+
+    expect(dateTime.MINUTE('-1')).to.equal(error.num)
+    expect(dateTime.MINUTE(-1)).to.equal(error.num)
+
+    expect(dateTime.MINUTE('')).to.equal(error.value)
     expect(dateTime.MINUTE('a')).to.equal(error.value)
+    expect(dateTime.MINUTE('true')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.MINUTE(err)).to.equal(err)
+    })
+
+    expect(dateTime.MINUTE()).to.equal(error.na)
+    expect(dateTime.MINUTE('1:01', '2:30')).to.equal(error.na)
   })
 
   it('MONTH', () => {
