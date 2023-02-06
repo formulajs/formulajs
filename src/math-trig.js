@@ -777,28 +777,42 @@ export function FACTDOUBLE(number) {
  * @returns
  */
 export function FLOOR(number, significance) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || significance === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
-  const anyError = utils.anyError(number, significance)
 
+  const anyError = utils.anyError(number, significance)
   if (anyError) {
     return anyError
   }
 
-  if (significance === 0) {
+  if (number === 0 && significance === 0) {
     return 0
   }
 
-  if (!(number >= 0 && significance > 0) && !(number <= 0 && significance < 0)) {
+  if (significance === 0) {
+    return error.div0
+  }
+
+  if (number >= 0 && significance < 0) {
     return error.num
   }
 
   significance = Math.abs(significance)
   const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
-  return number >= 0
-    ? ROUND(Math.floor(number / significance) * significance, precision)
-    : -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  if (number >= 0) {
+    return ROUND(Math.floor(number / significance) * significance, precision)
+  } else {
+    return -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  }
 }
 
 // TODO: Verify

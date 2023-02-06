@@ -356,17 +356,41 @@ describe('Math & Trig', () => {
   })
 
   it('FLOOR', () => {
-    expect(mathTrig.FLOOR(undefined, undefined)).to.equal(0)
-    expect(mathTrig.FLOOR(2, undefined)).to.equal(0) // different than Excel
-    expect(mathTrig.FLOOR(undefined, 2)).to.equal(0)
+    expect(mathTrig.FLOOR()).to.equal(error.na)
+    expect(mathTrig.FLOOR('')).to.equal(error.na)
+    expect(mathTrig.FLOOR('text')).to.equal(error.na)
     expect(mathTrig.FLOOR(error.na)).to.equal(error.na)
-    expect(mathTrig.FLOOR(3.7, 2)).to.equal(2)
-    expect(mathTrig.FLOOR(-2.5, -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(3.7, 2, 4)).to.equal(error.na)
+
+    expect(mathTrig.FLOOR('invalid', 0)).to.equal(error.value)
+    expect(mathTrig.FLOOR('text', 'text2')).to.equal(error.value)
+    expect(mathTrig.FLOOR('', '')).to.equal(error.value)
+    expect(mathTrig.FLOOR('', 2)).to.equal(error.value)
+    expect(mathTrig.FLOOR(3.7, '')).to.equal(error.value)
+
     expect(mathTrig.FLOOR(2.5, -2)).to.equal(error.num)
+    expect(mathTrig.FLOOR(10, -1)).to.equal(error.num)
+
+    expect(mathTrig.FLOOR(10, 0)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(2, null)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(3.7, false)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(true, false)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(0.234, 0)).to.equal(error.div0)
+
+    expect(mathTrig.FLOOR(null, null)).to.equal(0)
+    expect(mathTrig.FLOOR(null, 2)).to.equal(0)
+    expect(mathTrig.FLOOR(2, 4)).to.equal(0)
+    expect(mathTrig.FLOOR(3.7, 2)).to.equal(2)
+    expect(mathTrig.FLOOR(true, 2)).to.equal(0)
+    expect(mathTrig.FLOOR(3.7, true)).to.equal(3)
+    expect(mathTrig.FLOOR(false, 2)).to.equal(0)
+    expect(mathTrig.FLOOR('-2.5', '-2')).to.equal(-2)
+    expect(mathTrig.FLOOR(-2.5, '-2')).to.equal(-2)
+    expect(mathTrig.FLOOR('-2.5', -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(-2.5, -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(-5.4, 1)).to.equal(-6)
     expect(mathTrig.FLOOR(1.58, 0.1)).to.approximately(1.5, 1e-9)
     expect(mathTrig.FLOOR(0.234, 0.01)).to.approximately(0.23, 1e-9)
-    expect(mathTrig.FLOOR(0.234, 0)).to.equal(0)
-    expect(mathTrig.FLOOR('invalid', 0)).to.equal(error.value)
   })
 
   it('FLOOR.PRECISE', () => {
