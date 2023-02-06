@@ -1351,9 +1351,24 @@ describe('Lookup Reference', () => {
 
   it('VLOOKUP', () => {
     expect(lookup.VLOOKUP()).to.equal(error.na)
+    expect(lookup.VLOOKUP('')).to.equal(error.na)
     expect(lookup.VLOOKUP(1)).to.equal(error.na)
     expect(lookup.VLOOKUP(1, [[1, 2]])).to.equal(error.na)
-    expect(lookup.VLOOKUP(1, [[1, 2]], 2)).to.equal(2)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        2,
+        false,
+        4
+      )
+    ).to.equal(error.na)
+
+    expect(lookup.VLOOKUP(1, [[2, 1]], 2)).to.equal(error.na)
+
     expect(lookup.VLOOKUP(1, [[1, 2]], 2, false)).to.equal(2)
     expect(lookup.VLOOKUP(1, [[1, 2]], 2, true)).to.equal(2)
     expect(
@@ -1367,6 +1382,7 @@ describe('Lookup Reference', () => {
         true
       )
     ).to.equal('2')
+
     expect(
       lookup.VLOOKUP(
         5,
@@ -1390,6 +1406,18 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.VLOOKUP(
+        5,
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        2,
+        true
+      )
+    ).to.equal(4)
+
+    expect(
+      lookup.VLOOKUP(
         2,
         [
           [1, 'A'],
@@ -1401,17 +1429,6 @@ describe('Lookup Reference', () => {
         2
       )
     ).to.equal('B')
-    expect(
-      lookup.VLOOKUP(
-        5,
-        [
-          [1, 2],
-          [3, 4]
-        ],
-        2,
-        true
-      )
-    ).to.equal(4)
     expect(
       lookup.VLOOKUP(
         1.1,
@@ -1580,6 +1597,218 @@ describe('Lookup Reference', () => {
         false
       )
     ).to.equal(error.na)
+    // expect(lookup
+    //   .VLOOKUP(
+    //     [0, 1, 2, 1],
+    //     3,
+    //     2,
+    //     4
+    //   )
+    //   ).to.equal(error.ref)
+    expect(
+      lookup.VLOOKUP(
+        false,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [2, 'C'],
+          [1, 'D']
+        ],
+        true,
+        false
+      )
+    ).to.equal(error.na)
+
+    expect(
+      lookup.VLOOKUP(
+        2,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'e']
+        ],
+        2
+      )
+    ).to.equal('B')
+
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        '2'
+      )
+    ).to.equal('B')
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        true
+      )
+    ).to.equal(1)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        0
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        false
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        -1
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        ''
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        'text'
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        error.div0
+      )
+    ).to.equal(error.value)
+
+    expect(
+      lookup.VLOOKUP(
+        1,
+        [
+          [0, 'A'],
+          [1, 'B']
+        ],
+        2,
+        error.calc
+      )
+    ).to.equal(error.calc)
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        'tRuE'
+      )
+    ).to.equal('B')
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        'fALse'
+      )
+    ).to.equal('E')
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        1
+      )
+    ).to.equal('B')
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        -5
+      )
+    ).to.equal('B')
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        0
+      )
+    ).to.equal('E')
+    expect(
+      lookup.VLOOKUP(
+        3,
+        [
+          [0, 'A'],
+          [1, 'B'],
+          [4, 'C'],
+          [2, 'D'],
+          [3, 'E']
+        ],
+        2,
+        '1'
+      )
+    ).to.equal(error.value)
   })
 
   it('HLOOKUP', () => {

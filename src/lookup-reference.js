@@ -535,34 +535,48 @@ export function UNIQUE() {
  * @param {*} range_lookup Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
  * @returns
  */
-export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) {
-  if (!table_array || !col_index_num) {
+export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup = true) {
+  if (arguments.length < 3 || arguments.length > 4) {
     return error.na
   }
 
-  range_lookup = !(range_lookup === 0 || range_lookup === false)
-  let result = error.na
-  const isNumberLookup = typeof lookup_value === 'number'
-  let exactMatchOnly = false
+  if (!table_array) {
+    return error.na
+  }
 
-  for (let i = 0; i < table_array.length; i++) {
-    const row = table_array[i]
+  col_index_num = utils.getNumber(col_index_num)
+  if (typeof col_index_num !== 'number' || col_index_num < 1) {
+    return error.value
+  }
 
-    if (row[0] === lookup_value) {
-      result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
-      break
-    } else if (
-      !exactMatchOnly &&
-      ((isNumberLookup && range_lookup && row[0] <= lookup_value) ||
-        (range_lookup && typeof row[0] === 'string' && row[0].localeCompare(lookup_value) < 0))
-    ) {
-      result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
+  if (col_index_num > table_array[0].length) {
+    return error.ref
+  }
+
+  if (range_lookup instanceof Error) {
+    return range_lookup
+  }
+
+  range_lookup = utils.parseBool(range_lookup)
+  if (typeof range_lookup !== 'boolean') {
+    return error.value
+  }
+
+  if (range_lookup) {
+    const rowIndex = approximateBinarySearch(lookup_value, utils.flatten(table_array.map((row) => row[0])))
+
+    if (rowIndex === null) {
+      return error.na
     }
 
-    if (isNumberLookup && row[0] > lookup_value) {
-      exactMatchOnly = true
+    return table_array[rowIndex][col_index_num - 1]
+  }
+
+  for (let i = 0; i < table_array.length; i++) {
+    if (table_array[i][0] === lookup_value) {
+      return table_array[i][col_index_num - 1]
     }
   }
 
-  return result
+  return error.na
 }
