@@ -723,11 +723,49 @@ describe('Date & Time', () => {
   })
 
   it('WEEKNUM', () => {
-    expect(dateTime.WEEKNUM('1/1/1900')).to.equal(1)
-    expect(dateTime.WEEKNUM('2/1/1900')).to.equal(5)
-    expect(dateTime.WEEKNUM('2/1/1909', 2)).to.equal(6)
-    expect(dateTime.WEEKNUM('1/1/1901', 21)).to.equal(1)
+    // expect(dateTime.WEEKNUM(4)).to.equal(1)
+    // expect(dateTime.WEEKNUM('40')).to.equal(6)
+    expect(dateTime.WEEKNUM(365)).to.equal(53)
+
+    expect(dateTime.WEEKNUM('2015-01-04', '1900-01-02')).to.equal(1)
+
+    expect(dateTime.WEEKNUM(42008)).to.equal(2)
+    expect(dateTime.WEEKNUM(42008, 0)).to.equal(error.num)
+    expect(dateTime.WEEKNUM(42008, 1)).to.equal(2)
+    expect(dateTime.WEEKNUM(42008, 2)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 3)).to.equal(error.num)
+    expect(dateTime.WEEKNUM(42008, 11)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 12)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 13)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 14)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 15)).to.equal(2)
+    expect(dateTime.WEEKNUM(42008, 16)).to.equal(2)
+    expect(dateTime.WEEKNUM(42008, 17)).to.equal(2)
+    expect(dateTime.WEEKNUM(42008, 18)).to.equal(error.num)
+    expect(dateTime.WEEKNUM(42008, 21)).to.equal(1)
+    expect(dateTime.WEEKNUM(42008, 22)).to.equal(error.num)
+
+    // expect(dateTime.WEEKNUM(null)).to.equal(0)
+
+    // expect(dateTime.WEEKNUM(true)).to.equal(error.value)
+    // expect(dateTime.WEEKNUM(false)).to.equal(error.value)
+
+    expect(dateTime.WEEKNUM(-1)).to.equal(error.num)
+    expect(dateTime.WEEKNUM('-10')).to.equal(error.num)
+
+    expect(dateTime.WEEKNUM('')).to.equal(error.value)
     expect(dateTime.WEEKNUM('a')).to.equal(error.value)
+    expect(dateTime.WEEKNUM(1, 'a')).to.equal(error.value)
+    expect(dateTime.WEEKNUM(1, '')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.WEEKNUM(err)).to.equal(err)
+      expect(dateTime.WEEKNUM(err, 1)).to.equal(err)
+      expect(dateTime.WEEKNUM(1, err)).to.equal(err)
+    })
+
+    expect(dateTime.WEEKNUM()).to.equal(error.na)
+    expect(dateTime.WEEKNUM(1, 1, true)).to.equal(error.na)
   })
 
   it('WORKDAY', () => {

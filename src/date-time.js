@@ -1034,26 +1034,55 @@ export function WEEKDAY(serial_number, return_type) {
  * @returns
  */
 export function WEEKNUM(serial_number, return_type) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
 
-  if (serial_number instanceof Error) {
-    return serial_number
+  const someError = utils.anyError(serial_number, return_type)
+  if (someError) {
+    return someError
+  }
+
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
   }
 
   if (return_type === undefined) {
     return_type = 1
   }
 
+  return_type = utils.getNumber(return_type)
+  if (typeof return_type !== 'number') {
+    return error.value
+  }
   if (return_type === 21) {
     return ISOWEEKNUM(serial_number)
   }
 
-  const week_start = WEEK_STARTS[return_type]
-  let jan = new Date(serial_number.getFullYear(), 0, 1)
-  const inc = jan.getDay() < week_start ? 1 : 0
-  jan -= Math.abs(jan.getDay() - week_start) * 24 * 60 * 60 * 1000
+  const weekStart = WEEK_STARTS[return_type]
+  if (weekStart === undefined) {
+    return error.num
+  }
 
-  return Math.floor((serial_number - jan) / (1000 * 60 * 60 * 24) / 7 + 1) + inc
+  const jsDate = utils.serialNumberToDate(serial_number)
+
+  const jsFirstDayOfTheYear = new Date(Date.UTC(jsDate.getUTCFullYear(), 0, 1))
+  const firstDayOfTheYear = utils.dateToSerialNumber(jsFirstDayOfTheYear)
+
+  let daysDif = jsFirstDayOfTheYear.getUTCDay() - weekStart
+  if (daysDif < 0) {
+    daysDif += 7
+  }
+
+  const dayOfTheYear = serial_number - firstDayOfTheYear + 1
+
+  const week = Math.trunc((dayOfTheYear - 1 + daysDif) / 7) + 1
+
+  return week
 }
 
 /**
