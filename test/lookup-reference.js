@@ -5,12 +5,55 @@ import * as lookup from '../src/lookup-reference.js'
 
 describe('Lookup Reference', () => {
   it('CHOOSE', () => {
-    expect(lookup.CHOOSE()).to.equal(error.na)
-    expect(lookup.CHOOSE(1)).to.equal(error.na)
     expect(lookup.CHOOSE(1, 'jima')).to.equal('jima')
     expect(lookup.CHOOSE(3, 'jima', 'jimb', 'jimc')).to.equal('jimc')
+
+    expect(lookup.CHOOSE(1.5, 'jima')).to.equal('jima')
+    expect(lookup.CHOOSE(3.7, 'jima', 'jimb', 'jimc')).to.equal('jimc')
+
+    expect(lookup.CHOOSE(true, 'jima')).to.equal('jima')
+    expect(lookup.CHOOSE(false, 'jima')).to.equal(error.value)
+
+    expect(lookup.CHOOSE('true', 'jima')).to.equal(error.value)
+    expect(lookup.CHOOSE('false', 'jima')).to.equal(error.value)
+
+    expect(lookup.CHOOSE('jima', 'jimb', 'jimc')).to.equal(error.value)
+    expect(lookup.CHOOSE('', 'jima', 'jimb', 'jimc')).to.equal(error.value)
+
+    expect(lookup.CHOOSE('   1   ', 'jima')).to.equal('jima')
+    expect(lookup.CHOOSE('   3    ', 'jima', 'jimb', 'jimc')).to.equal('jimc')
+    expect(lookup.CHOOSE('   1.48   ', 'jima')).to.equal('jima')
+    expect(lookup.CHOOSE('   3.9    ', 'jima', 'jimb', 'jimc')).to.equal('jimc')
+
+    expect(lookup.CHOOSE(-2, 'jima')).to.equal(error.value)
+    expect(lookup.CHOOSE(0, 'jima')).to.equal(error.value)
     expect(lookup.CHOOSE(2, 'jima')).to.equal(error.value)
     expect(lookup.CHOOSE(255, 'jima')).to.equal(error.value)
+
+    expect(lookup.CHOOSE()).to.equal(error.na)
+    expect(lookup.CHOOSE(1)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(lookup.CHOOSE(err, 'first')).to.equal(err)
+    })
+
+    expect(lookup.CHOOSE([1, true, false], 'jima')).to.eql(['jima', 'jima', error.value])
+    expect(lookup.CHOOSE([[0], [error.div0], [2]], 'jima', 'jimb')).to.eql([[error.value], [error.div0], ['jimb']])
+    expect(
+      lookup.CHOOSE(
+        [
+          [1, true],
+          [false, 2],
+          ['text', error.name]
+        ],
+        'jima',
+        'jimb'
+      )
+    ).to.eql([
+      ['jima', 'jima'],
+      [error.value, 'jimb'],
+      [error.value, error.name]
+    ])
   })
 
   it('COLUMN', () => {

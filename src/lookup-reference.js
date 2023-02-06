@@ -20,7 +20,31 @@ export function CHOOSE() {
     return error.na
   }
 
-  const index = arguments[0]
+  let index = arguments[0]
+
+  if (Array.isArray(index)) {
+    const options = Array.from(arguments).slice(1)
+
+    return index.map((item) => CHOOSE(item, ...options))
+  }
+
+  if (Object.values(error).includes(index)) {
+    return index
+  }
+
+  if (typeof index === 'string') {
+    index = index.trim()
+
+    if (!utils.validNumber.test(index)) {
+      return error.value
+    }
+
+    index = parseFloat(index)
+  }
+
+  if (!Number.isInteger(index)) {
+    index = Math.trunc(index)
+  }
 
   if (index < 1 || index > 254) {
     return error.value
