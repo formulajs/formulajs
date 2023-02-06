@@ -449,9 +449,31 @@ describe('Date & Time', () => {
   })
 
   it('MONTH', () => {
-    expect(dateTime.MONTH('1/1/1900')).to.equal(1)
-    expect(dateTime.MONTH('12/1/1900')).to.equal(12)
+    expect(dateTime.MONTH(10)).to.equal(1)
+    expect(dateTime.MONTH(80)).to.equal(3)
+
+    expect(dateTime.MONTH('2017-04-11')).to.equal(4)
+
+    expect(dateTime.MONTH(null)).to.equal(1)
+
+    expect(dateTime.MONTH(true)).to.equal(1)
+    expect(dateTime.MONTH(false)).to.equal(1)
+
+    expect(dateTime.MONTH('365')).to.equal(12)
+    expect(dateTime.MONTH('400')).to.equal(2)
+
     expect(dateTime.MONTH('a')).to.equal(error.value)
+    expect(dateTime.MONTH('true')).to.equal(error.value)
+    expect(dateTime.MONTH('')).to.equal(error.value)
+
+    expect(dateTime.MONTH(-4)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.MONTH(err)).to.equal(err)
+    })
+
+    expect(dateTime.MONTH()).to.equal(error.na)
+    expect(dateTime.MONTH(1, 1)).to.equal(error.na)
   })
 
   it('NETWORKDAYS', () => {

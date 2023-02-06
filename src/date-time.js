@@ -642,13 +642,28 @@ export function MINUTE(serial_number) {
  * @returns
  */
 export function MONTH(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getMonth() + 1
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+  if (serial_number === 0) {
+    return 1
+  }
+
+  serial_number = utils.serialNumberToDate(serial_number)
+
+  return serial_number.getUTCMonth() + 1
 }
 
 /**
