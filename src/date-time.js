@@ -1294,11 +1294,6 @@ function isLeapYear(year) {
   return new Date(year, 1, 29).getMonth() === 1
 }
 
-// TODO : Use DAYS ?
-function daysBetween(start_date, end_date) {
-  return Math.ceil((end_date - start_date) / 1000 / 60 / 60 / 24)
-}
-
 /**
  * Returns the year fraction representing the number of whole days between start_date and end_date.
  *
@@ -1310,43 +1305,67 @@ function daysBetween(start_date, end_date) {
  * @returns
  */
 export function YEARFRAC(start_date, end_date, basis) {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  end_date = utils.parseDate(end_date)
-
-  if (end_date instanceof Error) {
-    return end_date
+  const someError = utils.anyError(start_date, end_date, basis)
+  if (someError) {
+    return someError
   }
 
-  basis = basis || 0
-  let sd = start_date.getDate()
-  const sm = start_date.getMonth() + 1
-  const sy = start_date.getFullYear()
-  let ed = end_date.getDate()
-  const em = end_date.getMonth() + 1
-  const ey = end_date.getFullYear()
+  if (typeof start_date === 'boolean' || typeof end_date === 'boolean' || typeof basis === 'boolean') {
+    return error.value
+  }
+
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
+
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0) {
+    return error.num
+  }
+
+  if (start_date > end_date) {
+    const temp = end_date
+    end_date = start_date
+    start_date = temp
+  }
+
+  const jsStartDate = utils.serialNumberToDate(start_date)
+  const jsEndDate = utils.serialNumberToDate(end_date)
+  if (basis == undefined || basis == null) {
+    basis = 0
+  }
+  basis = utils.getNumber(basis)
+  if (typeof basis !== 'number') {
+    return error.value
+  }
 
   switch (basis) {
     case 0:
       // US (NASD) 30/360
-      if (sd === 31 && ed === 31) {
-        sd = 30
-        ed = 30
-      } else if (sd === 31) {
-        sd = 30
-      } else if (sd === 30 && ed === 31) {
-        ed = 30
-      }
 
-      return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
+      return DAYS360(start_date, end_date) / 360
     case 1: {
       // Actual/actual
+      let sd = jsStartDate.getUTCDate()
+      const sm = jsStartDate.getUTCMonth() + 1
+      const sy = jsStartDate.getUTCFullYear()
+      let ed = jsEndDate.getUTCDate()
+      const em = jsEndDate.getUTCMonth() + 1
+      const ey = jsEndDate.getUTCFullYear()
+
       const feb29Between = (date1, date2) => {
-        const year1 = date1.getFullYear()
+        const year1 = date1.getUTCFullYear()
         const mar1year1 = new Date(year1, 2, 1)
 
         if (isLeapYear(year1) && date1 < mar1year1 && date2 >= mar1year1) {
@@ -1359,34 +1378,35 @@ export function YEARFRAC(start_date, end_date, basis) {
         return isLeapYear(year2) && date2 >= mar1year2 && date1 < mar1year2
       }
 
-      let ylength = 365
-
       if (sy === ey || (sy + 1 === ey && (sm > em || (sm === em && sd >= ed)))) {
-        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 1 && ed === 29)) {
+        let ylength = 365
+        if ((sy === ey && isLeapYear(sy)) || feb29Between(jsStartDate, jsEndDate) || (em === 1 && ed === 29)) {
           ylength = 366
         }
 
-        return daysBetween(start_date, end_date) / ylength
+        return (end_date - start_date) / ylength
       }
 
       const years = ey - sy + 1
-      const days = (new Date(ey + 1, 0, 1) - new Date(sy, 0, 1)) / 1000 / 60 / 60 / 24
+      const days =
+        utils.dateToSerialNumber(new Date(Date.UTC(ey + 1, 0, 1))) -
+        utils.dateToSerialNumber(new Date(Date.UTC(sy, 0, 1)))
       const average = days / years
 
-      return daysBetween(start_date, end_date) / average
+      return (end_date - start_date) / average
     }
 
     case 2:
       // Actual/360
 
-      return daysBetween(start_date, end_date) / 360
+      return (end_date - start_date) / 360
     case 3:
       // Actual/365
 
-      return daysBetween(start_date, end_date) / 365
+      return (end_date - start_date) / 365
     case 4:
       // European 30/360
 
-      return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
+      return DAYS360(start_date, end_date, true) / 360
   }
 }

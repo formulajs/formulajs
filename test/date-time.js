@@ -917,20 +917,52 @@ describe('Date & Time', () => {
   })
 
   it('YEARFRAC', () => {
-    expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900')).to.approximately(0.002777777777777778, 1e-3)
-    expect(dateTime.YEARFRAC('1/31/1900', '3/31/1900', 0)).to.approximately(0.16666666666666666, 1e-3)
-    expect(dateTime.YEARFRAC('1/31/1900', '2/1/1900', 0)).to.approximately(0.002777777777777778, 1e-3)
-    expect(dateTime.YEARFRAC('1/30/1900', '3/31/1900', 0)).to.approximately(0.16666666666666666, 1e-3)
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02')).to.approximately(0.002777778, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-31', '1900-03-31', 0)).to.approximately(0.166666667, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-31', '1900-02-01', 0)).to.approximately(0.002777778, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-30', '1900-03-31', 0)).to.approximately(0.166666667, 1e-5)
 
-    expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 1)).to.approximately(0.0027397260273972603, 1e-3)
-    expect(dateTime.YEARFRAC('1/1/1904', '1/1/1905', 1)).to.equal(1)
-    expect(dateTime.YEARFRAC('5/1/1903', '5/1/1904', 1)).to.equal(1)
-    expect(dateTime.YEARFRAC('1/1/1904', '1/2/1904', 1)).to.approximately(0.00273224043715847, 1e-3)
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02', 1)).to.approximately(0.002739726, 1e-5)
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', 1)).to.equal(1)
 
-    expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 2)).to.approximately(0.002777777777777778, 1e-3)
-    expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 3)).to.approximately(0.0027397260273972603, 1e-3)
-    expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 4)).to.approximately(0.002777777777777778, 1e-3)
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', '0')).to.equal(1)
+
+    expect(dateTime.YEARFRAC('2012-02-02', '2012-03-30', 0)).to.approximately(0.161111111, 1e-5)
+    expect(dateTime.YEARFRAC('2012-02-02', '2012-03-30', 1)).to.approximately(0.155737705, 1e-5)
+
+    expect(dateTime.YEARFRAC('1903-05-01', '1904-05-01', 1)).to.equal(1)
+    expect(dateTime.YEARFRAC('1904-01-01', '1904-01-02', 1)).to.approximately(0.00273224, 1e-5)
+
+    expect(dateTime.YEARFRAC(null, '2022-01-01')).to.approximately(122.0027778, 1e-5)
+    expect(dateTime.YEARFRAC('2022-01-01', null)).to.approximately(122.0027778, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02', null)).to.approximately(0.002777778, 1e-5)
+
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02', 2)).to.approximately(0.002777778, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02', 3)).to.approximately(0.002739726, 1e-5)
+    expect(dateTime.YEARFRAC('1900-01-01', '1900-01-02', 4)).to.approximately(0.002777778, 1e-5)
+
+    expect(dateTime.YEARFRAC('2000-02-29', '2005-03-12', 1)).to.approximately(5.031021898, 1e-5)
+    expect(dateTime.YEARFRAC('2005-03-12', '2000-02-29', 1)).to.approximately(5.031021898, 1e-5)
+
+    expect(dateTime.YEARFRAC('2021-01-03', '2022-05-04', 1)).to.approximately(1.331506849, 1e-5)
+    expect(dateTime.YEARFRAC('2019-02-02', '2022-01-03', 2)).to.approximately(2.961111111, 1e-5)
+
     expect(dateTime.YEARFRAC('a', '1/2/1900')).to.equal(error.value)
     expect(dateTime.YEARFRAC('1/1/1900', 'a')).to.equal(error.value)
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', 'text')).to.equal(error.value)
+
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', true)).to.equal(error.value)
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', false)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.YEARFRAC(err, '1900-03-31', 0)).to.equal(err)
+      expect(dateTime.YEARFRAC('1900-01-31', err, 0)).to.equal(err)
+      expect(dateTime.YEARFRAC('1900-01-31', '1900-03-31', err)).to.equal(err)
+    })
+
+    expect(dateTime.YEARFRAC()).to.equal(error.na)
+    expect(dateTime.YEARFRAC('1900-01-01')).to.equal(error.na)
+    expect(dateTime.YEARFRAC(2)).to.equal(error.na)
+    expect(dateTime.YEARFRAC('1904-01-01', '1905-01-01', true, 2)).to.equal(error.na)
   })
 })
