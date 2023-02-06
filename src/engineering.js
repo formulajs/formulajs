@@ -451,6 +451,14 @@ export function COMPLEX(real_num, i_num, suffix) {
  * @returns
  */
 export function CONVERT(number, from_unit, to_unit) {
+  if (arguments.length !== 3 || from_unit === null || to_unit === null) {
+    return error.na
+  }
+
+  if (number === '' || typeof number === 'boolean' || typeof from_unit === 'boolean' || typeof to_unit === 'boolean') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
 
   if (number instanceof Error) {
@@ -458,154 +466,168 @@ export function CONVERT(number, from_unit, to_unit) {
   }
 
   // List of units supported by CONVERT and units defined by the International System of Units
-  // [Name, Symbol, Alternate symbols, Quantity, ISU, CONVERT, Conversion ratio]
+  // [Symbols, Group, Get from base unit, Translate to base unit]
   const units = [
-    ['a.u. of action', '?', null, 'action', false, false, 1.05457168181818e-34],
-    ['a.u. of charge', 'e', null, 'electric_charge', false, false, 1.60217653141414e-19],
-    ['a.u. of energy', 'Eh', null, 'energy', false, false, 4.35974417757576e-18],
-    ['a.u. of length', 'a?', null, 'length', false, false, 5.29177210818182e-11],
-    ['a.u. of mass', 'm?', null, 'mass', false, false, 9.10938261616162e-31],
-    ['a.u. of time', '?/Eh', null, 'time', false, false, 2.41888432650516e-17],
-    ['admiralty knot', 'admkn', null, 'speed', false, true, 0.514773333],
-    ['ampere', 'A', null, 'electric_current', true, false, 1],
-    ['ampere per meter', 'A/m', null, 'magnetic_field_intensity', true, false, 1],
-    ['ångström', 'Å', ['ang'], 'length', false, true, 1e-10],
-    ['are', 'ar', null, 'area', false, true, 100],
-    ['astronomical unit', 'ua', null, 'length', false, false, 1.49597870691667e-11],
-    ['bar', 'bar', null, 'pressure', false, false, 100000],
-    ['barn', 'b', null, 'area', false, false, 1e-28],
-    ['becquerel', 'Bq', null, 'radioactivity', true, false, 1],
-    ['bit', 'bit', ['b'], 'information', false, true, 1],
-    ['btu', 'BTU', ['btu'], 'energy', false, true, 1055.05585262],
-    ['byte', 'byte', null, 'information', false, true, 8],
-    ['candela', 'cd', null, 'luminous_intensity', true, false, 1],
-    ['candela per square metre', 'cd/m?', null, 'luminance', true, false, 1],
-    ['coulomb', 'C', null, 'electric_charge', true, false, 1],
-    ['cubic ångström', 'ang3', ['ang^3'], 'volume', false, true, 1e-30],
-    ['cubic foot', 'ft3', ['ft^3'], 'volume', false, true, 0.028316846592],
-    ['cubic inch', 'in3', ['in^3'], 'volume', false, true, 0.000016387064],
-    ['cubic light-year', 'ly3', ['ly^3'], 'volume', false, true, 8.46786664623715e-47],
-    ['cubic metre', 'm?', null, 'volume', true, true, 1],
-    ['cubic mile', 'mi3', ['mi^3'], 'volume', false, true, 4168181825.44058],
-    ['cubic nautical mile', 'Nmi3', ['Nmi^3'], 'volume', false, true, 6352182208],
-    ['cubic Pica', 'Pica3', ['Picapt3', 'Pica^3', 'Picapt^3'], 'volume', false, true, 7.58660370370369e-8],
-    ['cubic yard', 'yd3', ['yd^3'], 'volume', false, true, 0.764554857984],
-    ['cup', 'cup', null, 'volume', false, true, 0.0002365882365],
-    ['dalton', 'Da', ['u'], 'mass', false, false, 1.66053886282828e-27],
-    ['day', 'd', ['day'], 'time', false, true, 86400],
-    ['degree', '°', null, 'angle', false, false, 0.0174532925199433],
-    ['degrees Rankine', 'Rank', null, 'temperature', false, true, 0.555555555555556],
-    ['dyne', 'dyn', ['dy'], 'force', false, true, 0.00001],
-    ['electronvolt', 'eV', ['ev'], 'energy', false, true, 1.60217656514141],
-    ['ell', 'ell', null, 'length', false, true, 1.143],
-    ['erg', 'erg', ['e'], 'energy', false, true, 1e-7],
-    ['farad', 'F', null, 'electric_capacitance', true, false, 1],
-    ['fluid ounce', 'oz', null, 'volume', false, true, 0.0000295735295625],
-    ['foot', 'ft', null, 'length', false, true, 0.3048],
-    ['foot-pound', 'flb', null, 'energy', false, true, 1.3558179483314],
-    ['gal', 'Gal', null, 'acceleration', false, false, 0.01],
-    ['gallon', 'gal', null, 'volume', false, true, 0.003785411784],
-    ['gauss', 'G', ['ga'], 'magnetic_flux_density', false, true, 1],
-    ['grain', 'grain', null, 'mass', false, true, 0.0000647989],
-    ['gram', 'g', null, 'mass', false, true, 0.001],
-    ['gray', 'Gy', null, 'absorbed_dose', true, false, 1],
-    ['gross registered ton', 'GRT', ['regton'], 'volume', false, true, 2.8316846592],
-    ['hectare', 'ha', null, 'area', false, true, 10000],
-    ['henry', 'H', null, 'inductance', true, false, 1],
-    ['hertz', 'Hz', null, 'frequency', true, false, 1],
-    ['horsepower', 'HP', ['h'], 'power', false, true, 745.69987158227],
-    ['horsepower-hour', 'HPh', ['hh', 'hph'], 'energy', false, true, 2684519.538],
-    ['hour', 'h', ['hr'], 'time', false, true, 3600],
-    ['imperial gallon (U.K.)', 'uk_gal', null, 'volume', false, true, 0.00454609],
-    ['imperial hundredweight', 'lcwt', ['uk_cwt', 'hweight'], 'mass', false, true, 50.802345],
-    ['imperial quart (U.K)', 'uk_qt', null, 'volume', false, true, 0.0011365225],
-    ['imperial ton', 'brton', ['uk_ton', 'LTON'], 'mass', false, true, 1016.046909],
-    ['inch', 'in', null, 'length', false, true, 0.0254],
-    ['international acre', 'uk_acre', null, 'area', false, true, 4046.8564224],
-    ['IT calorie', 'cal', null, 'energy', false, true, 4.1868],
-    ['joule', 'J', null, 'energy', true, true, 1],
-    ['katal', 'kat', null, 'catalytic_activity', true, false, 1],
-    ['kelvin', 'K', ['kel'], 'temperature', true, true, 1],
-    ['kilogram', 'kg', null, 'mass', true, true, 1],
-    ['knot', 'kn', null, 'speed', false, true, 0.514444444444444],
-    ['light-year', 'ly', null, 'length', false, true, 9460730472580800],
-    ['litre', 'L', ['l', 'lt'], 'volume', false, true, 0.001],
-    ['lumen', 'lm', null, 'luminous_flux', true, false, 1],
-    ['lux', 'lx', null, 'illuminance', true, false, 1],
-    ['maxwell', 'Mx', null, 'magnetic_flux', false, false, 1e-18],
-    ['measurement ton', 'MTON', null, 'volume', false, true, 1.13267386368],
-    ['meter per hour', 'm/h', ['m/hr'], 'speed', false, true, 0.00027777777777778],
-    ['meter per second', 'm/s', ['m/sec'], 'speed', true, true, 1],
-    ['meter per second squared', 'm?s??', null, 'acceleration', true, false, 1],
-    ['parsec', 'pc', ['parsec'], 'length', false, true, 30856775814671900],
-    ['meter squared per second', 'm?/s', null, 'kinematic_viscosity', true, false, 1],
-    ['metre', 'm', null, 'length', true, true, 1],
-    ['miles per hour', 'mph', null, 'speed', false, true, 0.44704],
-    ['millimetre of mercury', 'mmHg', null, 'pressure', false, false, 133.322],
-    ['minute', '?', null, 'angle', false, false, 0.000290888208665722],
-    ['minute', 'min', ['mn'], 'time', false, true, 60],
-    ['modern teaspoon', 'tspm', null, 'volume', false, true, 0.000005],
-    ['mole', 'mol', null, 'amount_of_substance', true, false, 1],
-    ['morgen', 'Morgen', null, 'area', false, true, 2500],
-    ['n.u. of action', '?', null, 'action', false, false, 1.05457168181818e-34],
-    ['n.u. of mass', 'm?', null, 'mass', false, false, 9.10938261616162e-31],
-    ['n.u. of speed', 'c?', null, 'speed', false, false, 299792458],
-    ['n.u. of time', '?/(me?c??)', null, 'time', false, false, 1.28808866778687e-21],
-    ['nautical mile', 'M', ['Nmi'], 'length', false, true, 1852],
-    ['newton', 'N', null, 'force', true, true, 1],
-    ['œrsted', 'Oe ', null, 'magnetic_field_intensity', false, false, 79.5774715459477],
-    ['ohm', 'Ω', null, 'electric_resistance', true, false, 1],
-    ['ounce mass', 'ozm', null, 'mass', false, true, 0.028349523125],
-    ['pascal', 'Pa', null, 'pressure', true, false, 1],
-    ['pascal second', 'Pa?s', null, 'dynamic_viscosity', true, false, 1],
-    ['pferdestärke', 'PS', null, 'power', false, true, 735.49875],
-    ['phot', 'ph', null, 'illuminance', false, false, 0.0001],
-    ['pica (1/6 inch)', 'pica', null, 'length', false, true, 0.00035277777777778],
-    ['pica (1/72 inch)', 'Pica', ['Picapt'], 'length', false, true, 0.00423333333333333],
-    ['poise', 'P', null, 'dynamic_viscosity', false, false, 0.1],
-    ['pond', 'pond', null, 'force', false, true, 0.00980665],
-    ['pound force', 'lbf', null, 'force', false, true, 4.4482216152605],
-    ['pound mass', 'lbm', null, 'mass', false, true, 0.45359237],
-    ['quart', 'qt', null, 'volume', false, true, 0.000946352946],
-    ['radian', 'rad', null, 'angle', true, false, 1],
-    ['second', '?', null, 'angle', false, false, 0.00000484813681109536],
-    ['second', 's', ['sec'], 'time', true, true, 1],
-    ['short hundredweight', 'cwt', ['shweight'], 'mass', false, true, 45.359237],
-    ['siemens', 'S', null, 'electrical_conductance', true, false, 1],
-    ['sievert', 'Sv', null, 'equivalent_dose', true, false, 1],
-    ['slug', 'sg', null, 'mass', false, true, 14.59390294],
-    ['square ångström', 'ang2', ['ang^2'], 'area', false, true, 1e-20],
-    ['square foot', 'ft2', ['ft^2'], 'area', false, true, 0.09290304],
-    ['square inch', 'in2', ['in^2'], 'area', false, true, 0.00064516],
-    ['square light-year', 'ly2', ['ly^2'], 'area', false, true, 8.95054210748189e31],
-    ['square meter', 'm?', null, 'area', true, true, 1],
-    ['square mile', 'mi2', ['mi^2'], 'area', false, true, 2589988.110336],
-    ['square nautical mile', 'Nmi2', ['Nmi^2'], 'area', false, true, 3429904],
-    ['square Pica', 'Pica2', ['Picapt2', 'Pica^2', 'Picapt^2'], 'area', false, true, 0.00001792111111111],
-    ['square yard', 'yd2', ['yd^2'], 'area', false, true, 0.83612736],
-    ['statute mile', 'mi', null, 'length', false, true, 1609.344],
-    ['steradian', 'sr', null, 'solid_angle', true, false, 1],
-    ['stilb', 'sb', null, 'luminance', false, false, 0.0001],
-    ['stokes', 'St', null, 'kinematic_viscosity', false, false, 0.0001],
-    ['stone', 'stone', null, 'mass', false, true, 6.35029318],
-    ['tablespoon', 'tbs', null, 'volume', false, true, 0.0000147868],
-    ['teaspoon', 'tsp', null, 'volume', false, true, 0.00000492892],
-    ['tesla', 'T', null, 'magnetic_flux_density', true, true, 1],
-    ['thermodynamic calorie', 'c', null, 'energy', false, true, 4.184],
-    ['ton', 'ton', null, 'mass', false, true, 907.18474],
-    ['tonne', 't', null, 'mass', false, false, 1000],
-    ['U.K. pint', 'uk_pt', null, 'volume', false, true, 0.00056826125],
-    ['U.S. bushel', 'bushel', null, 'volume', false, true, 0.03523907],
-    ['U.S. oil barrel', 'barrel', null, 'volume', false, true, 0.158987295],
-    ['U.S. pint', 'pt', ['us_pt'], 'volume', false, true, 0.000473176473],
-    ['U.S. survey mile', 'survey_mi', null, 'length', false, true, 1609.347219],
-    ['U.S. survey/statute acre', 'us_acre', null, 'area', false, true, 4046.87261],
-    ['volt', 'V', null, 'voltage', true, false, 1],
-    ['watt', 'W', null, 'power', true, true, 1],
-    ['watt-hour', 'Wh', ['wh'], 'energy', false, true, 3600],
-    ['weber', 'Wb', null, 'magnetic_flux', true, false, 1],
-    ['yard', 'yd', null, 'length', false, true, 0.9144],
-    ['year', 'yr', null, 'time', false, true, 31557600]
+    [['g'], 'mass'],
+    [['sg'], 'mass', (gram) => gram / 14593.9029372064, (slug) => slug * 14593.9029372064],
+    [['lbm'], 'mass', (gram) => gram / 453.59237, (pound) => pound * 453.59237],
+    [['u'], 'mass', (gram) => gram * 6.0221366516752e23, (u) => u * 1.6605402e-24],
+    [['ozm'], 'mass', (gram) => gram / 28.349523125, (ounce) => ounce * 28.349523125],
+    [['grain'], 'mass', (gram) => gram * 15.4323583529, (grain) => grain / 15.4323583529],
+    [['cwt', 'shweight'], 'mass', (gram) => gram * 2.2046226218488e-5, (shweight) => shweight / 2.2046226218488e-5],
+    [
+      ['uk_cwt', 'lcwt', 'hweight'],
+      'mass',
+      (gram) => gram * 1.9684130552221e-5,
+      (hweight) => hweight / 1.9684130552221e-5
+    ],
+    [['stone'], 'mass', (gram) => gram / 6350.29318, (stone) => stone * 6350.29318],
+    [['ton'], 'mass', (gram) => gram / 907184.74, (ton) => ton * 907184.74],
+    [['uk_ton', 'LTON', 'brton'], 'mass', (gram) => gram / 1016046.9088, (ton) => ton * 1016046.9088],
+
+    [['m'], 'distance'],
+    [['mi'], 'distance', (metre) => metre / 1609.344, (mile) => mile * 1609.344],
+    [['Nmi'], 'distance', (metre) => metre / 1852, (mile) => mile * 1852],
+    [['in'], 'distance', (metre) => metre / 0.0254, (inch) => inch * 0.0254],
+    [['ft'], 'distance', (metre) => metre / 0.3048, (foot) => foot * 0.3048],
+    [['yd'], 'distance', (metre) => metre / 0.9144, (yard) => yard * 0.9144],
+    [['ang'], 'distance', (metre) => metre / 1e-10, (angstrom) => angstrom * 1e-10],
+    [['ell'], 'distance', (metre) => metre / 1.143, (ell) => ell * 1.143],
+    [['ly'], 'distance', (metre) => metre * 1.057e-16, (lightYear) => lightYear / 1.057e-16],
+    [['parsec', 'pc'], 'distance', (metre) => metre / 3.08567758128e16, (parsec) => parsec * 3.08567758128e16],
+    [['Picapt', 'Pica'], 'distance', (metre) => metre / 3.52778e-4, (pica) => pica * 3.52778e-4],
+    [['pica'], 'distance', (metre) => metre * 236.2204724409, (pica) => pica / 236.2204724409],
+    [['survey_mi'], 'distance', (metre) => metre * 6.2137e-4, (pica) => pica / 6.2137e-4],
+
+    [['sec', 's'], 'time'],
+    [['yr'], 'time', (second) => second / 31557600, (year) => year * 31557600],
+    [['day', 'd'], 'time', (second) => second / 86400, (day) => day * 86400],
+    [['hr'], 'time', (second) => second / 3600, (hour) => hour * 3600],
+    [['mn', 'min'], 'time', (second) => second / 60, (minute) => minute * 60],
+
+    [['Pa', 'p'], 'pressure'],
+    [['atm', 'at'], 'pressure', (pascal) => pascal / 101325, (atmosphere) => atmosphere * 101325],
+    [['mmHg'], 'pressure', (pascal) => pascal / 133.322, (mmHg) => mmHg * 133.322],
+    [['psi'], 'pressure', (pascal) => pascal / 6894.757293, (psi) => psi * 6894.757293],
+    [['Torr'], 'pressure', (pascal) => pascal / 133.3223684, (torr) => torr * 133.3223684],
+
+    [['N'], 'force'],
+    [['dyn', 'dy'], 'force', (newton) => newton / 1e-5, (dyne) => dyne * 1e-5],
+    [['lbf'], 'force', (newton) => newton / 4.448221615, (poundForce) => poundForce * 4.448221615],
+    [['pond'], 'force', (newton) => newton / 0.00980665, (pond) => pond * 0.00980665],
+
+    [['J'], 'energy'],
+    [['e'], 'energy', (joule) => joule / 1e-7, (erg) => erg * 1e-7],
+    [['c'], 'energy', (joule) => joule / 4.184, (calorie) => calorie * 4.184],
+    [['cal'], 'energy', (joule) => joule / 4.1868, (calorie) => calorie * 4.1868],
+    [
+      ['eV', 'ev'],
+      'energy',
+      (joule) => joule / 1.6021766531138543e-19,
+      (electronVolt) => electronVolt * 1.6021766531138543e-19
+    ],
+    [['HPh', 'hh'], 'energy', (joule) => joule / 2684519.538, (horsepowerHour) => horsepowerHour * 2684519.538],
+    [['Wh', 'wh'], 'energy', (joule) => joule / 3600, (wattHour) => wattHour * 3600],
+    [['flb'], 'energy', (joule) => joule / 1.3558179483, (footPound) => footPound * 1.3558179483],
+    [['BTU', 'btu'], 'energy', (joule) => joule / 1055.055853, (btu) => btu * 1055.055853],
+
+    [['HP', 'h'], 'power'],
+    [['PS'], 'power', (horsepower) => horsepower / 0.986320071, (ps) => ps * 0.986320071],
+    [['W', 'w'], 'power', (horsepower) => horsepower / 1.3410220888438076e-3, (ps) => ps * 1.3410220888438076e-3],
+
+    [['T'], 'magnetism'],
+    [['ga'], 'magnetism', (tesla) => tesla / 1e-4, (gauss) => gauss * 1e-4],
+
+    [['C', 'cel'], 'temperature'],
+    [['K', 'kel'], 'temperature', (celsius) => celsius + 273, (kelvin) => kelvin - 273],
+    [['F', 'fah'], 'temperature', (celsius) => celsius * 1.8 + 32, (fahrenheit) => (fahrenheit - 32) / 1.8],
+    [['Rank'], 'temperature', (celsius) => ((celsius + 273.15) * 9) / 5, (rank) => ((rank - 491.67) * 5) / 9],
+    [['Reau'], 'temperature', (celsius) => celsius * 0.8, (reau) => reau / 0.8],
+
+    [['l', 'L', 'lt'], 'volume'],
+    [['tsp'], 'volume', (liter) => liter / 4.9289215940186e-3, (teaspoon) => teaspoon * 4.9289215940186e-3],
+    [['tspm'], 'volume', (liter) => liter / 0.005, (teaspoon) => teaspoon * 0.005],
+    [['tbs'], 'volume', (liter) => liter / 0.014786764782055936, (tablespoon) => tablespoon * 0.014786764782055936],
+    [['oz'], 'volume', (liter) => liter / 0.029573529564111873, (fluidOunce) => fluidOunce * 0.029573529564111873],
+    [['cup'], 'volume', (liter) => liter / 0.2365882365, (cup) => cup * 0.2365882365],
+    [['pt', 'us_pt'], 'volume', (liter) => liter / 0.473176473, (pint) => pint * 0.473176473],
+    [['uk_pt'], 'volume', (liter) => liter / 0.56826125, (pint) => pint * 0.56826125],
+    [['qt'], 'volume', (liter) => liter / 0.946352946, (quart) => quart * 0.946352946],
+    [['uk_qt'], 'volume', (liter) => liter / 1.1365225, (quart) => quart * 1.1365225],
+    [['gal'], 'volume', (liter) => liter / 3.785411784, (gallon) => gallon * 3.785411784],
+    [['uk_gal'], 'volume', (liter) => liter / 4.54609, (gallon) => gallon * 4.54609],
+    [['ang3', 'ang^3'], 'volume', (liter) => liter / 1e-27, (cubicAngstrom) => cubicAngstrom * 1e-27],
+    [['barrel'], 'volume', (liter) => liter / 158.987294928, (barrel) => barrel * 158.987294928],
+    [['bushel'], 'volume', (liter) => liter / 35.23907017, (bushel) => bushel * 35.23907017],
+    [['ft3', 'ft^3'], 'volume', (liter) => liter / 28.316846592, (cubicFeet) => cubicFeet * 28.316846592],
+    [['in3', 'in^3'], 'volume', (liter) => liter / 0.016387064, (cubicInch) => cubicInch * 0.016387064],
+    [
+      ['ly3', 'ly^3'],
+      'volume',
+      (liter) => liter / 8.46786664623715e50,
+      (cubicLightYear) => cubicLightYear * 8.46786664623715e50
+    ],
+    [['m3', 'm^3'], 'volume', (liter) => liter / 1000, (cubicMeter) => cubicMeter * 1000],
+    [['mi3', 'mi^3'], 'volume', (liter) => liter / 4168181825440.6, (cubicMile) => cubicMile * 4168181825440.6],
+    [['yd3', 'yd^3'], 'volume', (liter) => liter / 764.554857984, (cubicYard) => cubicYard * 764.554857984],
+    [
+      ['Nmi3', 'Nmi^3'],
+      'volume',
+      (liter) => liter / 6.352182208e12,
+      (cubicNauticalMile) => cubicNauticalMile * 6.352182208e12
+    ],
+    [
+      ['Picapt3', 'Picapt^3', 'Pica3', 'Pica^3'],
+      'volume',
+      (liter) => liter / 4.39039566186557e-8,
+      (cubicPica) => cubicPica * 4.39039566186557e-8
+    ],
+    [['GRT', 'regton'], 'volume', (liter) => liter / 2831.6846592, (regton) => regton * 2831.6846592],
+    [['MTON'], 'volume', (liter) => liter / 1132.67386368, (mton) => mton * 1132.67386368],
+
+    [['m2', 'm^2'], 'area'],
+    [['uk_acre'], 'area', (meter) => meter / 4046.8564224, (acre) => acre * 4046.8564224],
+    [['us_acre'], 'area', (meter) => meter / 4046.87260987425, (acre) => acre * 4046.87260987425],
+    [['ang2', 'ang^2'], 'area', (meter) => meter / 1e-20, (squareAngstrom) => squareAngstrom * 1e-20],
+    [['ar'], 'area', (meter) => meter / 100, (are) => are * 100],
+    [['ft2', 'ft^2'], 'area', (meter) => meter / 0.09290304, (squareFeet) => squareFeet * 0.09290304],
+    [['ha'], 'area', (meter) => meter / 10000, (hectare) => hectare * 10000],
+    [['in2', 'in^2'], 'area', (meter) => meter / 0.00064516, (squareInches) => squareInches * 0.00064516],
+    [
+      ['ly2', 'ly^2'],
+      'area',
+      (meter) => meter / 8.95054210748189e31,
+      (squareLightYear) => squareLightYear * 8.95054210748189e31
+    ],
+    [['Morgen'], 'area', (meter) => meter / 2500, (morgen) => morgen * 2500],
+    [['mi2', 'mi^2'], 'area', (meter) => meter / 2589988.110336, (squareMiles) => squareMiles * 2589988.110336],
+    [['Nmi2', 'Nmi^2'], 'area', (meter) => meter / 3429904, (squareNauticalMiles) => squareNauticalMiles * 3429904],
+    [
+      ['Picapt2', 'Pica2', 'Pica^2', 'Picapt^2'],
+      'area',
+      (meter) => meter / 1.2445216049382718e-7,
+      (squarePica) => squarePica * 1.2445216049382718e-7
+    ],
+    [['yd2', 'yd^2'], 'area', (meter) => meter / 0.83612736, (squareYards) => squareYards * 0.83612736],
+
+    [['bit'], 'information'],
+    [['byte'], 'information', (bit) => bit / 8, (byte) => byte * 8],
+
+    [['m/s', 'm/sec'], 'speed'],
+    [
+      ['admkn'],
+      'speed',
+      (metersPerSecond) => metersPerSecond / 0.5147733333333333,
+      (knot) => knot * 0.5147733333333333
+    ],
+    [['kn'], 'speed', (metersPerSecond) => metersPerSecond / 0.5144444444444445, (knot) => knot * 0.5144444444444445],
+    [
+      ['m/h', 'm/hr'],
+      'speed',
+      (metersPerSecond) => metersPerSecond / 0.0002777777777777778,
+      (metersPerHour) => metersPerHour * 0.0002777777777777778
+    ],
+    [['mph'], 'speed', (metersPerSecond) => metersPerSecond / 0.44704, (milesPerHour) => milesPerHour * 0.44704]
   ]
 
   // Binary prefixes
@@ -653,23 +675,13 @@ export function CONVERT(number, from_unit, to_unit) {
   let base_to_unit = to_unit
   let from_multiplier = 1
   let to_multiplier = 1
-  let alt
 
   // Lookup from and to units
-  for (let i = 0; i < units.length; i++) {
-    alt = units[i][2] === null ? [] : units[i][2]
-
-    if (units[i][1] === base_from_unit || alt.indexOf(base_from_unit) >= 0) {
-      from = units[i]
-    }
-
-    if (units[i][1] === base_to_unit || alt.indexOf(base_to_unit) >= 0) {
-      to = units[i]
-    }
-  }
+  from = units.find((conversion) => conversion[0].includes(base_from_unit))
+  to = units.find((conversion) => conversion[0].includes(base_to_unit))
 
   // Lookup from prefix
-  if (from === null) {
+  if (!from) {
     const from_binary_prefix = binary_prefixes[from_unit.substring(0, 2)]
     let from_unit_prefix = unit_prefixes[from_unit.substring(0, 1)]
 
@@ -688,17 +700,11 @@ export function CONVERT(number, from_unit, to_unit) {
     }
 
     // Lookup from unit
-    for (let j = 0; j < units.length; j++) {
-      alt = units[j][2] === null ? [] : units[j][2]
-
-      if (units[j][1] === base_from_unit || alt.indexOf(base_from_unit) >= 0) {
-        from = units[j]
-      }
-    }
+    from = units.find((conversion) => conversion[0].includes(base_from_unit))
   }
 
   // Lookup to prefix
-  if (to === null) {
+  if (!to) {
     const to_binary_prefix = binary_prefixes[to_unit.substring(0, 2)]
     let to_unit_prefix = unit_prefixes[to_unit.substring(0, 1)]
 
@@ -717,27 +723,31 @@ export function CONVERT(number, from_unit, to_unit) {
     }
 
     // Lookup to unit
-    for (let k = 0; k < units.length; k++) {
-      alt = units[k][2] === null ? [] : units[k][2]
-
-      if (units[k][1] === base_to_unit || alt.indexOf(base_to_unit) >= 0) {
-        to = units[k]
-      }
-    }
+    to = units.find((conversion) => conversion[0].includes(base_to_unit))
   }
 
   // Return error if a unit does not exist
-  if (from === null || to === null) {
+  if (!from || !to) {
     return error.na
   }
 
   // Return error if units represent different quantities
-  if (from[3] !== to[3]) {
+  if (from[1] !== to[1]) {
     return error.na
   }
 
   // Return converted number
-  return (number * from[6] * from_multiplier) / (to[6] * to_multiplier)
+  if (from[3]) {
+    number = from[3](number)
+  }
+  number *= from_multiplier
+
+  if (to[2]) {
+    number = to[2](number)
+  }
+  number /= to_multiplier
+
+  return number
 }
 
 /**
