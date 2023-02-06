@@ -1,3 +1,4 @@
+import * as utils from './utils/common.js'
 import * as error from './utils/error.js'
 
 // TODO
@@ -122,6 +123,28 @@ export function ISERROR(value) {
  * @returns
  */
 export function ISEVEN(number) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(number)) {
+    return error.value
+  }
+
+  if (number instanceof Error) {
+    return number
+  }
+
+  if (typeof number === 'boolean') {
+    return error.value
+  }
+
+  number = utils.getNumber(number)
+
+  if (typeof number !== 'number') {
+    return error.value
+  }
+
   return !(Math.floor(Math.abs(number)) & 1)
 }
 
