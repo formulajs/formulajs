@@ -888,8 +888,32 @@ describe('Date & Time', () => {
   })
 
   it('YEAR', () => {
-    expect(dateTime.YEAR('1/1/1900')).to.equal(1900)
+    expect(dateTime.YEAR('190000')).to.equal(2420)
+    expect(dateTime.YEAR(190000)).to.equal(2420)
+
+    expect(dateTime.YEAR('2022-10-03')).to.equal(2022)
+    expect(dateTime.YEAR('1900-01-01')).to.equal(1900)
+
+    // expect(dateTime.YEAR(null)).to.equal(1900)
+    expect(dateTime.YEAR(true)).to.equal(1900)
+    // expect(dateTime.YEAR(false)).to.equal(1900)
+
+    expect(dateTime.YEAR('-1')).to.equal(error.num)
+    expect(dateTime.YEAR(-1)).to.equal(error.num)
+
+    expect(dateTime.YEAR(30)).to.equal(1900)
+    expect(dateTime.YEAR(3)).to.equal(1900)
+
+    expect(dateTime.YEAR('')).to.equal(error.value)
     expect(dateTime.YEAR('a')).to.equal(error.value)
+    expect(dateTime.YEAR('true')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.YEAR(err)).to.equal(err)
+    })
+
+    expect(dateTime.YEAR()).to.equal(error.na)
+    expect(dateTime.YEAR('3-10-2022', '20/10/2019')).to.equal(error.na)
   })
 
   it('YEARFRAC', () => {

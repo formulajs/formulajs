@@ -1269,13 +1269,25 @@ WORKDAY.INTL = function (start_date, days, weekend, holidays) {
  * @returns
  */
 export function YEAR(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getFullYear()
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  const date = utils.serialNumberToDate(serial_number)
+
+  return date.getUTCFullYear()
 }
 
 function isLeapYear(year) {
