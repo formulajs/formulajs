@@ -769,13 +769,32 @@ describe('Date & Time', () => {
   })
 
   it('WORKDAY', () => {
-    expect(dateTime.WORKDAY('1/1/1900', 1).getDate()).to.equal(2)
-    expect(dateTime.WORKDAY('1/1/1900', 7).getDate()).to.equal(10)
-    expect(dateTime.WORKDAY('1/1/1900', 2, '1/2/1900').getDate()).to.equal(4)
+    expect(dateTime.WORKDAY('1900-03-01', 1)).to.equal(62)
+    expect(dateTime.WORKDAY('1900-01-01', 7)).to.equal(10)
+    expect(dateTime.WORKDAY('1900-01-01', 4, '1900-01-02')).to.equal(8)
+
+    expect(dateTime.WORKDAY('2022-05-11', '1900-01-30', '1900-01-14')).to.equal(44734)
+    expect(dateTime.WORKDAY('2022-05-11', -453, '1900-01-14')).to.equal(44057)
+
+    expect(dateTime.WORKDAY('44692', '-453', '14')).to.equal(44057)
+
     expect(dateTime.WORKDAY('a', 1, '1/2/1900')).to.equal(error.value)
     expect(dateTime.WORKDAY('1/1/1900', 'a')).to.equal(error.value)
     expect(dateTime.WORKDAY('1/1/1900', 1, 'a')).to.equal(error.value)
+
     expect(dateTime.WORKDAY('1/1/1900', -1)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.WORKDAY(err, 1)).to.equal(err)
+      expect(dateTime.WORKDAY(1, err)).to.equal(err)
+      expect(dateTime.WORKDAY(1, 1, err)).to.equal(err)
+      expect(dateTime.WORKDAY(1, 1, [err])).to.equal(err)
+    })
+
+    expect(dateTime.WORKDAY()).to.equal(error.na)
+    expect(dateTime.WORKDAY(1)).to.equal(error.na)
+    expect(dateTime.WORKDAY('1/1/1900')).to.equal(error.na)
+    expect(dateTime.WORKDAY('1/1/1900', 4, '2/1/1900', true)).to.equal(error.na)
   })
 
   it('WORKDAY.INTL', () => {

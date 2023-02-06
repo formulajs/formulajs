@@ -1076,6 +1076,10 @@ export function WEEKNUM(serial_number, return_type) {
  * @returns
  */
 export function WORKDAY(start_date, days, holidays) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   return WORKDAY.INTL(start_date, days, 1, holidays)
 }
 
