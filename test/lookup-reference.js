@@ -1813,6 +1813,7 @@ describe('Lookup Reference', () => {
 
   it('HLOOKUP', () => {
     expect(lookup.HLOOKUP()).to.equal(error.na)
+    expect(lookup.HLOOKUP('')).to.equal(error.na)
     expect(lookup.HLOOKUP(1)).to.equal(error.na)
     expect(lookup.HLOOKUP(1, [[1, 2]])).to.equal(error.na)
     expect(lookup.HLOOKUP(1, [[1], [2]], 2)).to.equal(2)
@@ -1896,6 +1897,18 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.HLOOKUP(
+        'li',
+        [
+          ['hector', 'jim'],
+          [1, 4]
+        ],
+        2,
+        4,
+        true
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.HLOOKUP(
         'ji',
         [
           ['hector', 'jam'],
@@ -1907,6 +1920,17 @@ describe('Lookup Reference', () => {
     ).to.equal(error.ref)
     expect(
       lookup.HLOOKUP(
+        true,
+        2,
+        [
+          ['hector', 'jam'],
+          [1, 4]
+        ],
+        true
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.HLOOKUP(
         'ji',
         [
           ['jim', 'jam'],
@@ -1915,7 +1939,7 @@ describe('Lookup Reference', () => {
         3,
         false
       )
-    ).to.equal(error.na)
+    ).to.equal(error.ref)
     expect(
       lookup.HLOOKUP(
         0,

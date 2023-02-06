@@ -159,7 +159,15 @@ export function COLUMNS(array) {
  * @returns
  */
 export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) {
-  return VLOOKUP(lookup_value, utils.transpose(table_array), row_index_num, range_lookup)
+  if (arguments.length < 3 || arguments.length > 4) {
+    return error.na
+  }
+
+  if (Array.isArray(table_array)) {
+    table_array = utils.transpose(table_array)
+  }
+
+  return VLOOKUP(lookup_value, table_array, row_index_num, range_lookup)
 }
 
 /**
