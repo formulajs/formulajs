@@ -374,36 +374,57 @@ export function DAYS(end_date, start_date) {
  * @param {*} method Optional. A logical value that specifies whether to use the U.S. or European method in the calculation.
  * @returns
  */
-export function DAYS360(start_date, end_date, method) {
-  method = utils.parseBool(method || 'false')
-  start_date = utils.parseDate(start_date)
-  end_date = utils.parseDate(end_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+export function DAYS360(start_date, end_date, method = false) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  if (end_date instanceof Error) {
-    return end_date
+  const someError = utils.anyError(start_date, end_date, method)
+  if (someError) {
+    return someError
   }
 
-  if (method instanceof Error) {
-    return method
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date !== 'number') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
   }
 
-  const sm = start_date.getMonth()
-  let em = end_date.getMonth()
+  end_date = utils.getNumber(end_date)
+  if (typeof end_date !== 'number') {
+    return error.value
+  }
+  if (end_date < 0) {
+    return error.num
+  }
+
+  method = utils.parseBool(method)
+  if (typeof method !== 'boolean') {
+    return error.value
+  }
+
+  start_date = utils.serialNumberToDate(start_date)
+  end_date = utils.serialNumberToDate(end_date)
+
+  const sm = start_date.getUTCMonth()
+  let em = end_date.getUTCMonth()
   let sd, ed
 
   if (method) {
-    sd = start_date.getDate() === 31 ? 30 : start_date.getDate()
-    ed = end_date.getDate() === 31 ? 30 : end_date.getDate()
+    sd = start_date.getUTCDate() === 31 ? 30 : start_date.getUTCDate()
+    ed = end_date.getUTCDate() === 31 ? 30 : end_date.getUTCDate()
   } else {
-    const smd = new Date(start_date.getFullYear(), sm + 1, 0).getDate()
-    const emd = new Date(end_date.getFullYear(), em + 1, 0).getDate()
-    sd = start_date.getDate() === smd ? 30 : start_date.getDate()
+    const nextStartDay = new Date(start_date.getTime())
+    nextStartDay.setDate(nextStartDay.getDate() + 1)
 
-    if (end_date.getDate() === emd) {
+    sd = sm !== nextStartDay.getUTCMonth() ? 30 : start_date.getUTCDate()
+
+    const nextEndDay = new Date(end_date.getTime())
+    nextEndDay.setDate(nextEndDay.getDate() + 1)
+
+    if (end_date.getUTCDate() >= 30 && end_date.getUTCMonth() !== nextEndDay.getUTCMonth()) {
       if (sd < 30) {
         em++
         ed = 1
@@ -411,11 +432,11 @@ export function DAYS360(start_date, end_date, method) {
         ed = 30
       }
     } else {
-      ed = end_date.getDate()
+      ed = end_date.getUTCDate()
     }
   }
 
-  return 360 * (end_date.getFullYear() - start_date.getFullYear()) + 30 * (em - sm) + (ed - sd)
+  return 360 * (end_date.getUTCFullYear() - start_date.getUTCFullYear()) + 30 * (em - sm) + (ed - sd)
 }
 
 /**

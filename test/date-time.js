@@ -214,20 +214,77 @@ describe('Date & Time', () => {
   })
 
   it('DAYS360', () => {
-    expect(dateTime.DAYS360('1/1/1901', '1/2/1901', true)).to.equal(1)
-    expect(dateTime.DAYS360('1/1/1901', '12/31/1901', true)).to.equal(359)
-    expect(dateTime.DAYS360('1/1/1901', '1/1/1902', true)).to.equal(360)
-    expect(dateTime.DAYS360('1/1/1901', '2/1/1901', true)).to.equal(30)
-    expect(dateTime.DAYS360('1/1/1901', '1/2/1901', false)).to.equal(1)
-    expect(dateTime.DAYS360('1/1/1901', '1/2/1901')).to.equal(1)
-    expect(dateTime.DAYS360('1/1/1901', '12/31/1901', false)).to.equal(360)
-    expect(dateTime.DAYS360('1/1/1901', '12/31/1901')).to.equal(360)
-    expect(dateTime.DAYS360('1/1/1901', '1/1/1902', false)).to.equal(360)
-    expect(dateTime.DAYS360('1/1/1901', '2/1/1901', false)).to.equal(30)
-    expect(dateTime.DAYS360('1/30/1901', '12/31/1901', false)).to.equal(330)
-    expect(dateTime.DAYS360('1/1/1901', 'a')).to.equal(error.value)
-    expect(dateTime.DAYS360('a', '1/2/1901')).to.equal(error.value)
-    expect(dateTime.DAYS360('1/1/1901', '1/2/1901', 'a')).to.equal(error.value)
+    expect(dateTime.DAYS360(0, '0')).to.equal(0)
+    expect(dateTime.DAYS360(false, null)).to.equal(0)
+    expect(dateTime.DAYS360(1, true, true)).to.equal(0)
+
+    expect(dateTime.DAYS360('2004-05-13', '2022-11-19')).to.equal(6666)
+
+    expect(dateTime.DAYS360(36585, 36641)).to.equal(55)
+    expect(dateTime.DAYS360(36585, 36641, true)).to.equal(56)
+
+    expect(dateTime.DAYS360(36616, 36641)).to.equal(25)
+    expect(dateTime.DAYS360(36616, 36641, true)).to.equal(25)
+
+    expect(dateTime.DAYS360('2012-02-02', '2012-03-30')).to.equal(58)
+    expect(dateTime.DAYS360('2008-03-31', '2008-06-01', false)).to.equal(61)
+
+    expect(dateTime.DAYS360(36535, 36585)).to.equal(49)
+    expect(dateTime.DAYS360(36535, 36585, true)).to.equal(49)
+
+    expect(dateTime.DAYS360(36556, 36585)).to.equal(29)
+    expect(dateTime.DAYS360(36556, 36585, true)).to.equal(29)
+
+    expect(dateTime.DAYS360(36556, 36616)).to.equal(60)
+    expect(dateTime.DAYS360(36556, 36616, true)).to.equal(60)
+
+    expect(dateTime.DAYS360(36535, 36616)).to.equal(81)
+    expect(dateTime.DAYS360(36535, 36616, true)).to.equal(80)
+
+    expect(dateTime.DAYS360(36557, 36585)).to.equal(28)
+    expect(dateTime.DAYS360(36557, 36585, true)).to.equal(28)
+
+    expect(dateTime.DAYS360(36586, 36616)).to.equal(30)
+    expect(dateTime.DAYS360(36586, 36616, true)).to.equal(29)
+
+    expect(dateTime.DAYS360(36950, 36950)).to.equal(-2)
+    expect(dateTime.DAYS360(36950, 36950, true)).to.equal(0)
+
+    expect(dateTime.DAYS360(36585, 36585)).to.equal(-1)
+    expect(dateTime.DAYS360(36585, 36585, true)).to.equal(0)
+
+    expect(dateTime.DAYS360(36950, 40268)).to.equal(3270)
+    expect(dateTime.DAYS360(36950, 40268, true)).to.equal(3272)
+
+    expect(dateTime.DAYS360(34458, 36585)).to.equal(2095)
+    expect(dateTime.DAYS360(34458, 36585, true)).to.equal(2095)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.DAYS360(err, 0)).to.equal(err)
+      expect(dateTime.DAYS360(0, err)).to.equal(err)
+      expect(dateTime.DAYS360(err, 0, true)).to.equal(err)
+      expect(dateTime.DAYS360(0, err, true)).to.equal(err)
+      expect(dateTime.DAYS360(0, 0, err)).to.equal(err)
+    })
+
+    expect(dateTime.DAYS360(36950, 40268, 'true')).to.equal(3272)
+    expect(dateTime.DAYS360(36950, 40268, 30)).to.equal(3272)
+
+    expect(dateTime.DAYS360(34458, 36585, false)).to.equal(2095)
+    expect(dateTime.DAYS360(34458, 36585, 'false')).to.equal(2095)
+    expect(dateTime.DAYS360(34458, 36585, 0)).to.equal(2095)
+
+    expect(dateTime.DAYS360(36950, 40268, '30')).to.equal(error.value)
+    expect(dateTime.DAYS360(36950, 40268, 'text')).to.equal(error.value)
+    expect(dateTime.DAYS360(36950, 40268, '')).to.equal(error.value)
+
+    expect(dateTime.DAYS360(-1, 36585)).to.equal(error.num)
+    expect(dateTime.DAYS360(3, -11)).to.equal(error.num)
+    expect(dateTime.DAYS360('true', 36585)).to.equal(error.value)
+
+    expect(dateTime.DAYS360()).to.equal(error.na)
+    expect(dateTime.DAYS360(1)).to.equal(error.na)
+    expect(dateTime.DAYS360(1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('EDATE', () => {
