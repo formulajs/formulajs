@@ -373,8 +373,6 @@ export function BASE(number, radix, min_length) {
 /**
  * Rounds a number to the nearest integer or to the nearest multiple of significance.
  *
- * Category: Math and trigonometry
- *
  * @param {*} number The value you want to round.
  * @param {*} significance The multiple to which you want to round.
  * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
