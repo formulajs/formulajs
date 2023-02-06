@@ -380,7 +380,7 @@ export function BASE(number, radix, min_length) {
  * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
-export function CEILING(number, significance, mode) {
+function ceiling(number, significance, mode) {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
   mode = utils.parseNumber(mode)
@@ -408,9 +408,48 @@ export function CEILING(number, significance, mode) {
   }
 }
 
-CEILING.MATH = CEILING
+/**
+ * Returns number rounded up, away from zero, to the nearest multiple of significance.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value you want to round.
+ * @param {*} significance The multiple to which you want to round.
+ * @returns
+ */
+export function CEILING(number, significance) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
 
-CEILING.PRECISE = CEILING
+  if (number === '' || significance === '') {
+    return error.value
+  }
+
+  number = utils.parseNumber(number)
+  significance = utils.parseNumber(significance)
+
+  const anyError = utils.anyError(number, significance)
+  if (anyError) {
+    return anyError
+  }
+
+  if (significance === 0) {
+    return 0
+  }
+
+  if (number > 0 && significance > 0 && number < significance) {
+    return significance
+  }
+
+  const precision = -Math.floor(Math.log(Math.abs(significance)) / Math.log(10))
+
+  return ROUND(Math.ceil(number / significance) * significance, precision)
+}
+
+CEILING.MATH = ceiling
+
+CEILING.PRECISE = ceiling
 
 /**
  * Returns the number of combinations for a given number of objects.
@@ -650,7 +689,7 @@ export function EVEN(number) {
     return number
   }
 
-  return CEILING(number, -2, -1)
+  return ceiling(number, -2, -1)
 }
 
 /**
@@ -879,7 +918,7 @@ export function INT(number) {
 
 // TODO: verify
 export const ISO = {
-  CEILING: CEILING
+  CEILING: ceiling
 }
 
 /**
