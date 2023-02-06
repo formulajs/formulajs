@@ -134,37 +134,74 @@ export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) 
  * @returns
  */
 export function INDEX(array, row_num, column_num) {
-  const someError = utils.anyError(array, row_num, column_num)
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
 
+  const someError = utils.anyError(array, row_num, column_num)
   if (someError) {
     return someError
   }
 
   if (!Array.isArray(array)) {
+    array = [array]
+  }
+
+  if (!Array.isArray(array[0])) {
+    array[0] = [array[0]]
+  }
+
+  const isRow = array.length === 1
+
+  if (column_num === undefined) {
+    if (isRow) {
+      column_num = row_num
+      row_num = 1
+    } else {
+      column_num = 1
+    }
+  }
+
+  column_num = utils.getNumber(column_num)
+  if (typeof column_num !== 'number') {
     return error.value
   }
 
-  const isOneDimensionRange = array.length > 0 && !Array.isArray(array[0])
+  column_num = Math.trunc(column_num)
 
-  if (isOneDimensionRange && !column_num) {
-    column_num = row_num
-    row_num = 1
-  } else {
-    column_num = column_num || 1
-    row_num = row_num || 1
+  row_num = utils.getNumber(row_num)
+  if (typeof row_num !== 'number') {
+    return error.value
   }
+
+  row_num = Math.trunc(row_num)
 
   if (column_num < 0 || row_num < 0) {
     return error.value
   }
 
-  if (isOneDimensionRange && row_num === 1 && column_num <= array.length) {
-    return array[column_num - 1]
-  } else if (row_num <= array.length && column_num <= array[row_num - 1].length) {
+  const numOfRows = array.length
+  const numOfColumns = array[0].length
+
+  if (row_num > numOfRows || column_num > numOfColumns) {
+    return error.ref
+  }
+
+  let result
+  if (column_num === 0 && row_num === 0) {
+    result = array
+  } else if (column_num === 0) {
+    result = [array[row_num - 1]]
+  } else if (row_num === 0) {
+    result = array.map((row) => [row[column_num - 1]])
+  } else {
     return array[row_num - 1][column_num - 1]
   }
 
-  return error.ref
+  if (result.length === 1 && result[0].length === 1) {
+    return result[0][0]
+  }
+  return result
 }
 
 /**

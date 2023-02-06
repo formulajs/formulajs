@@ -1695,28 +1695,86 @@ describe('Lookup Reference', () => {
 
   describe('INDEX', () => {
     describe('Array form', () => {
-      const oneDimensionRange = [1, 2, 3, 5, 8]
-      describe('and a one dimension Range', () => {
+      describe('and a single cell', () => {
         it('should return the value', () => {
-          expect(lookup.INDEX(oneDimensionRange, 1, 4)).to.equal(5)
-          expect(lookup.INDEX(['1', '2', '3', '5', '8'], 1, 5)).to.equal('8')
-        })
+          expect(lookup.INDEX(4, 1, 1)).to.equal(4)
+          expect(lookup.INDEX('text', 0, null)).to.equal('text')
+          expect(lookup.INDEX('-5', 1, false)).to.equal('-5')
+          expect(lookup.INDEX(false, 0, true)).to.equal(false)
 
-        it('should return the correct value in case second parameter is omitted', () => {
-          expect(lookup.INDEX(oneDimensionRange, 4)).to.equal(5)
+          expect(lookup.INDEX(false, 1)).to.equal(false)
         })
 
         it('should throw an error if row or column number is out of range', () => {
-          expect(lookup.INDEX(oneDimensionRange, 2, 4)).to.equal(error.ref)
-          expect(lookup.INDEX(oneDimensionRange, 1, 12)).to.equal(error.ref)
-          expect(lookup.INDEX(oneDimensionRange, 6)).to.equal(error.ref)
-          expect(lookup.INDEX(oneDimensionRange, -6)).to.equal(error.value)
+          expect(lookup.INDEX(true, 2, 0)).to.equal(error.ref)
+          expect(lookup.INDEX(true, 0, 2)).to.equal(error.ref)
+        })
+      })
+
+      const row = [[1, true, 3, '5', 8]]
+      describe('and a row', () => {
+        it('should return the value', () => {
+          expect(lookup.INDEX(row, 1, 4)).to.equal('5')
+          expect(lookup.INDEX(row, 1, 5)).to.equal(8)
+          expect(lookup.INDEX(row, 1, 2)).to.equal(true)
+
+          expect(lookup.INDEX(row, 1, 0)).to.eql(row)
+          expect(lookup.INDEX(row, 1, 1.9)).to.eql(1)
+          expect(lookup.INDEX(row, 1, null)).to.eql(row)
+          expect(lookup.INDEX(row, 1, '0')).to.eql(row)
+          expect(lookup.INDEX(row, 1, '1')).to.eql(1)
+
+          expect(lookup.INDEX(row, '1', 3)).to.equal(3)
+          expect(lookup.INDEX(row, 0, 3)).to.equal(3)
+          expect(lookup.INDEX(row, true, 3)).to.equal(3)
+          expect(lookup.INDEX(row, false, 3)).to.equal(3)
+          expect(lookup.INDEX(row, null, 3)).to.equal(3)
         })
 
-        it('should throw an error in case of error or empty inputs', () => {
-          expect(lookup.INDEX(undefined, 2, 4)).to.equal(error.value)
-          expect(lookup.INDEX(error.ref, 2, 4)).to.equal(error.ref)
-          expect(lookup.INDEX(oneDimensionRange, error.na)).to.equal(error.na)
+        it('should return the correct value in case second parameter is omitted', () => {
+          expect(lookup.INDEX(row, 2)).to.equal(true)
+        })
+
+        it('should throw an error if row or column number is out of range', () => {
+          expect(lookup.INDEX(row, 1, 6)).to.equal(error.ref)
+          expect(lookup.INDEX(row, 2, 1)).to.equal(error.ref)
+
+          expect(lookup.INDEX(row, 6)).to.equal(error.ref)
+          expect(lookup.INDEX(row, -1)).to.equal(error.value)
+
+          expect(lookup.INDEX(row, 1, -6)).to.equal(error.value)
+          expect(lookup.INDEX(row, -6, 1)).to.equal(error.value)
+
+          expect(lookup.INDEX(row, '', 3)).to.equal(error.value)
+          expect(lookup.INDEX(row, 'true', 3)).to.equal(error.value)
+
+          expect(lookup.INDEX(row, 1, '')).to.eql(error.value)
+          expect(lookup.INDEX(row, 1, 'true')).to.eql(error.value)
+        })
+      })
+
+      const column = [[1], [false], [5], ['text'], [-2.4]]
+      describe('and a column', () => {
+        it('should return the value', () => {
+          expect(lookup.INDEX(column, 2, 1)).to.equal(false)
+          expect(lookup.INDEX(column, 0, 1)).to.eql(column)
+          expect(lookup.INDEX(column, '0', 1)).to.eql(column)
+          expect(lookup.INDEX(column, null, 1)).to.eql(column)
+          expect(lookup.INDEX(column, false, 1)).to.eql(column)
+        })
+
+        it('should return the correct value in case second parameter is omitted', () => {
+          expect(lookup.INDEX(column, 2)).to.equal(false)
+        })
+
+        it('should throw an error if row or column number is out of range', () => {
+          expect(lookup.INDEX(column, 1, 2)).to.eql(error.ref)
+          expect(lookup.INDEX(column, 1, -1)).to.eql(error.value)
+          expect(lookup.INDEX(column, 1, 'text')).to.eql(error.value)
+
+          expect(lookup.INDEX(column, 6, 1)).to.eql(error.ref)
+          expect(lookup.INDEX(column, -1, 1)).to.eql(error.value)
+          expect(lookup.INDEX(column, '', 1)).to.eql(error.value)
         })
       })
 
@@ -1728,15 +1786,36 @@ describe('Lookup Reference', () => {
         it('should return the correct value', () => {
           expect(lookup.INDEX(twoDimensionRange, 2, 1)).to.equal('Strawberry')
           expect(lookup.INDEX(twoDimensionRange, 1, 2)).to.equal('Apple')
-          expect(lookup.INDEX([['Banana'], ['Apple']], 2)).to.equal('Apple')
+
+          expect(lookup.INDEX(twoDimensionRange, 0, 1)).to.eql([['Banana'], ['Strawberry']])
+          expect(lookup.INDEX(twoDimensionRange, 1, 0)).to.eql([['Banana', 'Apple']])
+          expect(lookup.INDEX(twoDimensionRange, 0, 0)).to.eql(twoDimensionRange)
         })
 
         it('should throw an error if row or column number is out of range', () => {
-          expect(lookup.INDEX(twoDimensionRange, 2, 5)).to.equal(error.ref)
-          expect(lookup.INDEX(twoDimensionRange, 2, 5)).to.equal(error.ref)
-          expect(lookup.INDEX(twoDimensionRange, -2, 5)).to.equal(error.value)
-          expect(lookup.INDEX(twoDimensionRange, 2, -5)).to.equal(error.value)
+          expect(lookup.INDEX(twoDimensionRange, 1, 3)).to.equal(error.ref)
+          expect(lookup.INDEX(twoDimensionRange, 3, 1)).to.equal(error.ref)
+
+          expect(lookup.INDEX(twoDimensionRange, -1, 1)).to.equal(error.value)
+          expect(lookup.INDEX(twoDimensionRange, 1, -1)).to.equal(error.value)
         })
+      })
+
+      it('should return an error in case of error', () => {
+        Object.values(error).forEach((err) => {
+          expect(lookup.INDEX(err, 2)).to.equal(err)
+          expect(lookup.INDEX(1, err)).to.equal(err)
+
+          expect(lookup.INDEX(err, 1, 1)).to.equal(err)
+          expect(lookup.INDEX(1, err, 1)).to.equal(err)
+          expect(lookup.INDEX(1, 1, err)).to.equal(err)
+        })
+      })
+
+      it('should return an error because of incorrect number of arguments', () => {
+        expect(lookup.INDEX()).to.equal(error.na)
+        expect(lookup.INDEX('')).to.equal(error.na)
+        expect(lookup.INDEX(row, 1, 1, 1)).to.equal(error.na)
       })
     })
   })
