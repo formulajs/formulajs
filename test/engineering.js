@@ -130,17 +130,44 @@ describe('Engineering', () => {
   })
 
   it('CONVERT', () => {
-    expect(engineering.CONVERT(1, 'lbm', 'kg')).to.approximately(0.45359237, 1e-9)
-    // expect(engineering.CONVERT(68, 'F', 'C')).to.equal(20);
-    expect(engineering.CONVERT(2.5, 'ft', 'sec')).to.equal(error.na)
-    expect(engineering.CONVERT(engineering.CONVERT(100, 'ft', 'm'), 'ft', 'm')).to.approximately(9.290304, 1e-9)
-    expect(engineering.CONVERT('a', 1)).to.equal(error.value)
+    expect(engineering.CONVERT()).to.equal(error.na)
+    expect(engineering.CONVERT('')).to.equal(error.na)
+    expect(engineering.CONVERT(2)).to.equal(error.na)
+    expect(engineering.CONVERT('a', 1)).to.equal(error.na)
+    expect(engineering.CONVERT(2, 'mi')).to.equal(error.na)
+    expect(engineering.CONVERT(1, 'mi', 'yard')).to.equal(error.na)
+    expect(engineering.CONVERT(2, 'mi', 'yd', 'mi')).to.equal(error.na)
     expect(engineering.CONVERT(1, 'invalid', 'invalid')).to.equal(error.na)
     expect(engineering.CONVERT(1, 'da', 'invalid')).to.equal(error.na)
     expect(engineering.CONVERT(1, 'ki', 'invalid')).to.equal(error.na)
     expect(engineering.CONVERT(1, 'invalid', 'da')).to.equal(error.na)
     expect(engineering.CONVERT(1, 'invalid', 'ki')).to.equal(error.na)
+    expect(engineering.CONVERT(2.5, 'ft', 'sec')).to.equal(error.na)
+    expect(engineering.CONVERT(null, null, null)).to.equal(error.na)
+    expect(engineering.CONVERT(10, null, 'mi')).to.equal(error.na)
+    expect(engineering.CONVERT(10, 'km', null)).to.equal(error.na)
 
+    expect(engineering.CONVERT(error.div0, error.div0, error.div0)).to.equal(error.div0)
+
+    expect(engineering.CONVERT('Lots of', 'mi', 'yard')).to.equal(error.value)
+    expect(engineering.CONVERT('', 'km', 'mi')).to.equal(error.value)
+    expect(engineering.CONVERT(true, 'km', 'mi')).to.equal(error.value)
+    expect(engineering.CONVERT(10, true, 'mi')).to.equal(error.value)
+    expect(engineering.CONVERT(10, 'km', true)).to.equal(error.value)
+
+    expect(engineering.CONVERT(1, 'kg', 'g')).to.equal(1000)
+    expect(engineering.CONVERT(1, 'km', 'm')).to.equal(1000)
+    expect(engineering.CONVERT(1, 'g', 'kg')).to.equal(0.001)
+    expect(engineering.CONVERT(1, 'm', 'km')).to.equal(0.001)
+
+    expect(engineering.CONVERT(72, 'F', 'C')).to.approximately(22.22222222222222, 1e-9)
+    expect(engineering.CONVERT(0, 'km', 'mi')).to.equal(0)
+    expect(engineering.CONVERT(null, 'km', 'mi')).to.equal(0)
+    expect(engineering.CONVERT(10, 'km', 'mi')).to.approximately(6.213711922, 1e-9)
+    expect(engineering.CONVERT('10', 'km', 'mi')).to.approximately(6.213711922, 1e-9)
+    expect(engineering.CONVERT(75, 'in', 'm')).to.approximately(1.905, 1e-9)
+    expect(engineering.CONVERT(1, 'gal', 'l')).to.approximately(3.785411784, 1e-9)
+    expect(engineering.CONVERT(1, 'lbm', 'kg')).to.approximately(0.45359237, 1e-9)
     expect(engineering.CONVERT(2, 'mi', 'yd')).to.equal(3520)
     expect(engineering.CONVERT(2, 'nm', 'mm')).to.approximately(0.000002, 1e-9)
     expect(engineering.CONVERT(2, 'kg', 'lbm')).to.approximately(4.409245243697551, 1e-9)
@@ -149,8 +176,8 @@ describe('Engineering', () => {
     expect(engineering.CONVERT(3583, 'byte', 'kbyte')).to.approximately(3.583, 1e-9)
     expect(engineering.CONVERT(3583, 'byte', 'bit')).to.equal(28664)
     expect(engineering.CONVERT(64, 'kibyte', 'bit')).to.equal(524288)
-    expect(engineering.CONVERT('Lots of', 'mi', 'yard')).to.equal(error.value)
-    expect(engineering.CONVERT(1, 'mi', 'yard')).to.equal(error.na)
+
+    expect(engineering.CONVERT(engineering.CONVERT(100, 'ft', 'm'), 'ft', 'm')).to.approximately(9.290304, 1e-9)
   })
 
   it('DEC2BIN', () => {
