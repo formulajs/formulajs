@@ -412,15 +412,12 @@ export function ROWS(array) {
   }
 
   if (!(array instanceof Array)) {
-    return error.value
+    return 1
   }
 
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.rows(array)
+  return array.length
 }
+
 /**
  * Returns a sorted array of the elements in an array. The returned array is the same shape as the provided array argument.
  *

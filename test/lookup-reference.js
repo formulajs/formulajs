@@ -214,9 +214,14 @@ describe('Lookup Reference', () => {
   })
 
   it('ROWS', () => {
-    expect(lookup.ROWS()).to.equal(error.na)
-    expect(lookup.ROWS(1)).to.equal(error.value)
-    expect(lookup.ROWS([])).to.eql(0)
+    expect(lookup.ROWS('')).to.equal(1)
+    expect(lookup.ROWS('text')).to.equal(1)
+    expect(lookup.ROWS('1')).to.equal(1)
+    expect(lookup.ROWS(1)).to.equal(1)
+    expect(lookup.ROWS(0)).to.equal(1)
+    expect(lookup.ROWS(true)).to.equal(1)
+    expect(lookup.ROWS(false)).to.equal(1)
+    expect(lookup.ROWS(null)).to.equal(1)
     expect(
       lookup.ROWS([
         [1, 2],
@@ -225,7 +230,9 @@ describe('Lookup Reference', () => {
       ])
     ).to.equal(3)
     expect(lookup.ROWS([[1, 2]])).to.equal(1)
-    expect(lookup.ROWS([1, 2])).to.equal(2)
+
+    expect(lookup.ROWS()).to.equal(error.na)
+    expect(lookup.ROWS(1, 2)).to.equal(error.na)
   })
 
   describe('SORT', () => {
