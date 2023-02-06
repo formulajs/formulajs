@@ -344,9 +344,56 @@ describe('Information', () => {
 
   it('ISODD', () => {
     expect(information.ISODD(-1)).to.equal(true)
-    expect(information.ISODD(5)).to.equal(true)
-    expect(information.ISODD(2.5)).to.equal(false)
+    expect(information.ISODD(-6)).to.equal(false)
+
+    expect(information.ISODD(0)).to.equal(false)
     expect(information.ISODD(null)).to.equal(false)
+
+    expect(information.ISODD(5)).to.equal(true)
+    expect(information.ISODD(2)).to.equal(false)
+
+    expect(information.ISODD(2.5)).to.equal(false)
+    expect(information.ISODD(3.8)).to.equal(true)
+
+    expect(information.ISODD('')).to.equal(error.value)
+    expect(information.ISODD(' ')).to.equal(error.value)
+    expect(information.ISODD('text')).to.equal(error.value)
+    expect(information.ISODD('1l')).to.equal(error.value)
+
+    expect(information.ISODD('    1')).to.equal(true)
+    expect(information.ISODD('    2')).to.equal(false)
+
+    expect(information.ISODD('-1   ')).to.equal(true)
+    expect(information.ISODD('-2   ')).to.equal(false)
+
+    expect(information.ISODD('    15.2   ')).to.equal(true)
+    expect(information.ISODD('    12.53   ')).to.equal(false)
+
+    expect(information.ISODD('-15.2')).to.equal(true)
+    expect(information.ISODD('-12.53')).to.equal(false)
+
+    expect(information.ISODD('1900-02-01')).to.equal(false)
+    expect(information.ISODD('1900-02-02')).to.equal(true)
+    expect(information.ISODD('08:45 AM')).to.equal(false)
+
+    expect(information.ISODD(null)).to.equal(false)
+
+    expect(information.ISODD()).to.equal(error.na)
+    expect(information.ISODD(1, 3)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISODD(err)).to.equal(err)
+    })
+
+    expect(information.ISODD([1, 2, 3])).to.equal(error.value)
+    expect(information.ISODD([[1], [2], [3]])).to.equal(error.value)
+    expect(
+      information.ISODD([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.equal(error.value)
   })
 
   // TODO

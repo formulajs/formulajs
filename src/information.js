@@ -252,6 +252,24 @@ export function ISNUMBER(value) {
  * @returns
  */
 export function ISODD(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(value)) {
+    return error.value
+  }
+
+  if (value instanceof Error) {
+    return value
+  }
+
+  value = utils.getNumber(value)
+
+  if (typeof value === 'string') {
+    return error.value
+  }
+
   return !!(Math.floor(Math.abs(value)) & 1)
 }
 
