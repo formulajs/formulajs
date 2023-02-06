@@ -379,12 +379,38 @@ describe('Date & Time', () => {
   })
 
   it('ISOWEEKNUM', () => {
-    expect(dateTime.ISOWEEKNUM('1/1/1901')).to.equal(1)
-    expect(dateTime.ISOWEEKNUM('1/8/1901')).to.equal(2)
-    expect(dateTime.ISOWEEKNUM('12/29/1901')).to.equal(52)
-    expect(dateTime.ISOWEEKNUM('6/6/1902')).to.equal(23)
+    expect(dateTime.ISOWEEKNUM(42009)).to.equal(2)
+
+    // expect(dateTime.ISOWEEKNUM(1)).to.equal(52)
+    // expect(dateTime.ISOWEEKNUM(true)).to.equal(52)
+
+    expect(dateTime.ISOWEEKNUM(0)).to.equal(52)
+    expect(dateTime.ISOWEEKNUM(null)).to.equal(52)
+    expect(dateTime.ISOWEEKNUM(false)).to.equal(52)
+
+    expect(dateTime.ISOWEEKNUM(-1)).to.equal(error.num)
+
+    expect(dateTime.ISOWEEKNUM('')).to.equal(error.value)
+    expect(dateTime.ISOWEEKNUM('true')).to.equal(error.value)
+    expect(dateTime.ISOWEEKNUM('false')).to.equal(error.value)
     expect(dateTime.ISOWEEKNUM('a')).to.equal(error.value)
-    expect(dateTime.ISOWEEKNUM(new Date('2021-02-04T00:00:00.123Z'))).to.equal(5)
+
+    expect(dateTime.ISOWEEKNUM('2017-01-01')).to.equal(52)
+
+    expect(dateTime.ISOWEEKNUM(42736)).to.equal(52)
+    expect(dateTime.ISOWEEKNUM(43101)).to.equal(1)
+    expect(dateTime.ISOWEEKNUM(43466)).to.equal(1)
+    expect(dateTime.ISOWEEKNUM(43831)).to.equal(1)
+    expect(dateTime.ISOWEEKNUM(44197)).to.equal(53)
+    expect(dateTime.ISOWEEKNUM(44562)).to.equal(52)
+    expect(dateTime.ISOWEEKNUM(44927)).to.equal(52)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.ISOWEEKNUM(err)).to.equal(err)
+    })
+
+    expect(dateTime.ISOWEEKNUM()).to.equal(error.na)
+    expect(dateTime.ISOWEEKNUM(1, 1)).to.equal(error.na)
   })
 
   it('MINUTE', () => {

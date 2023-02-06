@@ -543,6 +543,17 @@ export function HOUR(serial_number) {
   return Math.trunc(Math.round(serial_number * 24 * 1e8) / 1e8)
 }
 
+const weeksPerYear = (year) => {
+  const p = (y) => {
+    return Math.round(y + y / 4 - y / 100 + y / 400) % 7
+  }
+
+  if (p(year) === 4 || p(year - 1) === 3) {
+    return 53
+  }
+  return 52
+}
+
 /**
  * Returns the number of the ISO week number of the year for a given date.
  *
@@ -552,17 +563,44 @@ export function HOUR(serial_number) {
  * @returns
  */
 export function ISOWEEKNUM(date) {
-  date = utils.parseDate(date)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (date instanceof Error) {
     return date
   }
 
-  date = startOfDay(date)
-  date.setDate(date.getDate() + 4 - (date.getDay() || 7))
-  const yearStart = new Date(date.getFullYear(), 0, 1)
+  date = utils.getNumber(date)
+  if (typeof date !== 'number') {
+    return error.value
+  }
+  if (date < 0) {
+    return error.num
+  }
 
-  return Math.ceil(((date - yearStart) / 86400000 + 1) / 7)
+  const jsDate = utils.serialNumberToDate(date)
+
+  var yearStart = new Date(Date.UTC(jsDate.getUTCFullYear(), 0, 1))
+
+  const milliseconds = jsDate.getTime() - yearStart.getTime() + utils.millisecondsPerDay
+  const dayOfYear = milliseconds / utils.millisecondsPerDay
+
+  let dayOfWeek = jsDate.getUTCDay()
+  dayOfWeek--
+  if (dayOfWeek < 0) {
+    dayOfWeek += 7
+  }
+  dayOfWeek++
+
+  let temp = Math.trunc((10 + dayOfYear - dayOfWeek) / 7)
+
+  if (temp === 0) {
+    return weeksPerYear(jsDate.getUTCFullYear() - 1)
+  } else if (temp > weeksPerYear(jsDate.getUTCFullYear())) {
+    return 1
+  }
+  return temp
 }
 
 /**

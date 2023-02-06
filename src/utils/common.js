@@ -217,7 +217,8 @@ export function numbers() {
   return possibleNumbers.filter((el) => typeof el === 'number')
 }
 
-const millisecondsPerDay = 86400000
+export const millisecondsPerDay = 86400000
+
 const excelInitialTime = Date.UTC(1900, 0, 0)
 
 // !IMPORTANT!
