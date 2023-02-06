@@ -2,6 +2,7 @@ import jStat from 'jstat'
 
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import * as evalExpression from './utils/criteria-eval.js'
 
 const approximateBinarySearch = (lookupValue, lookupArray) => {
   const valueType = typeof lookupValue
@@ -323,70 +324,78 @@ export function LOOKUP(lookup_value, array, result_array) {
  * @param {*} match_type Optional. The number -1, 0, or 1. The match_type argument specifies how Excel matches lookup_value with values in lookup_array. The default value for this argument is 1.
  * @returns
  */
-export function MATCH(lookup_value, lookup_array, match_type) {
-  if (!lookup_value || !lookup_array) {
+export function MATCH(lookup_value, lookup_array, match_type = 1) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
   }
-
-  if (arguments.length === 2) {
-    match_type = 1
-  }
-
-  lookup_array = utils.flatten(lookup_array)
 
   if (!(lookup_array instanceof Array)) {
     return error.na
   }
 
-  if (match_type !== -1 && match_type !== 0 && match_type !== 1) {
+  if (lookup_value instanceof Error) {
+    return lookup_value
+  }
+  if (match_type instanceof Error) {
+    return error.ref
+  }
+
+  if (lookup_array.length > 1 && lookup_array[0].length > 1) {
     return error.na
   }
 
-  let index
-  let indexValue
+  lookup_array = utils.flatten(lookup_array)
 
-  for (let idx = 0; idx < lookup_array.length; idx++) {
-    if (match_type === 1) {
-      if (lookup_array[idx] === lookup_value) {
-        return idx + 1
-      } else if (lookup_array[idx] < lookup_value) {
-        if (!indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        } else if (lookup_array[idx] > indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        }
-      }
-    } else if (match_type === 0) {
-      if (typeof lookup_value === 'string' && typeof lookup_array[idx] === 'string') {
-        const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
-        const regex = new RegExp('^' + lookupValueStr + '$')
+  match_type = utils.getNumber(match_type)
+  if (typeof match_type !== 'number') {
+    return error.value
+  }
 
-        if (regex.test(lookup_array[idx].toLowerCase())) {
-          return idx + 1
-        }
-      } else {
-        if (lookup_array[idx] === lookup_value) {
-          return idx + 1
-        }
-      }
-    } else if (match_type === -1) {
-      if (lookup_array[idx] === lookup_value) {
-        return idx + 1
-      } else if (lookup_array[idx] > lookup_value) {
-        if (!indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        } else if (lookup_array[idx] < indexValue) {
-          index = idx + 1
-          indexValue = lookup_array[idx]
-        }
-      }
+  const valueType = typeof lookup_value
+
+  if (match_type > 0) {
+    const result = approximateBinarySearch(lookup_value, lookup_array)
+    if (result !== null) {
+      return result + 1
+    }
+    return error.na
+  } else if (match_type === 0) {
+    const tokenizedCriteria = evalExpression.parse(lookup_value + '')
+
+    const result = lookup_array.findIndex((item) => {
+      const tokens = [evalExpression.createToken(item, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+
+      return evalExpression.countIfComputeExpression(tokens)
+    })
+
+    return result >= 0 ? result + 1 : error.na
+  }
+
+  let lowestValidValue = null
+  for (let i = 0; i < lookup_array.length; i++) {
+    if (valueType !== typeof lookup_array[i]) {
+      continue
+    }
+    if (lookup_value > lookup_array[i]) {
+      break
+    }
+
+    if (lookup_value < lookup_array[i]) {
+      lowestValidValue = i
+    } else {
+      return i + 1
     }
   }
 
-  return index || error.na
+  if (lowestValidValue !== null) {
+    while (lowestValidValue >= 0 && lookup_array[lowestValidValue] instanceof Error) {
+      lowestValidValue--
+    }
+
+    return lowestValidValue >= 0 ? lowestValidValue + 1 : error.na
+  }
+
+  return error.na
 }
 
 /**
