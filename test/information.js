@@ -127,11 +127,60 @@ describe('Information', () => {
   })
 
   it('ISEVEN', () => {
-    expect(information.ISEVEN(-1)).to.equal(false)
-    expect(information.ISEVEN(2.5)).to.equal(true)
-    expect(information.ISEVEN(5)).to.equal(false)
+    expect(information.ISEVEN(10)).to.equal(true)
+    expect(information.ISEVEN(3)).to.equal(false)
+
+    expect(information.ISEVEN(-40)).to.equal(true)
+    expect(information.ISEVEN(-15)).to.equal(false)
+
     expect(information.ISEVEN(0)).to.equal(true)
     expect(information.ISEVEN(null)).to.equal(true)
+
+    expect(information.ISEVEN(2.5)).to.equal(true)
+    expect(information.ISEVEN(2.6)).to.equal(true)
+
+    expect(information.ISEVEN(3.5)).to.equal(false)
+    expect(information.ISEVEN(3.6)).to.equal(false)
+
+    expect(information.ISEVEN(true)).to.equal(error.value)
+    expect(information.ISEVEN(false)).to.equal(error.value)
+
+    expect(information.ISEVEN('true')).to.equal(error.value)
+    expect(information.ISEVEN('false')).to.equal(error.value)
+
+    expect(information.ISEVEN('')).to.equal(error.value)
+    expect(information.ISEVEN(' ')).to.equal(error.value)
+    expect(information.ISEVEN('text')).to.equal(error.value)
+
+    expect(information.ISEVEN('   8.9')).to.equal(true)
+    expect(information.ISEVEN('   7.6')).to.equal(false)
+
+    expect(information.ISEVEN('8.9    ')).to.equal(true)
+    expect(information.ISEVEN('7.6    ')).to.equal(false)
+
+    expect(information.ISEVEN('    8.9    ')).to.equal(true)
+    expect(information.ISEVEN('    7.6    ')).to.equal(false)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISEVEN(err)).to.equal(err)
+    })
+
+    expect(information.ISEVEN([1, 2, 3])).to.equal(error.value)
+    expect(information.ISEVEN([[1], [2], [3]])).to.equal(error.value)
+    expect(
+      information.ISEVEN([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.equal(error.value)
+
+    expect(information.ISEVEN()).to.equal(error.na)
+    expect(information.ISEVEN(1, 2)).to.equal(error.na)
+
+    expect(information.ISEVEN('1900-01-01')).to.equal(false)
+    expect(information.ISEVEN('1900-01-02')).to.equal(true)
+    expect(information.ISEVEN('08:45 AM')).to.equal(true)
   })
 
   // TODO
@@ -295,9 +344,56 @@ describe('Information', () => {
 
   it('ISODD', () => {
     expect(information.ISODD(-1)).to.equal(true)
-    expect(information.ISODD(5)).to.equal(true)
-    expect(information.ISODD(2.5)).to.equal(false)
+    expect(information.ISODD(-6)).to.equal(false)
+
+    expect(information.ISODD(0)).to.equal(false)
     expect(information.ISODD(null)).to.equal(false)
+
+    expect(information.ISODD(5)).to.equal(true)
+    expect(information.ISODD(2)).to.equal(false)
+
+    expect(information.ISODD(2.5)).to.equal(false)
+    expect(information.ISODD(3.8)).to.equal(true)
+
+    expect(information.ISODD('')).to.equal(error.value)
+    expect(information.ISODD(' ')).to.equal(error.value)
+    expect(information.ISODD('text')).to.equal(error.value)
+    expect(information.ISODD('1l')).to.equal(error.value)
+
+    expect(information.ISODD('    1')).to.equal(true)
+    expect(information.ISODD('    2')).to.equal(false)
+
+    expect(information.ISODD('-1   ')).to.equal(true)
+    expect(information.ISODD('-2   ')).to.equal(false)
+
+    expect(information.ISODD('    15.2   ')).to.equal(true)
+    expect(information.ISODD('    12.53   ')).to.equal(false)
+
+    expect(information.ISODD('-15.2')).to.equal(true)
+    expect(information.ISODD('-12.53')).to.equal(false)
+
+    expect(information.ISODD('1900-02-01')).to.equal(false)
+    expect(information.ISODD('1900-02-02')).to.equal(true)
+    expect(information.ISODD('08:45 AM')).to.equal(false)
+
+    expect(information.ISODD(null)).to.equal(false)
+
+    expect(information.ISODD()).to.equal(error.na)
+    expect(information.ISODD(1, 3)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(information.ISODD(err)).to.equal(err)
+    })
+
+    expect(information.ISODD([1, 2, 3])).to.equal(error.value)
+    expect(information.ISODD([[1], [2], [3]])).to.equal(error.value)
+    expect(
+      information.ISODD([
+        [1, 4],
+        [2, 5],
+        [3, 6]
+      ])
+    ).to.equal(error.value)
   })
 
   // TODO
