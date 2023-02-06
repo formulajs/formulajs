@@ -694,6 +694,10 @@ export function MONTH(serial_number) {
  * @returns
  */
 export function NETWORKDAYS(start_date, end_date, holidays) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
   return NETWORKDAYS.INTL(start_date, end_date, 1, holidays)
 }
 

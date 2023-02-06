@@ -477,20 +477,48 @@ describe('Date & Time', () => {
   })
 
   it('NETWORKDAYS', () => {
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-04')).to.equal(1)
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-05')).to.equal(2)
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-06')).to.equal(3)
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-07')).to.equal(3)
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-08')).to.equal(3)
-    expect(dateTime.NETWORKDAYS('2013-12-04', '2013-12-09')).to.equal(4)
-    expect(dateTime.NETWORKDAYS('2013-12-07', '2013-12-07')).to.equal(0)
-    expect(dateTime.NETWORKDAYS('2013-12-07', '2013-12-08')).to.equal(0)
-    expect(dateTime.NETWORKDAYS('12/4/2013', '12/4/2013')).to.equal(1)
-    expect(dateTime.NETWORKDAYS('12/4/2013', '1/4/2014', '1/1/2014')).to.equal(22)
-    expect(dateTime.NETWORKDAYS('12/4/2013', '1/4/2014', ['1/1/2014', '1/2/2014', '1/3/2014'])).to.equal(20)
-    expect(dateTime.NETWORKDAYS('a', '1/2/1900')).to.equal(error.value)
-    expect(dateTime.NETWORKDAYS('1/1/1900', 'a')).to.equal(error.value)
-    expect(dateTime.NETWORKDAYS('1/1/1900', '2/1/1900', 'a')).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS(36526, 44656)).to.equal(5807)
+    expect(dateTime.NETWORKDAYS(44656, 36526)).to.equal(-5807)
+
+    expect(dateTime.NETWORKDAYS('2000-01-01', '2022-04-05')).to.equal(5807)
+
+    expect(dateTime.NETWORKDAYS(44562, 44682)).to.equal(85)
+    expect(dateTime.NETWORKDAYS(44562, 44682, 44591)).to.equal(85)
+    expect(dateTime.NETWORKDAYS(44562, 44682, 44592)).to.equal(84)
+    expect(
+      dateTime.NETWORKDAYS(44562, 44682, [
+        [44590, 44591],
+        [44592, null]
+      ])
+    ).to.equal(84)
+
+    expect(dateTime.NETWORKDAYS(1, -1)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS(-1, 1)).to.equal(error.num)
+    expect(dateTime.NETWORKDAYS(1, 1, -1)).to.equal(error.num)
+
+    expect(dateTime.NETWORKDAYS('', 1)).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS('', 1, 1)).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS(1, '')).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS(1, '', 1)).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS(1, 1, '')).to.equal(error.value)
+
+    expect(dateTime.NETWORKDAYS(1, 'a')).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS('a', 1)).to.equal(error.value)
+    expect(dateTime.NETWORKDAYS(1, 10, 'a')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.NETWORKDAYS(1, err)).to.equal(err)
+      expect(dateTime.NETWORKDAYS(1, err, 1)).to.equal(err)
+
+      expect(dateTime.NETWORKDAYS(err, 1)).to.equal(err)
+      expect(dateTime.NETWORKDAYS(err, 1, 1)).to.equal(err)
+
+      expect(dateTime.NETWORKDAYS(1, 1, err)).to.equal(err)
+    })
+
+    expect(dateTime.NETWORKDAYS()).to.equal(error.na)
+    expect(dateTime.NETWORKDAYS(1)).to.equal(error.na)
+    expect(dateTime.NETWORKDAYS(1, 10, 5, 6)).to.equal(error.na)
   })
 
   it('NETWORKDAYS.INTL', () => {
