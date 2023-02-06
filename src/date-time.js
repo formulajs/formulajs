@@ -449,20 +449,46 @@ export function DAYS360(start_date, end_date, method = false) {
  * @returns
  */
 export function EDATE(start_date, months) {
-  start_date = utils.parseDate(start_date)
-
-  if (start_date instanceof Error) {
-    return start_date
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (isNaN(months)) {
+  const someError = utils.anyError(start_date, months)
+  if (someError) {
+    return someError
+  }
+
+  const someBoolean = [start_date, months].some((argument) => typeof argument === 'boolean')
+  if (someBoolean) {
     return error.value
   }
 
-  months = parseInt(months, 10)
-  start_date.setMonth(start_date.getMonth() + months)
+  start_date = utils.getNumber(start_date)
+  if (typeof start_date === 'string') {
+    return error.value
+  }
+  if (start_date < 0) {
+    return error.num
+  }
 
-  return start_date
+  months = utils.getNumber(months)
+  if (typeof months === 'string') {
+    return error.value
+  }
+
+  start_date = Math.trunc(start_date)
+  months = Math.trunc(months)
+
+  start_date = utils.serialNumberToDate(start_date)
+
+  const resultMonth = start_date.getUTCMonth() + months
+  start_date.setUTCMonth(resultMonth)
+
+  if (start_date.getUTCMonth() !== resultMonth % 12) {
+    start_date.setDate(-1)
+  }
+
+  return utils.dateToSerialNumber(start_date)
 }
 
 /**

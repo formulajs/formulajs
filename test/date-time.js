@@ -288,9 +288,38 @@ describe('Date & Time', () => {
   })
 
   it('EDATE', () => {
+    expect(dateTime.EDATE(1, 1)).to.equal(32)
+    expect(dateTime.EDATE('32', 1)).to.equal(61)
+    expect(dateTime.EDATE(4000, '-10')).to.equal(3697)
+
+    expect(dateTime.EDATE('2022-01-01', '2022-01-01')).to.equal(1400888)
+
+    expect(dateTime.EDATE(-1, 3)).to.equal(error.num)
+
+    expect(dateTime.EDATE(null, 1)).to.equal(31)
+    expect(dateTime.EDATE(1, null)).to.equal(1)
+
+    expect(dateTime.EDATE(32.9999999999999, 1)).to.equal(61)
+    expect(dateTime.EDATE(32, 1)).to.equal(61)
+
+    expect(dateTime.EDATE(1, 32.9999999999999)).to.equal(975)
+    expect(dateTime.EDATE(1, 32)).to.equal(975)
+
+    expect(dateTime.EDATE(true, 5)).to.equal(error.value)
+    expect(dateTime.EDATE(5, false)).to.equal(error.value)
+
     expect(dateTime.EDATE('a', 0)).to.equal(error.value)
-    expect(dateTime.EDATE('1/1/1900', 'a')).to.equal(error.value)
-    expect(dateTime.EDATE(new Date(2011, 0, 23), 1)).to.deep.equal(new Date(2011, 1, 23))
+    expect(dateTime.EDATE(0, '')).to.equal(error.value)
+
+    Object.values(error).forEach((err, index, array) => {
+      expect(dateTime.DAYS360(err, 0)).to.equal(err)
+      expect(dateTime.DAYS360(0, err)).to.equal(err)
+      expect(dateTime.DAYS360(err, array[(index + 1) % array.length])).to.equal(err)
+    })
+
+    expect(dateTime.EDATE()).to.equal(error.na)
+    expect(dateTime.EDATE(1)).to.equal(error.na)
+    expect(dateTime.EDATE(1, 1, true)).to.equal(error.na)
   })
 
   it('EOMONTH', () => {
