@@ -1675,22 +1675,112 @@ describe('Lookup Reference', () => {
     ).to.equal(error.na)
   })
 
-  describe('LOOKUP', () => {
-    describe('without a resultArray', () => {
-      it('should return the nearest value', () => {
-        expect(lookup.LOOKUP(0.21, [[0.1, 0.2, 0.3, 0.2]])).to.equal(0.2)
-      })
-    })
+  it('LOOKUP', () => {
+    expect(lookup.LOOKUP('Jamie', [['Jim', 'Jack', 'Franck']], [['blue'], ['yellow'], ['red']])).to.equal('red')
+    expect(lookup.LOOKUP('Jamie', [['Jim'], ['Jack'], ['Franck']], [['blue'], ['yellow'], ['red']])).to.equal('red')
 
-    describe('with a resultArray', () => {
-      expect(lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red'])).to.equal('yellow')
-      expect(lookup.LOOKUP('Jack', [['Jim'], ['Jack'], ['Franck']], [['blue'], ['yellow'], ['red']])).to.equal('yellow')
-      expect(lookup.LOOKUP('Jamie', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red'])).to.equal('red')
-      expect(lookup.LOOKUP('Jamie', [['Jim'], ['Jack'], ['Franck']], [['blue'], ['yellow'], ['red']])).to.equal('red')
-      expect(lookup.LOOKUP(0.23, [[0.1], [0.2], [0.3], [0.4]], [['A'], ['B'], ['C'], ['D']])).to.equal('B')
-      expect(lookup.LOOKUP(0, [[0.1, 0.2, 0.3, 0.4]], [['A', 'B', 'C', 'D']])).to.equal(error.na)
-      expect(lookup.LOOKUP(0.21, [[0.1, 0.2, 0.3, 0.2]], [['A', 'B', 'C', 'D']])).to.equal('B')
-    })
+    expect(lookup.LOOKUP('Jack', [['Jim'], ['Jack'], ['Franck']], [['blue'], ['yellow'], ['red']])).to.equal('yellow')
+    expect(
+      lookup.LOOKUP(
+        3125,
+        [[1000], [2000], [3000], [4000], [5000]],
+        [['Bronze'], ['Silver'], ['Gold'], ['Platinum'], ['Dinamond']]
+      )
+    ).to.equal('Gold')
+
+    expect(lookup.LOOKUP(0.23, [[0.1], [0.2], [0.3], [0.4]], [['A'], ['B'], ['C'], ['D']])).to.equal('B')
+    expect(lookup.LOOKUP(0.21, [[0.1, 0.2, 0.3, 0.2]], [['A', 'B', 'C', 'D']])).to.equal('B')
+
+    expect(lookup.LOOKUP(3.5, [[4, 3, 1, 8, 6]], [['A', 'B', 'C', 'D']])).to.equal('C')
+    expect(lookup.LOOKUP(3.5, [[4, 3, 1, 8, 6]], [['A', 'B']])).to.equal(error.ref)
+
+    expect(
+      lookup.LOOKUP(6, [
+        [1, 6, 11, 16],
+        [2, 7, 12, 17],
+        [3, 8, 13, 18],
+        [4, 9, 14, 19]
+      ])
+    ).to.equal(19)
+    expect(
+      lookup.LOOKUP(6, [
+        [1, 6, 11, 16],
+        [2, 7, 12, 17],
+        [3, 8, 13, 18]
+      ])
+    ).to.equal(8)
+
+    expect(
+      lookup.LOOKUP(
+        6,
+        [
+          [1, 6, 11, 16],
+          [2, 7, 12, 17],
+          [3, 8, 13, 18],
+          [4, 9, 14, 19]
+        ],
+        [['text 1', 'text 2', 'text 3', 'text 4']]
+      )
+    ).to.equal('text 4')
+    expect(
+      lookup.LOOKUP(
+        6,
+        [
+          [1, 6, 11, 16],
+          [2, 7, 12, 17],
+          [3, 8, 13, 18]
+        ],
+        [['text 1', 'text 2', 'text 3', 'text 4']]
+      )
+    ).to.equal('text 2')
+
+    expect(
+      lookup.LOOKUP(
+        1,
+        [
+          [1, 6, 11, 16],
+          [2, 7, 12, 17],
+          [3, 8, 13, 18],
+          [4, 9, 14, 19],
+          [5, 10, 15, 20]
+        ],
+        [
+          [1, 6, 11, 16],
+          [2, 7, 12, 17],
+          [3, 8, 13, 18],
+          [4, 9, 14, 19],
+          [5, 10, 15, 20]
+        ]
+      )
+    ).to.equal(error.na)
+
+    expect(lookup.LOOKUP(6, 4)).to.equal(4)
+    expect(lookup.LOOKUP(6, 4, 8)).to.equal(8)
+
+    expect(lookup.LOOKUP(error.div0, [[1], [2], [3], [4], [5]])).to.equal(error.div0)
+    expect(lookup.LOOKUP(6, error.div0)).to.equal(error.na)
+
+    expect(lookup.LOOKUP(0, [[0.1, 0.2, 0.3, 0.4]], [['A', 'B', 'C', 'D']])).to.equal(error.na)
+    expect(
+      lookup.LOOKUP(
+        3125,
+        [['Bronze'], ['Silver'], ['Gold'], ['Platinum'], ['Dinamond']],
+        [[1000], [2000], [3000], [4000], [5000]]
+      )
+    ).to.equal(error.na)
+    expect(lookup.LOOKUP(true, [1, 2, 3])).to.equal(error.na)
+
+    expect(
+      lookup.LOOKUP(
+        [[1000], [2000], [3000], [4000], [5000]],
+        [['Bronze'], ['Silver'], ['Gold'], ['Platinum'], ['Dinamond']]
+      )
+    ).to.equal(error.na)
+
+    expect(lookup.LOOKUP()).to.equal(error.na)
+    expect(lookup.LOOKUP(1)).to.equal(error.na)
+    expect(lookup.LOOKUP('')).to.equal(error.na)
+    expect(lookup.LOOKUP('Jack', ['Jim', 'Jack', 'Franck'], ['blue', 'yellow', 'red'], 2)).to.equal(error.na)
   })
 
   describe('INDEX', () => {

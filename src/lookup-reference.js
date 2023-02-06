@@ -3,6 +3,46 @@ import jStat from 'jstat'
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
+const approximateBinarySearch = (lookupValue, lookupArray) => {
+  const valueType = typeof lookupValue
+  let highestValidValue = null
+
+  let start = 0
+  let end = lookupArray.length - 1
+
+  while (end >= start) {
+    let middle = start + Math.trunc((end - start) / 2)
+
+    while (middle <= end && valueType !== typeof lookupArray[middle]) {
+      middle++
+    }
+
+    if (middle > end) {
+      middle--
+
+      while (middle >= start && valueType !== typeof lookupArray[middle]) {
+        middle--
+      }
+    }
+
+    if (middle < start) {
+      break
+    }
+
+    if (lookupValue > lookupArray[middle]) {
+      highestValidValue = middle
+
+      start = middle + 1
+    } else if (lookupValue < lookupArray[middle]) {
+      end = middle - 1
+    } else {
+      return middle
+    }
+  }
+
+  return highestValidValue
+}
+
 /**
  * Chooses a value from a list of values.
  *
@@ -217,26 +257,60 @@ export function INDEX(array, row_num, column_num) {
  * @returns
  */
 export function LOOKUP(lookup_value, array, result_array) {
-  array = utils.flatten(array)
-  result_array = result_array ? utils.flatten(result_array) : array
-
-  const isNumberLookup = typeof lookup_value === 'number'
-  let result = error.na
-
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] === lookup_value) {
-      return result_array[i]
-    } else if (
-      (isNumberLookup && array[i] <= lookup_value) ||
-      (typeof array[i] === 'string' && array[i].localeCompare(lookup_value) < 0)
-    ) {
-      result = result_array[i]
-    } else if (isNumberLookup && array[i] > lookup_value) {
-      return result
-    }
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  return result
+  if (lookup_value instanceof Error) {
+    return lookup_value
+  }
+
+  if (!Array.isArray(array)) {
+    array = [array]
+  }
+  if (!Array.isArray(array[0])) {
+    array[0] = [array[0]]
+  }
+
+  if (array[0].length > array.length) {
+    if (result_array === undefined) {
+      result_array = array[array.length - 1]
+    }
+
+    array = array[0]
+  } else {
+    if (result_array === undefined) {
+      result_array = array.map((row) => row[row.length - 1])
+    }
+
+    array = array.map((row) => row[0])
+  }
+
+  if (!Array.isArray(result_array)) {
+    result_array = [result_array]
+  }
+  if (!Array.isArray(result_array[0])) {
+    result_array[0] = [result_array[0]]
+  }
+
+  if (result_array.length > 1 && result_array[0].length > 1) {
+    return error.na
+  }
+
+  array = utils.flatten(array)
+  result_array = utils.flatten(result_array)
+
+  const index = approximateBinarySearch(lookup_value, array)
+
+  if (index === null) {
+    return error.na
+  }
+
+  if (index >= result_array.length) {
+    return error.ref
+  }
+
+  return result_array[index]
 }
 
 /**
