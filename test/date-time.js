@@ -678,9 +678,48 @@ describe('Date & Time', () => {
   })
 
   it('WEEKDAY', () => {
-    expect(dateTime.WEEKDAY('1/1/1901')).to.equal(3)
-    expect(dateTime.WEEKDAY('1/1/1901', 2)).to.equal(2)
+    // expect(dateTime.WEEKDAY(11)).to.equal(4)
+
+    expect(dateTime.WEEKDAY('2015-01-01', '1900-01-11')).to.equal(4)
+
+    expect(dateTime.WEEKDAY(42005)).to.equal(5)
+    expect(dateTime.WEEKDAY(42005, 0)).to.equal(error.num)
+    expect(dateTime.WEEKDAY(42005, 1)).to.equal(5)
+    expect(dateTime.WEEKDAY(42005, 2)).to.equal(4)
+    expect(dateTime.WEEKDAY(42005, 3)).to.equal(3)
+    expect(dateTime.WEEKDAY(42005, 4)).to.equal(error.num)
+    expect(dateTime.WEEKDAY(42005, 10)).to.equal(error.num)
+    expect(dateTime.WEEKDAY(42005, 11)).to.equal(4)
+    expect(dateTime.WEEKDAY(42005, 12)).to.equal(3)
+    expect(dateTime.WEEKDAY(42005, 13)).to.equal(2)
+    expect(dateTime.WEEKDAY(42005, 14)).to.equal(1)
+    expect(dateTime.WEEKDAY(42005, 15)).to.equal(7)
+    expect(dateTime.WEEKDAY(42005, 16)).to.equal(6)
+    expect(dateTime.WEEKDAY(42005, 17)).to.equal(5)
+    expect(dateTime.WEEKDAY(42005, 18)).to.equal(error.num)
+
+    // expect(dateTime.WEEKDAY(true)).to.equal(1)
+    // expect(dateTime.WEEKDAY(false)).to.equal(7)
+
+    // expect(dateTime.WEEKDAY(null)).to.equal(7)
+    // expect(dateTime.WEEKDAY(0)).to.equal(7)
+
+    expect(dateTime.WEEKDAY('400')).to.equal(1)
+
     expect(dateTime.WEEKDAY('a')).to.equal(error.value)
+    expect(dateTime.WEEKDAY('true')).to.equal(error.value)
+    expect(dateTime.WEEKDAY('')).to.equal(error.value)
+
+    expect(dateTime.WEEKDAY(-1)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(dateTime.WEEKDAY(err)).to.equal(err)
+      expect(dateTime.WEEKDAY(err, 1)).to.equal(err)
+      expect(dateTime.WEEKDAY(1, err)).to.equal(err)
+    })
+
+    expect(dateTime.WEEKDAY()).to.equal(error.na)
+    expect(dateTime.WEEKDAY(1, 1, 1)).to.equal(error.na)
   })
 
   it('WEEKNUM', () => {

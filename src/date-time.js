@@ -1,47 +1,29 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 
-const WEEK_STARTS = [
-  undefined,
-  0,
-  1,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  undefined,
-  1,
-  2,
-  3,
-  4,
-  5,
-  6,
-  0
-]
-const WEEK_TYPES = [
-  [],
-  [1, 2, 3, 4, 5, 6, 7],
-  [7, 1, 2, 3, 4, 5, 6],
-  [6, 0, 1, 2, 3, 4, 5],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [],
-  [7, 1, 2, 3, 4, 5, 6],
-  [6, 7, 1, 2, 3, 4, 5],
-  [5, 6, 7, 1, 2, 3, 4],
-  [4, 5, 6, 7, 1, 2, 3],
-  [3, 4, 5, 6, 7, 1, 2],
-  [2, 3, 4, 5, 6, 7, 1],
-  [1, 2, 3, 4, 5, 6, 7]
-]
+const WEEK_STARTS = {
+  1: 0,
+  2: 1,
+  11: 1,
+  12: 2,
+  13: 3,
+  14: 4,
+  15: 5,
+  16: 6,
+  17: 0
+}
+const WEEK_TYPES = {
+  1: [1, 2, 3, 4, 5, 6, 7],
+  2: [7, 1, 2, 3, 4, 5, 6],
+  3: [6, 0, 1, 2, 3, 4, 5],
+  11: [7, 1, 2, 3, 4, 5, 6],
+  12: [6, 7, 1, 2, 3, 4, 5],
+  13: [5, 6, 7, 1, 2, 3, 4],
+  14: [4, 5, 6, 7, 1, 2, 3],
+  15: [3, 4, 5, 6, 7, 1, 2],
+  16: [2, 3, 4, 5, 6, 7, 1],
+  17: [1, 2, 3, 4, 5, 6, 7]
+}
 const WEEKEND_TYPES = [
   [],
   [6, 0],
@@ -1004,17 +986,40 @@ export function TODAY() {
  * @returns
  */
 export function WEEKDAY(serial_number, return_type) {
-  serial_number = utils.parseDate(serial_number)
-
-  if (serial_number instanceof Error) {
-    return serial_number
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
   }
 
+  const someError = utils.anyError(serial_number, return_type)
+  if (someError) {
+    return someError
+  }
+
+  serial_number = utils.getNumber(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  if (return_type === null) {
+    return error.num
+  }
   if (return_type === undefined) {
     return_type = 1
   }
 
-  const day = serial_number.getDay()
+  return_type = utils.getNumber(return_type)
+  if (typeof return_type !== 'number') {
+    return error.value
+  }
+
+  if (!WEEK_TYPES[return_type]) {
+    return error.num
+  }
+
+  const day = utils.serialNumberToDate(serial_number).getUTCDay()
 
   return WEEK_TYPES[return_type][day]
 }
