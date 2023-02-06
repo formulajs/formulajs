@@ -100,9 +100,10 @@ describe('Lookup Reference', () => {
   })
 
   it('COLUMNS', () => {
-    expect(lookup.COLUMNS()).to.equal(error.na)
-    expect(lookup.COLUMNS(1)).to.equal(error.value)
-    expect(lookup.COLUMNS([])).to.eql(0)
+    expect(lookup.COLUMNS('')).to.equal(1)
+    expect(lookup.COLUMNS(1)).to.equal(1)
+    expect(lookup.COLUMNS('3')).to.equal(1)
+
     expect(
       lookup.COLUMNS([
         [1, 2],
@@ -110,8 +111,11 @@ describe('Lookup Reference', () => {
         [2, 4]
       ])
     ).to.equal(2)
+    expect(lookup.COLUMNS([[1], [2]])).to.equal(1)
     expect(lookup.COLUMNS([[1, 2]])).to.equal(2)
-    expect(lookup.COLUMNS([1, 2])).to.equal(1)
+
+    expect(lookup.COLUMNS()).to.equal(error.na)
+    expect(lookup.COLUMNS('3', 2)).to.equal(error.na)
   })
 
   describe('MATCH', () => {

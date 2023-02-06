@@ -100,14 +100,10 @@ export function COLUMNS(array) {
   }
 
   if (!(array instanceof Array)) {
-    return error.value
+    return 1
   }
 
-  if (array.length === 0) {
-    return 0
-  }
-
-  return jStat.cols(array)
+  return array[0].length
 }
 
 /**
