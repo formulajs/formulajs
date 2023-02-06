@@ -1342,6 +1342,93 @@ describe('Lookup Reference', () => {
     expect(lookup.TRANSPOSE(1, 1)).to.equal(error.na)
   })
 
+  it('ADDRESS', () => {
+    expect(lookup.ADDRESS('4', 3)).to.equal('$C$4')
+    expect(lookup.ADDRESS(4.1, '3.9')).to.equal('$C$4')
+
+    expect(lookup.ADDRESS(0, 3)).to.equal(error.value)
+    expect(lookup.ADDRESS(3, 0)).to.equal(error.value)
+    expect(lookup.ADDRESS(-1, 5)).to.equal(error.value)
+    expect(lookup.ADDRESS(10, -5)).to.equal(error.value)
+
+    expect(lookup.ADDRESS('0', 3)).to.equal(error.value)
+    expect(lookup.ADDRESS('3', '0')).to.equal(error.value)
+    expect(lookup.ADDRESS(-1, '5')).to.equal(error.value)
+
+    expect(lookup.ADDRESS(true, 'true')).to.equal('$A$1')
+    expect(lookup.ADDRESS(false, 1)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, false)).to.equal(error.value)
+    expect(lookup.ADDRESS(false, 1)).to.equal(error.value)
+    expect(lookup.ADDRESS(null, 1)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, null)).to.equal(error.value)
+
+    expect(lookup.ADDRESS(1, '')).to.equal(error.value)
+    expect(lookup.ADDRESS('', 1)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 'text')).to.equal(error.value)
+    expect(lookup.ADDRESS('text', 1)).to.equal(error.value)
+
+    expect(lookup.ADDRESS(1, 1, true)).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 1)).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 2)).to.equal('A$1')
+    expect(lookup.ADDRESS(1, 1, 3)).to.equal('$A1')
+    expect(lookup.ADDRESS(1, 1, 4)).to.equal('A1')
+
+    expect(lookup.ADDRESS(1, 1, null)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, '')).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 'text')).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 0)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, -1)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 5)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, false)).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 'true')).to.equal(error.value)
+
+    expect(lookup.ADDRESS(1, 1, true, false)).to.equal('R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, false)).to.equal('R1C1')
+    expect(lookup.ADDRESS(1, 1, 2, false)).to.equal('R1C[1]')
+    expect(lookup.ADDRESS(1, 1, 3, false)).to.equal('R[1]C1')
+    expect(lookup.ADDRESS(1, 1, 4, false)).to.equal('R[1]C[1]')
+
+    expect(lookup.ADDRESS(1, 1, 1, null)).to.equal('R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, '')).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 1, 'text')).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 1, 0)).to.equal('R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, -5)).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, 1)).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, '1')).to.equal(error.value)
+    expect(lookup.ADDRESS(1, 1, 1, true)).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, false)).to.equal('R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, 'true')).to.equal('$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, 'false')).to.equal('R1C1')
+
+    expect(lookup.ADDRESS(1, 1, 1, true, null)).to.equal('!$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, false, '')).to.equal('!R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, true, 0)).to.equal("'0'!$A$1")
+    expect(lookup.ADDRESS(1, 1, 1, false, -5)).to.equal("'-5'!R1C1")
+    expect(lookup.ADDRESS(1, 1, 1, true, 3)).to.equal("'3'!$A$1")
+    expect(lookup.ADDRESS(1, 1, 1, false, '1')).to.equal("'1'!R1C1")
+
+    expect(lookup.ADDRESS(1, 1, 1, true, true)).to.equal("'TRUE'!$A$1")
+    expect(lookup.ADDRESS(1, 1, 1, false, false)).to.equal("'FALSE'!R1C1")
+    expect(lookup.ADDRESS(1, 1, 1, true, 'true')).to.equal("'TRUE'!$A$1")
+    expect(lookup.ADDRESS(1, 1, 1, false, 'false')).to.equal("'FALSE'!R1C1")
+    expect(lookup.ADDRESS(1, 1, 1, true, 'text')).to.equal('text!$A$1')
+    expect(lookup.ADDRESS(1, 1, 1, false, 'text1')).to.equal('text1!R1C1')
+    expect(lookup.ADDRESS(1, 1, 1, true, '12text')).to.equal("'12text'!$A$1")
+    expect(lookup.ADDRESS(1, 1, 1, true, '?text')).to.equal("'?text'!$A$1")
+
+    Object.values(error).forEach((err) => {
+      expect(lookup.ADDRESS(err, 1, 1, 1, 1)).to.equal(err)
+      expect(lookup.ADDRESS(1, err, 1, 1, 1)).to.equal(err)
+      expect(lookup.ADDRESS(1, 1, err, 1, 1)).to.equal(err)
+      expect(lookup.ADDRESS(1, 1, 1, err, 1)).to.equal(err)
+      expect(lookup.ADDRESS(1, 1, 1, 1, err)).to.equal(err)
+    })
+
+    expect(lookup.ADDRESS()).to.equal(error.na)
+    expect(lookup.ADDRESS(1)).to.equal(error.na)
+    expect(lookup.ADDRESS(1, 1, 1, 1, 1, 1)).to.equal(error.na)
+  })
+
   it('UNIQUE', () => {
     expect(lookup.UNIQUE(1, 2, 3, 4, 5, 6, 6, 3)).to.deep.equal([1, 2, 3, 4, 5, 6])
     expect(lookup.UNIQUE('jima', 'jimb', 'jima', 'jimc')).to.deep.equal(['jima', 'jimb', 'jimc'])

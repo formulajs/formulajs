@@ -2,6 +2,7 @@ import jStat from 'jstat'
 
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import * as advance from './advance.js'
 import * as evalExpression from './utils/criteria-eval.js'
 
 const approximateBinarySearch = (lookupValue, lookupArray) => {
@@ -587,4 +588,132 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup =
   }
 
   return error.na
+}
+
+const startsWithNumber = /^-*\d/
+const startWithLetterOrNumber = /^\w/
+
+const a1Absolute = {
+  1: function (row, column) {
+    return '$' + column + '$' + row
+  },
+  2: function (row, column) {
+    return column + '$' + row
+  },
+  3: function (row, column) {
+    return '$' + column + row
+  },
+  4: function (row, column) {
+    return column + row
+  }
+}
+
+const r1c1Absolute = {
+  1: function (row, column) {
+    return 'R' + row + 'C' + column
+  },
+  2: function (row, column) {
+    return 'R' + row + 'C[' + column + ']'
+  },
+  3: function (row, column) {
+    return 'R[' + row + ']C' + column
+  },
+  4: function (row, column) {
+    return 'R[' + row + ']C[' + column + ']'
+  }
+}
+
+export function ADDRESS(row, column, absoluteNum = 1, a1Style = true, sheetName) {
+  if (arguments.length < 2 || arguments.length > 5) {
+    return error.na
+  }
+
+  const someError = utils.anyError(row, column, absoluteNum, a1Style, sheetName)
+  if (someError) {
+    return someError
+  }
+
+  row = utils.getNumber(row)
+  column = utils.getNumber(column)
+
+  if (typeof row === 'string') {
+    row = row.toUpperCase()
+
+    if (row === 'TRUE') {
+      row = 1
+    } else if (row === 'FALSE') {
+      row = 0
+    } else {
+      return error.value
+    }
+  }
+
+  if (typeof column === 'string') {
+    column = column.toUpperCase()
+
+    if (column === 'TRUE') {
+      column = 1
+    } else if (column === 'FALSE') {
+      column = 0
+    } else {
+      return error.value
+    }
+  }
+
+  row = Math.trunc(row)
+  column = Math.trunc(column)
+
+  if (row < 1 || column < 1) {
+    return error.value
+  }
+
+  absoluteNum = utils.getNumber(absoluteNum)
+  if (typeof absoluteNum !== 'number') {
+    return error.value
+  }
+
+  absoluteNum = Math.trunc(absoluteNum)
+
+  if (absoluteNum < 1 || absoluteNum > 4) {
+    return error.value
+  }
+
+  a1Style = utils.parseBool(a1Style)
+  if (typeof a1Style !== 'boolean') {
+    return error.value
+  }
+
+  let result = ''
+
+  if (sheetName !== undefined) {
+    const sheetNameType = typeof sheetName
+
+    if (sheetName === null) {
+      sheetName = ''
+    } else {
+      if (sheetNameType !== 'string') {
+        sheetName = sheetName.toString()
+      }
+
+      const upperCase = sheetName.toUpperCase()
+
+      if (upperCase === 'TRUE' || upperCase === 'FALSE') {
+        sheetName = "'" + upperCase + "'"
+      } else if (
+        sheetName.length > 0 &&
+        (startsWithNumber.test(sheetName) || !startWithLetterOrNumber.test(sheetName))
+      ) {
+        sheetName = "'" + sheetName + "'"
+      }
+    }
+
+    result = sheetName + '!'
+  }
+
+  if (a1Style) {
+    const columnsLetter = advance.getColumnName(column - 1)
+
+    return result + a1Absolute[absoluteNum](row, columnsLetter)
+  }
+  return result + r1c1Absolute[absoluteNum](row, column)
 }
