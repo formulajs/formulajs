@@ -350,11 +350,32 @@ describe('Date & Time', () => {
   })
 
   it('HOUR', () => {
-    expect(dateTime.HOUR('1/1/1900')).to.equal(0)
-    expect(dateTime.HOUR('1/1/1900 1:00')).to.equal(1)
-    // expect(dateTime.HOUR('1:00')).to.equal(1);
-    // expect(dateTime.HOUR('0.75')).to.equal(18);
+    expect(dateTime.HOUR('1900-01-01')).to.equal(0)
+    expect(dateTime.HOUR('1900-01-01 01:00 GMT')).to.equal(1)
+    expect(dateTime.HOUR('2022-01-01 13:00 GMT')).to.equal(13)
+
+    expect(dateTime.HOUR('01:00')).to.equal(1)
+    expect(dateTime.HOUR('11:00 AM')).to.equal(11)
+    expect(dateTime.HOUR('09:00 PM')).to.equal(21)
+    expect(dateTime.HOUR('13:15:30')).to.equal(13)
+    expect(dateTime.HOUR('0.75')).to.equal(18)
+
+    expect(dateTime.HOUR('')).to.equal(error.value)
     expect(dateTime.HOUR('a')).to.equal(error.value)
+    expect(dateTime.HOUR('true')).to.equal(error.value)
+
+    expect(dateTime.HOUR(1)).to.equal(0)
+    expect(dateTime.HOUR(943)).to.equal(0)
+
+    expect(dateTime.HOUR(null)).to.equal(0)
+    expect(dateTime.HOUR(true)).to.equal(0)
+    expect(dateTime.HOUR(false)).to.equal(0)
+
+    expect(dateTime.HOUR(-1)).to.equal(error.num)
+    expect(dateTime.HOUR('-1')).to.equal(error.num)
+
+    expect(dateTime.HOUR()).to.equal(error.na)
+    expect(dateTime.HOUR('2:30', '5:00')).to.equal(error.na)
   })
 
   it('ISOWEEKNUM', () => {

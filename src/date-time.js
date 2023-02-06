@@ -524,13 +524,23 @@ export function EOMONTH() {
  * @returns
  */
 export function HOUR(serial_number) {
-  serial_number = utils.parseDate(serial_number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
 
   if (serial_number instanceof Error) {
     return serial_number
   }
 
-  return serial_number.getHours()
+  serial_number = utils.getHour(serial_number)
+  if (typeof serial_number !== 'number') {
+    return error.value
+  }
+  if (serial_number < 0) {
+    return error.num
+  }
+
+  return Math.trunc(Math.round(serial_number * 24 * 1e8) / 1e8)
 }
 
 /**

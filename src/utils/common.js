@@ -477,3 +477,19 @@ const hourToNumber = function (something) {
 
   return milliseconds / millisecondsPerDay
 }
+
+export function getHour(something) {
+  if (typeof something === 'string') {
+    const hour = hourToNumber(something)
+
+    if (hour !== null) {
+      return hour
+    }
+  }
+
+  something = getNumber(something)
+  if (typeof something === 'number' && something >= 0) {
+    return something % 1
+  }
+  return something
+}
