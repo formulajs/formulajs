@@ -1832,9 +1832,38 @@ export function SUM() {
  * @returns
  */
 export function SUMIF(range, criteria, sum_range) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
+  if (sum_range) {
+    const isArray = Array.isArray(range)
+    if (isArray !== Array.isArray(sum_range)) {
+      return error.value
+    }
+
+    if (isArray) {
+      if (range.length !== sum_range.length || range[0].length !== sum_range[0].length) {
+        return error.value
+      }
+    }
+  }
+
+  if (!Array.isArray(range)) {
+    range = [range]
+  }
+
   range = utils.flatten(range)
 
-  sum_range = sum_range ? utils.flatten(sum_range) : range
+  if (sum_range) {
+    if (!Array.isArray(sum_range)) {
+      sum_range = [sum_range]
+    }
+
+    sum_range = utils.flatten(sum_range)
+  } else {
+    sum_range = range
+  }
 
   if (range instanceof Error) {
     return range
@@ -1845,20 +1874,15 @@ export function SUMIF(range, criteria, sum_range) {
   }
 
   let result = 0
-  const isWildcard = criteria === '*'
-  const tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '')
+  const tokenizedCriteria = evalExpression.parse(criteria + '')
 
   for (let i = 0; i < range.length; i++) {
     const value = range[i]
     const sumValue = sum_range[i]
 
-    if (isWildcard) {
-      result += value
-    } else {
-      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+    const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-      result += evalExpression.compute(tokens) ? sumValue : 0
-    }
+    result += evalExpression.countIfComputeExpression(tokens) ? sumValue : 0
   }
 
   return result
