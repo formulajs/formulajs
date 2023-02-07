@@ -501,14 +501,30 @@ describe('Text', () => {
 
   it('PROPER', () => {
     expect(text.PROPER(undefined)).to.equal('')
+    expect(text.PROPER('')).to.equal('')
     expect(text.PROPER(null)).to.equal('')
+
+    expect(text.PROPER()).to.equal(error.na)
     expect(text.PROPER(error.na)).to.equal(error.na)
+
     expect(text.PROPER('a title case')).to.equal('A Title Case')
     expect(text.PROPER(true)).to.equal('True')
     expect(text.PROPER(false)).to.equal('False')
     expect(text.PROPER(90)).to.equal('90')
-    expect(text.PROPER(NaN)).to.equal(error.value)
-    expect(text.PROPER()).to.equal('')
+    expect(text.PROPER(0)).to.equal('0')
+
+    expect(text.PROPER('a title case', 'text')).to.equal(error.na)
+
+    expect(text.PROPER(['text1', 'text2', 'text3'])).to.eql(['Text1', 'Text2', 'Text3'])
+    expect(
+      text.PROPER([
+        ['text1', 'text2'],
+        ['text3', 'text4']
+      ])
+    ).to.eql([
+      ['Text1', 'Text2'],
+      ['Text3', 'Text4']
+    ])
   })
 
   it('REPLACE', () => {

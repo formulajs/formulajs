@@ -520,12 +520,20 @@ export function PRONETIC() {
  * @returns
  */
 export function PROPER(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   if (utils.anyIsError(text)) {
     return text
   }
 
   if (isNaN(text) && typeof text === 'number') {
     return error.value
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => PROPER(item))
   }
 
   text = utils.parseString(text)
