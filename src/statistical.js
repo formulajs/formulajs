@@ -725,9 +725,23 @@ export function COUNT() {
  * @returns
  */
 export function COUNTA() {
-  const flatArguments = utils.flatten(arguments)
+  if (arguments.length === 0) {
+    return error.na
+  }
 
-  return flatArguments.length - COUNTBLANK(flatArguments)
+  const flatArguments = utils.flatten(arguments)
+  let notBlanks = 0
+  let element
+
+  for (let i = 0; i < flatArguments.length; i++) {
+    element = flatArguments[i]
+
+    if (element !== null) {
+      notBlanks++
+    }
+  }
+
+  return notBlanks
 }
 
 /**

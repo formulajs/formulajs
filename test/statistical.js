@@ -398,17 +398,53 @@ describe('Statistical', () => {
   })
 
   it('COUNTA', () => {
-    expect(statistical.COUNTA()).to.equal(0)
-    expect(statistical.COUNTA(undefined)).to.equal(0)
+    expect(statistical.COUNTA()).to.equal(error.na)
+
     expect(statistical.COUNTA(error.na)).to.equal(1)
+    expect(statistical.COUNTA(error.div0)).to.equal(1)
+    expect(statistical.COUNTA(1, error.div0, error.na)).to.equal(3)
     expect(statistical.COUNTA(1, 2, error.div0)).to.equal(3)
-    expect(statistical.COUNTA(1, null, 3, 'a', '', 'c')).to.equal(4)
-    expect(statistical.COUNTA([1, null, 3, 'a', '', 'c'])).to.equal(4)
-    expect(statistical.COUNTA([1, null, 3], ['a', '', 'c'])).to.equal(4)
+    expect(statistical.COUNTA(null)).to.equal(0)
+    expect(statistical.COUNTA('')).to.equal(1)
+    expect(statistical.COUNTA(1)).to.equal(1)
+    expect(statistical.COUNTA('1')).to.equal(1)
+    expect(statistical.COUNTA(true)).to.equal(1)
+    expect(statistical.COUNTA(false)).to.equal(1)
+    expect(statistical.COUNTA(1, '', '', '')).to.equal(4)
+    expect(statistical.COUNTA('text')).to.equal(1)
+    expect(statistical.COUNTA(1, null, 3, 'a', '', 'c')).to.equal(5)
+    expect(statistical.COUNTA(1, error.na, '28-10-2021', 'text', '')).to.equal(5)
+
+    expect(statistical.COUNTA([[1, 2, 3, 4]])).to.equal(4)
+    expect(statistical.COUNTA([[1, 2, 3, 4]], 1)).to.equal(5)
+    expect(statistical.COUNTA([[1, 2]], [[3, 4]])).to.equal(4)
+    expect(statistical.COUNTA([[1, null, 3, 'a', '', 'c']])).to.equal(5)
+    expect(statistical.COUNTA([[1, null, 3]], [['a', '', 'c']])).to.equal(5)
+
     expect(
       statistical.COUNTA([
         [1, null, 3],
         ['a', '', 'c']
+      ])
+    ).to.equal(5)
+    expect(
+      statistical.COUNT([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(4)
+    expect(
+      statistical.COUNTA([
+        [1, 2],
+        [3, 2],
+        [null, null]
+      ])
+    ).to.equal(4)
+    expect(
+      statistical.COUNTA([
+        [1, 2],
+        ['a', 'b'],
+        [null, null]
       ])
     ).to.equal(4)
   })
