@@ -1127,6 +1127,18 @@ export function MOD(number, divisor) {
  * @returns
  */
 export function MROUND(number, multiple) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (typeof number === 'boolean' || typeof multiple === 'boolean') {
+    return error.value
+  }
+
+  if (number === '' || multiple === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   multiple = utils.parseNumber(multiple)
   const anyError = utils.anyError(number, multiple)
