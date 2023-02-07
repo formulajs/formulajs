@@ -821,18 +821,30 @@ describe('Math & Trig', () => {
   })
 
   it('RANDBETWEEN', () => {
-    const bottom = 5
-    const top = 10
-    let sum = 0
-    const n = 100
-    let i = n
-    while (i--) {
-      sum += mathTrig.RANDBETWEEN(bottom, top)
-    }
+    expect(mathTrig.RANDBETWEEN(null, null)).to.equal(0)
+    expect(mathTrig.RANDBETWEEN(5, 5)).to.equal(5)
 
-    const average = sum / n
-    expect(Number(parseInt(average, 10))).to.equal(7)
-    expect(mathTrig.RANDBETWEEN(bottom, 'invalid')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(5, 10)).to.be.within(5, 10)
+    expect(mathTrig.RANDBETWEEN(1.1, 3.2)).to.be.within(1.1, 3.2)
+    expect(mathTrig.RANDBETWEEN(1, 1)).to.be.equal(1)
+
+    expect(mathTrig.RANDBETWEEN('2', 5)).to.be.within(2, 5)
+    expect(mathTrig.RANDBETWEEN(5, '7')).to.be.within(5, 7)
+
+    expect(mathTrig.RANDBETWEEN(7, 5)).to.equal(error.num)
+
+    expect(mathTrig.RANDBETWEEN(true, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(false, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(2, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('', '')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('FALSE', 'TRUE')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(5, 'invalid')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('text', 'invalid')).to.equal(error.value)
+
+    expect(mathTrig.RANDBETWEEN(1, 10, 15)).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN(1)).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN('')).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN()).to.equal(error.na)
   })
 
   it('ROMAN', () => {

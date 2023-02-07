@@ -1371,17 +1371,31 @@ export function RAND() {
  * @returns
  */
 export function RANDBETWEEN(bottom, top) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (typeof bottom === 'boolean' || bottom === '' || typeof top === 'boolean' || top === '') {
+    return error.value
+  }
+
   bottom = utils.parseNumber(bottom)
   top = utils.parseNumber(top)
-  const anyError = utils.anyError(bottom, top)
+  if (bottom > top) {
+    return error.num
+  }
 
+  const anyError = utils.anyError(bottom, top)
   if (anyError) {
     return anyError
   }
   // Creative Commons Attribution 3.0 License
   // Copyright (c) 2012 eqcode
 
-  return bottom + Math.ceil((top - bottom + 1) * Math.random()) - 1
+  bottom = Math.ceil(bottom)
+  top = Math.floor(top)
+
+  return Math.floor(Math.random() * (top - bottom + 1)) + bottom
 }
 
 // TODO
