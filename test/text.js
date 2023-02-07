@@ -103,11 +103,46 @@ describe('Text', () => {
   })
 
   it('CODE', () => {
-    expect(text.CODE()).to.equal(error.value)
+    expect(text.CODE(null)).to.equal(error.value)
     expect(text.CODE(undefined)).to.equal(error.value)
     expect(text.CODE(error.na)).to.equal(error.na)
+
+    expect(text.CODE('true')).to.equal(116)
+    expect(text.CODE('false')).to.equal(102)
+    expect(text.CODE(true)).to.equal(116)
+    expect(text.CODE(false)).to.equal(102)
+
     expect(text.CODE('A')).to.equal(65)
+    expect(text.CODE('a')).to.equal(97)
+    expect(text.CODE('3')).to.equal(51)
+    expect(text.CODE(3)).to.equal(51)
+    expect(text.CODE(3.2)).to.equal(51)
+    expect(text.CODE('-233')).to.equal(45)
+
+    expect(text.CODE('P')).to.equal(80)
+    expect(text.CODE('   P')).to.equal(32)
+    expect(text.CODE('   P    ')).to.equal(32)
+    expect(text.CODE('P    ')).to.equal(80)
+
+    expect(text.CODE('invalid')).to.equal(105)
+
+    expect(text.CODE(['A', 'K', 'P'])).to.eql([65, 75, 80])
+    expect(text.CODE([['A'], [error.value], ['P']])).to.eql([[65], [error.value], [80]])
+    expect(
+      text.CODE([
+        ['P', '<'],
+        ['(', '(']
+      ])
+    ).to.eql([
+      [80, 60],
+      [40, 40]
+    ])
+
+    expect(text.CODE(3, 4)).to.equal(error.na)
+    expect(text.CODE('3', '4')).to.equal(error.na)
     expect(text.CODE('Ϩ')).to.equal(1000)
+    expect(text.CODE('')).to.equal(error.value)
+    expect(text.CODE()).to.equal(error.na)
   })
 
   it('CONCATENATE', () => {

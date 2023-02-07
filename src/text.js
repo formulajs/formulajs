@@ -116,6 +116,18 @@ export function CLEAN(text) {
  * @returns
  */
 export function CODE(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => CODE(item))
+  }
+
+  if (typeof text === 'boolean' || typeof text === 'number') {
+    text = text.toString()
+  }
+
   if (utils.anyIsError(text)) {
     return text
   }
