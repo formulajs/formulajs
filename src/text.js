@@ -691,14 +691,43 @@ export function RIGHT(text, num_chars) {
  * @returns
  */
 export function SEARCH(find_text, within_text, start_num) {
-  let foundAt
-
-  if (typeof find_text !== 'string' || typeof within_text !== 'string') {
-    return error.value
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  start_num = start_num === undefined ? 0 : start_num
-  foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num - 1) + 1
+  if (Array.isArray(within_text)) {
+    return within_text.map((item) => SEARCH(find_text, item, start_num))
+  }
+
+  if (find_text instanceof Error) {
+    return find_text
+  }
+
+  if (within_text instanceof Error) {
+    return within_text
+  }
+
+  if (start_num instanceof Error) {
+    return start_num
+  }
+
+  if (start_num === undefined) {
+    start_num = 0
+  } else {
+    start_num = utils.getNumber(start_num)
+
+    if (typeof start_num !== 'number' || start_num < 1) {
+      return error.value
+    }
+
+    start_num--
+  }
+
+  find_text = find_text !== null ? find_text.toString() : ''
+
+  within_text = within_text !== null ? within_text.toString() : ''
+
+  let foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num) + 1
 
   return foundAt === 0 ? error.value : foundAt
 }

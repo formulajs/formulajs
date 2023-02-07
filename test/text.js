@@ -666,11 +666,115 @@ describe('Text', () => {
   })
 
   it('SEARCH', () => {
+    expect(text.SEARCH('e', 'Statements', 6, 'text')).to.equal(error.na)
+    expect(text.SEARCH(80)).to.equal(error.na)
+    expect(text.SEARCH('')).to.equal(error.na)
+    expect(text.SEARCH()).to.equal(error.na)
+    expect(text.SEARCH(null)).to.equal(error.na)
+
     expect(text.SEARCH('e', 'Statements', 6)).to.equal(7)
-    expect(text.SEARCH('margin', 'Profit Margin')).to.equal(8)
+
+    expect(text.SEARCH('MARGIN', 'Profit Margin')).to.equal(8)
+    expect(text.SEARCH(80, 80)).to.equal(1)
+    expect(text.SEARCH(0, 80)).to.equal(2)
+    expect(text.SEARCH('0', 80)).to.equal(2)
+    expect(text.SEARCH(8, 'text8')).to.equal(5)
+
+    expect(text.SEARCH(true, 'this is true')).to.equal(9)
+    expect(text.SEARCH('true', true)).to.equal(1)
+    expect(text.SEARCH(true, 'true')).to.equal(1)
+
+    expect(text.SEARCH(false, 'this is false')).to.equal(9)
+    expect(text.SEARCH('false', false)).to.equal(1)
+    expect(text.SEARCH(false, 'false')).to.equal(1)
+
+    expect(text.SEARCH(null, null)).to.equal(1)
+    expect(text.SEARCH(null, '')).to.equal(1)
+    expect(text.SEARCH(null, true)).to.equal(1)
+    expect(text.SEARCH(null, false)).to.equal(1)
+    expect(text.SEARCH(null, 'true')).to.equal(1)
+    expect(text.SEARCH(null, -1)).to.equal(1)
+    expect(text.SEARCH(null, 0)).to.equal(1)
+    expect(text.SEARCH(null, 1)).to.equal(1)
+    expect(text.SEARCH(null, '-1')).to.equal(1)
+
+    expect(text.SEARCH(true, null)).to.equal(error.value)
+    expect(text.SEARCH(false, null)).to.equal(error.value)
+    expect(text.SEARCH('true', null)).to.equal(error.value)
+    expect(text.SEARCH(-1, null)).to.equal(error.value)
+    expect(text.SEARCH(0, null)).to.equal(error.value)
+    expect(text.SEARCH(1, null)).to.equal(error.value)
+    expect(text.SEARCH('-1', null)).to.equal(error.value)
+
+    expect(text.SEARCH('', '')).to.equal(1)
+    expect(text.SEARCH('', null)).to.equal(1)
+    expect(text.SEARCH('', true)).to.equal(1)
+    expect(text.SEARCH('', false)).to.equal(1)
+    expect(text.SEARCH('', 'true')).to.equal(1)
+    expect(text.SEARCH('', -1)).to.equal(1)
+    expect(text.SEARCH('', 0)).to.equal(1)
+    expect(text.SEARCH('', 1)).to.equal(1)
+    expect(text.SEARCH('', '-1')).to.equal(1)
+
+    expect(text.SEARCH(true, '')).to.equal(error.value)
+    expect(text.SEARCH(false, '')).to.equal(error.value)
+    expect(text.SEARCH('true', '')).to.equal(error.value)
+    expect(text.SEARCH(-1, '')).to.equal(error.value)
+    expect(text.SEARCH(0, '')).to.equal(error.value)
+    expect(text.SEARCH(1, '')).to.equal(error.value)
+    expect(text.SEARCH('-1', '')).to.equal(error.value)
+
+    expect(text.SEARCH(1, true)).to.equal(error.value)
+
+    expect(text.SEARCH(800, 80)).to.equal(error.value)
+    expect(text.SEARCH('MARGIN', 8)).to.equal(error.value)
     expect(text.SEARCH(true, 'bool')).to.equal(error.value)
     expect(text.SEARCH('foo', 'bar')).to.equal(error.value)
     expect(text.SEARCH('ba', 'bar')).to.equal(1)
+
+    expect(text.SEARCH(1, 4561, 2)).to.equal(4)
+    expect(text.SEARCH('UE', true, 3)).to.equal(3)
+
+    expect(text.SEARCH('t', 'test', 0)).to.equal(error.value)
+    expect(text.SEARCH('t', 'test', -1)).to.equal(error.value)
+    expect(text.SEARCH('t', 'test', 5)).to.equal(error.value)
+
+    expect(text.SEARCH('', 'test', 0)).to.equal(error.value)
+    expect(text.SEARCH('', 'test', -1)).to.equal(error.value)
+    expect(text.SEARCH('', 'test', 5)).to.equal(5)
+
+    expect(text.SEARCH('t', 'test', null)).to.equal(error.value)
+    expect(text.SEARCH('t', 'test', '')).to.equal(error.value)
+    expect(text.SEARCH('t', 'test', true)).to.equal(1)
+    expect(text.SEARCH('t', 'test', false)).to.equal(error.value)
+
+    expect(text.SEARCH('t', 'test', '2     ')).to.equal(4)
+    expect(text.SEARCH('t', 'test', '    2')).to.equal(4)
+    expect(text.SEARCH('t', 'test', '    2    ')).to.equal(4)
+    expect(text.SEARCH('t', 'test', '    a2    ')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(text.SEARCH(err, 'test')).to.equal(err)
+      expect(text.SEARCH('', err)).to.equal(err)
+      expect(text.SEARCH('', 'test', err)).to.equal(err)
+    })
+
+    expect(text.SEARCH('Brazil', ['Hello', 'Number', 'Text1', 'Brazil'])).to.eql([
+      error.value,
+      error.value,
+      error.value,
+      1
+    ])
+
+    expect(
+      text.SEARCH('Brazil', [
+        ['Hello', 'Text'],
+        ['Brazil', 'I Love Brazil']
+      ])
+    ).to.eql([
+      [error.value, error.value],
+      [1, 8]
+    ])
   })
 
   describe('SUBSTITUTE', () => {
