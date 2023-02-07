@@ -969,6 +969,14 @@ export const UNICODE = CODE
  * @returns
  */
 export function UPPER(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => UPPER(item))
+  }
+
   text = utils.parseString(text)
 
   if (text instanceof Error) {

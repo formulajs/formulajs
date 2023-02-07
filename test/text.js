@@ -995,11 +995,31 @@ describe('Text', () => {
   })
 
   it('UPPER', () => {
+    expect(text.UPPER('to upper case please', 'text')).to.equal(error.na)
+    expect(text.UPPER()).to.equal(error.na)
+
     expect(text.UPPER(undefined)).to.equal('')
+    expect(text.UPPER(null)).to.equal('')
+    expect(text.UPPER('')).to.equal('')
+
     expect(text.UPPER(error.na)).to.equal(error.na)
+
     expect(text.UPPER('to upper case please')).to.equal('TO UPPER CASE PLEASE')
     expect(text.UPPER(true)).to.equal('TRUE')
+
     expect(text.UPPER(1)).to.equal('1')
+    expect(text.UPPER(1.1)).to.equal('1.1')
+
+    expect(text.UPPER(['text1', 'text2', 'text3'])).to.eql(['TEXT1', 'TEXT2', 'TEXT3'])
+    expect(
+      text.UPPER([
+        ['text1', 'text2'],
+        ['text3', 'text4']
+      ])
+    ).to.eql([
+      ['TEXT1', 'TEXT2'],
+      ['TEXT3', 'TEXT4']
+    ])
   })
 
   describe('VALUE', () => {
