@@ -13,10 +13,24 @@ import * as utils from './utils/common.js'
  * @returns
  */
 export function ABS(number) {
-  number = utils.parseNumber(number)
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(number)) {
+    return number.map((item) => ABS(item))
+  }
 
   if (number instanceof Error) {
     return number
+  }
+  if (number === '') {
+    return error.value
+  }
+
+  number = utils.parseNumber(number)
+  if (isNaN(number)) {
+    return error.value
   }
 
   const result = Math.abs(number)
@@ -359,14 +373,12 @@ export function BASE(number, radix, min_length) {
 /**
  * Rounds a number to the nearest integer or to the nearest multiple of significance.
  *
- * Category: Math and trigonometry
- *
  * @param {*} number The value you want to round.
  * @param {*} significance The multiple to which you want to round.
  * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
-export function CEILING(number, significance, mode) {
+function ceiling(number, significance, mode) {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
   mode = utils.parseNumber(mode)
@@ -394,9 +406,48 @@ export function CEILING(number, significance, mode) {
   }
 }
 
-CEILING.MATH = CEILING
+/**
+ * Returns number rounded up, away from zero, to the nearest multiple of significance.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value you want to round.
+ * @param {*} significance The multiple to which you want to round.
+ * @returns
+ */
+export function CEILING(number, significance) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
 
-CEILING.PRECISE = CEILING
+  if (number === '' || significance === '') {
+    return error.value
+  }
+
+  number = utils.parseNumber(number)
+  significance = utils.parseNumber(significance)
+
+  const anyError = utils.anyError(number, significance)
+  if (anyError) {
+    return anyError
+  }
+
+  if (significance === 0) {
+    return 0
+  }
+
+  if (number > 0 && significance > 0 && number < significance) {
+    return significance
+  }
+
+  const precision = -Math.floor(Math.log(Math.abs(significance)) / Math.log(10))
+
+  return ROUND(Math.ceil(number / significance) * significance, precision)
+}
+
+CEILING.MATH = ceiling
+
+CEILING.PRECISE = ceiling
 
 /**
  * Returns the number of combinations for a given number of objects.
@@ -636,7 +687,7 @@ export function EVEN(number) {
     return number
   }
 
-  return CEILING(number, -2, -1)
+  return ceiling(number, -2, -1)
 }
 
 /**
@@ -726,28 +777,42 @@ export function FACTDOUBLE(number) {
  * @returns
  */
 export function FLOOR(number, significance) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || significance === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
-  const anyError = utils.anyError(number, significance)
 
+  const anyError = utils.anyError(number, significance)
   if (anyError) {
     return anyError
   }
 
-  if (significance === 0) {
+  if (number === 0 && significance === 0) {
     return 0
   }
 
-  if (!(number >= 0 && significance > 0) && !(number <= 0 && significance < 0)) {
+  if (significance === 0) {
+    return error.div0
+  }
+
+  if (number >= 0 && significance < 0) {
     return error.num
   }
 
   significance = Math.abs(significance)
   const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
-  return number >= 0
-    ? ROUND(Math.floor(number / significance) * significance, precision)
-    : -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  if (number >= 0) {
+    return ROUND(Math.floor(number / significance) * significance, precision)
+  } else {
+    return -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  }
 }
 
 // TODO: Verify
@@ -805,7 +870,7 @@ FLOOR.MATH = (number, significance, mode) => {
  * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
  * @returns
  */
-FLOOR.PRECISE = FLOOR['MATH']
+FLOOR.PRECISE = FLOOR.MATH
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
 /**
@@ -854,6 +919,14 @@ export function GCD() {
  * @returns
  */
 export function INT(number) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (number === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
 
   if (number instanceof Error) {
@@ -865,7 +938,7 @@ export function INT(number) {
 
 // TODO: verify
 export const ISO = {
-  CEILING: CEILING
+  CEILING: ceiling
 }
 
 /**
@@ -1021,10 +1094,18 @@ export function MMULT(array1, array2) {
  * @returns
  */
 export function MOD(number, divisor) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || divisor === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   divisor = utils.parseNumber(divisor)
-  const anyError = utils.anyError(number, divisor)
 
+  const anyError = utils.anyError(number, divisor)
   if (anyError) {
     return anyError
   }
@@ -1033,10 +1114,7 @@ export function MOD(number, divisor) {
     return error.div0
   }
 
-  let modulus = Math.abs(number % divisor)
-  modulus = number < 0 ? divisor - modulus : modulus
-
-  return divisor > 0 ? modulus : -modulus
+  return number - divisor * INT(number / divisor)
 }
 
 /**
@@ -1049,6 +1127,18 @@ export function MOD(number, divisor) {
  * @returns
  */
 export function MROUND(number, multiple) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (typeof number === 'boolean' || typeof multiple === 'boolean') {
+    return error.value
+  }
+
+  if (number === '' || multiple === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   multiple = utils.parseNumber(multiple)
   const anyError = utils.anyError(number, multiple)
@@ -1264,6 +1354,10 @@ export function RADIANS(angle) {
  * @returns
  */
 export function RAND() {
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
   return Math.random()
 }
 
@@ -1277,17 +1371,31 @@ export function RAND() {
  * @returns
  */
 export function RANDBETWEEN(bottom, top) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (typeof bottom === 'boolean' || bottom === '' || typeof top === 'boolean' || top === '') {
+    return error.value
+  }
+
   bottom = utils.parseNumber(bottom)
   top = utils.parseNumber(top)
-  const anyError = utils.anyError(bottom, top)
+  if (bottom > top) {
+    return error.num
+  }
 
+  const anyError = utils.anyError(bottom, top)
   if (anyError) {
     return anyError
   }
   // Creative Commons Attribution 3.0 License
   // Copyright (c) 2012 eqcode
 
-  return bottom + Math.ceil((top - bottom + 1) * Math.random()) - 1
+  bottom = Math.ceil(bottom)
+  top = Math.floor(top)
+
+  return Math.floor(Math.random() * (top - bottom + 1)) + bottom
 }
 
 // TODO
@@ -1361,6 +1469,14 @@ export function ROMAN(number) {
  * @returns
  */
 export function ROUND(number, num_digits) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || num_digits === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
   const anyError = utils.anyError(number, num_digits)
@@ -1369,7 +1485,12 @@ export function ROUND(number, num_digits) {
     return anyError
   }
 
-  return Number(Math.round(Number(number + 'e' + num_digits)) + 'e' + num_digits * -1)
+  const signal = Math.sign(number)
+  number = Math.abs(number)
+
+  var result = Math.round(number * Math.pow(10, num_digits)) / Math.pow(10, num_digits)
+
+  return result * signal
 }
 
 /**
@@ -1382,6 +1503,14 @@ export function ROUND(number, num_digits) {
  * @returns
  */
 export function ROUNDDOWN(number, num_digits) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || num_digits === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
   const anyError = utils.anyError(number, num_digits)
@@ -1405,6 +1534,14 @@ export function ROUNDDOWN(number, num_digits) {
  * @returns
  */
 export function ROUNDUP(number, num_digits) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || num_digits === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
   const anyError = utils.anyError(number, num_digits)
@@ -1657,6 +1794,10 @@ export function SUBTOTAL(function_num, ref1) {
  * @returns
  */
 export function SUM() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   let result = 0
 
   utils.arrayEach(utils.argsToArray(arguments), (value) => {
@@ -1666,10 +1807,6 @@ export function SUM() {
       result = value
     } else if (typeof value === 'number') {
       result += value
-    } else if (typeof value === 'string') {
-      const parsed = parseFloat(value)
-
-      !isNaN(parsed) && (result += parsed)
     } else if (Array.isArray(value)) {
       const inner_result = SUM.apply(null, value)
 
@@ -1695,9 +1832,38 @@ export function SUM() {
  * @returns
  */
 export function SUMIF(range, criteria, sum_range) {
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
+  if (sum_range) {
+    const isArray = Array.isArray(range)
+    if (isArray !== Array.isArray(sum_range)) {
+      return error.value
+    }
+
+    if (isArray) {
+      if (range.length !== sum_range.length || range[0].length !== sum_range[0].length) {
+        return error.value
+      }
+    }
+  }
+
+  if (!Array.isArray(range)) {
+    range = [range]
+  }
+
   range = utils.flatten(range)
 
-  sum_range = sum_range ? utils.flatten(sum_range) : range
+  if (sum_range) {
+    if (!Array.isArray(sum_range)) {
+      sum_range = [sum_range]
+    }
+
+    sum_range = utils.flatten(sum_range)
+  } else {
+    sum_range = range
+  }
 
   if (range instanceof Error) {
     return range
@@ -1708,20 +1874,15 @@ export function SUMIF(range, criteria, sum_range) {
   }
 
   let result = 0
-  const isWildcard = criteria === '*'
-  const tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '')
+  const tokenizedCriteria = evalExpression.parse(criteria + '')
 
   for (let i = 0; i < range.length; i++) {
     const value = range[i]
     const sumValue = sum_range[i]
 
-    if (isWildcard) {
-      result += value
-    } else {
-      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+    const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-      result += evalExpression.compute(tokens) ? sumValue : 0
-    }
+    result += evalExpression.countIfComputeExpression(tokens) ? sumValue : 0
   }
 
   return result
@@ -1735,6 +1896,21 @@ export function SUMIF(range, criteria, sum_range) {
  * @returns
  */
 export function SUMIFS() {
+  if (arguments.length < 3 || (arguments.length > 3 && arguments.length % 2 === 0)) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
   const args = utils.argsToArray(arguments)
   const range = utils.parseNumberArray(utils.flatten(args.shift()))
 
@@ -1746,6 +1922,18 @@ export function SUMIFS() {
   const criteriaLength = criterias.length / 2
 
   for (let i = 0; i < criteriaLength; i++) {
+    if (!Array.isArray(criterias[i * 2])) {
+      criterias[i * 2] = [criterias[i * 2]]
+    }
+
+    if (!Array.isArray(criterias[i * 2][0])) {
+      criterias[i * 2][0] = [criterias[i * 2][0]]
+    }
+
+    if (height !== criterias[i * 2].length || width !== criterias[i * 2][0].length) {
+      return error.value
+    }
+
     criterias[i * 2] = utils.flatten(criterias[i * 2])
   }
 
@@ -1757,19 +1945,14 @@ export function SUMIFS() {
     for (let j = 0; j < criteriaLength; j++) {
       const valueToTest = criterias[j * 2][i]
       const criteria = criterias[j * 2 + 1]
-      const isWildcard = criteria === void 0 || criteria === '*'
       let computedResult = false
 
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
-          tokenizedCriteria
-        )
+      const tokenizedCriteria = evalExpression.parse(criteria + '')
+      const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+        tokenizedCriteria
+      )
 
-        computedResult = evalExpression.compute(tokens)
-      }
+      computedResult = evalExpression.countIfComputeExpression(tokens)
 
       // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
       if (!computedResult) {

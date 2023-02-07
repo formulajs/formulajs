@@ -5,11 +5,37 @@ import * as mathTrig from '../src/math-trig.js'
 
 describe('Math & Trig', () => {
   it('ABS', () => {
-    expect(mathTrig.ABS()).to.equal(0)
-    expect(mathTrig.ABS(undefined)).to.equal(0)
+    expect(mathTrig.ABS(null)).to.equal(0)
+    expect(mathTrig.ABS(0)).to.equal(0)
+
+    expect(mathTrig.ABS()).to.equal(error.na)
+    expect(mathTrig.ABS(2, 5)).to.equal(error.na)
     expect(mathTrig.ABS(error.na)).to.equal(error.na)
-    expect(mathTrig.ABS(-1)).to.equal(1)
+
+    expect(mathTrig.ABS('TRUE')).to.equal(error.value)
+    expect(mathTrig.ABS(' ')).to.equal(error.value)
     expect(mathTrig.ABS('invalid')).to.equal(error.value)
+    expect(mathTrig.ABS('')).to.equal(error.value)
+
+    expect(mathTrig.ABS(1)).to.equal(1)
+    expect(mathTrig.ABS(-1)).to.equal(1)
+    expect(mathTrig.ABS(-0.5)).to.equal(0.5)
+    expect(mathTrig.ABS('-1.5')).to.equal(1.5)
+
+    expect(mathTrig.ABS(true)).to.equal(1)
+    expect(mathTrig.ABS(false)).to.equal(0)
+
+    expect(mathTrig.ABS([-2, -5, -8.3])).to.eql([2, 5, 8.3])
+
+    expect(
+      mathTrig.ABS([
+        [-0.5, 'text'],
+        ['-05', true]
+      ])
+    ).to.eql([
+      [0.5, error.value],
+      [5, 1]
+    ])
   })
 
   it('ACOS', () => {
@@ -128,27 +154,49 @@ describe('Math & Trig', () => {
   })
 
   it('CEILING', () => {
-    expect(mathTrig.CEILING(undefined)).to.equal(0)
-    expect(mathTrig.CEILING(error.na)).to.equal(error.na)
-    expect(mathTrig.CEILING(1, error.na)).to.equal(error.na)
-    expect(mathTrig.CEILING(4.1)).to.equal(0)
-    expect(mathTrig.CEILING(4.1, 1)).to.equal(5)
-    expect(mathTrig.CEILING(-4.1, 1)).to.equal(-4)
+    expect(mathTrig.CEILING()).to.equal(error.na)
+    expect(mathTrig.CEILING('')).to.equal(error.na)
+    expect(mathTrig.CEILING('text')).to.equal(error.na)
+    expect(mathTrig.CEILING(4.1)).to.equal(error.na)
+    expect(mathTrig.CEILING(null)).to.equal(error.na)
+    expect(mathTrig.CEILING(-4.1, 2, 0)).to.equal(error.na)
+
+    expect(mathTrig.CEILING(1, error.div0)).to.equal(error.div0)
+    expect(mathTrig.CEILING(error.div0, 1)).to.equal(error.div0)
+
+    expect(mathTrig.CEILING(true, 1)).to.equal(1)
+    expect(mathTrig.CEILING(4.1, true)).to.equal(5)
+    expect(mathTrig.CEILING(false, 1)).to.equal(0)
+    expect(mathTrig.CEILING(4.1, false)).to.equal(0)
+    expect(mathTrig.CEILING(true, false)).to.equal(0)
+
+    expect(mathTrig.CEILING('text1', 'text2')).to.equal(error.value)
+    expect(mathTrig.CEILING('', '')).to.equal(error.value)
+    expect(mathTrig.CEILING('', 2)).to.equal(error.value)
+    expect(mathTrig.CEILING(4.1, '')).to.equal(error.value)
+    expect(mathTrig.CEILING(4.1, 'true')).to.equal(error.value)
+
+    expect(mathTrig.CEILING(null, null)).to.equal(0)
+    expect(mathTrig.CEILING(4.1, null)).to.equal(0)
+    expect(mathTrig.CEILING(null, 2)).to.equal(0)
+
     expect(mathTrig.CEILING(4.1, 0)).to.equal(0)
+    expect(mathTrig.CEILING(-4.1, 1)).to.equal(-4)
     expect(mathTrig.CEILING(4.1, 1)).to.equal(5)
+    expect(mathTrig.CEILING(8, 8)).to.equal(8)
     expect(mathTrig.CEILING(4.1, 2)).to.equal(6)
+    expect(mathTrig.CEILING(2, 4.1)).to.equal(4.1)
+    expect(mathTrig.CEILING(4.1, '2')).to.equal(6)
+    expect(mathTrig.CEILING('4.1', 2)).to.equal(6)
+    expect(mathTrig.CEILING('4.1', '2')).to.equal(6)
     expect(mathTrig.CEILING(-4.1, 2)).to.equal(-4)
-    expect(mathTrig.CEILING(-4.1, -2)).to.equal(-4)
+    expect(mathTrig.CEILING(-4.1, -2)).to.equal(-6)
     expect(mathTrig.CEILING(1.234, 0.1)).to.approximately(1.3, 1e-9)
     expect(mathTrig.CEILING(-1.234, 0.1)).to.approximately(-1.2, 1e-9)
-    expect(mathTrig.CEILING(-1.234, -0.1)).to.approximately(-1.2, 1e-9)
-    expect(mathTrig.CEILING(-1.234, -0.01)).to.approximately(-1.23, 1e-9)
+    expect(mathTrig.CEILING(-1.234, -0.1)).to.approximately(-1.3, 1e-9)
+    expect(mathTrig.CEILING(-1.234, -0.01)).to.approximately(-1.24, 1e-9)
     expect(mathTrig.CEILING(-1.234, -0.001)).to.approximately(-1.234, 1e-9)
-    expect(mathTrig.CEILING(-4.1, 2, 0)).to.equal(-4)
-    expect(mathTrig.CEILING(-4.1, 2, -1)).to.equal(-6)
-    expect(mathTrig.CEILING(-4.1, -2, 0)).to.equal(-4)
-    expect(mathTrig.CEILING(-4.1, -2, -1)).to.equal(-6)
-    expect(mathTrig.CEILING(-4.1, -2, 'invalid')).to.equal(error.value)
+    expect(mathTrig.CEILING(1.234, -0.001)).to.approximately(1.234, 1e-9)
   })
 
   it('CEILING.MATH', () => {
@@ -308,17 +356,41 @@ describe('Math & Trig', () => {
   })
 
   it('FLOOR', () => {
-    expect(mathTrig.FLOOR(undefined, undefined)).to.equal(0)
-    expect(mathTrig.FLOOR(2, undefined)).to.equal(0) // different than Excel
-    expect(mathTrig.FLOOR(undefined, 2)).to.equal(0)
+    expect(mathTrig.FLOOR()).to.equal(error.na)
+    expect(mathTrig.FLOOR('')).to.equal(error.na)
+    expect(mathTrig.FLOOR('text')).to.equal(error.na)
     expect(mathTrig.FLOOR(error.na)).to.equal(error.na)
-    expect(mathTrig.FLOOR(3.7, 2)).to.equal(2)
-    expect(mathTrig.FLOOR(-2.5, -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(3.7, 2, 4)).to.equal(error.na)
+
+    expect(mathTrig.FLOOR('invalid', 0)).to.equal(error.value)
+    expect(mathTrig.FLOOR('text', 'text2')).to.equal(error.value)
+    expect(mathTrig.FLOOR('', '')).to.equal(error.value)
+    expect(mathTrig.FLOOR('', 2)).to.equal(error.value)
+    expect(mathTrig.FLOOR(3.7, '')).to.equal(error.value)
+
     expect(mathTrig.FLOOR(2.5, -2)).to.equal(error.num)
+    expect(mathTrig.FLOOR(10, -1)).to.equal(error.num)
+
+    expect(mathTrig.FLOOR(10, 0)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(2, null)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(3.7, false)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(true, false)).to.equal(error.div0)
+    expect(mathTrig.FLOOR(0.234, 0)).to.equal(error.div0)
+
+    expect(mathTrig.FLOOR(null, null)).to.equal(0)
+    expect(mathTrig.FLOOR(null, 2)).to.equal(0)
+    expect(mathTrig.FLOOR(2, 4)).to.equal(0)
+    expect(mathTrig.FLOOR(3.7, 2)).to.equal(2)
+    expect(mathTrig.FLOOR(true, 2)).to.equal(0)
+    expect(mathTrig.FLOOR(3.7, true)).to.equal(3)
+    expect(mathTrig.FLOOR(false, 2)).to.equal(0)
+    expect(mathTrig.FLOOR('-2.5', '-2')).to.equal(-2)
+    expect(mathTrig.FLOOR(-2.5, '-2')).to.equal(-2)
+    expect(mathTrig.FLOOR('-2.5', -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(-2.5, -2)).to.equal(-2)
+    expect(mathTrig.FLOOR(-5.4, 1)).to.equal(-6)
     expect(mathTrig.FLOOR(1.58, 0.1)).to.approximately(1.5, 1e-9)
     expect(mathTrig.FLOOR(0.234, 0.01)).to.approximately(0.23, 1e-9)
-    expect(mathTrig.FLOOR(0.234, 0)).to.equal(0)
-    expect(mathTrig.FLOOR('invalid', 0)).to.equal(error.value)
   })
 
   it('FLOOR.PRECISE', () => {
@@ -368,12 +440,23 @@ describe('Math & Trig', () => {
   })
 
   it('INT', () => {
-    expect(mathTrig.INT(undefined)).to.equal(0)
+    expect(mathTrig.INT()).to.equal(error.na)
+    expect(mathTrig.INT(5.5, 5)).to.equal(error.na)
     expect(mathTrig.INT(error.na)).to.equal(error.na)
-    expect(mathTrig.INT(5.5)).to.equal(5)
-    expect(mathTrig.INT('invalid')).to.equal(error.value)
+
+    expect(mathTrig.INT(error.div0)).to.equal(error.div0)
+
     expect(mathTrig.INT('')).to.equal(error.value)
+    expect(mathTrig.INT('text')).to.equal(error.value)
+
+    expect(mathTrig.INT(null)).to.equal(0)
     expect(mathTrig.INT(true)).to.equal(1)
+    expect(mathTrig.INT(false)).to.equal(0)
+
+    expect(mathTrig.INT(5.5)).to.equal(5)
+    expect(mathTrig.INT(-10.8)).to.equal(-11)
+    expect(mathTrig.INT(10.8)).to.equal(10)
+    expect(mathTrig.INT('10.8')).to.equal(10)
   })
 
   it('ISO.CEILING', () => {
@@ -538,32 +621,93 @@ describe('Math & Trig', () => {
   })
 
   it('MOD', () => {
-    expect(mathTrig.MOD(undefined, undefined)).to.equal(error.div0)
-    expect(mathTrig.MOD(1, undefined)).to.equal(error.div0)
-    expect(mathTrig.MOD(undefined, 1)).to.equal(0)
+    expect(mathTrig.MOD()).to.equal(error.na)
+    expect(mathTrig.MOD(null)).to.equal(error.na)
+    expect(mathTrig.MOD('')).to.equal(error.na)
+    expect(mathTrig.MOD('text')).to.equal(error.na)
+    expect(mathTrig.MOD(3, 2, 1)).to.equal(error.na)
+
     expect(mathTrig.MOD(1, error.na)).to.equal(error.na)
     expect(mathTrig.MOD(error.na, 1)).to.equal(error.na)
 
+    expect(mathTrig.MOD(1, error.div0)).to.equal(error.div0)
+    expect(mathTrig.MOD(error.div0, 1)).to.equal(error.div0)
+    expect(mathTrig.MOD(error.div0, error.div0)).to.equal(error.div0)
+    expect(mathTrig.MOD(null, null)).to.equal(error.div0)
+    expect(mathTrig.MOD(1, null)).to.equal(error.div0)
+    expect(mathTrig.MOD(3, 0)).to.equal(error.div0)
+    expect(mathTrig.MOD(4, false)).to.equal(error.div0)
+
+    expect(mathTrig.MOD('text1', 'text2')).to.equal(error.value)
+    expect(mathTrig.MOD('text', 2)).to.equal(error.value)
+    expect(mathTrig.MOD(3, 'text')).to.equal(error.value)
+    expect(mathTrig.MOD('', '')).to.equal(error.value)
+
+    expect(mathTrig.MOD(null, 1)).to.equal(0)
+    expect(mathTrig.MOD(true, 4)).to.equal(1)
+    expect(mathTrig.MOD(4, true)).to.equal(0)
+    expect(mathTrig.MOD(false, 4)).to.equal(0)
+    expect(mathTrig.MOD(100, 25)).to.equal(0)
+    expect(mathTrig.MOD(0.75, 0.1)).to.approximately(0.05, 1e-9)
     expect(mathTrig.MOD(3, 2)).to.equal(1)
+    expect(mathTrig.MOD(100, 25)).to.equal(0)
+    expect(mathTrig.MOD(36, 4)).to.equal(0)
+    expect(mathTrig.MOD(15, 4)).to.equal(3)
+    expect(mathTrig.MOD(8, 3)).to.equal(2)
+    expect(mathTrig.MOD(13, 3)).to.equal(1)
+    expect(mathTrig.MOD(-3, -2)).to.equal(-1)
+    expect(mathTrig.MOD('3', 2)).to.equal(1)
+    expect(mathTrig.MOD(3, '2')).to.equal(1)
+    expect(mathTrig.MOD('3', '2')).to.equal(1)
     expect(mathTrig.MOD(-3, 2)).to.equal(1)
     expect(mathTrig.MOD(3, -2)).to.equal(-1)
     expect(mathTrig.MOD(-90, 360)).to.equal(270)
-    expect(mathTrig.MOD(3, 0)).to.equal(error.div0)
-    expect(mathTrig.MOD(3, 'invalid')).to.equal(error.value)
+    expect(mathTrig.MOD(10, 100)).to.equal(10)
+    expect(mathTrig.MOD(15, 100)).to.equal(15)
+    expect(mathTrig.MOD(-120, 360)).to.equal(240)
+    expect(mathTrig.MOD(-90, -120)).to.equal(-90)
+    expect(mathTrig.MOD(70, -90)).to.equal(-20)
   })
 
   it('MROUND', () => {
-    expect(mathTrig.MROUND(undefined, undefined)).to.equal(0)
-    expect(mathTrig.MROUND(1, undefined)).to.equal(0)
-    expect(mathTrig.MROUND(undefined, 1)).to.equal(0)
+    expect(mathTrig.MROUND()).to.equal(error.na)
+    expect(mathTrig.MROUND('')).to.equal(error.na)
+    expect(mathTrig.MROUND(1)).to.equal(error.na)
+    expect(mathTrig.MROUND(10, 3, 2)).to.equal(error.na)
     expect(mathTrig.MROUND(1, error.na)).to.equal(error.na)
     expect(mathTrig.MROUND(error.na, 1)).to.equal(error.na)
+    expect(mathTrig.MROUND(error.na, error.div0)).to.equal(error.na)
 
-    expect(mathTrig.MROUND(10, 3)).to.equal(9)
-    expect(mathTrig.MROUND(-10, -3)).to.equal(-9)
-    expect(mathTrig.MROUND(1.3, 0.2)).to.approximately(1.4000000000000001, 1e-9)
+    expect(mathTrig.MROUND(error.div0, error.na)).to.equal(error.div0)
+
     expect(mathTrig.MROUND(5, -2)).to.equal(error.num)
+    expect(mathTrig.MROUND(-2, 5)).to.equal(error.num)
+
+    expect(mathTrig.MROUND('text', 'text2')).to.equal(error.value)
+    expect(mathTrig.MROUND('text', 3)).to.equal(error.value)
     expect(mathTrig.MROUND(5, 'invalid')).to.equal(error.value)
+    expect(mathTrig.MROUND('', 3)).to.equal(error.value)
+    expect(mathTrig.MROUND(10, '')).to.equal(error.value)
+    expect(mathTrig.MROUND('', '')).to.equal(error.value)
+    expect(mathTrig.MROUND(true, 3)).to.equal(error.value)
+    expect(mathTrig.MROUND(10, true)).to.equal(error.value)
+    expect(mathTrig.MROUND(false, 3)).to.equal(error.value)
+    expect(mathTrig.MROUND(10, false)).to.equal(error.value)
+    expect(mathTrig.MROUND(true, false)).to.equal(error.value)
+
+    expect(mathTrig.MROUND(null, null)).to.equal(0)
+    expect(mathTrig.MROUND(1, null)).to.equal(0)
+    expect(mathTrig.MROUND(null, 1)).to.equal(0)
+    expect(mathTrig.MROUND(2, 5)).to.equal(0)
+    expect(mathTrig.MROUND(10, 3)).to.equal(9)
+    expect(mathTrig.MROUND(27842.5, 1000)).to.equal(28000)
+    expect(mathTrig.MROUND(46, 7)).to.equal(49)
+    expect(mathTrig.MROUND('20', 5)).to.equal(20)
+    expect(mathTrig.MROUND(20, '5')).to.equal(20)
+    expect(mathTrig.MROUND('20', '5')).to.equal(20)
+    expect(mathTrig.MROUND(20, 5)).to.equal(20)
+    expect(mathTrig.MROUND(-10, -3)).to.equal(-9)
+    expect(mathTrig.MROUND(1.3, 0.2)).to.approximately(1.4, 1e-9)
   })
 
   it('MULTINOMIAL', () => {
@@ -669,30 +813,38 @@ describe('Math & Trig', () => {
   })
 
   it('RAND', () => {
-    let sum = 0
-    const n = 10
-    let i = n
-    while (i--) {
-      sum += mathTrig.RAND()
-    }
-
-    const average = sum / n
-    expect(Number(parseInt(average), 10)).to.equal(0)
+    expect(mathTrig.RAND()).to.be.within(0, 1)
+    expect(mathTrig.RAND(null)).to.equal(error.na)
+    expect(mathTrig.RAND('')).to.equal(error.na)
+    expect(mathTrig.RAND(1)).to.equal(error.na)
+    expect(mathTrig.RAND(true)).to.equal(error.na)
   })
 
   it('RANDBETWEEN', () => {
-    const bottom = 5
-    const top = 10
-    let sum = 0
-    const n = 100
-    let i = n
-    while (i--) {
-      sum += mathTrig.RANDBETWEEN(bottom, top)
-    }
+    expect(mathTrig.RANDBETWEEN(null, null)).to.equal(0)
+    expect(mathTrig.RANDBETWEEN(5, 5)).to.equal(5)
 
-    const average = sum / n
-    expect(Number(parseInt(average, 10))).to.equal(7)
-    expect(mathTrig.RANDBETWEEN(bottom, 'invalid')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(5, 10)).to.be.within(5, 10)
+    expect(mathTrig.RANDBETWEEN(1.1, 3.2)).to.be.within(1.1, 3.2)
+    expect(mathTrig.RANDBETWEEN(1, 1)).to.be.equal(1)
+
+    expect(mathTrig.RANDBETWEEN('2', 5)).to.be.within(2, 5)
+    expect(mathTrig.RANDBETWEEN(5, '7')).to.be.within(5, 7)
+
+    expect(mathTrig.RANDBETWEEN(7, 5)).to.equal(error.num)
+
+    expect(mathTrig.RANDBETWEEN(true, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(false, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(2, true)).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('', '')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('FALSE', 'TRUE')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN(5, 'invalid')).to.equal(error.value)
+    expect(mathTrig.RANDBETWEEN('text', 'invalid')).to.equal(error.value)
+
+    expect(mathTrig.RANDBETWEEN(1, 10, 15)).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN(1)).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN('')).to.equal(error.na)
+    expect(mathTrig.RANDBETWEEN()).to.equal(error.na)
   })
 
   it('ROMAN', () => {
@@ -702,46 +854,119 @@ describe('Math & Trig', () => {
   })
 
   it('ROUND', () => {
-    expect(mathTrig.ROUND(undefined, undefined)).to.equal(0)
-    expect(mathTrig.ROUND(2, undefined)).to.equal(2)
-    expect(mathTrig.ROUND(undefined, 2)).to.equal(0)
-    expect(mathTrig.ROUND(error.na)).to.equal(error.na)
-    expect(mathTrig.ROUND(2.15, 1)).to.approximately(2.2, 1e-9)
-    expect(mathTrig.ROUND(2.149, 1)).to.approximately(2.1, 1e-9)
-    expect(mathTrig.ROUND(600.425, 2)).to.approximately(600.43, 1e-9)
-    expect(mathTrig.ROUND(600.435, 2)).to.approximately(600.44, 1e-9)
-    expect(mathTrig.ROUND(-1.475, 2)).to.approximately(-1.47, 1e-9) // TODO: check if -1.48 would be the correct result or a precision error
+    expect(mathTrig.ROUND()).to.equal(error.na)
+    expect(mathTrig.ROUND('')).to.equal(error.na)
+    expect(mathTrig.ROUND(1)).to.equal(error.na)
+    expect(mathTrig.ROUND('text')).to.equal(error.na)
+    expect(mathTrig.ROUND(5.785, 1, 2)).to.equal(error.na)
+    expect(mathTrig.ROUND(error.div0)).to.equal(error.na)
+    expect(mathTrig.ROUND(error.na, error.div0)).to.equal(error.na)
+
+    expect(mathTrig.ROUND(error.div0, error.na)).to.equal(error.div0)
+
+    expect(mathTrig.ROUND('text', 1)).to.equal(error.value)
+    expect(mathTrig.ROUND(-50.55, 'invalid')).to.equal(error.value)
+    expect(mathTrig.ROUND('', '')).to.equal(error.value)
+    expect(mathTrig.ROUND(5.785, '')).to.equal(error.value)
+    expect(mathTrig.ROUND('', 1)).to.equal(error.value)
+    expect(mathTrig.ROUND('text1', 'text2')).to.equal(error.value)
+
+    expect(mathTrig.ROUND(null, null)).to.equal(0)
+    expect(mathTrig.ROUND(2, null)).to.equal(2)
+    expect(mathTrig.ROUND(null, 2)).to.equal(0)
     expect(mathTrig.ROUND(21.5, -1)).to.equal(20)
-    expect(mathTrig.ROUND(626.3, -3)).to.equal(1000)
+    expect(mathTrig.ROUND('21.5', '-1')).to.equal(20)
     expect(mathTrig.ROUND(1.98, -1)).to.equal(0)
     expect(mathTrig.ROUND(-50.55, -2)).to.equal(-100)
-    expect(mathTrig.ROUND(-50.55, 'invalid')).to.equal(error.value)
+    expect(mathTrig.ROUND(626.3, -3)).to.equal(1000)
+    expect(mathTrig.ROUND(5.785, false)).to.equal(6)
+    expect(mathTrig.ROUND(5.785, true)).to.equal(5.8)
+    expect(mathTrig.ROUND(true, 1)).to.equal(1)
+    expect(mathTrig.ROUND(false, 1)).to.equal(0)
+    expect(mathTrig.ROUND(true, false)).to.equal(1)
+    expect(mathTrig.ROUND(5.785, 1)).to.equal(5.8)
+    expect(mathTrig.ROUND(5.785, 2)).to.equal(5.79)
+    expect(mathTrig.ROUND(-1.475, 2)).to.equal(-1.48)
+    expect(mathTrig.ROUND(5.785, 3)).to.equal(5.785)
+    expect(mathTrig.ROUND(23542.5, 0)).to.equal(23543)
   })
 
   it('ROUNDDOWN', () => {
-    expect(mathTrig.ROUNDDOWN(undefined, undefined)).to.equal(0)
-    expect(mathTrig.ROUNDDOWN(2, undefined)).to.equal(2)
-    expect(mathTrig.ROUNDDOWN(undefined, 2)).to.equal(0)
-    expect(mathTrig.ROUNDDOWN(error.na)).to.equal(error.na)
-    expect(mathTrig.ROUNDDOWN(3.2, 0)).to.equal(3)
-    expect(mathTrig.ROUNDDOWN(76.9, 0)).to.equal(76)
-    expect(mathTrig.ROUNDDOWN(3.14159, 3)).to.approximately(3.141, 1e-9)
-    expect(mathTrig.ROUNDDOWN(-3.14159, 1)).to.approximately(-3.1, 1e-9)
-    expect(mathTrig.ROUNDDOWN(31415.92654, -2)).to.equal(31400)
+    expect(mathTrig.ROUNDDOWN()).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN('')).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN(1)).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN('text')).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN(error.div0)).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN(3.2, 1, 2)).to.equal(error.na)
+    expect(mathTrig.ROUNDDOWN(error.na, error.div0)).to.equal(error.na)
+
+    expect(mathTrig.ROUNDDOWN(error.div0, error.na)).to.equal(error.div0)
+
+    expect(mathTrig.ROUNDDOWN(3.2, 'text')).to.equal(error.value)
+    expect(mathTrig.ROUNDDOWN('text', 1)).to.equal(error.value)
+    expect(mathTrig.ROUNDDOWN('text1', 'text2')).to.equal(error.value)
     expect(mathTrig.ROUNDDOWN(31415.92654, 'invalid')).to.equal(error.value)
+    expect(mathTrig.ROUNDDOWN('', '')).to.equal(error.value)
+    expect(mathTrig.ROUNDDOWN(3.2, '')).to.equal(error.value)
+    expect(mathTrig.ROUNDDOWN('', 1)).to.equal(error.value)
+
+    expect(mathTrig.ROUNDDOWN(null, null)).to.equal(0)
+    expect(mathTrig.ROUNDDOWN(2, null)).to.equal(2)
+    expect(mathTrig.ROUNDDOWN(null, 2)).to.equal(0)
+    expect(mathTrig.ROUNDDOWN(3.2, false)).to.equal(3)
+    expect(mathTrig.ROUNDDOWN(3.2, true)).to.equal(3.2)
+    expect(mathTrig.ROUNDDOWN(true, 1)).to.equal(1)
+    expect(mathTrig.ROUNDDOWN(false, 1)).to.equal(0)
+    expect(mathTrig.ROUNDDOWN(true, false)).to.equal(1)
+    expect(mathTrig.ROUNDDOWN('3.2', '0')).to.equal(3)
+    expect(mathTrig.ROUNDDOWN(3.2, 0)).to.equal(3)
+    expect(mathTrig.ROUNDDOWN(3.2, 1)).to.equal(3.2)
+    expect(mathTrig.ROUNDDOWN(76.9, 0)).to.equal(76)
+    expect(mathTrig.ROUNDDOWN(3.14159, 3)).to.equal(3.141)
+    expect(mathTrig.ROUNDDOWN('-3.14159', '1')).to.equal(-3.1)
+    expect(mathTrig.ROUNDDOWN(-3.14159, 1)).to.equal(-3.1)
+    expect(mathTrig.ROUNDDOWN(27842.5, -1)).to.equal(27840)
+    expect(mathTrig.ROUNDDOWN(31415.92654, -2)).to.equal(31400)
+    expect(mathTrig.ROUNDDOWN(27842.5, -3)).to.equal(27000)
   })
 
   it('ROUNDUP', () => {
-    expect(mathTrig.ROUNDUP(undefined, undefined)).to.equal(0)
-    expect(mathTrig.ROUNDUP(2, undefined)).to.equal(2)
-    expect(mathTrig.ROUNDUP(undefined, 2)).to.equal(0)
-    expect(mathTrig.ROUNDUP(error.na)).to.equal(error.na)
-    expect(mathTrig.ROUNDUP(3.2, 0)).to.equal(4)
-    expect(mathTrig.ROUNDUP(76.9, 0)).to.equal(77)
-    expect(mathTrig.ROUNDUP(3.14159, 3)).to.approximately(3.142, 1e-9)
-    expect(mathTrig.ROUNDUP(-3.14159, 1)).to.approximately(-3.2, 1e-9)
-    expect(mathTrig.ROUNDUP(31415.92654, -2)).to.equal(31500)
+    expect(mathTrig.ROUNDUP()).to.equal(error.na)
+    expect(mathTrig.ROUNDUP('')).to.equal(error.na)
+    expect(mathTrig.ROUNDUP(1)).to.equal(error.na)
+    expect(mathTrig.ROUNDUP('text')).to.equal(error.na)
+    expect(mathTrig.ROUNDUP(3.2, 0, 0)).to.equal(error.na)
+    expect(mathTrig.ROUNDUP(error.div0)).to.equal(error.na)
+    expect(mathTrig.ROUNDUP(error.na, error.div0)).to.equal(error.na)
+
+    expect(mathTrig.ROUNDUP(error.div0, error.na)).to.equal(error.div0)
+
+    expect(mathTrig.ROUNDUP('text', 1)).to.equal(error.value)
     expect(mathTrig.ROUNDUP(31415.92654, 'invalid')).to.equal(error.value)
+    expect(mathTrig.ROUNDUP('text', 2)).to.equal(error.value)
+    expect(mathTrig.ROUNDUP('', '')).to.equal(error.value)
+    expect(mathTrig.ROUNDUP(5.785, '')).to.equal(error.value)
+    expect(mathTrig.ROUNDUP('', 1)).to.equal(error.value)
+    expect(mathTrig.ROUNDUP('text1', 'text2')).to.equal(error.value)
+
+    expect(mathTrig.ROUNDUP(null, null)).to.equal(0)
+    expect(mathTrig.ROUNDUP(2, null)).to.equal(2)
+    expect(mathTrig.ROUNDUP(null, 2)).to.equal(0)
+    expect(mathTrig.ROUNDUP(5.785, false)).to.equal(6)
+    expect(mathTrig.ROUNDUP(5.785, true)).to.equal(5.8)
+    expect(mathTrig.ROUNDUP(true, 1)).to.equal(1)
+    expect(mathTrig.ROUNDUP(false, 1)).to.equal(0)
+    expect(mathTrig.ROUNDUP(true, false)).to.equal(1)
+    expect(mathTrig.ROUNDUP(5.785, 1)).to.equal(5.8)
+    expect(mathTrig.ROUNDUP('3.2', '0')).to.equal(4)
+    expect(mathTrig.ROUNDUP(3.2, 0)).to.equal(4)
+    expect(mathTrig.ROUNDUP(3.2, 1)).to.equal(3.2)
+    expect(mathTrig.ROUNDUP(76.9, 0)).to.equal(77)
+    expect(mathTrig.ROUNDUP(3.14159, 3)).to.equal(3.142)
+    expect(mathTrig.ROUNDUP(-3.14159, 1)).to.equal(-3.2)
+    expect(mathTrig.ROUNDUP(23242.3, -1)).to.equal(23250)
+    expect(mathTrig.ROUNDUP(31415.92654, -2)).to.equal(31500)
+    expect(mathTrig.ROUNDUP(23242.3, -3)).to.equal(24000)
   })
 
   it('SEC', () => {
@@ -837,17 +1062,46 @@ describe('Math & Trig', () => {
   })
 
   it('SUM', () => {
-    expect(mathTrig.SUM(undefined, 1)).to.equal(1)
+    expect(mathTrig.SUM()).to.equal(error.na)
     expect(mathTrig.SUM(1, 2, error.na)).to.equal(error.na)
     expect(mathTrig.SUM(1, error.na, 2)).to.equal(error.na)
     expect(mathTrig.SUM(1, [error.na], 2)).to.equal(error.na)
     expect(mathTrig.SUM([1], [2], [error.na])).to.equal(error.na)
     expect(mathTrig.SUM([1], [error.na], [2])).to.equal(error.na)
     expect(mathTrig.SUM([1], error.na, [2])).to.equal(error.na)
+    expect(mathTrig.SUM(error.na)).to.equal(error.na)
+    expect(mathTrig.SUM(null, error.na)).to.equal(error.na)
+    expect(mathTrig.SUM(error.na, 1)).to.equal(error.na)
+
+    expect(mathTrig.SUM(null, error.div0)).to.equal(error.div0)
+
+    expect(mathTrig.SUM(1, 'invalid')).to.equal(1)
+    expect(mathTrig.SUM(null, 1)).to.equal(1)
+    expect(mathTrig.SUM(1, null)).to.equal(1)
+
+    expect(mathTrig.SUM(true)).to.equal(0)
+    expect(mathTrig.SUM(false)).to.equal(0)
+    expect(mathTrig.SUM(true, 3)).to.equal(3)
+    expect(mathTrig.SUM(1, true)).to.equal(1)
+    expect(mathTrig.SUM(1, false)).to.equal(1)
+    expect(mathTrig.SUM(false, 3)).to.equal(3)
+    expect(mathTrig.SUM(true, false)).to.equal(0)
+
+    expect(mathTrig.SUM('')).to.equal(0)
+    expect(mathTrig.SUM(null)).to.equal(0)
+    expect(mathTrig.SUM(1)).to.equal(1)
+    expect(mathTrig.SUM('text')).to.equal(0)
+    expect(mathTrig.SUM(1, 2)).to.equal(3)
+    expect(mathTrig.SUM('', 2)).to.equal(2)
+    expect(mathTrig.SUM(1, '')).to.equal(1)
+    expect(mathTrig.SUM('1', 2)).to.equal(2)
+    expect(mathTrig.SUM(1, '2')).to.equal(1)
+    expect(mathTrig.SUM('1', '2')).to.equal(0)
     expect(mathTrig.SUM(1, 2, 3)).to.equal(6)
     expect(mathTrig.SUM([1, 2, 3])).to.equal(6)
     expect(mathTrig.SUM([1, 2, 3], 1, 2)).to.equal(9)
     expect(mathTrig.SUM([1, 2, 3], [1, 2])).to.equal(9)
+
     expect(
       mathTrig.SUM([
         [1, 1],
@@ -885,32 +1139,32 @@ describe('Math & Trig', () => {
           [3, 3]
         ],
         [
-          [1, 1],
-          [2, 2],
-          [3, 3]
+          [1, 1, 1],
+          [2, 2, 1],
+          [3, 3, 1],
+          [3, 3, 1]
         ]
       )
-    ).to.equal(24)
-    expect(mathTrig.SUM(1, 'invalid')).to.equal(1)
-    expect(mathTrig.SUM(undefined)).to.equal(0)
-    expect(mathTrig.SUM(undefined, 1)).to.equal(1)
-    expect(mathTrig.SUM(null)).to.equal(0)
-    expect(mathTrig.SUM(null, 1)).to.equal(1)
-    expect(mathTrig.SUM(error.na)).to.equal(error.na)
-    expect(mathTrig.SUM(undefined, error.na)).to.equal(error.na)
-    expect(mathTrig.SUM(error.na, 1)).to.equal(error.na)
+    ).to.equal(34)
   })
 
   it('SUMIF', () => {
-    expect(mathTrig.SUMIF([undefined], undefined)).to.equal(0)
-    expect(mathTrig.SUMIF([1, 2, 3], undefined)).to.equal(0)
-    expect(mathTrig.SUMIF([1, 2, 3], error.na)).to.equal(0)
-    expect(mathTrig.SUMIF([undefined], '>2')).to.equal(0)
-    expect(mathTrig.SUMIF([1, 2, error.na], error.na)).to.equal(0)
-    expect(mathTrig.SUMIF([2, error.na], '>1')).to.equal(2)
-    expect(mathTrig.SUMIF([error.na], '>1')).to.equal(0)
-    expect(mathTrig.SUMIF([error.na], '>1', [error.na])).to.equal(0)
-    expect(mathTrig.SUMIF([1, 2, 3], '>2')).to.equal(3)
+    expect(mathTrig.SUMIF()).to.equal(error.na)
+    expect(mathTrig.SUMIF('')).to.equal(error.na)
+    expect(mathTrig.SUMIF('text')).to.equal(error.na)
+    expect(mathTrig.SUMIF(1)).to.equal(error.na)
+
+    expect(mathTrig.SUMIF(1, 2)).to.equal(0)
+    expect(mathTrig.SUMIF(5, 5)).to.equal(5)
+    expect(mathTrig.SUMIF([[null]], null)).to.equal(0)
+    expect(mathTrig.SUMIF([[1, 2, 3]], null)).to.equal(0)
+    expect(mathTrig.SUMIF([[1, 2, 3]], error.na)).to.equal(0)
+    expect(mathTrig.SUMIF([[null]], '>2')).to.equal(0)
+    expect(mathTrig.SUMIF([[1, 2, error.na]], error.na)).to.equal(0)
+    expect(mathTrig.SUMIF([[2, error.na]], '>1')).to.equal(2)
+    expect(mathTrig.SUMIF([[error.na]], '>1')).to.equal(0)
+    expect(mathTrig.SUMIF([[error.na]], '>1', [[error.na]])).to.equal(0)
+    expect(mathTrig.SUMIF([[1, 2, 3]], '>2')).to.equal(3)
     expect(
       mathTrig.SUMIF(
         [
@@ -921,7 +1175,8 @@ describe('Math & Trig', () => {
         '>2'
       )
     ).to.equal(6)
-    expect(mathTrig.SUMIF([1, 2, 3], '*')).to.equal(6)
+    expect(mathTrig.SUMIF([[1, 2, 3]], '*')).to.equal(0)
+    expect(mathTrig.SUMIF([[1, 2, 3]], '<>')).to.equal(6)
     expect(
       mathTrig.SUMIF(
         [
@@ -929,19 +1184,67 @@ describe('Math & Trig', () => {
           [2, 2],
           [3, 3]
         ],
-        '*'
+        '<>'
       )
     ).to.equal(12)
-    expect(mathTrig.SUMIF([1, 'invalid', 3], '>2')).to.equal(3)
-    expect(mathTrig.SUMIF([1, 2, 3], '<>2')).to.equal(4)
-    expect(mathTrig.SUMIF([1, 2, 3, 3, 4, 5], '=3')).to.equal(6)
-    expect(mathTrig.SUMIF([1, 'b', 'c', 'b', 'd'], '=b', [1, 2, 3, 4, 5])).to.equal(6)
-    expect(mathTrig.SUMIF(['a', 'b', 'c', 'd', 'd'], '<>d', [1, 2, 3, 4, 5])).to.equal(6)
+    expect(mathTrig.SUMIF([[1, 'invalid', 3]], '>2')).to.equal(3)
+    expect(mathTrig.SUMIF([[1, 2, 3]], '<>2')).to.equal(4)
+    expect(mathTrig.SUMIF([[1, 2, 3, 3, 4, 5]], '=3')).to.equal(6)
+    expect(mathTrig.SUMIF([[1, 'b', 'c', 'b', 'd']], '=b', [[1, 2, 3, 4, 5]])).to.equal(6)
+    expect(mathTrig.SUMIF([['a', 'b', 'c', 'd', 'd']], '<>d', [[1, 2, 3, 4, 5]])).to.equal(6)
+
+    expect(
+      mathTrig.SUMIF(
+        [
+          [1, 1],
+          [2, 2],
+          [3, 3]
+        ],
+        '<>',
+        [
+          [1, 1],
+          [1, 1],
+          [1, 1]
+        ]
+      )
+    ).to.equal(6)
+
+    expect(
+      mathTrig.SUMIF(
+        [
+          [1, 1],
+          [2, 2],
+          [3, 3]
+        ],
+        '<>',
+        [[1, 1]]
+      )
+    ).to.equal(error.value)
   })
 
   it('SUMIFS', () => {
-    expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '<9')).to.equal(2)
-    expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '*')).to.equal(5)
+    expect(mathTrig.SUMIFS()).to.equal(error.na)
+    expect(mathTrig.SUMIFS('')).to.equal(error.na)
+    expect(mathTrig.SUMIFS(1)).to.equal(error.na)
+    expect(mathTrig.SUMIFS('text')).to.equal(error.na)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], '>4')).to.equal(error.na)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[1, 2, 3]], '>4', [[1, 2, 3]])).to.equal(error.na)
+
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4')).to.equal(5)
+    expect(mathTrig.SUMIFS([[5, 10]], [[4, '5']], '*')).to.equal(10)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4', [[7, 8, 9]], '<9')).to.equal(2)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4', [[7, 8, 9]], '<>')).to.equal(5)
+    expect(
+      mathTrig.SUMIFS(
+        [
+          [1, 2, 3],
+          [4, 5, 6]
+        ],
+        [7, 8, 9],
+        '>4'
+      )
+    ).to.equal(error.value)
+
     expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(error.value)
   })
 
