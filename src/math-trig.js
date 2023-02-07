@@ -1469,6 +1469,14 @@ export function ROMAN(number) {
  * @returns
  */
 export function ROUND(number, num_digits) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || num_digits === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
   const anyError = utils.anyError(number, num_digits)
@@ -1477,7 +1485,12 @@ export function ROUND(number, num_digits) {
     return anyError
   }
 
-  return Number(Math.round(Number(number + 'e' + num_digits)) + 'e' + num_digits * -1)
+  const signal = Math.sign(number)
+  number = Math.abs(number)
+
+  var result = Math.round(number * Math.pow(10, num_digits)) / Math.pow(10, num_digits)
+
+  return result * signal
 }
 
 /**
