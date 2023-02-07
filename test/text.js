@@ -934,18 +934,49 @@ describe('Text', () => {
   })
 
   it('TRIM', () => {
+    expect(text.TRIM(null)).to.equal('')
+
+    expect(text.TRIM(true)).to.equal('true')
+    expect(text.TRIM(false)).to.equal('false')
+
+    expect(text.TRIM('true')).to.equal('true')
+    expect(text.TRIM('false')).to.equal('false')
+
+    expect(text.TRIM()).to.equal(error.na)
+    expect(text.TRIM('')).to.equal(error.undefined)
     expect(text.TRIM(undefined)).to.equal('')
     expect(text.TRIM(error.na)).to.equal(error.na)
     expect(text.TRIM(' more  spaces ')).to.equal('more spaces')
-    expect(text.TRIM(true)).to.equal('true')
+
+    expect(text.TRIM(10, 'text')).to.equal(error.na)
+    expect(text.TRIM(10, 10)).to.equal(error.na)
+
     expect(text.TRIM(10)).to.equal('10')
+    expect(text.TRIM(-10)).to.equal('-10')
+    expect(text.TRIM(0)).to.equal('0')
+    expect(text.TRIM(3.4)).to.equal('3.4')
+    expect(text.TRIM(-93.4)).to.equal('-93.4')
+
+    expect(text.TRIM(['   f', '   ', ' c'])).to.eql(['f', '', 'c'])
+    expect(text.TRIM([[10], [5], [2]])).to.eql([['10'], ['5'], ['2']])
+    expect(
+      text.TRIM([
+        [5, 10],
+        [3, 5],
+        [1, 2]
+      ])
+    ).to.eql([
+      ['5', '10'],
+      ['3', '5'],
+      ['1', '2']
+    ])
     expect(
       text.TRIM(
         `  spaces,      tabs, and
       new lines`
       )
     ).to.equal('spaces, tabs, and new lines')
-    expect(text.TRIM('  spaces,\t\t\ttabs, and\nnew lines')).to.equal('spaces, tabs, and new lines')
+    expect(text.TRIM('  spaces, tabs, and new lines')).to.equal('spaces, tabs, and new lines')
   })
 
   it('UNICHAR', () => {

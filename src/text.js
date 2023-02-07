@@ -931,6 +931,22 @@ export function TEXTJOIN(delimiter, ignore_empty, ...args) {
  * @returns
  */
 export function TRIM(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (text === null) {
+    return ''
+  }
+
+  if (text === '') {
+    return error.undefined
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => TRIM(item))
+  }
+
   text = utils.parseString(text)
 
   if (text instanceof Error) {
