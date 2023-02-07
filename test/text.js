@@ -425,10 +425,52 @@ describe('Text', () => {
 
   it('MID', () => {
     const data = 'Fluid Flow'
+
+    expect(text.MID(0)).to.equal(error.na)
+    expect(text.MID('')).to.equal(error.na)
+    expect(text.MID()).to.equal(error.na)
+    expect(text.MID(data)).to.equal(error.na)
+    expect(text.MID(data)).to.equal(error.na)
+    expect(text.MID(data, 1)).to.equal(error.na)
+    expect(text.MID(data, 1, 5, 7)).to.equal(error.na)
+
+    expect(text.MID(1, 5, data)).to.equal(error.value)
+
+    expect(text.MID(error.na, 1, 5)).to.equal(error.na)
+    expect(text.MID(data, error.na, 5)).to.equal(error.na)
+    expect(text.MID(data, 1, error.na)).to.equal(error.na)
+
     expect(text.MID(data, 1, 5)).to.equal('Fluid')
+    expect(text.MID(true, 1, 2)).to.eql('TR')
+    expect(text.MID(false, 1, 3)).to.eql('FAL')
+
     expect(text.MID(data, 7, 20)).to.equal('Flow')
     expect(text.MID(data, 20, 50)).to.equal('')
-    expect(text.MID(0)).to.equal(error.value)
+    expect(text.MID(412, 1, 2)).to.equal('41')
+    expect(text.MID(4.12, 1, 2)).to.equal('4.')
+    expect(text.MID(4.12, 2, 1)).to.equal('.')
+
+    expect(text.MID(null, 1, 2)).to.equal('')
+    expect(text.MID(4.12, null, 2)).to.equal(error.value)
+    expect(text.MID(4.12, 1, null)).to.equal('')
+
+    expect(text.MID(['text1', 'text2', 'text3'], 1, 1)).to.eql(['t', 't', 't'])
+    //expect(text.MID(['text1', 'text2'], ['text3', 'text4'], ['text5', 'text6'])).to.eql([error.value, error.value])
+    //expect(text.MID(['text1', 'text2'], [4, 2], [3, 4])).to.eql(['t1', 'ext2'])
+
+    expect(
+      text.MID(
+        [
+          ['text1', 'text2'],
+          ['text3', 'text4']
+        ],
+        1,
+        2
+      )
+    ).to.eql([
+      ['te', 'te'],
+      ['te', 'te']
+    ])
   })
 
   describe('NUMBERVALUE', () => {

@@ -434,15 +434,39 @@ export function LOWER(text) {
  * @returns
  */
 export function MID(text, start_num, num_chars) {
-  if (start_num === undefined || start_num === null) {
+  if (arguments.length !== 3) {
+    return error.na
+  }
+
+  const someError = utils.anyError(text, start_num, num_chars)
+  if (someError) {
+    return someError
+  }
+
+  if (start_num == null) {
     return error.value
   }
 
-  start_num = utils.parseNumber(start_num)
-  num_chars = utils.parseNumber(num_chars)
+  start_num = utils.getNumber(start_num)
+  num_chars = utils.getNumber(num_chars)
 
-  if (utils.anyIsError(start_num, num_chars) || typeof text !== 'string') {
-    return num_chars
+  if (typeof start_num === 'string' || typeof num_chars === 'string') {
+    return error.value
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => MID(item, start_num, num_chars))
+  }
+
+  if (text === null) {
+    return ''
+  }
+
+  const textType = typeof text
+  if (textType === 'boolean') {
+    text = text.toString().toUpperCase()
+  } else if (textType === 'number') {
+    text = text.toString()
   }
 
   const begin = start_num - 1
