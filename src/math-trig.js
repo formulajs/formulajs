@@ -919,6 +919,14 @@ export function GCD() {
  * @returns
  */
 export function INT(number) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (number === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
 
   if (number instanceof Error) {

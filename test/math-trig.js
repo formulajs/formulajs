@@ -440,12 +440,23 @@ describe('Math & Trig', () => {
   })
 
   it('INT', () => {
-    expect(mathTrig.INT(undefined)).to.equal(0)
+    expect(mathTrig.INT()).to.equal(error.na)
+    expect(mathTrig.INT(5.5, 5)).to.equal(error.na)
     expect(mathTrig.INT(error.na)).to.equal(error.na)
-    expect(mathTrig.INT(5.5)).to.equal(5)
-    expect(mathTrig.INT('invalid')).to.equal(error.value)
+
+    expect(mathTrig.INT(error.div0)).to.equal(error.div0)
+
     expect(mathTrig.INT('')).to.equal(error.value)
+    expect(mathTrig.INT('text')).to.equal(error.value)
+
+    expect(mathTrig.INT(null)).to.equal(0)
     expect(mathTrig.INT(true)).to.equal(1)
+    expect(mathTrig.INT(false)).to.equal(0)
+
+    expect(mathTrig.INT(5.5)).to.equal(5)
+    expect(mathTrig.INT(-10.8)).to.equal(-11)
+    expect(mathTrig.INT(10.8)).to.equal(10)
+    expect(mathTrig.INT('10.8')).to.equal(10)
   })
 
   it('ISO.CEILING', () => {
