@@ -41,6 +41,26 @@ export function BAHTTEXT() {
  * @returns
  */
 export function CHAR(number) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(number)) {
+    return number.map((item) => CHAR(item))
+  }
+
+  if (number === true) {
+    number = 1
+  }
+
+  if (number === '') {
+    return error.num
+  }
+
+  if (number < 1) {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
 
   if (number === 0) {
@@ -63,7 +83,21 @@ export function CHAR(number) {
  * @returns
  */
 export function CLEAN(text) {
-  if (utils.anyIsError(text)) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (text === '') {
+    return ''
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => CLEAN(item))
+  }
+
+  text = utils.parseString(text)
+
+  if (text instanceof Error) {
     return text
   }
 
@@ -82,6 +116,18 @@ export function CLEAN(text) {
  * @returns
  */
 export function CODE(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => CODE(item))
+  }
+
+  if (typeof text === 'boolean' || typeof text === 'number') {
+    text = text.toString()
+  }
+
   if (utils.anyIsError(text)) {
     return text
   }
@@ -106,6 +152,10 @@ export function CODE(text) {
 export function CONCATENATE() {
   const args = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, args)
+
+  if (arguments.length === 0) {
+    return error.na
+  }
 
   if (someError) {
     return someError
@@ -213,12 +263,26 @@ export function EXACT(text1, text2) {
  * @returns
  */
 export function FIND(find_text, within_text, start_num) {
-  if (arguments.length < 2) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
+  }
+
+  if (Array.isArray(within_text)) {
+    return within_text.map((item) => FIND(find_text, item, start_num))
+  }
+
+  if (find_text === null && within_text === null && typeof start_num === 'undefined') {
+    return 1
   }
 
   find_text = utils.parseString(find_text)
   within_text = utils.parseString(within_text)
+
+  const varPosition = parseInt(start_num)
+  if (isNaN(varPosition) && typeof start_num !== 'undefined') {
+    return error.value
+  }
+
   start_num = start_num === undefined ? 0 : start_num
   const found_index = within_text.indexOf(find_text, start_num - 1)
 
@@ -280,6 +344,14 @@ export function FIXED(number, decimals = 2, no_commas = false) {
 export function LEFT(text, num_chars) {
   const someError = utils.anyError(text, num_chars)
 
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LEFT(item, num_chars))
+  }
+
   if (someError) {
     return someError
   }
@@ -304,8 +376,12 @@ export function LEFT(text, num_chars) {
  * @returns
  */
 export function LEN(text) {
-  if (arguments.length === 0) {
-    return error.error
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LEN(item))
   }
 
   if (text instanceof Error) {
@@ -331,7 +407,11 @@ export function LEN(text) {
  */
 export function LOWER(text) {
   if (arguments.length !== 1) {
-    return error.value
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LOWER(item))
   }
 
   text = utils.parseString(text)
@@ -354,15 +434,39 @@ export function LOWER(text) {
  * @returns
  */
 export function MID(text, start_num, num_chars) {
-  if (start_num === undefined || start_num === null) {
+  if (arguments.length !== 3) {
+    return error.na
+  }
+
+  const someError = utils.anyError(text, start_num, num_chars)
+  if (someError) {
+    return someError
+  }
+
+  if (start_num == null) {
     return error.value
   }
 
-  start_num = utils.parseNumber(start_num)
-  num_chars = utils.parseNumber(num_chars)
+  start_num = utils.getNumber(start_num)
+  num_chars = utils.getNumber(num_chars)
 
-  if (utils.anyIsError(start_num, num_chars) || typeof text !== 'string') {
-    return num_chars
+  if (typeof start_num === 'string' || typeof num_chars === 'string') {
+    return error.value
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => MID(item, start_num, num_chars))
+  }
+
+  if (text === null) {
+    return ''
+  }
+
+  const textType = typeof text
+  if (textType === 'boolean') {
+    text = text.toString().toUpperCase()
+  } else if (textType === 'number') {
+    text = text.toString()
   }
 
   const begin = start_num - 1
@@ -416,6 +520,10 @@ export function PRONETIC() {
  * @returns
  */
 export function PROPER(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   if (utils.anyIsError(text)) {
     return text
   }
@@ -424,9 +532,41 @@ export function PROPER(text) {
     return error.value
   }
 
+  if (Array.isArray(text)) {
+    return text.map((item) => PROPER(item))
+  }
+
   text = utils.parseString(text)
 
   return text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+}
+
+export function REGEXEXTRACT(text, regular_expression) {
+  if (arguments.length < 2) {
+    return error.na
+  }
+
+  const match = text.match(new RegExp(regular_expression))
+
+  return match ? match[match.length > 1 ? match.length - 1 : 0] : null
+}
+
+export function REGEXREPLACE(text, regular_expression, replacement) {
+  if (arguments.length < 3) {
+    return error.na
+  }
+
+  return text.replace(new RegExp(regular_expression), replacement)
+}
+
+export function REGEXMATCH(text, regular_expression, full) {
+  if (arguments.length < 2) {
+    return error.na
+  }
+
+  const match = text.match(new RegExp(regular_expression))
+
+  return full ? match : !!match
 }
 
 /**
@@ -441,8 +581,36 @@ export function PROPER(text) {
  * @returns
  */
 export function REPLACE(old_text, num_chars, length, new_text) {
+  if (arguments.length !== 4) {
+    return error.na
+  }
+
+  const someError = utils.anyError(old_text, num_chars, length, new_text)
+  if (someError) {
+    return someError
+  }
+
+  if (Array.isArray(old_text)) {
+    return old_text.map((item) => REPLACE(item, num_chars, length, new_text))
+  }
+
+  if (num_chars === '' || num_chars === null || num_chars === 0 || length === '' || length === null) {
+    return error.value
+  }
+
   num_chars = utils.parseNumber(num_chars)
   length = utils.parseNumber(length)
+
+  if (typeof old_text === 'boolean') {
+    old_text = old_text.toString().toUpperCase()
+  }
+
+  if (typeof new_text === 'boolean') {
+    new_text = new_text.toString().toUpperCase()
+  }
+
+  old_text = old_text.toString()
+  new_text = new_text.toString()
 
   if (utils.anyIsError(num_chars, length) || typeof old_text !== 'string' || typeof new_text !== 'string') {
     return error.value
@@ -489,6 +657,14 @@ export function REPT(text, number_times) {
 export function RIGHT(text, num_chars) {
   const someError = utils.anyError(text, num_chars)
 
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => RIGHT(item, num_chars))
+  }
+
   if (someError) {
     return someError
   }
@@ -515,16 +691,49 @@ export function RIGHT(text, num_chars) {
  * @returns
  */
 export function SEARCH(find_text, within_text, start_num) {
-  let foundAt
-
-  if (typeof find_text !== 'string' || typeof within_text !== 'string') {
-    return error.value
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
   }
 
-  start_num = start_num === undefined ? 0 : start_num
-  foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num - 1) + 1
+  if (Array.isArray(within_text)) {
+    return within_text.map((item) => SEARCH(find_text, item, start_num))
+  }
+
+  if (find_text instanceof Error) {
+    return find_text
+  }
+
+  if (within_text instanceof Error) {
+    return within_text
+  }
+
+  if (start_num instanceof Error) {
+    return start_num
+  }
+
+  if (start_num === undefined) {
+    start_num = 0
+  } else {
+    start_num = utils.getNumber(start_num)
+
+    if (typeof start_num !== 'number' || start_num < 1) {
+      return error.value
+    }
+
+    start_num--
+  }
+
+  find_text = find_text !== null ? find_text.toString() : ''
+
+  within_text = within_text !== null ? within_text.toString() : ''
+
+  let foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num) + 1
 
   return foundAt === 0 ? error.value : foundAt
+}
+
+export function SPLIT(text, separator) {
+  return text.split(separator)
 }
 
 /**
@@ -539,8 +748,28 @@ export function SEARCH(find_text, within_text, start_num) {
  * @returns
  */
 export function SUBSTITUTE(text, old_text, new_text, instance_num) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || arguments.length > 4) {
     return error.na
+  }
+
+  if (new_text === null) {
+    new_text = ''
+  }
+
+  if (text === null) {
+    text = ''
+  }
+
+  if (typeof text === 'boolean') {
+    text = text.toString().toUpperCase()
+  }
+
+  if (typeof new_text === 'boolean') {
+    return text
+  }
+
+  if (typeof instance_num === 'boolean') {
+    return error.value
   }
 
   if (!text || !old_text) {
@@ -554,16 +783,16 @@ export function SUBSTITUTE(text, old_text, new_text, instance_num) {
       return error.value
     }
 
-    let index = 0
+    let index = text.indexOf(old_text)
     let i = 0
 
-    while (index > -1 && text.indexOf(old_text, index) > -1) {
-      index = text.indexOf(old_text, index + 1)
+    while (index > -1) {
       i++
 
-      if (index > -1 && i === instance_num) {
+      if (i === instance_num) {
         return text.substring(0, index) + new_text + text.substring(index + old_text.length)
       }
+      index = text.indexOf(old_text, index + 1)
     }
 
     return text
@@ -651,15 +880,21 @@ export function TEXT(value, format_text) {
  * @returns
  */
 export function TEXTJOIN(delimiter, ignore_empty, ...args) {
-  if (typeof ignore_empty !== 'boolean') {
-    ignore_empty = utils.parseBool(ignore_empty)
-  }
-
   if (arguments.length < 3) {
     return error.na
   }
 
-  delimiter = delimiter !== null && delimiter !== undefined ? delimiter : ''
+  if (ignore_empty !== null && typeof ignore_empty !== 'boolean') {
+    ignore_empty = utils.parseBool(ignore_empty)
+  }
+
+  if (ignore_empty === error.value) {
+    return error.value
+  }
+
+  if (delimiter == undefined || delimiter == null) {
+    delimiter = ''
+  }
 
   let flatArgs = utils.flatten(args)
   let textToJoin = ignore_empty ? flatArgs.filter((text) => text) : flatArgs
@@ -696,6 +931,22 @@ export function TEXTJOIN(delimiter, ignore_empty, ...args) {
  * @returns
  */
 export function TRIM(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (text === null) {
+    return ''
+  }
+
+  if (text === '') {
+    return error.undefined
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => TRIM(item))
+  }
+
   text = utils.parseString(text)
 
   if (text instanceof Error) {
@@ -718,6 +969,14 @@ export const UNICODE = CODE
  * @returns
  */
 export function UPPER(text) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => UPPER(item))
+  }
+
   text = utils.parseString(text)
 
   if (text instanceof Error) {
