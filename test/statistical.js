@@ -174,11 +174,73 @@ describe('Statistical', () => {
   })
 
   it('AVERAGEIFS', () => {
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2')).to.equal(12)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '*')).to.equal(7.5)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 2, 3, 4], '>2')).to.equal(12)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '>2')).to.equal(0)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '*')).to.equal(12)
+    expect(statistical.AVERAGEIFS()).to.equal(error.na)
+    expect(statistical.AVERAGEIFS('')).to.equal(error.na)
+    expect(statistical.AVERAGEIFS(1)).to.equal(error.na)
+    expect(statistical.AVERAGEIFS(1, 2)).to.equal(error.na)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]])).to.equal(error.na)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[2, 4, 8, 16]], '>1', [[2, 4, 8, 16]])).to.equal(error.na)
+
+    expect(
+      statistical.AVERAGEIFS(
+        [[2, 4, 8, 16]],
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>2'
+      )
+    ).to.equal(error.value)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [[2, 4, 8, 16]],
+        '>2'
+      )
+    ).to.equal(error.value)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        '>2'
+      )
+    ).to.equal(12)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        '>4'
+      )
+    ).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2')).to.equal(12)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>=2')).to.approximately(9.333333333, 1e-5)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '<=2')).to.equal(3)
+
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 'b', 3, 4]], '>0')).to.approximately(8.666666667, 1e-5)
+    expect(statistical.AVERAGEIFS([[2, 'b', 8, 16]], [[1, 2, 3, 4]], '>0')).to.approximately(8.666666667, 1e-5)
+
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 'a']], '>2')).to.equal(8)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([['a', 'b', 'c', 'd']], [['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '*')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '<>')).to.equal(7.5)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2', [[1, 2, 3, 4]], '>2')).to.equal(12)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2', [[1, 1, 1, 1]], '>2')).to.equal(error.div0)
   })
 
   it('BETA.DIST', () => {

@@ -215,31 +215,59 @@ export function AVERAGEIF(range, criteria, average_range) {
  * @returns
  */
 export function AVERAGEIFS() {
-  // Does not work with multi dimensional ranges yet!
-  // http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
+  if (arguments.length < 3 || arguments.length % 2 === 0) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
   const args = utils.argsToArray(arguments)
   const criteriaLength = (args.length - 1) / 2
-  const range = utils.flatten(args[0])
+  const range = utils.flatten(args.shift())
   let count = 0
   let result = 0
 
+  for (let i = 0; i < args.length; i += 2) {
+    if (!Array.isArray(args[i])) {
+      args[i] = [args[i]]
+    }
+
+    if (!Array.isArray(args[i][0])) {
+      args[i][0] = [args[i][0]]
+    }
+
+    if (height !== args[i].length || width !== args[i][0].length) {
+      return error.value
+    }
+
+    args[i] = utils.flatten(args[i])
+  }
+
   for (let i = 0; i < range.length; i++) {
+    if (typeof range[i] !== 'number') {
+      continue
+    }
+
     let isMeetCondition = false
 
     for (let j = 0; j < criteriaLength; j++) {
-      const value = args[2 * j + 1][i]
-      const criteria = args[2 * j + 2]
-      const isWildcard = criteria === void 0 || criteria === '*'
+      const value = args[2 * j][i]
+      const criteria = args[2 * j + 1]
       let computedResult = false
 
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+      const tokenizedCriteria = evalExpression.parse(criteria + '')
+      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-        computedResult = evalExpression.compute(tokens)
-      }
+      computedResult = evalExpression.countIfComputeExpression(tokens)
 
       // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
       if (!computedResult) {
@@ -256,9 +284,17 @@ export function AVERAGEIFS() {
     }
   }
 
+  if (count === 0) {
+    return error.div0
+  }
+
   const average = result / count
 
-  return isNaN(average) ? 0 : average
+  if (isNaN(average)) {
+    return 0
+  } else {
+    return average
+  }
 }
 
 export const BETA = {}
