@@ -818,6 +818,35 @@ export function COUNTIF(range, criteria) {
  * @returns
  */
 export function COUNTIFS() {
+  if (arguments.length < 2 || arguments.length % 2 !== 0) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
+  for (let i = 2; i < arguments.length; i += 2) {
+    if (!Array.isArray(arguments[i])) {
+      arguments[i] = [arguments[i]]
+    }
+
+    if (!Array.isArray(arguments[i][0])) {
+      arguments[i][0] = [arguments[i][0]]
+    }
+
+    if (height !== arguments[i].length || width !== arguments[i][0].length) {
+      return error.value
+    }
+  }
+
   const args = utils.argsToArray(arguments)
   const results = new Array(utils.flatten(args[0]).length)
 
@@ -828,17 +857,14 @@ export function COUNTIFS() {
   for (let i = 0; i < args.length; i += 2) {
     const range = utils.flatten(args[i])
     const criteria = args[i + 1]
-    const isWildcard = criteria === void 0 || criteria === '*'
 
-    if (!isWildcard) {
-      const tokenizedCriteria = evalExpression.parse(criteria + '')
+    const tokenizedCriteria = evalExpression.parse(criteria + '')
 
-      for (let j = 0; j < range.length; j++) {
-        const value = range[j]
-        const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+    for (let j = 0; j < range.length; j++) {
+      const value = range[j]
+      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-        results[j] = results[j] && evalExpression.compute(tokens)
-      }
+      results[j] = results[j] && evalExpression.countIfComputeExpression(tokens)
     }
   }
 
