@@ -527,6 +527,14 @@ describe('Text', () => {
     ])
   })
 
+  it('REGEXEXTRACT', () => {
+    expect(text.REGEXEXTRACT('(Content) between brackets', '(([A-Za-z]+))')).to.equal('Content')
+    expect(text.REGEXEXTRACT('The price today is $826.25', '[0-9]+.[0-9]+[0-9]+')).to.equal('826.25')
+    expect(text.REGEXEXTRACT('Google Doc 101', '[0-9]+')).to.equal('101')
+    expect(text.REGEXEXTRACT('Google Doc 101')).to.equal(error.na)
+    expect(text.REGEXEXTRACT()).to.equal(error.na)
+  })
+
   it('REPLACE', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')

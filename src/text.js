@@ -541,6 +541,16 @@ export function PROPER(text) {
   return text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
 }
 
+export function REGEXEXTRACT(text, regular_expression) {
+  if (arguments.length < 2) {
+    return error.na
+  }
+
+  const match = text.match(new RegExp(regular_expression))
+
+  return match ? match[match.length > 1 ? match.length - 1 : 0] : null
+}
+
 /**
  * Replaces characters within text
  *
