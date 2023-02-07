@@ -1534,6 +1534,14 @@ export function ROUNDDOWN(number, num_digits) {
  * @returns
  */
 export function ROUNDUP(number, num_digits) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || num_digits === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
   const anyError = utils.anyError(number, num_digits)
