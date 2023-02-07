@@ -777,6 +777,11 @@ describe('Text', () => {
     ])
   })
 
+  it('SPLIT', () => {
+    // eslint-disable-next-line no-extra-semi
+    expect(text.SPLIT('123242', '2')).to.be.a('array')
+  })
+
   describe('SUBSTITUTE', () => {
     it('should substitute all occurrences of a string for another string', () => {
       expect(text.SUBSTITUTE('Jim Alateras', 'Jim', 'James')).to.equal('James Alateras')

@@ -732,6 +732,10 @@ export function SEARCH(find_text, within_text, start_num) {
   return foundAt === 0 ? error.value : foundAt
 }
 
+export function SPLIT(text, separator) {
+  return text.split(separator)
+}
+
 /**
  * Substitutes new text for old text in a text string.
  *
