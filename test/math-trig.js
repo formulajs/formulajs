@@ -1223,8 +1223,28 @@ describe('Math & Trig', () => {
   })
 
   it('SUMIFS', () => {
-    expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '<9')).to.equal(2)
-    expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '*')).to.equal(5)
+    expect(mathTrig.SUMIFS()).to.equal(error.na)
+    expect(mathTrig.SUMIFS('')).to.equal(error.na)
+    expect(mathTrig.SUMIFS(1)).to.equal(error.na)
+    expect(mathTrig.SUMIFS('text')).to.equal(error.na)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], '>4')).to.equal(error.na)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[1, 2, 3]], '>4', [[1, 2, 3]])).to.equal(error.na)
+
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4')).to.equal(5)
+    expect(mathTrig.SUMIFS([[5, 10]], [[4, '5']], '*')).to.equal(10)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4', [[7, 8, 9]], '<9')).to.equal(2)
+    expect(mathTrig.SUMIFS([[1, 2, 3]], [[4, 5, 6]], '>4', [[7, 8, 9]], '<>')).to.equal(5)
+    expect(
+      mathTrig.SUMIFS(
+        [
+          [1, 2, 3],
+          [4, 5, 6]
+        ],
+        [7, 8, 9],
+        '>4'
+      )
+    ).to.equal(error.value)
+
     expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(error.value)
   })
 

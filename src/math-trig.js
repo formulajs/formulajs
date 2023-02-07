@@ -1896,6 +1896,21 @@ export function SUMIF(range, criteria, sum_range) {
  * @returns
  */
 export function SUMIFS() {
+  if (arguments.length < 3 || (arguments.length > 3 && arguments.length % 2 === 0)) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
   const args = utils.argsToArray(arguments)
   const range = utils.parseNumberArray(utils.flatten(args.shift()))
 
@@ -1907,6 +1922,18 @@ export function SUMIFS() {
   const criteriaLength = criterias.length / 2
 
   for (let i = 0; i < criteriaLength; i++) {
+    if (!Array.isArray(criterias[i * 2])) {
+      criterias[i * 2] = [criterias[i * 2]]
+    }
+
+    if (!Array.isArray(criterias[i * 2][0])) {
+      criterias[i * 2][0] = [criterias[i * 2][0]]
+    }
+
+    if (height !== criterias[i * 2].length || width !== criterias[i * 2][0].length) {
+      return error.value
+    }
+
     criterias[i * 2] = utils.flatten(criterias[i * 2])
   }
 
@@ -1918,19 +1945,14 @@ export function SUMIFS() {
     for (let j = 0; j < criteriaLength; j++) {
       const valueToTest = criterias[j * 2][i]
       const criteria = criterias[j * 2 + 1]
-      const isWildcard = criteria === void 0 || criteria === '*'
       let computedResult = false
 
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
-          tokenizedCriteria
-        )
+      const tokenizedCriteria = evalExpression.parse(criteria + '')
+      const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+        tokenizedCriteria
+      )
 
-        computedResult = evalExpression.compute(tokens)
-      }
+      computedResult = evalExpression.countIfComputeExpression(tokens)
 
       // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
       if (!computedResult) {
