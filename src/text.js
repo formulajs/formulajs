@@ -376,8 +376,12 @@ export function LEFT(text, num_chars) {
  * @returns
  */
 export function LEN(text) {
-  if (arguments.length === 0) {
-    return error.error
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LEN(item))
   }
 
   if (text instanceof Error) {

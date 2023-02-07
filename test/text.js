@@ -365,15 +365,32 @@ describe('Text', () => {
   })
 
   it('LEN', () => {
-    expect(text.LEN(undefined)).to.equal(0)
-    expect(text.LEN(error.na)).to.equal(error.na)
     expect(text.LEN(true)).to.equal(4)
     expect(text.LEN('four')).to.equal(4)
-    expect(text.LEN([1, 2, 3, 4, 5])).to.equal(error.value)
-    expect(text.LEN()).to.equal(error.error)
-    expect(text.LEN(null)).to.equal(0)
-    expect(text.LEN([])).to.equal(error.value)
+    expect(text.LEN('$1,000.00')).to.equal(9)
+    expect(text.LEN('25-Jun-21')).to.equal(9)
+    expect(text.LEN(1000)).to.equal(4)
+    expect(text.LEN(-1.75)).to.equal(5)
     expect(text.LEN(123)).to.equal(3)
+
+    expect(text.LEN('')).to.equal(0)
+    expect(text.LEN(null)).to.equal(0)
+
+    expect(text.LEN('four', 'text')).to.equal(error.na)
+    expect(text.LEN()).to.equal(error.na)
+    expect(text.LEN(error.na)).to.equal(error.na)
+
+    expect(text.LEN([1, 2, 3, 4, 5])).to.eql([1, 1, 1, 1, 1])
+
+    expect(
+      text.LEN([
+        ['text', 'string'],
+        ['date', 'number']
+      ])
+    ).to.eql([
+      [4, 6],
+      [4, 6]
+    ])
   })
 
   it('LOWER', () => {
