@@ -813,15 +813,11 @@ describe('Math & Trig', () => {
   })
 
   it('RAND', () => {
-    let sum = 0
-    const n = 10
-    let i = n
-    while (i--) {
-      sum += mathTrig.RAND()
-    }
-
-    const average = sum / n
-    expect(Number(parseInt(average), 10)).to.equal(0)
+    expect(mathTrig.RAND()).to.be.within(0, 1)
+    expect(mathTrig.RAND(null)).to.equal(error.na)
+    expect(mathTrig.RAND('')).to.equal(error.na)
+    expect(mathTrig.RAND(1)).to.equal(error.na)
+    expect(mathTrig.RAND(true)).to.equal(error.na)
   })
 
   it('RANDBETWEEN', () => {

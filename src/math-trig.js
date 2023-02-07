@@ -1354,6 +1354,10 @@ export function RADIANS(angle) {
  * @returns
  */
 export function RAND() {
+  if (arguments.length !== 0) {
+    return error.na
+  }
+
   return Math.random()
 }
 
