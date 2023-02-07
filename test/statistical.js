@@ -1114,11 +1114,30 @@ describe('Statistical', () => {
   })
 
   it('MIN', () => {
-    expect(statistical.MIN()).to.equal(0)
-    expect(statistical.MIN(undefined)).to.equal(0)
+    expect(statistical.MIN()).to.equal(error.na)
+
     expect(statistical.MIN(error.na)).to.equal(error.na)
+    expect(statistical.MIN(error.na, 3, 1)).to.equal(error.na)
+    expect(statistical.MIN(error.div0)).to.equal(error.div0)
+    expect(statistical.MIN(error.div0, 3, 1)).to.equal(error.div0)
+
+    expect(statistical.MIN(null)).to.equal(0)
+    expect(statistical.MIN(true)).to.equal(0)
+    expect(statistical.MIN(false)).to.equal(0)
+    expect(statistical.MIN('')).to.equal(0)
+    expect(statistical.MIN('text')).to.equal(0)
+    expect(statistical.MIN(1)).to.equal(1)
+
+    expect(statistical.MIN(3, 1, null)).to.equal(1)
+    expect(statistical.MIN(3, 1)).to.equal(1)
+    expect(statistical.MIN(3, 6)).to.equal(3)
+    expect(statistical.MIN(3, 6, 'text')).to.equal(3)
+
+    expect(statistical.MIN('a', 1, 2, 3, 'v', 4, 'c', 'g')).to.equal(1)
+    expect(statistical.MIN('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')).to.equal(0)
     expect(statistical.MIN([0.1, 0.2], [0.4, 0.8], [true, false])).to.approximately(0.1, 1e-9)
     expect(statistical.MIN([0, 0.1, 0.2], [0.4, 0.8, 1], [true, false])).to.equal(0)
+
     expect(
       statistical.MIN(
         [

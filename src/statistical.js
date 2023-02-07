@@ -1890,6 +1890,10 @@ export function MEDIAN() {
  * @returns
  */
 export function MIN() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
 
