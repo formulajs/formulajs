@@ -542,6 +542,13 @@ describe('Text', () => {
     expect(text.REGEXREPLACE()).to.equal(error.na)
   })
 
+  it('REGEXMATCH', () => {
+    expect(text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', true)).to.be.a('array')
+    expect(text.REGEXMATCH('(Content) between brackets', '(([A-Za-z]+))', false)).to.equal(true)
+    expect(text.REGEXMATCH('(Content) between brackets')).to.equal(error.na)
+    expect(text.REGEXMATCH()).to.equal(error.na)
+  })
+
   it('REPLACE', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')

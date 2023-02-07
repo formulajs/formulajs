@@ -559,6 +559,16 @@ export function REGEXREPLACE(text, regular_expression, replacement) {
   return text.replace(new RegExp(regular_expression), replacement)
 }
 
+export function REGEXMATCH(text, regular_expression, full) {
+  if (arguments.length < 2) {
+    return error.na
+  }
+
+  const match = text.match(new RegExp(regular_expression))
+
+  return full ? match : !!match
+}
+
 /**
  * Replaces characters within text
  *
