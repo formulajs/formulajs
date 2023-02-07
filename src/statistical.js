@@ -42,6 +42,10 @@ export function AVEDEV() {
  * @returns
  */
 export function AVERAGE() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter(utils.isDefined)
 
@@ -64,6 +68,10 @@ export function AVERAGE() {
   for (let i = 0; i < n; i++) {
     sum += range[i]
     count += 1
+  }
+
+  if (count === 0) {
+    return error.div0
   }
 
   result = sum / count
@@ -139,40 +147,60 @@ export function AVERAGEA() {
  * @returns
  */
 export function AVERAGEIF(range, criteria, average_range) {
-  if (arguments.length <= 1) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
+  }
+
+  if (!Array.isArray(range)) {
+    range = [range]
+  }
+
+  if (!Array.isArray(range[0])) {
+    range[0] = [range[0]]
+  }
+
+  if (average_range !== undefined) {
+    if (!Array.isArray(average_range)) {
+      average_range = [average_range]
+    }
+
+    if (!Array.isArray(average_range[0])) {
+      average_range[0] = [average_range[0]]
+    }
+
+    if (range.length !== average_range.length || range[0].length !== average_range[0].length) {
+      return error.value
+    }
   }
 
   average_range = average_range || range
   const flatAverageRange = utils.flatten(average_range)
   const flatAverageRangeDefined = flatAverageRange.filter(utils.isDefined)
-  average_range = utils.parseNumberArray(flatAverageRangeDefined)
+  average_range = flatAverageRangeDefined
 
   range = utils.flatten(range)
 
-  if (average_range instanceof Error) {
-    return average_range
-  }
-
   let average_count = 0
   let result = 0
-  const isWildcard = criteria === void 0 || criteria === '*'
-  const tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '')
+  const tokenizedCriteria = evalExpression.parse(criteria + '')
 
   for (let i = 0; i < range.length; i++) {
+    if (typeof average_range[i] !== 'number') {
+      continue
+    }
+
     const value = range[i]
 
-    if (isWildcard) {
+    const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+
+    if (evalExpression.countIfComputeExpression(tokens)) {
       result += average_range[i]
       average_count++
-    } else {
-      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
-
-      if (evalExpression.compute(tokens)) {
-        result += average_range[i]
-        average_count++
-      }
     }
+  }
+
+  if (!average_count) {
+    return error.div0
   }
 
   return result / average_count
@@ -187,31 +215,59 @@ export function AVERAGEIF(range, criteria, average_range) {
  * @returns
  */
 export function AVERAGEIFS() {
-  // Does not work with multi dimensional ranges yet!
-  // http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
+  if (arguments.length < 3 || arguments.length % 2 === 0) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
   const args = utils.argsToArray(arguments)
   const criteriaLength = (args.length - 1) / 2
-  const range = utils.flatten(args[0])
+  const range = utils.flatten(args.shift())
   let count = 0
   let result = 0
 
+  for (let i = 0; i < args.length; i += 2) {
+    if (!Array.isArray(args[i])) {
+      args[i] = [args[i]]
+    }
+
+    if (!Array.isArray(args[i][0])) {
+      args[i][0] = [args[i][0]]
+    }
+
+    if (height !== args[i].length || width !== args[i][0].length) {
+      return error.value
+    }
+
+    args[i] = utils.flatten(args[i])
+  }
+
   for (let i = 0; i < range.length; i++) {
+    if (typeof range[i] !== 'number') {
+      continue
+    }
+
     let isMeetCondition = false
 
     for (let j = 0; j < criteriaLength; j++) {
-      const value = args[2 * j + 1][i]
-      const criteria = args[2 * j + 2]
-      const isWildcard = criteria === void 0 || criteria === '*'
+      const value = args[2 * j][i]
+      const criteria = args[2 * j + 1]
       let computedResult = false
 
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+      const tokenizedCriteria = evalExpression.parse(criteria + '')
+      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-        computedResult = evalExpression.compute(tokens)
-      }
+      computedResult = evalExpression.countIfComputeExpression(tokens)
 
       // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
       if (!computedResult) {
@@ -228,9 +284,17 @@ export function AVERAGEIFS() {
     }
   }
 
+  if (count === 0) {
+    return error.div0
+  }
+
   const average = result / count
 
-  return isNaN(average) ? 0 : average
+  if (isNaN(average)) {
+    return 0
+  } else {
+    return average
+  }
 }
 
 export const BETA = {}
@@ -643,6 +707,10 @@ export function CORREL(array1, array2) {
  * @returns
  */
 export function COUNT() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
 
   return utils.numbers(flatArguments).length
@@ -657,9 +725,23 @@ export function COUNT() {
  * @returns
  */
 export function COUNTA() {
-  const flatArguments = utils.flatten(arguments)
+  if (arguments.length === 0) {
+    return error.na
+  }
 
-  return flatArguments.length - COUNTBLANK(flatArguments)
+  const flatArguments = utils.flatten(arguments)
+  let notBlanks = 0
+  let element
+
+  for (let i = 0; i < flatArguments.length; i++) {
+    element = flatArguments[i]
+
+    if (element !== null) {
+      notBlanks++
+    }
+  }
+
+  return notBlanks
 }
 
 /**
@@ -671,6 +753,10 @@ export function COUNTA() {
  * @returns
  */
 export function COUNTBLANK() {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   const range = utils.flatten(arguments)
   let blanks = 0
   let element
@@ -694,12 +780,18 @@ export function COUNTBLANK() {
  * @returns
  */
 export function COUNTIF(range, criteria) {
-  range = utils.flatten(range)
+  if (arguments.length !== 2) {
+    return error.na
+  }
 
-  const isWildcard = criteria === void 0 || criteria === '*'
+  if (!Array.isArray(range)) {
+    range = [range]
+  } else {
+    range = utils.flatten(range)
+  }
 
-  if (isWildcard) {
-    return range.length
+  if (criteria === null) {
+    criteria = 0
   }
 
   let matches = 0
@@ -709,7 +801,7 @@ export function COUNTIF(range, criteria) {
     const value = range[i]
     const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-    if (evalExpression.compute(tokens)) {
+    if (evalExpression.countIfComputeExpression(tokens) || value === criteria) {
       matches++
     }
   }
@@ -726,6 +818,35 @@ export function COUNTIF(range, criteria) {
  * @returns
  */
 export function COUNTIFS() {
+  if (arguments.length < 2 || arguments.length % 2 !== 0) {
+    return error.na
+  }
+
+  if (!Array.isArray(arguments[0])) {
+    arguments[0] = [arguments[0]]
+  }
+
+  if (!Array.isArray(arguments[0][0])) {
+    arguments[0][0] = [arguments[0][0]]
+  }
+
+  const height = arguments[0].length
+  const width = arguments[0][0].length
+
+  for (let i = 2; i < arguments.length; i += 2) {
+    if (!Array.isArray(arguments[i])) {
+      arguments[i] = [arguments[i]]
+    }
+
+    if (!Array.isArray(arguments[i][0])) {
+      arguments[i][0] = [arguments[i][0]]
+    }
+
+    if (height !== arguments[i].length || width !== arguments[i][0].length) {
+      return error.value
+    }
+  }
+
   const args = utils.argsToArray(arguments)
   const results = new Array(utils.flatten(args[0]).length)
 
@@ -736,17 +857,14 @@ export function COUNTIFS() {
   for (let i = 0; i < args.length; i += 2) {
     const range = utils.flatten(args[i])
     const criteria = args[i + 1]
-    const isWildcard = criteria === void 0 || criteria === '*'
 
-    if (!isWildcard) {
-      const tokenizedCriteria = evalExpression.parse(criteria + '')
+    const tokenizedCriteria = evalExpression.parse(criteria + '')
 
-      for (let j = 0; j < range.length; j++) {
-        const value = range[j]
-        const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+    for (let j = 0; j < range.length; j++) {
+      const value = range[j]
+      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-        results[j] = results[j] && evalExpression.compute(tokens)
-      }
+      results[j] = results[j] && evalExpression.countIfComputeExpression(tokens)
     }
   }
 
@@ -759,6 +877,10 @@ export function COUNTIFS() {
   }
 
   return result
+}
+
+export function COUNTUNIQUE() {
+  return lookup.UNIQUE.apply(null, utils.flatten(arguments)).length
 }
 
 export const COVARIANCE = {}
@@ -1519,18 +1641,47 @@ export function KURT() {
  * @returns
  */
 export function LARGE(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
-  k = utils.parseNumber(k)
-
-  if (utils.anyIsError(array, k)) {
-    return array
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (k < 0 || array.length < k) {
+  if (!Array.isArray(array)) {
+    array = [array]
+  } else {
+    array = array.reduce((list, sub) => list.concat(sub), [])
+  }
+
+  if (k === '') {
     return error.value
   }
 
-  return array.sort((a, b) => b - a)[k - 1]
+  k = utils.parseNumber(k)
+
+  if (utils.anyIsError(k)) {
+    return k
+  }
+
+  if (k <= 0 || array.length < k) {
+    return error.num
+  }
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] instanceof Error) {
+      return array[i]
+    }
+  }
+
+  array = array.filter((item) => {
+    return typeof item === 'number'
+  })
+
+  array = array.sort((a, b) => b - a)
+
+  if (typeof array[k - 1] !== 'number') {
+    return error.num
+  }
+
+  return array[k - 1]
 }
 
 /**
@@ -1667,6 +1818,9 @@ LOGNORM.INV = (probability, mean, standard_dev) => {
  * @returns
  */
 export function MAX() {
+  if (arguments.length === 0) {
+    return error.na
+  }
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
 
@@ -1736,6 +1890,10 @@ export function MEDIAN() {
  * @returns
  */
 export function MIN() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
 
@@ -2519,14 +2677,47 @@ export function SLOPE(known_y, known_x) {
  * @returns
  */
 export function SMALL(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
-  k = utils.parseNumber(k)
-
-  if (utils.anyIsError(array, k)) {
-    return array
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  return array.sort((a, b) => a - b)[k - 1]
+  if (!Array.isArray(array)) {
+    array = [array]
+  } else {
+    array = array.reduce((list, sub) => list.concat(sub), [])
+  }
+
+  if (k === '') {
+    return error.value
+  }
+
+  k = utils.parseNumber(k)
+
+  if (utils.anyIsError(k)) {
+    return k
+  }
+
+  if (k <= 0 || array.length < k) {
+    return error.num
+  }
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] instanceof Error) {
+      return array[i]
+    }
+  }
+
+  array = array.filter((item) => {
+    return typeof item === 'number'
+  })
+
+  array = array.sort((a, b) => a - b)
+
+  if (typeof array[k - 1] !== 'number') {
+    return error.num
+  }
+
+  return array[k - 1]
 }
 
 /**

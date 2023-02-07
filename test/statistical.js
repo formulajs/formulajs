@@ -22,18 +22,53 @@ describe('Statistical', () => {
   })
 
   it('AVERAGE', () => {
-    expect(statistical.AVERAGE(undefined)).to.equal(error.div0)
-    expect(statistical.AVERAGE(2, undefined, undefined)).to.equal(2)
+    expect(statistical.AVERAGE()).to.equal(error.na)
+    expect(statistical.AVERAGE('')).to.equal(error.div0)
+    expect(statistical.AVERAGE('text')).to.equal(error.div0)
+    expect(statistical.AVERAGE(true)).to.equal(error.div0)
+    expect(statistical.AVERAGE(false)).to.equal(error.div0)
+    expect(statistical.AVERAGE(2)).to.equal(2)
+    expect(statistical.AVERAGE('2')).to.equal(error.div0)
+    expect(statistical.AVERAGE('7', 8, 8)).to.equal(8)
+
+    expect(statistical.AVERAGE(null)).to.equal(error.div0)
+    expect(statistical.AVERAGE(2, null, null)).to.equal(2)
     expect(statistical.AVERAGE(error.na)).to.equal(error.na)
+    expect(statistical.AVERAGE(error.div0)).to.equal(error.div0)
+
+    expect(statistical.AVERAGE(9, 7, 9)).to.approximately(8.333333333, 1e-9)
     expect(statistical.AVERAGE(2, 4, 8, 16)).to.approximately(7.5, 1e-9)
+    expect(statistical.AVERAGE(2, 4, 8, 16, true, error.na)).to.equal(error.na)
+    expect(statistical.AVERAGE(2, 4, 8, 16, '', '')).to.approximately(7.5, 1e-9)
+
     expect(statistical.AVERAGE([2, 4, 8, 16])).to.approximately(7.5, 1e-9)
-    expect(statistical.AVERAGE([2, 4], [8, 16])).to.approximately(7.5, 1e-9)
+    expect(statistical.AVERAGE([[2, 4]], [[8, 16]])).to.approximately(7.5, 1e-9)
+
+    expect(
+      statistical.AVERAGE(
+        [[2, 4]],
+        [
+          [2, 4],
+          [8, 16]
+        ]
+      )
+    ).to.approximately(6, 1e-9)
+
     expect(
       statistical.AVERAGE([
         [2, 4],
         [8, 16]
       ])
     ).to.approximately(7.5, 1e-9)
+    expect(
+      statistical.AVERAGE(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        8
+      )
+    ).to.approximately(7.6, 1e-9)
     expect(
       statistical.AVERAGE([
         [2, 4],
@@ -55,10 +90,37 @@ describe('Statistical', () => {
   })
 
   it('AVERAGEIF', () => {
-    expect(statistical.AVERAGEIF([undefined], '>5')).to.equal(error.value) // different than Excel
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '>5')).to.equal(12)
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '*')).to.equal(7.5)
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '>5', [1, 2, 3, 4])).to.approximately(3.5, 1e-9)
+    expect(statistical.AVERAGEIF()).to.equal(error.na)
+    expect(statistical.AVERAGEIF('')).to.equal(error.na)
+    expect(statistical.AVERAGEIF('text')).to.equal(error.na)
+    expect(statistical.AVERAGEIF(1)).to.equal(error.na)
+    expect(
+      statistical.AVERAGEIF([
+        [2, 4],
+        [8, 16]
+      ])
+    ).to.equal(error.na)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>5', [[2, 4, 8, 16]], true)).to.equal(error.na)
+
+    expect(statistical.AVERAGEIF(null, '>5')).to.equal(error.div0)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>5')).to.equal(12)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>4')).to.equal(12)
+
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>=4')).to.approximately(9.333333333, 1e-5)
+
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '*')).to.equal(error.div0)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '<>')).to.equal(7.5)
+    expect(statistical.AVERAGEIF([['a', 4, 'c', 'd']], '>2')).to.equal(4)
+    expect(statistical.AVERAGEIF([['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>4'
+      )
+    ).to.equal(12)
     expect(
       statistical.AVERAGEIF(
         [
@@ -71,17 +133,114 @@ describe('Statistical', () => {
           [3, 4]
         ]
       )
-    ).to.approximately(3.5, 1e-9)
-    expect(statistical.AVERAGEIF([2, 4, 'invalid', 16], '>5')).to.equal(error.value)
-    expect(statistical.AVERAGEIF()).to.equal(error.na)
+    ).to.approximately(3.5, 1e-5)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 'b']
+        ],
+        '>5',
+        [
+          [1, 2],
+          [3, 4]
+        ]
+      )
+    ).to.equal(3)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>5',
+        [
+          [1, 2],
+          [3, 'b']
+        ]
+      )
+    ).to.equal(3)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>5',
+        [[1, 2]]
+      )
+    ).to.equal(error.value)
+    expect(statistical.AVERAGEIF([2, 4, 'invalid', 16], '>5')).to.equal(16)
   })
 
   it('AVERAGEIFS', () => {
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2')).to.equal(12)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '*')).to.equal(7.5)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 2, 3, 4], '>2')).to.equal(12)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '>2')).to.equal(0)
-    expect(statistical.AVERAGEIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '*')).to.equal(12)
+    expect(statistical.AVERAGEIFS()).to.equal(error.na)
+    expect(statistical.AVERAGEIFS('')).to.equal(error.na)
+    expect(statistical.AVERAGEIFS(1)).to.equal(error.na)
+    expect(statistical.AVERAGEIFS(1, 2)).to.equal(error.na)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]])).to.equal(error.na)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[2, 4, 8, 16]], '>1', [[2, 4, 8, 16]])).to.equal(error.na)
+
+    expect(
+      statistical.AVERAGEIFS(
+        [[2, 4, 8, 16]],
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>2'
+      )
+    ).to.equal(error.value)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [[2, 4, 8, 16]],
+        '>2'
+      )
+    ).to.equal(error.value)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        '>2'
+      )
+    ).to.equal(12)
+    expect(
+      statistical.AVERAGEIFS(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        '>4'
+      )
+    ).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2')).to.equal(12)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>=2')).to.approximately(9.333333333, 1e-5)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '<=2')).to.equal(3)
+
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 'b', 3, 4]], '>0')).to.approximately(8.666666667, 1e-5)
+    expect(statistical.AVERAGEIFS([[2, 'b', 8, 16]], [[1, 2, 3, 4]], '>0')).to.approximately(8.666666667, 1e-5)
+
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 'a']], '>2')).to.equal(8)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([['a', 'b', 'c', 'd']], [['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '*')).to.equal(error.div0)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '<>')).to.equal(7.5)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2', [[1, 2, 3, 4]], '>2')).to.equal(12)
+    expect(statistical.AVERAGEIFS([[2, 4, 8, 16]], [[1, 2, 3, 4]], '>2', [[1, 1, 1, 1]], '>2')).to.equal(error.div0)
   })
 
   it('BETA.DIST', () => {
@@ -192,13 +351,30 @@ describe('Statistical', () => {
   })
 
   it('COUNT', () => {
-    expect(statistical.COUNT()).to.equal(0)
-    expect(statistical.COUNT(undefined)).to.equal(0)
+    expect(statistical.COUNT()).to.equal(error.na)
+
+    expect(statistical.COUNT(error.na)).to.equal(0)
+    expect(statistical.COUNT(error.div0)).to.equal(0)
+    expect(statistical.COUNT(1, error.div0, error.na)).to.equal(1)
+    expect(statistical.COUNT('')).to.equal(0)
+    expect(statistical.COUNT('1')).to.equal(0)
+    expect(statistical.COUNT('text')).to.equal(0)
+    expect(statistical.COUNT(1)).to.equal(1)
+    expect(statistical.COUNT(null)).to.equal(0)
+    expect(statistical.COUNT(true)).to.equal(0)
+    expect(statistical.COUNT(false)).to.equal(0)
     expect(statistical.COUNT(error.na)).to.equal(0)
     expect(statistical.COUNT(1, 2, 3, 4)).to.equal(4)
+    expect(statistical.COUNT(1, '', '', '')).to.equal(1)
+    expect(statistical.COUNT(1, 2, 3, 4, 'text')).to.equal(4)
+    expect(statistical.COUNT(1, 2, 3, 4, '21-10-2020')).to.equal(4)
+    expect(statistical.COUNT(1, 2, '8:30 AM')).to.equal(2)
     expect(statistical.COUNT(1, 2, error.div0, 4)).to.equal(3)
-    expect(statistical.COUNT([1, 2, 3, 4])).to.equal(4)
-    expect(statistical.COUNT([1, 2], [3, 4])).to.equal(4)
+
+    expect(statistical.COUNT([[1, 2, 3, 4]])).to.equal(4)
+    expect(statistical.COUNT([[1, 2, 3, 4]], 1)).to.equal(5)
+    expect(statistical.COUNT([[1, 2]], [[3, 4]])).to.equal(4)
+
     expect(
       statistical.COUNT([
         [1, 2],
@@ -222,42 +398,125 @@ describe('Statistical', () => {
   })
 
   it('COUNTA', () => {
-    expect(statistical.COUNTA()).to.equal(0)
-    expect(statistical.COUNTA(undefined)).to.equal(0)
+    expect(statistical.COUNTA()).to.equal(error.na)
+
     expect(statistical.COUNTA(error.na)).to.equal(1)
+    expect(statistical.COUNTA(error.div0)).to.equal(1)
+    expect(statistical.COUNTA(1, error.div0, error.na)).to.equal(3)
     expect(statistical.COUNTA(1, 2, error.div0)).to.equal(3)
-    expect(statistical.COUNTA(1, null, 3, 'a', '', 'c')).to.equal(4)
-    expect(statistical.COUNTA([1, null, 3, 'a', '', 'c'])).to.equal(4)
-    expect(statistical.COUNTA([1, null, 3], ['a', '', 'c'])).to.equal(4)
+    expect(statistical.COUNTA(null)).to.equal(0)
+    expect(statistical.COUNTA('')).to.equal(1)
+    expect(statistical.COUNTA(1)).to.equal(1)
+    expect(statistical.COUNTA('1')).to.equal(1)
+    expect(statistical.COUNTA(true)).to.equal(1)
+    expect(statistical.COUNTA(false)).to.equal(1)
+    expect(statistical.COUNTA(1, '', '', '')).to.equal(4)
+    expect(statistical.COUNTA('text')).to.equal(1)
+    expect(statistical.COUNTA(1, null, 3, 'a', '', 'c')).to.equal(5)
+    expect(statistical.COUNTA(1, error.na, '28-10-2021', 'text', '')).to.equal(5)
+
+    expect(statistical.COUNTA([[1, 2, 3, 4]])).to.equal(4)
+    expect(statistical.COUNTA([[1, 2, 3, 4]], 1)).to.equal(5)
+    expect(statistical.COUNTA([[1, 2]], [[3, 4]])).to.equal(4)
+    expect(statistical.COUNTA([[1, null, 3, 'a', '', 'c']])).to.equal(5)
+    expect(statistical.COUNTA([[1, null, 3]], [['a', '', 'c']])).to.equal(5)
+
     expect(
       statistical.COUNTA([
         [1, null, 3],
         ['a', '', 'c']
       ])
+    ).to.equal(5)
+    expect(
+      statistical.COUNT([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(4)
+    expect(
+      statistical.COUNTA([
+        [1, 2],
+        [3, 2],
+        [null, null]
+      ])
+    ).to.equal(4)
+    expect(
+      statistical.COUNTA([
+        [1, 2],
+        ['a', 'b'],
+        [null, null]
+      ])
     ).to.equal(4)
   })
 
   it('COUNTBLANK', () => {
-    expect(statistical.COUNTBLANK()).to.equal(0)
-    expect(statistical.COUNTBLANK(undefined)).to.equal(1)
+    expect(statistical.COUNTBLANK()).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, 2)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, error.div0, error.na)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, 2, error.div0)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, '', '', '')).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, 2, 3, 4]], 1)).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, 2]], [[3, 4]])).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, null, 3, 'a', '', 'c')).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, null, 3, 'a', '', 'c']])).to.equal(2)
+    expect(statistical.COUNTBLANK([[1, null, 3]], [['a', '', 'c']])).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, error.na, '28-10-2021', 'text', '')).to.equal(error.na)
+
     expect(statistical.COUNTBLANK(error.na)).to.equal(0)
-    expect(statistical.COUNTBLANK(1, 2, error.div0)).to.equal(0)
-    expect(statistical.COUNTBLANK(1, null, 3, 'a', '', 'c')).to.equal(2)
-    expect(statistical.COUNTBLANK([1, null, 3, 'a', '', 'c'])).to.equal(2)
-    expect(statistical.COUNTBLANK([1, null, 3], ['a', '', 'c'])).to.equal(2)
+    expect(statistical.COUNTBLANK(error.div0)).to.equal(0)
+    expect(statistical.COUNTBLANK(null)).to.equal(1)
+    expect(statistical.COUNTBLANK('')).to.equal(1)
+    expect(statistical.COUNTBLANK(' ')).to.equal(0)
+    expect(statistical.COUNTBLANK(1)).to.equal(0)
+    expect(statistical.COUNTBLANK('1')).to.equal(0)
+    expect(statistical.COUNTBLANK(true)).to.equal(0)
+    expect(statistical.COUNTBLANK(false)).to.equal(0)
+    expect(statistical.COUNTBLANK('text')).to.equal(0)
+    expect(statistical.COUNTBLANK([[1, 2, 3, 4]])).to.equal(0)
+
     expect(
       statistical.COUNTBLANK([
         [1, null, 3],
         ['a', '', 'c']
       ])
     ).to.equal(2)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(0)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        [3, 2],
+        [null, null]
+      ])
+    ).to.equal(2)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        ['a', 'b'],
+        [null, null]
+      ])
+    ).to.equal(2)
   })
 
   it('COUNTIF', () => {
-    expect(statistical.COUNTIF([undefined], '>1')).to.equal(0)
-    expect(statistical.COUNTIF([error.na], '>1')).to.equal(0)
+    expect(statistical.COUNTIF()).to.equal(error.na)
+    expect(statistical.COUNTIF('')).to.equal(error.na)
+    expect(statistical.COUNTIF(1)).to.equal(error.na)
+    expect(statistical.COUNTIF('text')).to.equal(error.na)
+
+    expect(statistical.COUNTIF(null, '>1')).to.equal(0)
+    expect(statistical.COUNTIF(error.na, '>1')).to.equal(0)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '>=1')).to.equal(2)
     expect(statistical.COUNTIF([1, null, 3, 'a', ''], '>1')).to.equal(1)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '<=3')).to.equal(2)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '<=1')).to.equal(1)
     expect(statistical.COUNTIF([1, null, 'c', 'a', ''], '>1')).to.equal(0)
+    expect(statistical.COUNTIF([1, 2, 3, 3, 3], '=3')).to.equal(3)
+
     expect(
       statistical.COUNTIF(
         [
@@ -276,6 +535,42 @@ describe('Statistical', () => {
         'a'
       )
     ).to.equal(2)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 3],
+          ['a', 4, 'c']
+        ],
+        ''
+      )
+    ).to.equal(0)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 3],
+          ['a', 4, 'c']
+        ],
+        '<>'
+      )
+    ).to.equal(5)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, 'v', 3],
+          ['v', 4, 'c']
+        ],
+        '?'
+      )
+    ).to.equal(3)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 3],
+          ['?', 4, 'c']
+        ],
+        '~?'
+      )
+    ).to.equal(1)
     expect(
       statistical.COUNTIF(
         [
@@ -284,14 +579,92 @@ describe('Statistical', () => {
         ],
         '*'
       )
+    ).to.equal(3)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 'text123text']
+        ],
+        'text*text'
+      )
+    ).to.equal(2)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['textktext', 4, 'text123text']
+        ],
+        'text?text'
+      )
+    ).to.equal(1)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 'text~atext']
+        ],
+        'text~~?text'
+      )
+    ).to.equal(1)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 0]
+        ],
+        '<>'
+      )
+    ).to.equal(5)
+    expect(
+      statistical.COUNTIF(
+        [
+          [77, 'text', ''],
+          [null, true, false]
+        ],
+        '<>?'
+      )
     ).to.equal(6)
+    expect(
+      statistical.COUNTIF(
+        [
+          [77, 'text', ''],
+          [null, true, false]
+        ],
+        '<>?'
+      )
+    ).to.equal(6)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ],
+        '*',
+        2
+      )
+    ).to.equal(error.na)
+    expect(
+      statistical.COUNTIF([
+        [1, null, 'a'],
+        ['a', 4, 'c']
+      ])
+    ).to.equal(error.na)
   })
 
   it('COUNTIFS', () => {
-    expect(statistical.COUNTIFS([undefined], '>1')).to.equal(0)
-    expect(statistical.COUNTIFS([error.na], '>1')).to.equal(0)
-    expect(statistical.COUNTIFS([1, null, 3, 'a', ''], '>1')).to.equal(1)
-    expect(statistical.COUNTIFS([1, null, 'c', 'a', ''], '>1')).to.equal(0)
+    expect(statistical.COUNTIFS()).to.equal(error.na)
+    expect(statistical.COUNTIFS('')).to.equal(error.na)
+    expect(statistical.COUNTIFS('text')).to.equal(error.na)
+    expect(statistical.COUNTIFS(1)).to.equal(error.na)
+
+    expect(statistical.COUNTIFS(null, '>1')).to.equal(0)
+    expect(statistical.COUNTIFS(error.na, '>1')).to.equal(0)
+    expect(statistical.COUNTIFS([[1, null, 3, 'a', '']], '>1')).to.equal(1)
+    expect(statistical.COUNTIFS([[1, null, 'c', 'a', '']], '>1')).to.equal(0)
     expect(
       statistical.COUNTIFS(
         [
@@ -310,11 +683,98 @@ describe('Statistical', () => {
         'a'
       )
     ).to.equal(2)
-    expect(statistical.COUNTIFS([1, null], '1', [2, null], '2')).to.equal(1)
-    expect(statistical.COUNTIFS([1, null], '1', [null, 2], '2')).to.equal(0)
-    expect(statistical.COUNTIFS([1, null], '1', [null, 2], '*')).to.equal(1)
-    expect(statistical.COUNTIFS([1, null], '*', [null, 2], '*')).to.equal(2)
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ],
+        '<>'
+      )
+    ).to.equal(5)
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, '?', 'a'],
+          ['a', 4, 'c']
+        ],
+        '~?'
+      )
+    ).to.equal(1)
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, '?', 'a'],
+          ['a', 4, 'c']
+        ],
+        '*'
+      )
+    ).to.equal(4)
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, '?', 'a'],
+          ['a', 4, 'c']
+        ],
+        ''
+      )
+    ).to.equal(0)
+
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ],
+        '*',
+        3
+      )
+    ).to.equal(error.na)
+    expect(
+      statistical.COUNTIFS([
+        [1, null, 'a'],
+        ['a', 4, 'c']
+      ])
+    ).to.equal(error.na)
+    expect(
+      statistical.COUNTIFS(
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ],
+        'a',
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ]
+      )
+    ).to.equal(error.na)
+
+    expect(statistical.COUNTIFS([[1, null]], '1', [[2, null]], '2')).to.equal(1)
+    expect(statistical.COUNTIFS([[1, null]], '1', [[null, 2]], '2')).to.equal(0)
+    expect(statistical.COUNTIFS([[1, null]], '1', [[null, 2]], '*')).to.equal(0)
+    expect(statistical.COUNTIFS([[1, null]], '*', [[null, 2]], '*')).to.equal(0)
     expect(statistical.COUNTIFS([[1], [null]], '1', [[2], [1]], '2')).to.equal(1)
+    expect(statistical.COUNTIFS([[1, 2, 'a', 'b']], '*', [[3, 2, 1]], '>1')).to.equal(error.value)
+  })
+
+  it('COUNTUNIQUE', () => {
+    expect(statistical.COUNTUNIQUE()).to.equal(0)
+    expect(statistical.COUNTUNIQUE(1, 1, 2, 2, 3, 3)).to.equal(3)
+    expect(statistical.COUNTUNIQUE([1, 1, 2, 2, 3, 3])).to.equal(3)
+    expect(statistical.COUNTUNIQUE([1, 1, 2], [2, 3, 3])).to.equal(3)
+    expect(
+      statistical.COUNTUNIQUE(
+        [
+          [1, 1],
+          [2, 5]
+        ],
+        [
+          [2, 3],
+          [3, 4]
+        ]
+      )
+    ).to.equal(5)
   })
 
   it('COVARIANCE.P', () => {
@@ -511,11 +971,64 @@ describe('Statistical', () => {
   })
 
   it('LARGE', () => {
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 1)).to.equal(5)
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 3)).to.equal(3)
-    expect(statistical.LARGE([3, 5, 3], -3)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3], 4)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3, 'invalid', 4], 3)).to.equal(error.value)
+    expect(statistical.LARGE()).to.equal(error.na)
+    expect(statistical.LARGE('')).to.equal(error.na)
+    expect(statistical.LARGE(1)).to.equal(error.na)
+    expect(statistical.LARGE('text')).to.equal(error.na)
+    expect(statistical.LARGE(1, 2, 3)).to.equal(error.na)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 3, 5)).to.equal(error.na)
+    expect(statistical.LARGE([[1, 2, error.na, 4, 5]], 1)).to.equal(error.na)
+
+    expect(statistical.LARGE([[1, 2, error.div0, 4, 5]], 1)).to.equal(error.div0)
+
+    expect(statistical.LARGE([[1, 2, 3]], '')).to.equal(error.value)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 'text')).to.equal(error.value)
+
+    expect(statistical.LARGE([[1, 2, 3]], null)).to.equal(error.num)
+    expect(statistical.LARGE([[1, 2, 3]], 4)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3]], -3)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3, true]], 4)).to.equal(error.num)
+    expect(statistical.LARGE([[true, false]], 1)).to.equal(error.num)
+    expect(statistical.LARGE([['a', 'a', 'a', 'a', 'a']], 1)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3, null, 4]], 5)).to.equal(error.num)
+    expect(statistical.LARGE(10, 2)).to.equal(error.num)
+    expect(statistical.LARGE(10, null)).to.equal(error.num)
+    expect(statistical.LARGE([[null, 2]], 2)).to.equal(error.num)
+    expect(statistical.LARGE([['3', 5, '3', null, 4]], 3)).to.equal(error.num)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5]], 0)).to.equal(error.num)
+
+    expect(statistical.LARGE([3, 4, 5, 2, 'text', 4, 6, 4, 7], 4)).to.equal(4)
+    expect(statistical.LARGE([3, 4, 5, 2, 3, 4, 6, 4, 7], 4)).to.equal(4)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 3)).to.equal(2)
+    expect(statistical.LARGE([[3, 5, 3, true]], 3)).to.equal(3)
+    expect(statistical.LARGE(10, 1)).to.equal(10)
+    expect(statistical.LARGE(10, true)).to.equal(10)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], 1)).to.equal(5)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], 3)).to.equal(3)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], '3')).to.equal(3)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5]], 1)).to.equal(5)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5, '']], 1)).to.equal(5)
+    expect(statistical.LARGE(['a', 'a', 'a', 'a', 5], 1)).to.equal(5)
+    expect(statistical.LARGE([[3, 5, 3, null, 4]], 3)).to.equal(3)
+
+    expect(
+      statistical.LARGE(
+        [
+          [4, 5],
+          [8, 2]
+        ],
+        2
+      )
+    ).to.equal(5)
+    expect(
+      statistical.LARGE(
+        [
+          [1, 4],
+          [20, 23]
+        ],
+        3
+      )
+    ).to.equal(4)
   })
 
   it('LINEST', () => {
@@ -546,10 +1059,29 @@ describe('Statistical', () => {
   })
 
   it('MAX', () => {
-    expect(statistical.MAX()).to.equal(0)
-    expect(statistical.MAX(undefined)).to.equal(0)
+    expect(statistical.MAX()).to.equal(error.na)
+
     expect(statistical.MAX(error.na)).to.equal(error.na)
-    expect(statistical.MAX([0.1, 0.2], [0.4, 0.8], [true, false])).to.approximately(0.8, 1e-9)
+    expect(statistical.MAX(error.na, 3, 1)).to.equal(error.na)
+    expect(statistical.MAX(error.div0)).to.equal(error.div0)
+    expect(statistical.MAX(error.div0, 3, 1)).to.equal(error.div0)
+
+    expect(statistical.MAX(null)).to.equal(0)
+    expect(statistical.MAX(true)).to.equal(0)
+    expect(statistical.MAX(false)).to.equal(0)
+    expect(statistical.MAX('')).to.equal(0)
+    expect(statistical.MAX('text')).to.equal(0)
+    expect(statistical.MAX(3)).to.equal(3)
+
+    expect(statistical.MAX(3, 1, null)).to.equal(3)
+    expect(statistical.MAX(3, 1)).to.equal(3)
+    expect(statistical.MAX(3, 6)).to.equal(6)
+    expect(statistical.MAX(3, 6, 'text')).to.equal(6)
+
+    expect(statistical.MAX([['a', 1, 2, 3, 'v', 4, 'c', 'g']])).to.equal(4)
+    expect(statistical.MAX([['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']])).to.equal(0)
+    expect(statistical.MAX([[0.1, 0.2]], [[0.4, 0.8]], [[true, false]])).to.approximately(0.8, 1e-9)
+
     expect(
       statistical.MAX([
         [0, 0.1, 0.2],
@@ -582,11 +1114,30 @@ describe('Statistical', () => {
   })
 
   it('MIN', () => {
-    expect(statistical.MIN()).to.equal(0)
-    expect(statistical.MIN(undefined)).to.equal(0)
+    expect(statistical.MIN()).to.equal(error.na)
+
     expect(statistical.MIN(error.na)).to.equal(error.na)
+    expect(statistical.MIN(error.na, 3, 1)).to.equal(error.na)
+    expect(statistical.MIN(error.div0)).to.equal(error.div0)
+    expect(statistical.MIN(error.div0, 3, 1)).to.equal(error.div0)
+
+    expect(statistical.MIN(null)).to.equal(0)
+    expect(statistical.MIN(true)).to.equal(0)
+    expect(statistical.MIN(false)).to.equal(0)
+    expect(statistical.MIN('')).to.equal(0)
+    expect(statistical.MIN('text')).to.equal(0)
+    expect(statistical.MIN(1)).to.equal(1)
+
+    expect(statistical.MIN(3, 1, null)).to.equal(1)
+    expect(statistical.MIN(3, 1)).to.equal(1)
+    expect(statistical.MIN(3, 6)).to.equal(3)
+    expect(statistical.MIN(3, 6, 'text')).to.equal(3)
+
+    expect(statistical.MIN('a', 1, 2, 3, 'v', 4, 'c', 'g')).to.equal(1)
+    expect(statistical.MIN('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')).to.equal(0)
     expect(statistical.MIN([0.1, 0.2], [0.4, 0.8], [true, false])).to.approximately(0.1, 1e-9)
     expect(statistical.MIN([0, 0.1, 0.2], [0.4, 0.8, 1], [true, false])).to.equal(0)
+
     expect(
       statistical.MIN(
         [
@@ -891,8 +1442,66 @@ describe('Statistical', () => {
   })
 
   it('SMALL', () => {
+    expect(statistical.SMALL()).to.equal(error.na)
+    expect(statistical.SMALL('')).to.equal(error.na)
+    expect(statistical.SMALL(1)).to.equal(error.na)
+    expect(statistical.SMALL('text')).to.equal(error.na)
+    expect(statistical.SMALL(1, 2, 3)).to.equal(error.na)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 3, 5)).to.equal(error.na)
+    expect(statistical.SMALL([[1, 2, error.na, 4, 5]], 1)).to.equal(error.na)
+
+    expect(statistical.SMALL([[1, 2, error.div0, 4, 5]], 1)).to.equal(error.div0)
+
+    expect(statistical.SMALL([[1, 2, 3]], '')).to.equal(error.value)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 'text')).to.equal(error.value)
+
+    expect(statistical.SMALL([[1, 2, 3]], null)).to.equal(error.num)
+    expect(statistical.SMALL([[1, 2, 3]], 4)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3]], -3)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3, true]], 4)).to.equal(error.num)
+    expect(statistical.SMALL([[true, false]], 1)).to.equal(error.num)
+    expect(statistical.SMALL([['a', 'a', 'a', 'a', 'a']], 1)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3, null, 4]], 5)).to.equal(error.num)
+    expect(statistical.SMALL(10, 2)).to.equal(error.num)
+    expect(statistical.SMALL(10, null)).to.equal(error.num)
+    expect(statistical.SMALL([[null, 2]], 2)).to.equal(error.num)
+    expect(statistical.SMALL([['3', 5, '3', null, 4]], 3)).to.equal(error.num)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5]], 0)).to.equal(error.num)
+
+    expect(statistical.SMALL([[3, 5, 3, true]], 3)).to.equal(5)
+    expect(statistical.SMALL([3, 4, 5, 2, 'text', 4, 6, 4, 7], 4)).to.equal(4)
     expect(statistical.SMALL([3, 4, 5, 2, 3, 4, 6, 4, 7], 4)).to.equal(4)
-    expect(statistical.SMALL([3, 4, 5, 2, 'invalid', 4, 6, 4, 7], 4)).to.equal(error.value)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 3)).to.equal(4)
+    expect(statistical.SMALL([[3, 5, 3, true]], 3)).to.equal(5)
+    expect(statistical.SMALL(10, 1)).to.equal(10)
+    expect(statistical.SMALL(10, true)).to.equal(10)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], 1)).to.equal(1)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], 3)).to.equal(3)
+    expect(statistical.SMALL([[10, 5]], '2')).to.equal(10)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], '3')).to.equal(3)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5]], 1)).to.equal(1)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5, '']], 1)).to.equal(1)
+    expect(statistical.SMALL(['a', 'a', 'a', 'a', 5], 1)).to.equal(5)
+    expect(statistical.SMALL([[3, 5, 3, null, 4]], 3)).to.equal(4)
+
+    expect(
+      statistical.SMALL(
+        [
+          [4, 5],
+          [8, 2]
+        ],
+        2
+      )
+    ).to.equal(4)
+    expect(
+      statistical.SMALL(
+        [
+          [1, 4],
+          [20, 23]
+        ],
+        3
+      )
+    ).to.equal(20)
   })
 
   it('STANDARDIZE', () => {
