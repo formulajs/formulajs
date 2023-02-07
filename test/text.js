@@ -553,7 +553,49 @@ describe('Text', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')
     expect(text.REPLACE('123456', 1, 3, '@')).to.equal('@456')
-    expect(text.REPLACE()).to.equal(error.value)
+
+    expect(text.REPLACE(123456, 1, 3, '@')).to.equal('@456')
+    expect(text.REPLACE(true, 1, 3, '@')).to.equal('@E')
+    expect(text.REPLACE(true, 1, 2, false)).to.equal('FALSEUE')
+    expect(text.REPLACE(true, 1, 0, false)).to.equal('FALSETRUE')
+
+    expect(text.REPLACE(true, '1', '2', false)).to.equal('FALSEUE')
+    expect(text.REPLACE(true, true, false, false)).to.equal('FALSETRUE')
+    expect(text.REPLACE(true, true, 0, false)).to.equal('FALSETRUE')
+
+    expect(text.REPLACE(true, 0, 2, false)).to.equal(error.value)
+    expect(text.REPLACE(true, 0, false, false)).to.equal(error.value)
+    expect(text.REPLACE(true, '2', '', false)).to.equal(error.value)
+    expect(text.REPLACE(true, '', '2', false)).to.equal(error.value)
+    expect(text.REPLACE(true, null, null, false)).to.equal(error.value)
+
+    expect(text.REPLACE(error.div0, 1, 2, 'test')).to.equal(error.div0)
+    expect(text.REPLACE('123456', error.div0, 1, 'test')).to.equal(error.div0)
+    expect(text.REPLACE('123456', 1, error.div0, 'test')).to.equal(error.div0)
+    expect(text.REPLACE('123456', 1, 2, error.div0)).to.equal(error.div0)
+
+    expect(text.REPLACE('123456', 3, '@')).to.equal(error.na)
+    expect(text.REPLACE('123456', '@')).to.equal(error.na)
+    expect(text.REPLACE('123456', 1, 3, '@', 4)).to.equal(error.na)
+    expect(text.REPLACE('')).to.equal(error.na)
+    expect(text.REPLACE()).to.equal(error.na)
+
+    expect(text.REPLACE(['text1', 'text2', 'text3'], 1, 4, 'texto')).to.eql(['texto1', 'texto2', 'texto3'])
+
+    expect(
+      text.REPLACE(
+        [
+          ['text1', 'text2'],
+          ['text3', 'text4']
+        ],
+        1,
+        4,
+        'texto'
+      )
+    ).to.eql([
+      ['texto1', 'texto2'],
+      ['texto3', 'texto4']
+    ])
   })
 
   it('REPT', () => {

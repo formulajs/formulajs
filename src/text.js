@@ -581,8 +581,36 @@ export function REGEXMATCH(text, regular_expression, full) {
  * @returns
  */
 export function REPLACE(old_text, num_chars, length, new_text) {
+  if (arguments.length !== 4) {
+    return error.na
+  }
+
+  const someError = utils.anyError(old_text, num_chars, length, new_text)
+  if (someError) {
+    return someError
+  }
+
+  if (Array.isArray(old_text)) {
+    return old_text.map((item) => REPLACE(item, num_chars, length, new_text))
+  }
+
+  if (num_chars === '' || num_chars === null || num_chars === 0 || length === '' || length === null) {
+    return error.value
+  }
+
   num_chars = utils.parseNumber(num_chars)
   length = utils.parseNumber(length)
+
+  if (typeof old_text === 'boolean') {
+    old_text = old_text.toString().toUpperCase()
+  }
+
+  if (typeof new_text === 'boolean') {
+    new_text = new_text.toString().toUpperCase()
+  }
+
+  old_text = old_text.toString()
+  new_text = new_text.toString()
 
   if (utils.anyIsError(num_chars, length) || typeof old_text !== 'string' || typeof new_text !== 'string') {
     return error.value
