@@ -780,12 +780,18 @@ export function COUNTBLANK() {
  * @returns
  */
 export function COUNTIF(range, criteria) {
-  range = utils.flatten(range)
+  if (arguments.length !== 2) {
+    return error.na
+  }
 
-  const isWildcard = criteria === void 0 || criteria === '*'
+  if (!Array.isArray(range)) {
+    range = [range]
+  } else {
+    range = utils.flatten(range)
+  }
 
-  if (isWildcard) {
-    return range.length
+  if (criteria === null) {
+    criteria = 0
   }
 
   let matches = 0
@@ -795,7 +801,7 @@ export function COUNTIF(range, criteria) {
     const value = range[i]
     const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
 
-    if (evalExpression.compute(tokens)) {
+    if (evalExpression.countIfComputeExpression(tokens) || value === criteria) {
       matches++
     }
   }

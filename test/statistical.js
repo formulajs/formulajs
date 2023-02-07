@@ -503,10 +503,20 @@ describe('Statistical', () => {
   })
 
   it('COUNTIF', () => {
-    expect(statistical.COUNTIF([undefined], '>1')).to.equal(0)
-    expect(statistical.COUNTIF([error.na], '>1')).to.equal(0)
+    expect(statistical.COUNTIF()).to.equal(error.na)
+    expect(statistical.COUNTIF('')).to.equal(error.na)
+    expect(statistical.COUNTIF(1)).to.equal(error.na)
+    expect(statistical.COUNTIF('text')).to.equal(error.na)
+
+    expect(statistical.COUNTIF(null, '>1')).to.equal(0)
+    expect(statistical.COUNTIF(error.na, '>1')).to.equal(0)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '>=1')).to.equal(2)
     expect(statistical.COUNTIF([1, null, 3, 'a', ''], '>1')).to.equal(1)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '<=3')).to.equal(2)
+    expect(statistical.COUNTIF([1, null, 3, 'a', ''], '<=1')).to.equal(1)
     expect(statistical.COUNTIF([1, null, 'c', 'a', ''], '>1')).to.equal(0)
+    expect(statistical.COUNTIF([1, 2, 3, 3, 3], '=3')).to.equal(3)
+
     expect(
       statistical.COUNTIF(
         [
@@ -528,12 +538,121 @@ describe('Statistical', () => {
     expect(
       statistical.COUNTIF(
         [
+          [1, null, 3],
+          ['a', 4, 'c']
+        ],
+        ''
+      )
+    ).to.equal(0)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 3],
+          ['a', 4, 'c']
+        ],
+        '<>'
+      )
+    ).to.equal(5)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, 'v', 3],
+          ['v', 4, 'c']
+        ],
+        '?'
+      )
+    ).to.equal(3)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 3],
+          ['?', 4, 'c']
+        ],
+        '~?'
+      )
+    ).to.equal(1)
+    expect(
+      statistical.COUNTIF(
+        [
           [1, null, 'a'],
           ['a', 4, 'c']
         ],
         '*'
       )
+    ).to.equal(3)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 'text123text']
+        ],
+        'text*text'
+      )
+    ).to.equal(2)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['textktext', 4, 'text123text']
+        ],
+        'text?text'
+      )
+    ).to.equal(1)
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 'text~atext']
+        ],
+        'text~~?text'
+      )
+    ).to.equal(1)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'texttext'],
+          ['a', 4, 0]
+        ],
+        '<>'
+      )
+    ).to.equal(5)
+    expect(
+      statistical.COUNTIF(
+        [
+          [77, 'text', ''],
+          [null, true, false]
+        ],
+        '<>?'
+      )
     ).to.equal(6)
+    expect(
+      statistical.COUNTIF(
+        [
+          [77, 'text', ''],
+          [null, true, false]
+        ],
+        '<>?'
+      )
+    ).to.equal(6)
+
+    expect(
+      statistical.COUNTIF(
+        [
+          [1, null, 'a'],
+          ['a', 4, 'c']
+        ],
+        '*',
+        2
+      )
+    ).to.equal(error.na)
+    expect(
+      statistical.COUNTIF([
+        [1, null, 'a'],
+        ['a', 4, 'c']
+      ])
+    ).to.equal(error.na)
   })
 
   it('COUNTIFS', () => {
