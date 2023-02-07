@@ -450,17 +450,54 @@ describe('Statistical', () => {
   })
 
   it('COUNTBLANK', () => {
-    expect(statistical.COUNTBLANK()).to.equal(0)
-    expect(statistical.COUNTBLANK(undefined)).to.equal(1)
+    expect(statistical.COUNTBLANK()).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, 2)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, error.div0, error.na)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, 2, error.div0)).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, '', '', '')).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, 2, 3, 4]], 1)).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, 2]], [[3, 4]])).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, null, 3, 'a', '', 'c')).to.equal(error.na)
+    expect(statistical.COUNTBLANK([[1, null, 3, 'a', '', 'c']])).to.equal(2)
+    expect(statistical.COUNTBLANK([[1, null, 3]], [['a', '', 'c']])).to.equal(error.na)
+    expect(statistical.COUNTBLANK(1, error.na, '28-10-2021', 'text', '')).to.equal(error.na)
+
     expect(statistical.COUNTBLANK(error.na)).to.equal(0)
-    expect(statistical.COUNTBLANK(1, 2, error.div0)).to.equal(0)
-    expect(statistical.COUNTBLANK(1, null, 3, 'a', '', 'c')).to.equal(2)
-    expect(statistical.COUNTBLANK([1, null, 3, 'a', '', 'c'])).to.equal(2)
-    expect(statistical.COUNTBLANK([1, null, 3], ['a', '', 'c'])).to.equal(2)
+    expect(statistical.COUNTBLANK(error.div0)).to.equal(0)
+    expect(statistical.COUNTBLANK(null)).to.equal(1)
+    expect(statistical.COUNTBLANK('')).to.equal(1)
+    expect(statistical.COUNTBLANK(' ')).to.equal(0)
+    expect(statistical.COUNTBLANK(1)).to.equal(0)
+    expect(statistical.COUNTBLANK('1')).to.equal(0)
+    expect(statistical.COUNTBLANK(true)).to.equal(0)
+    expect(statistical.COUNTBLANK(false)).to.equal(0)
+    expect(statistical.COUNTBLANK('text')).to.equal(0)
+    expect(statistical.COUNTBLANK([[1, 2, 3, 4]])).to.equal(0)
+
     expect(
       statistical.COUNTBLANK([
         [1, null, 3],
         ['a', '', 'c']
+      ])
+    ).to.equal(2)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(0)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        [3, 2],
+        [null, null]
+      ])
+    ).to.equal(2)
+    expect(
+      statistical.COUNTBLANK([
+        [1, 2],
+        ['a', 'b'],
+        [null, null]
       ])
     ).to.equal(2)
   })

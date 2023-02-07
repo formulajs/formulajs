@@ -753,6 +753,10 @@ export function COUNTA() {
  * @returns
  */
 export function COUNTBLANK() {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
   const range = utils.flatten(arguments)
   let blanks = 0
   let element
