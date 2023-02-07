@@ -899,6 +899,7 @@ describe('Text', () => {
     expect(text.TEXTJOIN(' ', true, 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
       'The sun will come up tomorrow.'
     )
+    expect(text.TEXTJOIN(' ', false, 1, '', 2, null, 4, 0, '9')).to.equal('1  2  4 0 9')
     expect(text.TEXTJOIN(' ', 'TRUE', 'The', '', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
       'The sun will come up tomorrow.'
     )
@@ -917,10 +918,19 @@ describe('Text', () => {
     expect(text.TEXTJOIN(true, true, ['The', 'sun', 'will'], 'come', ['up', 'tomorrow.'])).to.equal(
       'Thetruesuntruewilltruecometrueuptruetomorrow.'
     )
-    expect(text.TEXTJOIN(undefined, undefined, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
+    expect(text.TEXTJOIN(', ', 'One', 'Two', 'Three', 'Four')).to.equal(error.value)
+    expect(text.TEXTJOIN(null, null, 'The', 'sun', 'will', 'come', 'up', 'tomorrow.')).to.equal(
       'Thesunwillcomeuptomorrow.'
     )
+    expect(text.TEXTJOIN('text', 1, 'text2')).to.equal('text2')
+    expect(text.TEXTJOIN('text', true, 'text2')).to.equal('text2')
+
+    expect(text.TEXTJOIN('text', 'text2')).to.equal(error.na)
+    expect(text.TEXTJOIN(1, 3)).to.equal(error.na)
+    expect(text.TEXTJOIN(1)).to.equal(error.na)
     expect(text.TEXTJOIN(' ', true)).to.equal(error.na)
+    expect(text.TEXTJOIN('')).to.equal(error.na)
+    expect(text.TEXTJOIN()).to.equal(error.na)
   })
 
   it('TRIM', () => {

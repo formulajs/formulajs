@@ -880,15 +880,21 @@ export function TEXT(value, format_text) {
  * @returns
  */
 export function TEXTJOIN(delimiter, ignore_empty, ...args) {
-  if (typeof ignore_empty !== 'boolean') {
-    ignore_empty = utils.parseBool(ignore_empty)
-  }
-
   if (arguments.length < 3) {
     return error.na
   }
 
-  delimiter = delimiter !== null && delimiter !== undefined ? delimiter : ''
+  if (ignore_empty !== null && typeof ignore_empty !== 'boolean') {
+    ignore_empty = utils.parseBool(ignore_empty)
+  }
+
+  if (ignore_empty === error.value) {
+    return error.value
+  }
+
+  if (delimiter == undefined || delimiter == null) {
+    delimiter = ''
+  }
 
   let flatArgs = utils.flatten(args)
   let textToJoin = ignore_empty ? flatArgs.filter((text) => text) : flatArgs
