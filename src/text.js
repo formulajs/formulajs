@@ -407,7 +407,11 @@ export function LEN(text) {
  */
 export function LOWER(text) {
   if (arguments.length !== 1) {
-    return error.value
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LOWER(item))
   }
 
   text = utils.parseString(text)

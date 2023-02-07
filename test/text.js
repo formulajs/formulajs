@@ -395,14 +395,32 @@ describe('Text', () => {
 
   it('LOWER', () => {
     expect(text.LOWER(undefined)).to.equal('')
+    expect(text.LOWER('')).to.equal('')
+    expect(text.LOWER(null)).to.equal('')
+
+    expect(text.LOWER()).to.equal(error.na)
     expect(text.LOWER(error.na)).to.equal(error.na)
+
+    expect(text.LOWER('A Title Case')).to.equal('a title case')
     expect(text.LOWER('abcd')).to.equal('abcd')
     expect(text.LOWER('ABcd')).to.equal('abcd')
     expect(text.LOWER('ABCD')).to.equal('abcd')
-    expect(text.LOWER('')).to.equal('')
     expect(text.LOWER(true)).to.equal('true')
+    expect(text.LOWER(false)).to.equal('false')
     expect(text.LOWER(1)).to.equal('1')
-    expect(text.LOWER()).to.equal(error.value)
+
+    expect(text.LOWER('ABCD', 'FG')).to.equal(error.na)
+
+    expect(text.LOWER(['Text1', 'Text2', 'Text3'])).to.eql(['text1', 'text2', 'text3'])
+    expect(
+      text.LOWER([
+        ['Text1', 'Text2'],
+        ['Text3', 'Text4']
+      ])
+    ).to.eql([
+      ['text1', 'text2'],
+      ['text3', 'text4']
+    ])
   })
 
   it('MID', () => {
