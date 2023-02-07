@@ -611,16 +611,58 @@ describe('Text', () => {
   })
 
   it('RIGHT', () => {
+    expect(text.RIGHT('Sale Price', 5, 3)).to.equal(error.na)
+    expect(text.RIGHT()).to.equal(error.na)
+
+    expect(text.RIGHT('')).to.equal('')
+    expect(text.RIGHT(null)).to.equal('')
+
+    expect(text.RIGHT('Stock Number')).to.equal('r')
+    expect(text.RIGHT(true)).to.equal('e')
+    expect(text.RIGHT(42)).to.equal('2')
+    expect(text.RIGHT(4.2)).to.equal('2')
+    expect(text.RIGHT(4.2, 2)).to.equal('.2')
+    expect(text.RIGHT('Sale Price', 5)).to.equal('Price')
+
     expect(text.RIGHT(error.na, 2)).to.equal(error.na)
     expect(text.RIGHT('text', error.na)).to.equal(error.na)
-    expect(text.RIGHT(undefined, undefined)).to.equal('')
-    expect(text.RIGHT(undefined, 3)).to.equal('')
-    expect(text.RIGHT('Sale Price', 5)).to.equal('Price')
-    expect(text.RIGHT('Stock Number')).to.equal('r')
+
+    expect(text.RIGHT(5, 'Sale Price')).to.equal(error.value)
     expect(text.RIGHT('something', 'invalid')).to.equal(error.value)
-    expect(text.RIGHT()).to.equal('')
-    expect(text.RIGHT(42)).to.equal('2')
-    expect(text.RIGHT(true)).to.equal('e')
+
+    expect(text.RIGHT(null, null)).to.equal('')
+    expect(text.RIGHT(null, 3)).to.equal('')
+
+    expect(text.RIGHT(['text1', 'text2', 'text3'])).to.eql(['1', '2', '3'])
+    expect(text.RIGHT([null, 'text2', 'text3'])).to.eql(['', '2', '3'])
+    expect(text.RIGHT(['text1', 'text2', 'text3'], ['text1', 'text2', 'text3'])).to.eql([
+      error.value,
+      error.value,
+      error.value
+    ])
+    //expect(text.RIGHT(['text1', 'text2', 'text3'], [1, 2, 3])).to.eql(['1', 't2', 'xt3'])
+
+    expect(
+      text.RIGHT([
+        ['text', 'string'],
+        ['date', 'number']
+      ])
+    ).to.eql([
+      ['t', 'g'],
+      ['e', 'r']
+    ])
+    expect(
+      text.RIGHT(
+        [
+          ['text', 'string'],
+          ['date', 'number']
+        ],
+        4
+      )
+    ).to.eql([
+      ['text', 'ring'],
+      ['date', 'mber']
+    ])
   })
 
   it('SEARCH', () => {

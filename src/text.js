@@ -657,6 +657,14 @@ export function REPT(text, number_times) {
 export function RIGHT(text, num_chars) {
   const someError = utils.anyError(text, num_chars)
 
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => RIGHT(item, num_chars))
+  }
+
   if (someError) {
     return someError
   }
