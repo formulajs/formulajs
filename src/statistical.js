@@ -879,6 +879,10 @@ export function COUNTIFS() {
   return result
 }
 
+export function COUNTUNIQUE() {
+  return lookup.UNIQUE.apply(null, utils.flatten(arguments)).length
+}
+
 export const COVARIANCE = {}
 
 /**
