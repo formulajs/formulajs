@@ -1062,17 +1062,46 @@ describe('Math & Trig', () => {
   })
 
   it('SUM', () => {
-    expect(mathTrig.SUM(undefined, 1)).to.equal(1)
+    expect(mathTrig.SUM()).to.equal(error.na)
     expect(mathTrig.SUM(1, 2, error.na)).to.equal(error.na)
     expect(mathTrig.SUM(1, error.na, 2)).to.equal(error.na)
     expect(mathTrig.SUM(1, [error.na], 2)).to.equal(error.na)
     expect(mathTrig.SUM([1], [2], [error.na])).to.equal(error.na)
     expect(mathTrig.SUM([1], [error.na], [2])).to.equal(error.na)
     expect(mathTrig.SUM([1], error.na, [2])).to.equal(error.na)
+    expect(mathTrig.SUM(error.na)).to.equal(error.na)
+    expect(mathTrig.SUM(null, error.na)).to.equal(error.na)
+    expect(mathTrig.SUM(error.na, 1)).to.equal(error.na)
+
+    expect(mathTrig.SUM(null, error.div0)).to.equal(error.div0)
+
+    expect(mathTrig.SUM(1, 'invalid')).to.equal(1)
+    expect(mathTrig.SUM(null, 1)).to.equal(1)
+    expect(mathTrig.SUM(1, null)).to.equal(1)
+
+    expect(mathTrig.SUM(true)).to.equal(0)
+    expect(mathTrig.SUM(false)).to.equal(0)
+    expect(mathTrig.SUM(true, 3)).to.equal(3)
+    expect(mathTrig.SUM(1, true)).to.equal(1)
+    expect(mathTrig.SUM(1, false)).to.equal(1)
+    expect(mathTrig.SUM(false, 3)).to.equal(3)
+    expect(mathTrig.SUM(true, false)).to.equal(0)
+
+    expect(mathTrig.SUM('')).to.equal(0)
+    expect(mathTrig.SUM(null)).to.equal(0)
+    expect(mathTrig.SUM(1)).to.equal(1)
+    expect(mathTrig.SUM('text')).to.equal(0)
+    expect(mathTrig.SUM(1, 2)).to.equal(3)
+    expect(mathTrig.SUM('', 2)).to.equal(2)
+    expect(mathTrig.SUM(1, '')).to.equal(1)
+    expect(mathTrig.SUM('1', 2)).to.equal(2)
+    expect(mathTrig.SUM(1, '2')).to.equal(1)
+    expect(mathTrig.SUM('1', '2')).to.equal(0)
     expect(mathTrig.SUM(1, 2, 3)).to.equal(6)
     expect(mathTrig.SUM([1, 2, 3])).to.equal(6)
     expect(mathTrig.SUM([1, 2, 3], 1, 2)).to.equal(9)
     expect(mathTrig.SUM([1, 2, 3], [1, 2])).to.equal(9)
+
     expect(
       mathTrig.SUM([
         [1, 1],
@@ -1110,20 +1139,13 @@ describe('Math & Trig', () => {
           [3, 3]
         ],
         [
-          [1, 1],
-          [2, 2],
-          [3, 3]
+          [1, 1, 1],
+          [2, 2, 1],
+          [3, 3, 1],
+          [3, 3, 1]
         ]
       )
-    ).to.equal(24)
-    expect(mathTrig.SUM(1, 'invalid')).to.equal(1)
-    expect(mathTrig.SUM(undefined)).to.equal(0)
-    expect(mathTrig.SUM(undefined, 1)).to.equal(1)
-    expect(mathTrig.SUM(null)).to.equal(0)
-    expect(mathTrig.SUM(null, 1)).to.equal(1)
-    expect(mathTrig.SUM(error.na)).to.equal(error.na)
-    expect(mathTrig.SUM(undefined, error.na)).to.equal(error.na)
-    expect(mathTrig.SUM(error.na, 1)).to.equal(error.na)
+    ).to.equal(34)
   })
 
   it('SUMIF', () => {

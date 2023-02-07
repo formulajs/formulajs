@@ -1794,6 +1794,10 @@ export function SUBTOTAL(function_num, ref1) {
  * @returns
  */
 export function SUM() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   let result = 0
 
   utils.arrayEach(utils.argsToArray(arguments), (value) => {
@@ -1803,10 +1807,6 @@ export function SUM() {
       result = value
     } else if (typeof value === 'number') {
       result += value
-    } else if (typeof value === 'string') {
-      const parsed = parseFloat(value)
-
-      !isNaN(parsed) && (result += parsed)
     } else if (Array.isArray(value)) {
       const inner_result = SUM.apply(null, value)
 
