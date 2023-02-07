@@ -707,6 +707,10 @@ export function CORREL(array1, array2) {
  * @returns
  */
 export function COUNT() {
+  if (arguments.length < 1) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
 
   return utils.numbers(flatArguments).length

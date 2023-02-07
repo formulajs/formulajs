@@ -351,13 +351,30 @@ describe('Statistical', () => {
   })
 
   it('COUNT', () => {
-    expect(statistical.COUNT()).to.equal(0)
-    expect(statistical.COUNT(undefined)).to.equal(0)
+    expect(statistical.COUNT()).to.equal(error.na)
+
+    expect(statistical.COUNT(error.na)).to.equal(0)
+    expect(statistical.COUNT(error.div0)).to.equal(0)
+    expect(statistical.COUNT(1, error.div0, error.na)).to.equal(1)
+    expect(statistical.COUNT('')).to.equal(0)
+    expect(statistical.COUNT('1')).to.equal(0)
+    expect(statistical.COUNT('text')).to.equal(0)
+    expect(statistical.COUNT(1)).to.equal(1)
+    expect(statistical.COUNT(null)).to.equal(0)
+    expect(statistical.COUNT(true)).to.equal(0)
+    expect(statistical.COUNT(false)).to.equal(0)
     expect(statistical.COUNT(error.na)).to.equal(0)
     expect(statistical.COUNT(1, 2, 3, 4)).to.equal(4)
+    expect(statistical.COUNT(1, '', '', '')).to.equal(1)
+    expect(statistical.COUNT(1, 2, 3, 4, 'text')).to.equal(4)
+    expect(statistical.COUNT(1, 2, 3, 4, '21-10-2020')).to.equal(4)
+    expect(statistical.COUNT(1, 2, '8:30 AM')).to.equal(2)
     expect(statistical.COUNT(1, 2, error.div0, 4)).to.equal(3)
-    expect(statistical.COUNT([1, 2, 3, 4])).to.equal(4)
-    expect(statistical.COUNT([1, 2], [3, 4])).to.equal(4)
+
+    expect(statistical.COUNT([[1, 2, 3, 4]])).to.equal(4)
+    expect(statistical.COUNT([[1, 2, 3, 4]], 1)).to.equal(5)
+    expect(statistical.COUNT([[1, 2]], [[3, 4]])).to.equal(4)
+
     expect(
       statistical.COUNT([
         [1, 2],
