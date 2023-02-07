@@ -41,6 +41,26 @@ export function BAHTTEXT() {
  * @returns
  */
 export function CHAR(number) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (Array.isArray(number)) {
+    return number.map((item) => CHAR(item))
+  }
+
+  if (number === true) {
+    number = 1
+  }
+
+  if (number === '') {
+    return error.num
+  }
+
+  if (number < 1) {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
 
   if (number === 0) {

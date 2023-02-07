@@ -13,12 +13,54 @@ describe('Text', () => {
   })
 
   it('CHAR', () => {
+    expect(text.CHAR(1)).to.equal(String.fromCharCode('1'))
+    expect(text.CHAR(true)).to.equal(String.fromCharCode('1'))
+    expect(text.CHAR(false)).to.equal(error.value)
+
+    expect(text.CHAR('true')).to.equal(error.value)
+    expect(text.CHAR('false')).to.equal(error.value)
+
+    expect(text.CHAR(null)).to.equal(error.value)
+
     expect(text.CHAR(65)).to.equal('A')
+    expect(text.CHAR(97)).to.equal('a')
+
+    expect(text.CHAR('65')).to.equal('A')
+    expect(text.CHAR('80')).to.equal('P')
+    expect(text.CHAR('   80')).to.equal('P')
+    expect(text.CHAR('   80    ')).to.equal('P')
+    expect(text.CHAR('80    ')).to.equal('P')
+
+    expect(text.CHAR(51)).to.equal('3')
     expect(text.CHAR(255)).to.equal('ÿ')
     expect(text.CHAR(1000)).to.equal('Ϩ')
-    expect(text.CHAR(undefined)).to.equal(error.value)
+
+    expect(text.CHAR(0)).to.equal(error.value)
+    expect(text.CHAR(-1)).to.equal(error.value)
+    expect(text.CHAR(-0.4)).to.equal(error.value)
+    expect(text.CHAR(0.9)).to.equal(error.value)
+    expect(text.CHAR(80.2)).to.equal('P')
+
+    expect(text.CHAR(65, 55)).to.equal(error.na)
     expect(text.CHAR(error.na)).to.equal(error.na)
+    expect(text.CHAR()).to.equal(error.na)
+
+    expect(text.CHAR(undefined)).to.equal(error.value)
     expect(text.CHAR('invalid')).to.equal(error.value)
+
+    expect(text.CHAR([65, 75, 80])).to.eql(['A', 'K', 'P'])
+    expect(text.CHAR([[65], ['a'], [80]])).to.eql([['A'], [error.value], ['P']])
+    expect(
+      text.CHAR([
+        [80, 60],
+        [40, 40]
+      ])
+    ).to.eql([
+      ['P', '<'],
+      ['(', '(']
+    ])
+
+    expect(text.CHAR('')).to.equal(error.num)
   })
 
   it('CLEAN', () => {
