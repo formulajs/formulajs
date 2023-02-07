@@ -146,13 +146,62 @@ describe('Text', () => {
   })
 
   it('CONCATENATE', () => {
+    expect(text.CONCATENATE(1)).to.equal('1')
+    expect(text.CONCATENATE(false)).to.equal('FALSE')
+    expect(text.CONCATENATE(true)).to.equal('TRUE')
+    expect(text.CONCATENATE('false')).to.equal('false')
+    expect(text.CONCATENATE('true')).to.equal('true')
+    expect(text.CONCATENATE('text')).to.equal('text')
+
+    expect(text.CONCATENATE(true, 'yes')).to.equal('TRUEyes')
+    expect(text.CONCATENATE(false, 'no')).to.equal('FALSEno')
+    expect(text.CONCATENATE(1, 'one')).to.equal('1one')
+
     expect(text.CONCATENATE('a', undefined, 'b')).to.equal('ab')
     expect(text.CONCATENATE('a', error.na, 'b')).to.equal(error.na)
     expect(text.CONCATENATE('hello', ' ', 'world')).to.equal('hello world')
-    expect(text.CONCATENATE(['hello', ' my ', 'world'])).to.equal('hello my world')
-    expect(text.CONCATENATE(1, 'one')).to.equal('1one')
-    expect(text.CONCATENATE(true, 'yes')).to.equal('TRUEyes')
-    expect(text.CONCATENATE(false, 'no')).to.equal('FALSEno')
+    expect(text.CONCATENATE('text', 'text', 2, 4)).to.equal('texttext24')
+
+    // expect(text.CONCATENATE(['hello', ' my ', 'world'])).to.eql(['hello', ' my ', 'world'])
+    // expect(text.CONCATENATE(['A', ', ', ' B', ', ', 'C'])).to.eql(['A', ', ', ' B', ', ', 'C'])
+    // expect(text.CONCATENATE([415, ' text', ' 49'])).to.eql(['415', ' text', ' 49'])
+    // expect(text.CONCATENATE([
+    //   [415, 'text'],
+    //   [14, 'asd']
+    // ])).to.eql([
+    //   ['415', 'text'],
+    //   ['14', 'asd']
+    // ])
+    // expect(text.CONCATENATE([
+    //   ['text1', 'text2'],
+    //   ['text3', 'text4']
+    // ],[
+    //   ['text1', 'text2'],
+    //   ['text3', 'text4']
+    // ])).to.CONCATENATE([
+    //   ['text1text1', 'text2text2'],
+    //   ['text3text3', 'text4text4']
+    // ])
+    // expect(text.CONCATENATE(['text1', ' text2', ' text3'],[
+    //   ['text1', 'text2'],
+    //   ['text3', 'text4']
+    // ])).to.eql([
+    //   ['text1text1', 'text2text2', error.na],
+    //   ['text1text3', 'text2text4', error.na]
+    // ])
+
+    // expect(text.CONCATENATE([
+    //   ['text1', 'text2'],
+    //   ['text3', 'text4']
+    // ], ['text1', ' text2', ' text3'])).to.eql([
+    //   ['text1text1', 'text2text2', error.na],
+    //   ['text3text1', 'text4text2', error.na]
+    // ])
+
+    expect(text.CONCATENATE('')).to.equal('')
+    expect(text.CONCATENATE(' ')).to.equal(' ')
+    expect(text.CONCATENATE(null)).to.equal('')
+    expect(text.CONCATENATE()).to.equal(error.na)
   })
 
   it('CONCAT', () => {

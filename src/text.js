@@ -153,6 +153,10 @@ export function CONCATENATE() {
   const args = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, args)
 
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   if (someError) {
     return someError
   }
