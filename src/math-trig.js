@@ -1094,10 +1094,18 @@ export function MMULT(array1, array2) {
  * @returns
  */
 export function MOD(number, divisor) {
+  if (arguments.length !== 2) {
+    return error.na
+  }
+
+  if (number === '' || divisor === '') {
+    return error.value
+  }
+
   number = utils.parseNumber(number)
   divisor = utils.parseNumber(divisor)
-  const anyError = utils.anyError(number, divisor)
 
+  const anyError = utils.anyError(number, divisor)
   if (anyError) {
     return anyError
   }
@@ -1106,10 +1114,7 @@ export function MOD(number, divisor) {
     return error.div0
   }
 
-  let modulus = Math.abs(number % divisor)
-  modulus = number < 0 ? divisor - modulus : modulus
-
-  return divisor > 0 ? modulus : -modulus
+  return number - divisor * INT(number / divisor)
 }
 
 /**
