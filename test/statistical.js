@@ -90,10 +90,37 @@ describe('Statistical', () => {
   })
 
   it('AVERAGEIF', () => {
-    expect(statistical.AVERAGEIF([undefined], '>5')).to.equal(error.value) // different than Excel
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '>5')).to.equal(12)
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '*')).to.equal(7.5)
-    expect(statistical.AVERAGEIF([2, 4, 8, 16], '>5', [1, 2, 3, 4])).to.approximately(3.5, 1e-9)
+    expect(statistical.AVERAGEIF()).to.equal(error.na)
+    expect(statistical.AVERAGEIF('')).to.equal(error.na)
+    expect(statistical.AVERAGEIF('text')).to.equal(error.na)
+    expect(statistical.AVERAGEIF(1)).to.equal(error.na)
+    expect(
+      statistical.AVERAGEIF([
+        [2, 4],
+        [8, 16]
+      ])
+    ).to.equal(error.na)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>5', [[2, 4, 8, 16]], true)).to.equal(error.na)
+
+    expect(statistical.AVERAGEIF(null, '>5')).to.equal(error.div0)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>5')).to.equal(12)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>4')).to.equal(12)
+
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '>=4')).to.approximately(9.333333333, 1e-5)
+
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '*')).to.equal(error.div0)
+    expect(statistical.AVERAGEIF([[2, 4, 8, 16]], '<>')).to.equal(7.5)
+    expect(statistical.AVERAGEIF([['a', 4, 'c', 'd']], '>2')).to.equal(4)
+    expect(statistical.AVERAGEIF([['a', 'b', 'c', 'd']], '>2')).to.equal(error.div0)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>4'
+      )
+    ).to.equal(12)
     expect(
       statistical.AVERAGEIF(
         [
@@ -106,9 +133,44 @@ describe('Statistical', () => {
           [3, 4]
         ]
       )
-    ).to.approximately(3.5, 1e-9)
-    expect(statistical.AVERAGEIF([2, 4, 'invalid', 16], '>5')).to.equal(error.value)
-    expect(statistical.AVERAGEIF()).to.equal(error.na)
+    ).to.approximately(3.5, 1e-5)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 'b']
+        ],
+        '>5',
+        [
+          [1, 2],
+          [3, 4]
+        ]
+      )
+    ).to.equal(3)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>5',
+        [
+          [1, 2],
+          [3, 'b']
+        ]
+      )
+    ).to.equal(3)
+    expect(
+      statistical.AVERAGEIF(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        '>5',
+        [[1, 2]]
+      )
+    ).to.equal(error.value)
+    expect(statistical.AVERAGEIF([2, 4, 'invalid', 16], '>5')).to.equal(16)
   })
 
   it('AVERAGEIFS', () => {

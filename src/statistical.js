@@ -147,40 +147,60 @@ export function AVERAGEA() {
  * @returns
  */
 export function AVERAGEIF(range, criteria, average_range) {
-  if (arguments.length <= 1) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
+  }
+
+  if (!Array.isArray(range)) {
+    range = [range]
+  }
+
+  if (!Array.isArray(range[0])) {
+    range[0] = [range[0]]
+  }
+
+  if (average_range !== undefined) {
+    if (!Array.isArray(average_range)) {
+      average_range = [average_range]
+    }
+
+    if (!Array.isArray(average_range[0])) {
+      average_range[0] = [average_range[0]]
+    }
+
+    if (range.length !== average_range.length || range[0].length !== average_range[0].length) {
+      return error.value
+    }
   }
 
   average_range = average_range || range
   const flatAverageRange = utils.flatten(average_range)
   const flatAverageRangeDefined = flatAverageRange.filter(utils.isDefined)
-  average_range = utils.parseNumberArray(flatAverageRangeDefined)
+  average_range = flatAverageRangeDefined
 
   range = utils.flatten(range)
 
-  if (average_range instanceof Error) {
-    return average_range
-  }
-
   let average_count = 0
   let result = 0
-  const isWildcard = criteria === void 0 || criteria === '*'
-  const tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '')
+  const tokenizedCriteria = evalExpression.parse(criteria + '')
 
   for (let i = 0; i < range.length; i++) {
+    if (typeof average_range[i] !== 'number') {
+      continue
+    }
+
     const value = range[i]
 
-    if (isWildcard) {
+    const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
+
+    if (evalExpression.countIfComputeExpression(tokens)) {
       result += average_range[i]
       average_count++
-    } else {
-      const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
-
-      if (evalExpression.compute(tokens)) {
-        result += average_range[i]
-        average_count++
-      }
     }
+  }
+
+  if (!average_count) {
+    return error.div0
   }
 
   return result / average_count
