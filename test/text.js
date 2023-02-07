@@ -244,17 +244,55 @@ describe('Text', () => {
   })
 
   it('FIND', () => {
-    const data = 'Miriam McGovern'
-    expect(text.FIND(undefined, undefined)).to.equal(1)
-    expect(text.FIND('M', data)).to.equal(1)
-    expect(text.FIND('m', data)).to.equal(6)
-    expect(text.FIND('M', data, 3)).to.equal(8)
-    expect(text.FIND('M', undefined)).to.equal(error.value)
-    expect(text.FIND('M')).to.equal(error.na)
+    const data = 'Miriam McGovern'
+
     expect(text.FIND()).to.equal(error.na)
+    expect(text.FIND(null)).to.equal(error.na)
+    expect(text.FIND('')).to.equal(error.na)
+    expect(text.FIND('M')).to.equal(error.na)
+    expect(text.FIND('M', data, 3, 4)).to.equal(error.na)
+
+    expect(text.FIND('M', data, 'text')).to.equal(error.value)
+    expect(text.FIND('x', 'zebra')).to.equal(error.value)
+    expect(text.FIND('M', null)).to.equal(error.value)
+    expect(text.FIND(null, null, null)).to.equal(error.value)
+
+    expect(text.FIND(null, null)).to.equal(1)
+    expect(text.FIND('cG', data)).to.equal(9)
+    expect(text.FIND('M', data)).to.equal(1)
+    expect(text.FIND(12, 312)).to.equal(2)
+    expect(text.FIND('M', data, 3)).to.equal(8)
+    expect(text.FIND('M', data, '3')).to.equal(8)
+    expect(text.FIND('m', data, 3)).to.equal(6)
     expect(text.FIND(true, '12true')).to.equal(3)
     expect(text.FIND(12, '312')).to.equal(2)
     expect(text.FIND(12, 312)).to.equal(2)
+    expect(text.FIND(12, 312)).to.equal(2)
+
+    expect(text.FIND('Text', ['Hello', 'Number', 'Text1'])).to.eql([error.value, error.value, 1])
+
+    expect(
+      text.FIND('Brazil', [
+        ['Hello', 'Text'],
+        ['Brazil', 'I Love Brazil']
+      ])
+    ).to.eql([
+      [error.value, error.value],
+      [1, 8]
+    ])
+    expect(
+      text.FIND(
+        'Brazil',
+        [
+          ['Hello', 'Text'],
+          ['Brazil', 'I Love Brasil']
+        ],
+        9
+      )
+    ).to.eql([
+      [error.value, error.value],
+      [error.value, error.value]
+    ])
   })
 
   it('FIXED', () => {

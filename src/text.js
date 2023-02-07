@@ -263,12 +263,26 @@ export function EXACT(text1, text2) {
  * @returns
  */
 export function FIND(find_text, within_text, start_num) {
-  if (arguments.length < 2) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
+  }
+
+  if (Array.isArray(within_text)) {
+    return within_text.map((item) => FIND(find_text, item, start_num))
+  }
+
+  if (find_text === null && within_text === null && typeof start_num === 'undefined') {
+    return 1
   }
 
   find_text = utils.parseString(find_text)
   within_text = utils.parseString(within_text)
+
+  const varPosition = parseInt(start_num)
+  if (isNaN(varPosition) && typeof start_num !== 'undefined') {
+    return error.value
+  }
+
   start_num = start_num === undefined ? 0 : start_num
   const found_index = within_text.indexOf(find_text, start_num - 1)
 
