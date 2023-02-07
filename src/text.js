@@ -83,7 +83,21 @@ export function CHAR(number) {
  * @returns
  */
 export function CLEAN(text) {
-  if (utils.anyIsError(text)) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (text === '') {
+    return ''
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => CLEAN(item))
+  }
+
+  text = utils.parseString(text)
+
+  if (text instanceof Error) {
     return text
   }
 

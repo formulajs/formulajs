@@ -64,9 +64,42 @@ describe('Text', () => {
   })
 
   it('CLEAN', () => {
+    expect(text.CLEAN(null)).to.equal('')
     expect(text.CLEAN(undefined)).to.equal('')
+
+    expect(text.CLEAN()).to.equal(error.na)
+    expect(text.CLEAN('text1', 'text2')).to.equal(error.na)
+    expect(text.CLEAN(100, 22)).to.equal(error.na)
+
     expect(text.CLEAN(error.na)).to.equal(error.na)
-    expect(text.CLEAN('Monthly Report')).to.equal('Monthly Report')
+    expect(text.CLEAN('')).to.equal('')
+
+    expect(text.CLEAN(true)).to.equal('true')
+    expect(text.CLEAN(false)).to.equal('false')
+
+    expect(text.CLEAN('true')).to.equal('true')
+    expect(text.CLEAN('false')).to.equal('false')
+
+    expect(text.CLEAN('text')).to.equal('text')
+    expect(text.CLEAN(100)).to.equal('100')
+    expect(text.CLEAN(0)).to.equal('0')
+    expect(text.CLEAN(-1.8)).to.equal('-1.8')
+    expect(text.CLEAN(-0.9)).to.equal('-0.9')
+    expect(text.CLEAN(8.7)).to.equal('8.7')
+
+    expect(text.CLEAN([10, 5, 2])).to.eql(['10', '5', '2'])
+    expect(
+      text.CLEAN([
+        ['texto1', 'texto2'],
+        ['texto3', 'texto4']
+      ])
+    ).to.eql([
+      ['texto1', 'texto2'],
+      ['texto3', 'texto4']
+    ])
+
+    expect(text.CLEAN('\n\nOla!\n\ntudo bem?')).to.equal('Ola!tudo bem?')
+    expect(text.CLEAN('Monthly \t\t\tReport')).to.equal('Monthly Report')
   })
 
   it('CODE', () => {
