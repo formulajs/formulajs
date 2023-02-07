@@ -1818,6 +1818,9 @@ LOGNORM.INV = (probability, mean, standard_dev) => {
  * @returns
  */
 export function MAX() {
+  if (arguments.length === 0) {
+    return error.na
+  }
   const flatArguments = utils.flatten(arguments)
   const someError = utils.anyError.apply(undefined, flatArguments)
 

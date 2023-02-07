@@ -1059,10 +1059,29 @@ describe('Statistical', () => {
   })
 
   it('MAX', () => {
-    expect(statistical.MAX()).to.equal(0)
-    expect(statistical.MAX(undefined)).to.equal(0)
+    expect(statistical.MAX()).to.equal(error.na)
+
     expect(statistical.MAX(error.na)).to.equal(error.na)
-    expect(statistical.MAX([0.1, 0.2], [0.4, 0.8], [true, false])).to.approximately(0.8, 1e-9)
+    expect(statistical.MAX(error.na, 3, 1)).to.equal(error.na)
+    expect(statistical.MAX(error.div0)).to.equal(error.div0)
+    expect(statistical.MAX(error.div0, 3, 1)).to.equal(error.div0)
+
+    expect(statistical.MAX(null)).to.equal(0)
+    expect(statistical.MAX(true)).to.equal(0)
+    expect(statistical.MAX(false)).to.equal(0)
+    expect(statistical.MAX('')).to.equal(0)
+    expect(statistical.MAX('text')).to.equal(0)
+    expect(statistical.MAX(3)).to.equal(3)
+
+    expect(statistical.MAX(3, 1, null)).to.equal(3)
+    expect(statistical.MAX(3, 1)).to.equal(3)
+    expect(statistical.MAX(3, 6)).to.equal(6)
+    expect(statistical.MAX(3, 6, 'text')).to.equal(6)
+
+    expect(statistical.MAX([['a', 1, 2, 3, 'v', 4, 'c', 'g']])).to.equal(4)
+    expect(statistical.MAX([['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']])).to.equal(0)
+    expect(statistical.MAX([[0.1, 0.2]], [[0.4, 0.8]], [[true, false]])).to.approximately(0.8, 1e-9)
+
     expect(
       statistical.MAX([
         [0, 0.1, 0.2],
