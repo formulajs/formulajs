@@ -1855,6 +1855,14 @@ export function MAXA() {
   return range.length === 0 ? 0 : Math.max.apply(Math, range)
 }
 
+export function MAXIFS() {
+  throw new Error('MAXIFS is not implemented')
+}
+
+export function MINIFS() {
+  throw new Error('MINIFS is not implemented')
+}
+
 /**
  * Returns the median of the given numbers.
  *

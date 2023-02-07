@@ -509,6 +509,14 @@ describe('Math & Trig', () => {
     expect(mathTrig.LOG10('invalid')).to.equal(error.value)
   })
 
+  xit('MDETERM', () => {
+    expect(mathTrig.MDETERM).to.throw('MDETERM is not implemented')
+  })
+
+  xit('MINVERSE', () => {
+    expect(mathTrig.MINVERSE).to.throw('MINVERSE is not implemented')
+  })
+
   describe('MMULT', () => {
     it('should return the matrix product of two arrays', () => {
       expect(mathTrig.MMULT([[1], [2], [3]], [[4, 5, 6]])).to.deep.equal([
@@ -820,6 +828,10 @@ describe('Math & Trig', () => {
     expect(mathTrig.RAND(true)).to.equal(error.na)
   })
 
+  xit('RANDARRAY', () => {
+    expect(mathTrig.RANDARRAY).to.throw('RANDARRAY is not implemented')
+  })
+
   it('RANDBETWEEN', () => {
     expect(mathTrig.RANDBETWEEN(null, null)).to.equal(0)
     expect(mathTrig.RANDBETWEEN(5, 5)).to.equal(5)
@@ -995,6 +1007,10 @@ describe('Math & Trig', () => {
       ])
     ).to.approximately(0.7071032148228457, 1e-9)
     expect(mathTrig.SERIESSUM(1, 2, 3, 'invalid')).to.equal(error.value)
+  })
+
+  xit('SEQUENCE', () => {
+    expect(mathTrig.SEQUENCE).to.throw('SEQUENCE is not implemented')
   })
 
   it('SIGN', () => {

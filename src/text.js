@@ -293,6 +293,10 @@ export function FIND(find_text, within_text, start_num) {
   return found_index + 1
 }
 
+export function FINDB() {
+  throw new Error('FINDB is not implemented')
+}
+
 /**
  * Formats a number as text with a fixed number of decimals.
  *
@@ -367,6 +371,10 @@ export function LEFT(text, num_chars) {
   return text.substring(0, num_chars)
 }
 
+export function LEFTB() {
+  throw new Error('LEFTB is not implemented')
+}
+
 /**
  * Returns the number of characters in a text string
  *
@@ -395,6 +403,10 @@ export function LEN(text) {
   const textAsString = utils.parseString(text)
 
   return textAsString.length
+}
+
+export function LENB() {
+  throw new Error('LENB is not implemented')
 }
 
 /**
@@ -473,6 +485,10 @@ export function MID(text, start_num, num_chars) {
   const end = begin + num_chars
 
   return text.substring(begin, end)
+}
+
+export function MIDB() {
+  throw new Error('MIDB is not implemented')
 }
 
 // TODO
@@ -619,6 +635,10 @@ export function REPLACE(old_text, num_chars, length, new_text) {
   return old_text.substr(0, num_chars - 1) + new_text + old_text.substr(num_chars - 1 + length)
 }
 
+export function REPLACEB() {
+  throw new Error('REPLACEB is not implemented')
+}
+
 /**
  * Repeats text a given number of times.
  *
@@ -680,6 +700,10 @@ export function RIGHT(text, num_chars) {
   return text.substring(text.length - num_chars)
 }
 
+export function RIGHTB() {
+  throw new Error('RIGHTB is not implemented')
+}
+
 /**
  * Finds one text value within another (not case-sensitive)
  *
@@ -730,6 +754,10 @@ export function SEARCH(find_text, within_text, start_num) {
   let foundAt = within_text.toLowerCase().indexOf(find_text.toLowerCase(), start_num) + 1
 
   return foundAt === 0 ? error.value : foundAt
+}
+
+export function SEARCHB() {
+  throw new Error('SEARCHB is not implemented')
 }
 
 export function SPLIT(text, separator) {

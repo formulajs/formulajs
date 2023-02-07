@@ -1051,6 +1051,14 @@ export function LOG10(number) {
   return Math.log(number) / Math.log(10)
 }
 
+export function MDETERM() {
+  throw new Error('MDETERM is not implemented')
+}
+
+export function MINVERSE() {
+  throw new Error('MINVERSE is not implemented')
+}
+
 /**
  * Returns the matrix product of two arrays. The result is an array with the same number of rows as array1 and the same number of columns as array2.
  *
@@ -1361,6 +1369,10 @@ export function RAND() {
   return Math.random()
 }
 
+export function RANDARRAY() {
+  throw new Error('RANDARRAY is not implemented')
+}
+
 /**
  * Returns a random number between the numbers you specify.
  *
@@ -1619,6 +1631,10 @@ export function SERIESSUM(x, n, m, coefficients) {
   }
 
   return result
+}
+
+export function SEQUENCE() {
+  throw new Error('SEQUENCE is not implemented')
 }
 
 /**

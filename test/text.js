@@ -295,6 +295,10 @@ describe('Text', () => {
     ])
   })
 
+  xit('FINDB', () => {
+    expect(text.FINDB).to.throw('FINDB is not implemented')
+  })
+
   it('FIXED', () => {
     expect(text.FIXED(1234.567, 1)).to.equal('1,234.6')
     expect(text.FIXED(1234.567, -1)).to.equal('1,230')
@@ -364,6 +368,10 @@ describe('Text', () => {
     ])
   })
 
+  xit('LEFTB', () => {
+    expect(text.LEFTB).to.throw('LEFTB is not implemented')
+  })
+
   it('LEN', () => {
     expect(text.LEN(true)).to.equal(4)
     expect(text.LEN('four')).to.equal(4)
@@ -391,6 +399,10 @@ describe('Text', () => {
       [4, 6],
       [4, 6]
     ])
+  })
+
+  xit('LENB', () => {
+    expect(text.LENB).to.throw('LENB is not implemented')
   })
 
   it('LOWER', () => {
@@ -471,6 +483,10 @@ describe('Text', () => {
       ['te', 'te'],
       ['te', 'te']
     ])
+  })
+
+  xit('MIDB', () => {
+    expect(text.MIDB).to.throw('MIDB is not implemented')
   })
 
   describe('NUMBERVALUE', () => {
@@ -598,6 +614,10 @@ describe('Text', () => {
     ])
   })
 
+  xit('REPLACEB', () => {
+    expect(text.REPLACEB).to.throw('REPLACEB is not implemented')
+  })
+
   it('REPT', () => {
     expect(text.REPT(undefined, undefined)).to.equal('')
     expect(text.REPT('text', undefined)).to.equal('')
@@ -663,6 +683,10 @@ describe('Text', () => {
       ['text', 'ring'],
       ['date', 'mber']
     ])
+  })
+
+  xit('RIGHTB', () => {
+    expect(text.RIGHTB).to.throw('RIGHTB is not implemented')
   })
 
   it('SEARCH', () => {
@@ -775,6 +799,10 @@ describe('Text', () => {
       [error.value, error.value],
       [1, 8]
     ])
+  })
+
+  xit('SEARCHB', () => {
+    expect(text.SEARCHB).to.throw('SEARCHB is not implemented')
   })
 
   it('SPLIT', () => {

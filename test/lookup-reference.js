@@ -1898,6 +1898,10 @@ describe('Lookup Reference', () => {
     ).to.equal(error.value)
   })
 
+  xit('FILTER', () => {
+    expect(lookup.FILTER).to.throw('FILTER is not implemented')
+  })
+
   it('HLOOKUP', () => {
     expect(lookup.HLOOKUP()).to.equal(error.na)
     expect(lookup.HLOOKUP('')).to.equal(error.na)
@@ -2304,5 +2308,33 @@ describe('Lookup Reference', () => {
         expect(lookup.INDEX(row, 1, 1, 1)).to.equal(error.na)
       })
     })
+  })
+
+  xit('AREAS', () => {
+    expect(lookup.AREAS).to.throw('AREAS is not implemented')
+  })
+
+  xit('FORMULATEXT', () => {
+    expect(lookup.FORMULATEXT).to.throw('FORMULATEXT is not implemented')
+  })
+
+  xit('GETPIVOTDATA', () => {
+    expect(lookup.GETPIVOTDATA).to.throw('GETPIVOTDATA is not implemented')
+  })
+
+  xit('HYPERLINK', () => {
+    expect(lookup.HYPERLINK).to.throw('HYPERLINK is not implemented')
+  })
+
+  xit('INDIRECT', () => {
+    expect(lookup.INDIRECT).to.throw('INDIRECT is not implemented')
+  })
+
+  xit('OFFSET', () => {
+    expect(lookup.OFFSET).to.throw('OFFSET is not implemented')
+  })
+
+  xit('RTD', () => {
+    expect(lookup.RTD).to.throw('RTD is not implemented')
   })
 })

@@ -1105,6 +1105,14 @@ describe('Statistical', () => {
     ).to.equal(1)
   })
 
+  xit('MAXIFS', () => {
+    expect(statistical.MAXIFS).to.throw('MAXIFS is not implemented')
+  })
+
+  xit('MINIFS', () => {
+    expect(statistical.MINIFS).to.throw('MINIFS is not implemented')
+  })
+
   it('MEDIAN', () => {
     expect(statistical.MEDIAN()).to.equal(error.num)
     expect(statistical.MEDIAN(undefined)).to.equal(error.num)

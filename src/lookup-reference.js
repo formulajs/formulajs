@@ -590,6 +590,10 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup =
   return error.na
 }
 
+export function FILTER() {
+  throw new Error('FILTER is not implemented')
+}
+
 const startsWithNumber = /^-*\d/
 const startWithLetterOrNumber = /^\w/
 
@@ -716,4 +720,32 @@ export function ADDRESS(row, column, absoluteNum = 1, a1Style = true, sheetName)
     return result + a1Absolute[absoluteNum](row, columnsLetter)
   }
   return result + r1c1Absolute[absoluteNum](row, column)
+}
+
+export function AREAS() {
+  throw new Error('AREAS is not implemented')
+}
+
+export function FORMULATEXT() {
+  throw new Error('FORMULATEXT is not implemented')
+}
+
+export function GETPIVOTDATA() {
+  throw new Error('GETPIVOTDATA is not implemented')
+}
+
+export function HYPERLINK() {
+  throw new Error('HYPERLINK is not implemented')
+}
+
+export function INDIRECT() {
+  throw new Error('INDIRECT is not implemented')
+}
+
+export function OFFSET() {
+  throw new Error('OFFSET is not implemented')
+}
+
+export function RTD() {
+  throw new Error('RTD is not implemented')
 }
