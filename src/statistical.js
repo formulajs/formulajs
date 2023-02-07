@@ -42,6 +42,10 @@ export function AVEDEV() {
  * @returns
  */
 export function AVERAGE() {
+  if (arguments.length === 0) {
+    return error.na
+  }
+
   const flatArguments = utils.flatten(arguments)
   const flatArgumentsDefined = flatArguments.filter(utils.isDefined)
 
@@ -64,6 +68,10 @@ export function AVERAGE() {
   for (let i = 0; i < n; i++) {
     sum += range[i]
     count += 1
+  }
+
+  if (count === 0) {
+    return error.div0
   }
 
   result = sum / count

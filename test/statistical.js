@@ -22,18 +22,53 @@ describe('Statistical', () => {
   })
 
   it('AVERAGE', () => {
-    expect(statistical.AVERAGE(undefined)).to.equal(error.div0)
-    expect(statistical.AVERAGE(2, undefined, undefined)).to.equal(2)
+    expect(statistical.AVERAGE()).to.equal(error.na)
+    expect(statistical.AVERAGE('')).to.equal(error.div0)
+    expect(statistical.AVERAGE('text')).to.equal(error.div0)
+    expect(statistical.AVERAGE(true)).to.equal(error.div0)
+    expect(statistical.AVERAGE(false)).to.equal(error.div0)
+    expect(statistical.AVERAGE(2)).to.equal(2)
+    expect(statistical.AVERAGE('2')).to.equal(error.div0)
+    expect(statistical.AVERAGE('7', 8, 8)).to.equal(8)
+
+    expect(statistical.AVERAGE(null)).to.equal(error.div0)
+    expect(statistical.AVERAGE(2, null, null)).to.equal(2)
     expect(statistical.AVERAGE(error.na)).to.equal(error.na)
+    expect(statistical.AVERAGE(error.div0)).to.equal(error.div0)
+
+    expect(statistical.AVERAGE(9, 7, 9)).to.approximately(8.333333333, 1e-9)
     expect(statistical.AVERAGE(2, 4, 8, 16)).to.approximately(7.5, 1e-9)
+    expect(statistical.AVERAGE(2, 4, 8, 16, true, error.na)).to.equal(error.na)
+    expect(statistical.AVERAGE(2, 4, 8, 16, '', '')).to.approximately(7.5, 1e-9)
+
     expect(statistical.AVERAGE([2, 4, 8, 16])).to.approximately(7.5, 1e-9)
-    expect(statistical.AVERAGE([2, 4], [8, 16])).to.approximately(7.5, 1e-9)
+    expect(statistical.AVERAGE([[2, 4]], [[8, 16]])).to.approximately(7.5, 1e-9)
+
+    expect(
+      statistical.AVERAGE(
+        [[2, 4]],
+        [
+          [2, 4],
+          [8, 16]
+        ]
+      )
+    ).to.approximately(6, 1e-9)
+
     expect(
       statistical.AVERAGE([
         [2, 4],
         [8, 16]
       ])
     ).to.approximately(7.5, 1e-9)
+    expect(
+      statistical.AVERAGE(
+        [
+          [2, 4],
+          [8, 16]
+        ],
+        8
+      )
+    ).to.approximately(7.6, 1e-9)
     expect(
       statistical.AVERAGE([
         [2, 4],
