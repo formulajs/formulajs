@@ -1641,18 +1641,47 @@ export function KURT() {
  * @returns
  */
 export function LARGE(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
-  k = utils.parseNumber(k)
-
-  if (utils.anyIsError(array, k)) {
-    return array
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  if (k < 0 || array.length < k) {
+  if (!Array.isArray(array)) {
+    array = [array]
+  } else {
+    array = array.reduce((list, sub) => list.concat(sub), [])
+  }
+
+  if (k === '') {
     return error.value
   }
 
-  return array.sort((a, b) => b - a)[k - 1]
+  k = utils.parseNumber(k)
+
+  if (utils.anyIsError(k)) {
+    return k
+  }
+
+  if (k <= 0 || array.length < k) {
+    return error.num
+  }
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] instanceof Error) {
+      return array[i]
+    }
+  }
+
+  array = array.filter((item) => {
+    return typeof item === 'number'
+  })
+
+  array = array.sort((a, b) => b - a)
+
+  if (typeof array[k - 1] !== 'number') {
+    return error.num
+  }
+
+  return array[k - 1]
 }
 
 /**

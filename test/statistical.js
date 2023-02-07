@@ -971,11 +971,64 @@ describe('Statistical', () => {
   })
 
   it('LARGE', () => {
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 1)).to.equal(5)
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 3)).to.equal(3)
-    expect(statistical.LARGE([3, 5, 3], -3)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3], 4)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3, 'invalid', 4], 3)).to.equal(error.value)
+    expect(statistical.LARGE()).to.equal(error.na)
+    expect(statistical.LARGE('')).to.equal(error.na)
+    expect(statistical.LARGE(1)).to.equal(error.na)
+    expect(statistical.LARGE('text')).to.equal(error.na)
+    expect(statistical.LARGE(1, 2, 3)).to.equal(error.na)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 3, 5)).to.equal(error.na)
+    expect(statistical.LARGE([[1, 2, error.na, 4, 5]], 1)).to.equal(error.na)
+
+    expect(statistical.LARGE([[1, 2, error.div0, 4, 5]], 1)).to.equal(error.div0)
+
+    expect(statistical.LARGE([[1, 2, 3]], '')).to.equal(error.value)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 'text')).to.equal(error.value)
+
+    expect(statistical.LARGE([[1, 2, 3]], null)).to.equal(error.num)
+    expect(statistical.LARGE([[1, 2, 3]], 4)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3]], -3)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3, true]], 4)).to.equal(error.num)
+    expect(statistical.LARGE([[true, false]], 1)).to.equal(error.num)
+    expect(statistical.LARGE([['a', 'a', 'a', 'a', 'a']], 1)).to.equal(error.num)
+    expect(statistical.LARGE([[3, 5, 3, null, 4]], 5)).to.equal(error.num)
+    expect(statistical.LARGE(10, 2)).to.equal(error.num)
+    expect(statistical.LARGE(10, null)).to.equal(error.num)
+    expect(statistical.LARGE([[null, 2]], 2)).to.equal(error.num)
+    expect(statistical.LARGE([['3', 5, '3', null, 4]], 3)).to.equal(error.num)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5]], 0)).to.equal(error.num)
+
+    expect(statistical.LARGE([3, 4, 5, 2, 'text', 4, 6, 4, 7], 4)).to.equal(4)
+    expect(statistical.LARGE([3, 4, 5, 2, 3, 4, 6, 4, 7], 4)).to.equal(4)
+    expect(statistical.LARGE([1, 2, 'a', 4, 5, ''], 3)).to.equal(2)
+    expect(statistical.LARGE([[3, 5, 3, true]], 3)).to.equal(3)
+    expect(statistical.LARGE(10, 1)).to.equal(10)
+    expect(statistical.LARGE(10, true)).to.equal(10)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], 1)).to.equal(5)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], 3)).to.equal(3)
+    expect(statistical.LARGE([[1, 3, 2, 5, 4]], '3')).to.equal(3)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5]], 1)).to.equal(5)
+    expect(statistical.LARGE([[1, 2, 'a', 4, 5, '']], 1)).to.equal(5)
+    expect(statistical.LARGE(['a', 'a', 'a', 'a', 5], 1)).to.equal(5)
+    expect(statistical.LARGE([[3, 5, 3, null, 4]], 3)).to.equal(3)
+
+    expect(
+      statistical.LARGE(
+        [
+          [4, 5],
+          [8, 2]
+        ],
+        2
+      )
+    ).to.equal(5)
+    expect(
+      statistical.LARGE(
+        [
+          [1, 4],
+          [20, 23]
+        ],
+        3
+      )
+    ).to.equal(4)
   })
 
   it('LINEST', () => {
