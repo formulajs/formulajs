@@ -551,6 +551,14 @@ export function REGEXEXTRACT(text, regular_expression) {
   return match ? match[match.length > 1 ? match.length - 1 : 0] : null
 }
 
+export function REGEXREPLACE(text, regular_expression, replacement) {
+  if (arguments.length < 3) {
+    return error.na
+  }
+
+  return text.replace(new RegExp(regular_expression), replacement)
+}
+
 /**
  * Replaces characters within text
  *

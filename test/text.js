@@ -535,6 +535,13 @@ describe('Text', () => {
     expect(text.REGEXEXTRACT()).to.equal(error.na)
   })
 
+  it('REGEXREPLACE', () => {
+    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))', 'Me')).to.equal('(Me) between brackets')
+    expect(text.REGEXREPLACE('(Content) between brackets', '(([A-Za-z]+))')).to.equal(error.na)
+    expect(text.REGEXREPLACE('(Content) between brackets')).to.equal(error.na)
+    expect(text.REGEXREPLACE()).to.equal(error.na)
+  })
+
   it('REPLACE', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')
