@@ -2677,14 +2677,47 @@ export function SLOPE(known_y, known_x) {
  * @returns
  */
 export function SMALL(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
-  k = utils.parseNumber(k)
-
-  if (utils.anyIsError(array, k)) {
-    return array
+  if (arguments.length !== 2) {
+    return error.na
   }
 
-  return array.sort((a, b) => a - b)[k - 1]
+  if (!Array.isArray(array)) {
+    array = [array]
+  } else {
+    array = array.reduce((list, sub) => list.concat(sub), [])
+  }
+
+  if (k === '') {
+    return error.value
+  }
+
+  k = utils.parseNumber(k)
+
+  if (utils.anyIsError(k)) {
+    return k
+  }
+
+  if (k <= 0 || array.length < k) {
+    return error.num
+  }
+
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] instanceof Error) {
+      return array[i]
+    }
+  }
+
+  array = array.filter((item) => {
+    return typeof item === 'number'
+  })
+
+  array = array.sort((a, b) => a - b)
+
+  if (typeof array[k - 1] !== 'number') {
+    return error.num
+  }
+
+  return array[k - 1]
 }
 
 /**

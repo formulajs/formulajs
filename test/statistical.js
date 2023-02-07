@@ -1442,8 +1442,66 @@ describe('Statistical', () => {
   })
 
   it('SMALL', () => {
+    expect(statistical.SMALL()).to.equal(error.na)
+    expect(statistical.SMALL('')).to.equal(error.na)
+    expect(statistical.SMALL(1)).to.equal(error.na)
+    expect(statistical.SMALL('text')).to.equal(error.na)
+    expect(statistical.SMALL(1, 2, 3)).to.equal(error.na)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 3, 5)).to.equal(error.na)
+    expect(statistical.SMALL([[1, 2, error.na, 4, 5]], 1)).to.equal(error.na)
+
+    expect(statistical.SMALL([[1, 2, error.div0, 4, 5]], 1)).to.equal(error.div0)
+
+    expect(statistical.SMALL([[1, 2, 3]], '')).to.equal(error.value)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 'text')).to.equal(error.value)
+
+    expect(statistical.SMALL([[1, 2, 3]], null)).to.equal(error.num)
+    expect(statistical.SMALL([[1, 2, 3]], 4)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3]], -3)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3, true]], 4)).to.equal(error.num)
+    expect(statistical.SMALL([[true, false]], 1)).to.equal(error.num)
+    expect(statistical.SMALL([['a', 'a', 'a', 'a', 'a']], 1)).to.equal(error.num)
+    expect(statistical.SMALL([[3, 5, 3, null, 4]], 5)).to.equal(error.num)
+    expect(statistical.SMALL(10, 2)).to.equal(error.num)
+    expect(statistical.SMALL(10, null)).to.equal(error.num)
+    expect(statistical.SMALL([[null, 2]], 2)).to.equal(error.num)
+    expect(statistical.SMALL([['3', 5, '3', null, 4]], 3)).to.equal(error.num)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5]], 0)).to.equal(error.num)
+
+    expect(statistical.SMALL([[3, 5, 3, true]], 3)).to.equal(5)
+    expect(statistical.SMALL([3, 4, 5, 2, 'text', 4, 6, 4, 7], 4)).to.equal(4)
     expect(statistical.SMALL([3, 4, 5, 2, 3, 4, 6, 4, 7], 4)).to.equal(4)
-    expect(statistical.SMALL([3, 4, 5, 2, 'invalid', 4, 6, 4, 7], 4)).to.equal(error.value)
+    expect(statistical.SMALL([1, 2, 'a', 4, 5, ''], 3)).to.equal(4)
+    expect(statistical.SMALL([[3, 5, 3, true]], 3)).to.equal(5)
+    expect(statistical.SMALL(10, 1)).to.equal(10)
+    expect(statistical.SMALL(10, true)).to.equal(10)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], 1)).to.equal(1)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], 3)).to.equal(3)
+    expect(statistical.SMALL([[10, 5]], '2')).to.equal(10)
+    expect(statistical.SMALL([[1, 3, 2, 5, 4]], '3')).to.equal(3)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5]], 1)).to.equal(1)
+    expect(statistical.SMALL([[1, 2, 'a', 4, 5, '']], 1)).to.equal(1)
+    expect(statistical.SMALL(['a', 'a', 'a', 'a', 5], 1)).to.equal(5)
+    expect(statistical.SMALL([[3, 5, 3, null, 4]], 3)).to.equal(4)
+
+    expect(
+      statistical.SMALL(
+        [
+          [4, 5],
+          [8, 2]
+        ],
+        2
+      )
+    ).to.equal(4)
+    expect(
+      statistical.SMALL(
+        [
+          [1, 4],
+          [20, 23]
+        ],
+        3
+      )
+    ).to.equal(20)
   })
 
   it('STANDARDIZE', () => {
