@@ -314,14 +314,54 @@ describe('Text', () => {
   })
 
   it('LEFT', () => {
+    expect(text.LEFT('Sale Price', 4, 3)).to.equal(error.na)
+    expect(text.LEFT()).to.equal(error.na)
+
+    expect(text.LEFT('')).to.equal('')
+    expect(text.LEFT(null)).to.equal('')
+
+    expect(text.LEFT('Sweeden')).to.equal('S')
+    expect(text.LEFT(true)).to.equal('t')
+    expect(text.LEFT(42)).to.equal('4')
+    expect(text.LEFT(4.2)).to.equal('4')
+    expect(text.LEFT(4.2, 2)).to.equal('4.')
+    expect(text.LEFT('Sale Price', 4)).to.equal('Sale')
+
     expect(text.LEFT(error.na, 2)).to.equal(error.na)
     expect(text.LEFT('text', error.na)).to.equal(error.na)
-    expect(text.LEFT(undefined, undefined)).to.equal('')
-    expect(text.LEFT(undefined, 3)).to.equal('')
-    expect(text.LEFT('Sale Price', 4)).to.equal('Sale')
-    expect(text.LEFT('Sweeden')).to.equal('S')
-    expect(text.LEFT(42)).to.equal('4')
-    expect(text.LEFT(true)).to.equal('t')
+
+    expect(text.LEFT(5, 'Sale Price')).to.equal(error.value)
+    expect(text.LEFT('something', 'invalid')).to.equal(error.value)
+
+    expect(text.LEFT(null, null)).to.equal('')
+    expect(text.LEFT(null, 3)).to.equal('')
+
+    expect(text.LEFT(['text1', 'text2', 'text3'])).to.eql(['t', 't', 't'])
+    expect(text.LEFT([null, 'text2', 'text3'])).to.eql(['', 't', 't'])
+    //expect(text.LEFT(['text1', 'text2', 'text3'], ['text1', 'text2', 'text3'])).to.eql([error.value, error.value, error.value])
+    //expect(text.LEFT(['text1', 'text2', 'text3'], [1, 2, 3])).to.eql(['t', 'te', 'tex'])
+
+    expect(
+      text.LEFT([
+        ['text', 'string'],
+        ['date', 'number']
+      ])
+    ).to.eql([
+      ['t', 's'],
+      ['d', 'n']
+    ])
+    expect(
+      text.LEFT(
+        [
+          ['text', 'string'],
+          ['date', 'number']
+        ],
+        4
+      )
+    ).to.eql([
+      ['text', 'stri'],
+      ['date', 'numb']
+    ])
   })
 
   it('LEN', () => {

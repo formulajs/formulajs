@@ -344,6 +344,14 @@ export function FIXED(number, decimals = 2, no_commas = false) {
 export function LEFT(text, num_chars) {
   const someError = utils.anyError(text, num_chars)
 
+  if (arguments.length < 1 || arguments.length > 2) {
+    return error.na
+  }
+
+  if (Array.isArray(text)) {
+    return text.map((item) => LEFT(item, num_chars))
+  }
+
   if (someError) {
     return someError
   }
