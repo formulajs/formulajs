@@ -785,7 +785,18 @@ describe('Text', () => {
   describe('SUBSTITUTE', () => {
     it('should substitute all occurrences of a string for another string', () => {
       expect(text.SUBSTITUTE('Jim Alateras', 'Jim', 'James')).to.equal('James Alateras')
+      expect(text.SUBSTITUTE('Jim Alateras', 'Jim', 2)).to.equal('2 Alateras')
       expect(text.SUBSTITUTE('Jim Alateras', 'im', 'ames')).to.equal('James Alateras')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b')).to.equal('bubble')
+      expect(text.SUBSTITUTE('tuttle', 't', null)).to.equal('ule')
+      expect(text.SUBSTITUTE('tuttle', null, 'b')).to.equal('tuttle')
+      expect(text.SUBSTITUTE(null, 't', 'b')).to.equal('')
+      expect(text.SUBSTITUTE(true, 't', 'b')).to.equal('TRUE')
+      expect(text.SUBSTITUTE(true, 'T', 'b')).to.equal('bRUE')
+      expect(text.SUBSTITUTE(false, 'F', 'b')).to.equal('bALSE')
+      expect(text.SUBSTITUTE('tuttle', true, 'b')).to.equal('tuttle')
+      expect(text.SUBSTITUTE('tuttle', 't', true)).to.equal('tuttle')
+
       expect(text.SUBSTITUTE('Jim Alateras', '', 'ames')).to.equal('Jim Alateras')
       expect(text.SUBSTITUTE('Jim Alateras', undefined, 'ames')).to.equal('Jim Alateras')
       expect(text.SUBSTITUTE('Jim, Alateras, Sr.', ',', '')).to.equal('Jim Alateras Sr.')
@@ -798,11 +809,25 @@ describe('Text', () => {
     })
 
     it('should return an #N/A error if not enough inputs', () => {
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 1, 2)).to.equal(error.na)
       expect(text.SUBSTITUTE('Jim Alateras')).to.equal(error.na)
+      expect(text.SUBSTITUTE('Jim Alateras', 'James')).to.equal(error.na)
+      expect(text.SUBSTITUTE('')).to.equal(error.na)
+      expect(text.SUBSTITUTE(null)).to.equal(error.na)
       expect(text.SUBSTITUTE()).to.equal(error.na)
     })
 
     it('should substitute the nth occurrence of a string for another string', () => {
+      expect(text.SUBSTITUTE('tuttle', null, 'b', 1)).to.equal('tuttle')
+      expect(text.SUBSTITUTE('tuttle', 't', null, 1)).to.equal('uttle')
+      expect(text.SUBSTITUTE('tuttle', 't', ' ', 1)).to.equal(' uttle')
+      expect(text.SUBSTITUTE('tuttle', 'P', 'b', 1)).to.equal('tuttle')
+      expect(text.SUBSTITUTE('tuttle', 'T', 'b', 1)).to.equal('tuttle')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 1)).to.equal('buttle')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 1)).to.equal('buttle')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 2)).to.equal('tubtle')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 3)).to.equal('tutble')
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 4)).to.equal('tuttle')
       expect(text.SUBSTITUTE('a-a-a', ':', '', 1)).to.equal('a-a-a')
       expect(text.SUBSTITUTE('a-a-a', '-', ':', '2')).to.equal('a-a:a')
       expect(text.SUBSTITUTE('a-a-a', '-', ':', '2.5')).to.equal('a-a:a')
@@ -813,6 +838,10 @@ describe('Text', () => {
     })
 
     it('should return a #VALUE! error if occurrence is not a number greater than or equal to 1', () => {
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', 'text')).to.equal(error.value)
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', null)).to.equal(error.value)
+      expect(text.SUBSTITUTE('tuttle', 't', 'b', true)).to.equal(error.value)
+
       expect(text.SUBSTITUTE('a-a-a', '-', ':', '')).to.equal(error.value)
       expect(text.SUBSTITUTE('a-a-a', '-', ':', 'x')).to.equal(error.value)
       expect(text.SUBSTITUTE('a-a-a', '-', ':', '-1')).to.equal(error.value)

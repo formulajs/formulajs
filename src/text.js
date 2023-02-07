@@ -748,8 +748,28 @@ export function SPLIT(text, separator) {
  * @returns
  */
 export function SUBSTITUTE(text, old_text, new_text, instance_num) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || arguments.length > 4) {
     return error.na
+  }
+
+  if (new_text === null) {
+    new_text = ''
+  }
+
+  if (text === null) {
+    text = ''
+  }
+
+  if (typeof text === 'boolean') {
+    text = text.toString().toUpperCase()
+  }
+
+  if (typeof new_text === 'boolean') {
+    return text
+  }
+
+  if (typeof instance_num === 'boolean') {
+    return error.value
   }
 
   if (!text || !old_text) {
@@ -763,16 +783,16 @@ export function SUBSTITUTE(text, old_text, new_text, instance_num) {
       return error.value
     }
 
-    let index = 0
+    let index = text.indexOf(old_text)
     let i = 0
 
-    while (index > -1 && text.indexOf(old_text, index) > -1) {
-      index = text.indexOf(old_text, index + 1)
+    while (index > -1) {
       i++
 
-      if (index > -1 && i === instance_num) {
+      if (i === instance_num) {
         return text.substring(0, index) + new_text + text.substring(index + old_text.length)
       }
+      index = text.indexOf(old_text, index + 1)
     }
 
     return text
