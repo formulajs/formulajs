@@ -183,11 +183,6 @@ describe('Information', () => {
     expect(information.ISEVEN('08:45 AM')).to.equal(true)
   })
 
-  // TODO
-  it('ISFORMULA', () => {
-    expect(information.ISFORMULA).to.throw('ISFORMULA is not implemented')
-  })
-
   it('ISLOGICAL', () => {
     expect(information.ISLOGICAL(true)).to.equal(true)
     expect(information.ISLOGICAL(false)).to.equal(true)

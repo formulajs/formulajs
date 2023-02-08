@@ -73,30 +73,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.ACOTH('invalid')).to.equal(error.value)
   })
 
-  // TODO: more edge cases, explore the second argument (options)
-  it('AGGREGATE', () => {
-    expect(mathTrig.AGGREGATE(1, 4, [1, 2, 3])).to.equal(2)
-    expect(mathTrig.AGGREGATE(2, 4, [1, 2, 3, 'does not count'])).to.equal(3)
-    expect(mathTrig.AGGREGATE(3, 4, [1, 2, 3, 'counts'])).to.equal(4)
-    expect(mathTrig.AGGREGATE(4, 4, [1, 2, 3])).to.equal(3)
-    expect(mathTrig.AGGREGATE(5, 4, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.AGGREGATE(6, 4, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.AGGREGATE(7, 4, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.AGGREGATE(8, 4, [1, 2, 3])).to.approximately(0.816496580927726, 1e-9)
-    expect(mathTrig.AGGREGATE(9, 4, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.AGGREGATE(10, 4, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.AGGREGATE(11, 4, [1, 2, 3])).to.approximately(0.6666666666666666, 1e-9)
-    expect(mathTrig.AGGREGATE(12, 4, [1, 2, 3])).to.equal(2)
-    expect(mathTrig.AGGREGATE(13, 4, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.AGGREGATE(14, 4, [1, 2, 3], 2)).to.equal(2)
-    expect(mathTrig.AGGREGATE(15, 4, [1, 2, 3], 2)).to.equal(2)
-    expect(mathTrig.AGGREGATE(16, 4, [1, 2, 3], 0.4)).to.approximately(1.8, 1e-9)
-    expect(mathTrig.AGGREGATE(17, 4, [1, 2, 3], 2)).to.equal(2)
-    expect(mathTrig.AGGREGATE(18, 4, [1, 2, 3], 0.4)).to.approximately(1.6, 1e-9)
-    expect(mathTrig.AGGREGATE(19, 4, [1, 2, 3], 2)).to.equal(2)
-    expect(mathTrig.AGGREGATE('invalid', 4, [1, 2, 3], 2)).to.equal(error.value)
-  })
-
   it('ARABIC', () => {
     expect(mathTrig.ARABIC(undefined)).to.equal(0)
     expect(mathTrig.ARABIC(error.na)).to.equal(error.na)
@@ -1051,32 +1027,6 @@ describe('Math & Trig', () => {
     expect(mathTrig.SQRTPI('invalid')).to.equal(error.value)
   })
 
-  it('SUBTOTAL', () => {
-    expect(mathTrig.SUBTOTAL(1, [1, 2, 3])).to.equal(2)
-    expect(mathTrig.SUBTOTAL(2, [1, 2, 3, 'does not count'])).to.equal(3)
-    expect(mathTrig.SUBTOTAL(3, [1, 2, 3, 'counts'])).to.equal(4)
-    expect(mathTrig.SUBTOTAL(4, [1, 2, 3])).to.equal(3)
-    expect(mathTrig.SUBTOTAL(5, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(6, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.SUBTOTAL(7, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(8, [1, 2, 3])).to.approximately(0.816496580927726, 1e-9)
-    expect(mathTrig.SUBTOTAL(9, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.SUBTOTAL(10, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(11, [1, 2, 3])).to.approximately(0.6666666666666666, 1e-9)
-    expect(mathTrig.SUBTOTAL(101, [1, 2, 3])).to.equal(2)
-    expect(mathTrig.SUBTOTAL(102, [1, 2, 3, 'does not count'])).to.equal(3)
-    expect(mathTrig.SUBTOTAL(103, [1, 2, 3, 'counts'])).to.equal(4)
-    expect(mathTrig.SUBTOTAL(104, [1, 2, 3])).to.equal(3)
-    expect(mathTrig.SUBTOTAL(105, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(106, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.SUBTOTAL(107, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(108, [1, 2, 3])).to.approximately(0.816496580927726, 1e-9)
-    expect(mathTrig.SUBTOTAL(109, [1, 2, 3])).to.equal(6)
-    expect(mathTrig.SUBTOTAL(110, [1, 2, 3])).to.equal(1)
-    expect(mathTrig.SUBTOTAL(111, [1, 2, 3])).to.approximately(0.6666666666666666, 1e-9)
-    expect(mathTrig.SUBTOTAL('invalid', [1, 2, 3])).to.equal(error.value)
-  })
-
   it('SUM', () => {
     expect(mathTrig.SUM()).to.equal(error.na)
     expect(mathTrig.SUM(1, 2, error.na)).to.equal(error.na)
@@ -1262,58 +1212,6 @@ describe('Math & Trig', () => {
     ).to.equal(error.value)
 
     expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(error.value)
-  })
-
-  it('SUMPRODUCT', () => {
-    expect(
-      mathTrig.SUMPRODUCT(
-        [
-          [3, 4],
-          [8, error.na]
-        ],
-        [
-          [2, 7],
-          [6, 7]
-        ]
-      )
-    ).to.equal(error.na)
-    expect(mathTrig.SUMPRODUCT([[undefined, undefined]], [[undefined, undefined]])).to.equal(0)
-    expect(
-      mathTrig.SUMPRODUCT(
-        [
-          [3, 4],
-          [8, 6],
-          [1, 9]
-        ],
-        [
-          [2, 7],
-          [6, 7],
-          [5, 3]
-        ]
-      )
-    ).to.equal(156)
-
-    expect(mathTrig.SUMPRODUCT([[1], [4], [10]], [[0.55], [0.3], [0.1]])).to.approximately(2.75, 1e-9)
-
-    expect(mathTrig.SUMPRODUCT([1, 4, 10], [0.55, 0.3, 0.1])).to.approximately(2.75, 1e-9)
-
-    expect(
-      mathTrig.SUMPRODUCT(
-        [
-          [3, 4],
-          [8, 6],
-          [1, 9]
-        ],
-        [
-          [2, 'invalid'],
-          [6, 7],
-          [5, 3]
-        ]
-      )
-    ).to.equal(error.value)
-
-    expect(mathTrig.SUMPRODUCT([8, 'invalid'], [5, 3])).to.equal(error.value)
-    expect(mathTrig.SUMPRODUCT()).to.equal(error.value)
   })
 
   it('SUMSQ', () => {

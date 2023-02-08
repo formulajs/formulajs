@@ -56,49 +56,6 @@ describe('Lookup Reference', () => {
     ])
   })
 
-  it('COLUMN', () => {
-    expect(lookup.COLUMN()).to.equal(error.na)
-    expect(
-      lookup.COLUMN([
-        [1, 2],
-        [2, 3],
-        [2, 4]
-      ])
-    ).to.equal(error.na)
-    expect(
-      lookup.COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        -1
-      )
-    ).to.equal(error.num)
-    expect(lookup.COLUMN('hello', 1)).to.equal(error.value)
-    expect(
-      lookup.COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        0
-      )
-    ).to.eql([[1], [2], [2]])
-    expect(
-      lookup.COLUMN(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        1
-      )
-    ).to.eql([[2], [3], [4]])
-    expect(typeof lookup.COLUMN([], 0)).to.equal('undefined')
-  })
-
   it('COLUMNS', () => {
     expect(lookup.COLUMNS('')).to.equal(1)
     expect(lookup.COLUMNS(1)).to.equal(1)
@@ -2320,18 +2277,6 @@ describe('Lookup Reference', () => {
 
   xit('GETPIVOTDATA', () => {
     expect(lookup.GETPIVOTDATA).to.throw('GETPIVOTDATA is not implemented')
-  })
-
-  xit('HYPERLINK', () => {
-    expect(lookup.HYPERLINK).to.throw('HYPERLINK is not implemented')
-  })
-
-  xit('INDIRECT', () => {
-    expect(lookup.INDIRECT).to.throw('INDIRECT is not implemented')
-  })
-
-  xit('OFFSET', () => {
-    expect(lookup.OFFSET).to.throw('OFFSET is not implemented')
   })
 
   xit('RTD', () => {

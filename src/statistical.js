@@ -1864,32 +1864,6 @@ export function MINIFS() {
 }
 
 /**
- * Returns the median of the given numbers.
- *
- * Category: Statistical
- *
- * @param {*} args number1, number2, ... Number1 is required, subsequent numbers are optional. 1 to 255 numbers for which you want the median.
- * @returns
- */
-export function MEDIAN() {
-  const flatArguments = utils.flatten(arguments)
-  const someError = utils.anyError.apply(undefined, flatArguments)
-
-  if (someError) {
-    return someError
-  }
-
-  const range = utils.arrayValuesToNumbers(flatArguments)
-  let result = jStat.median(range)
-
-  if (isNaN(result)) {
-    result = error.num
-  }
-
-  return result
-}
-
-/**
  * Returns the minimum value in a list of arguments.
  *
  * Category: Statistical

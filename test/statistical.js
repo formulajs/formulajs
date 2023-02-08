@@ -1113,14 +1113,6 @@ describe('Statistical', () => {
     expect(statistical.MINIFS).to.throw('MINIFS is not implemented')
   })
 
-  it('MEDIAN', () => {
-    expect(statistical.MEDIAN()).to.equal(error.num)
-    expect(statistical.MEDIAN(undefined)).to.equal(error.num)
-    expect(statistical.MEDIAN(error.na)).to.equal(error.na)
-    expect(statistical.MEDIAN(1, 2, 3, 4, 5)).to.equal(3)
-    expect(statistical.MEDIAN(1, 2, 3, 4, 5, 6)).to.approximately(3.5, 1e-9)
-  })
-
   it('MIN', () => {
     expect(statistical.MIN()).to.equal(error.na)
 

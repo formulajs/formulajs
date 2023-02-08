@@ -844,61 +844,6 @@ export function T(value) {
 }
 
 /**
- * Formats a number and converts it to text.
- *
- * Category: Text
- *
- * @param {*} value A numeric value that you want to be converted into text.
- * @param {*} format_text A text string that defines the formatting that you want to be applied to the supplied value.
- * @returns
- */
-export function TEXT(value, format_text) {
-  if (value === undefined || value instanceof Error || format_text instanceof Error) {
-    return error.na
-  }
-
-  if (format_text === undefined || format_text === null) {
-    return ''
-  }
-
-  if (typeof format_text === 'number') {
-    return String(format_text)
-  }
-
-  if (typeof format_text !== 'string') {
-    return error.value
-  }
-
-  const currencySymbol = format_text.startsWith('$') ? '$' : ''
-  const isPercent = format_text.endsWith('%')
-  format_text = format_text.replace(/%/g, '').replace(/\$/g, '')
-
-  // count all 0s after the decimal point
-  const decimalPlaces = format_text.split('.')[1].match(/0/g).length
-
-  const noCommas = !format_text.includes(',')
-
-  if (isPercent) {
-    value = value * 100
-  }
-
-  value = FIXED(value, decimalPlaces, noCommas)
-
-  if (value.startsWith('-')) {
-    value = value.replace('-', '')
-    value = '-' + currencySymbol + value
-  } else {
-    value = currencySymbol + value
-  }
-
-  if (isPercent) {
-    value = value + '%'
-  }
-
-  return value
-}
-
-/**
  * Combines the text from multiple ranges and/or strings.
  *
  * Category: Text

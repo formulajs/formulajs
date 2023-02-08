@@ -148,21 +148,6 @@ export function ISEVEN(number) {
   return !(Math.floor(Math.abs(number)) & 1)
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns TRUE if there is a reference to a value that contains a formula.
- *
- * Category: Information
- *
- * @param {*} reference Reference is a reference to the value you want to test. Reference can be a value reference, a formula, or a name that refers to a value.
- * @returns
- */
-export function ISFORMULA() {
-  throw new Error('ISFORMULA is not implemented')
-}
-
 /**
  * Returns TRUE if the value is a logical value.
  *

@@ -1,7 +1,6 @@
 import * as error from './utils/error.js'
 import * as evalExpression from './utils/criteria-eval.js'
 import * as information from './information.js'
-import * as statistical from './statistical.js'
 import * as utils from './utils/common.js'
 
 /**
@@ -128,68 +127,6 @@ export function ACOTH(number) {
   }
 
   return result
-}
-
-// TODO: use options
-/**
- * Returns an aggregate in a list or database.
- *
- * Category: Math and trigonometry
- *
- * @param {*} function_num A number 1 to 19 that specifies which function to use.
- * @param {*} options A numerical value that determines which values to ignore in the evaluation range for the function. Note: The function will not ignore hidden rows, nested subtotals or nested aggregates if the array argument includes a calculation, for example: =AGGREGATE(14,3,A1:A100*(A1:A100>0),1)
- * @param {*} ref1 The first numeric argument for functions that take multiple numeric arguments for which you want the aggregate value.
- * @param {*} ref2 Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of values for which you want the aggregate value. Ref2 is a second argument that is required for certain functions.
- * @returns
- */
-export function AGGREGATE(function_num, options, ref1, ref2) {
-  function_num = utils.parseNumber(function_num)
-  options = utils.parseNumber(function_num)
-
-  if (utils.anyIsError(function_num, options)) {
-    return error.value
-  }
-
-  switch (function_num) {
-    case 1:
-      return statistical.AVERAGE(ref1)
-    case 2:
-      return statistical.COUNT(ref1)
-    case 3:
-      return statistical.COUNTA(ref1)
-    case 4:
-      return statistical.MAX(ref1)
-    case 5:
-      return statistical.MIN(ref1)
-    case 6:
-      return PRODUCT(ref1)
-    case 7:
-      return statistical.STDEV.S(ref1)
-    case 8:
-      return statistical.STDEV.P(ref1)
-    case 9:
-      return SUM(ref1)
-    case 10:
-      return statistical.VAR.S(ref1)
-    case 11:
-      return statistical.VAR.P(ref1)
-    case 12:
-      return statistical.MEDIAN(ref1)
-    case 13:
-      return statistical.MODE.SNGL(ref1)
-    case 14:
-      return statistical.LARGE(ref1, ref2)
-    case 15:
-      return statistical.SMALL(ref1, ref2)
-    case 16:
-      return statistical.PERCENTILE.INC(ref1, ref2)
-    case 17:
-      return statistical.QUARTILE.INC(ref1, ref2)
-    case 18:
-      return statistical.PERCENTILE.EXC(ref1, ref2)
-    case 19:
-      return statistical.QUARTILE.EXC(ref1, ref2)
-  }
 }
 
 /**
@@ -1738,71 +1675,6 @@ export function SQRTPI(number) {
 }
 
 /**
- * Returns a subtotal in a list or database.
- *
- * Category: Math and trigonometry
- *
- * @param {*} function_num The number 1-11 or 101-111 that specifies the function to use for the subtotal. 1-11 includes manually-hidden rows, while 101-111 excludes them; filtered-out values are always excluded.
- * @param {*} ref1 The first named range or reference for which you want the subtotal.
- * @returns
- */
-export function SUBTOTAL(function_num, ref1) {
-  function_num = utils.parseNumber(function_num)
-
-  if (function_num instanceof Error) {
-    return function_num
-  }
-
-  switch (function_num) {
-    case 1:
-      return statistical.AVERAGE(ref1)
-    case 2:
-      return statistical.COUNT(ref1)
-    case 3:
-      return statistical.COUNTA(ref1)
-    case 4:
-      return statistical.MAX(ref1)
-    case 5:
-      return statistical.MIN(ref1)
-    case 6:
-      return PRODUCT(ref1)
-    case 7:
-      return statistical.STDEV.S(ref1)
-    case 8:
-      return statistical.STDEV.P(ref1)
-    case 9:
-      return SUM(ref1)
-    case 10:
-      return statistical.VAR.S(ref1)
-    case 11:
-      return statistical.VAR.P(ref1)
-    // no hidden values for us
-    case 101:
-      return statistical.AVERAGE(ref1)
-    case 102:
-      return statistical.COUNT(ref1)
-    case 103:
-      return statistical.COUNTA(ref1)
-    case 104:
-      return statistical.MAX(ref1)
-    case 105:
-      return statistical.MIN(ref1)
-    case 106:
-      return PRODUCT(ref1)
-    case 107:
-      return statistical.STDEV.S(ref1)
-    case 108:
-      return statistical.STDEV.P(ref1)
-    case 109:
-      return SUM(ref1)
-    case 110:
-      return statistical.VAR.S(ref1)
-    case 111:
-      return statistical.VAR.P(ref1)
-  }
-}
-
-/**
  * Adds its arguments.
  *
  * Category: Math and trigonometry
@@ -1981,74 +1853,6 @@ export function SUMIFS() {
 
     if (isMeetCondition) {
       result += range[i]
-    }
-  }
-
-  return result
-}
-
-/**
- * Returns the sum of the products of corresponding array components.
- *
- * Category: Math and trigonometry
- *
- * @returns
- */
-export function SUMPRODUCT() {
-  if (!arguments || arguments.length === 0) {
-    return error.value
-  }
-
-  const arrays = arguments.length + 1
-  let result = 0
-  let product
-  let k
-  let _i
-  let _ij
-
-  for (let i = 0; i < arguments[0].length; i++) {
-    if (!(arguments[0][i] instanceof Array)) {
-      product = 1
-
-      for (k = 1; k < arrays; k++) {
-        const _i_arg = arguments[k - 1][i]
-
-        if (_i_arg instanceof Error) {
-          return _i_arg
-        }
-
-        _i = utils.parseNumber(_i_arg)
-
-        if (_i instanceof Error) {
-          return _i
-        }
-
-        product *= _i
-      }
-
-      result += product
-    } else {
-      for (let j = 0; j < arguments[0][i].length; j++) {
-        product = 1
-
-        for (k = 1; k < arrays; k++) {
-          const _ij_arg = arguments[k - 1][i][j]
-
-          if (_ij_arg instanceof Error) {
-            return _ij_arg
-          }
-
-          _ij = utils.parseNumber(_ij_arg)
-
-          if (_ij instanceof Error) {
-            return _ij
-          }
-
-          product *= _ij
-        }
-
-        result += product
-      }
     }
   }
 

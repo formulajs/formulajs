@@ -100,35 +100,6 @@ export function CHOOSE() {
 }
 
 /**
- * Returns the column number of a reference.
- *
- * Category: Lookup and reference
- *
- * @param {*} reference the value or range of values for which you want to return the column number.
- * @param {*} index
- * @returns
- */
-export function COLUMN(reference, index) {
-  if (arguments.length !== 2) {
-    return error.na
-  }
-
-  if (index < 0) {
-    return error.num
-  }
-
-  if (!(reference instanceof Array) || typeof index !== 'number') {
-    return error.value
-  }
-
-  if (reference.length === 0) {
-    return undefined
-  }
-
-  return jStat.col(reference, index)
-}
-
-/**
  * Returns the number of columns in a reference.
  *
  * Category: Lookup and reference
@@ -732,18 +703,6 @@ export function FORMULATEXT() {
 
 export function GETPIVOTDATA() {
   throw new Error('GETPIVOTDATA is not implemented')
-}
-
-export function HYPERLINK() {
-  throw new Error('HYPERLINK is not implemented')
-}
-
-export function INDIRECT() {
-  throw new Error('INDIRECT is not implemented')
-}
-
-export function OFFSET() {
-  throw new Error('OFFSET is not implemented')
 }
 
 export function RTD() {
