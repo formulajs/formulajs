@@ -912,10 +912,6 @@ export function TRIM(text) {
     return ''
   }
 
-  if (text === '') {
-    return error.undefined
-  }
-
   if (Array.isArray(text)) {
     return text.map((item) => TRIM(item))
   }

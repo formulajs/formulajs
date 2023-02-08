@@ -936,7 +936,7 @@ describe('Text', () => {
     expect(text.TRIM('false')).to.equal('false')
 
     expect(text.TRIM()).to.equal(error.na)
-    expect(text.TRIM('')).to.equal(error.undefined)
+    expect(text.TRIM('')).to.equal('')
     expect(text.TRIM(undefined)).to.equal('')
     expect(text.TRIM(error.na)).to.equal(error.na)
     expect(text.TRIM(' more  spaces ')).to.equal('more spaces')
