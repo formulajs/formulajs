@@ -1,15 +1,14 @@
-import * as error from './error.js'
-import * as utils from './common.js'
+import * as error from './utils/error.js'
+import * as utils from './utils/common.js'
 
-import { POWER } from './../math-trig.js'
+import { POWER } from './math-trig.js'
 
 /**
- * Following functions are part of Formula.js only and not found in Excel.
- * Purpose of these functions is to implement an Excel like behaviour for fundamental math symbols such as +, -, /, *, etc.
+ * The functions in this file refer to the functions of the google sheets operator category
  */
 
 /**
- * Formula.js only.
+ * Returns the sum of two numbers. Equivalent to the '+' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -32,7 +31,7 @@ export function ADD(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns one number divided by another. Equivalent to the '/' operator.
  *
  * @param {*} dividend
  * @param {*} divisor
@@ -59,7 +58,7 @@ export function DIVIDE(dividend, divisor) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if two specified values are equal and 'FALSE' otherwise. Equivalent to the '=' operator.
  *
  * @param {*} value1
  * @param {*} value2
@@ -90,7 +89,7 @@ export function EQ(value1, value2) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if the first argument is strictly greater than the second, and 'FALSE' otherwise. Equivalent to the '>' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -127,7 +126,7 @@ export function GT(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if the first argument is greater than or equal to the second, and 'FALSE' otherwise. Equivalent to the '>=' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -156,7 +155,7 @@ export function GTE(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if the first argument is strictly less than the second, and 'FALSE' otherwise. Equivalent to the '<' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -185,7 +184,7 @@ export function LT(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if the first argument is less than or equal to the second, and 'FALSE' otherwise. Equivalent to the '<=' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -214,7 +213,7 @@ export function LTE(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns the difference of two numbers. Equivalent to the '-' operator.
  *
  * @param {*} num1
  * @param {*} num2
@@ -237,7 +236,7 @@ export function MINUS(num1, num2) {
 }
 
 /**
- * Formula.js only
+ * Returns the product of two numbers. Equivalent to the '*' operator.
  *
  * @param {*} factor1
  * @param {*} factor2
@@ -260,7 +259,7 @@ export function MULTIPLY(factor1, factor2) {
 }
 
 /**
- * Formula.js only
+ * Returns 'TRUE' if two specified values are not equal and 'FALSE' otherwise. Equivalent to the '<>' operator.
  *
  * @param {*} value1
  * @param {*} value2
@@ -291,7 +290,7 @@ export function NE(value1, value2) {
 }
 
 /**
- * Formula.js only
+ * Returns a number raised to a power.
  *
  * @param {*} base
  * @param {*} exponent
@@ -303,4 +302,20 @@ export function POW(base, exponent) {
   }
 
   return POWER(base, exponent)
+}
+
+export function ISBETWEEN() {
+  throw new Error('ISBETWEEN is not implemented')
+}
+
+export function UMINUS() {
+  throw new Error('UMINUS is not implemented')
+}
+
+export function UNARY_PERCENT() {
+  throw new Error('UNARY_PERCENT is not implemented')
+}
+
+export function UPLUS() {
+  throw new Error('UPLUS is not implemented')
 }
