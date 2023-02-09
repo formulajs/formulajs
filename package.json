@@ -1,34 +1,24 @@
 {
-  "name": "@formulajs/formulajs",
-  "version": "4.2.0",
+  "name": "@jspreadsheet/formulajs",
+  "version": "1.0.0",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
-  "author": "Formulajs",
-  "homepage": "https://github.com/formulajs/formulajs#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/formulajs/formulajs.git"
-  },
-  "bugs": {
-    "url": "https://github.com/formulajs/formulajs/issues"
-  },
-  "license": "MIT",
   "type": "module",
-  "bin": {
-    "formulajs": "./bin/cli.js"
-  },
   "main": "./lib/cjs",
   "module": "./lib/esm",
   "unpkg": "./lib/browser/formula.min.js",
   "jsdelivr": "./lib/browser/formula.min.js",
   "exports": {
     ".": {
-      "require": "./lib/cjs/index.cjs",
-      "import": "./lib/esm/index.mjs"
+      "require": "./lib/cjs/index.js",
+      "import": "./lib/esm/index.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./*": {
+      "require": "./lib/cjs/*",
+      "import": "./lib/esm/*"
+    }
   },
   "files": [
-    "bin/cli.js",
     "lib",
     "types"
   ],
