@@ -401,7 +401,39 @@ export function isDefined(arg) {
   return arg !== undefined && arg !== null
 }
 
-export const validNumber = /^-?\d+(\.\d+)?$/
+export const isDigit = (text) => {
+  return text >= '0' && text <= '9'
+}
+
+export const isValidNumber = (text, allowSignal) => {
+  let startOfNumber = 0
+
+  if (allowSignal && (text[0] === '-' || text[0] === '+')) {
+    startOfNumber++
+  }
+
+  const textLength = text.length
+
+  if (startOfNumber === textLength) {
+    return false
+  }
+
+  let passedThePoint = false
+
+  for (let index = startOfNumber; index < textLength; index++) {
+    if (!isDigit(text[index])) {
+      if (!passedThePoint && text[index] === '.' && index > startOfNumber && index < textLength - 1) {
+        passedThePoint = true
+
+        continue
+      }
+
+      return false
+    }
+  }
+
+  return true
+}
 
 export function getNumber(something) {
   if (something instanceof Date) {
@@ -417,7 +449,7 @@ export function getNumber(something) {
   }
   if (type === 'string') {
     const trimmed = something.trim()
-    if (validNumber.test(trimmed)) {
+    if (isValidNumber(trimmed, true)) {
       return parseFloat(trimmed)
     }
 
@@ -442,7 +474,7 @@ export function getNumber(something) {
 
 const hourRegex = /^(\d{2}):(\d{2})(?:(?::(\d{2}))|((?: AM)|(?: PM)))?$/
 
-const hourToNumber = function (something) {
+export const hourToNumber = function (something) {
   const pieces = hourRegex.exec(something)
 
   if (!hourRegex.test(something)) {

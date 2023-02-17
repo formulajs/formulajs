@@ -332,4 +332,84 @@ describe('Utils => Common', () => {
       expect(utils.anyIsString(1, 'text')).to.be.true
     })
   })
+
+  describe('Misc', () => {
+    it('isValidNumber without allowSignal', () => {
+      expect(utils.isValidNumber('')).to.be.false
+
+      expect(utils.isValidNumber('a')).to.be.false
+      expect(utils.isValidNumber('-a')).to.be.false
+      expect(utils.isValidNumber('+a')).to.be.false
+
+      expect(utils.isValidNumber('1.')).to.be.false
+      expect(utils.isValidNumber('-1.')).to.be.false
+      expect(utils.isValidNumber('+1.')).to.be.false
+
+      expect(utils.isValidNumber('.1')).to.be.false
+      expect(utils.isValidNumber('-.1')).to.be.false
+      expect(utils.isValidNumber('+.1')).to.be.false
+
+      expect(utils.isValidNumber('-')).to.be.false
+      expect(utils.isValidNumber('+')).to.be.false
+
+      expect(utils.isValidNumber('.')).to.be.false
+      expect(utils.isValidNumber('-.')).to.be.false
+      expect(utils.isValidNumber('+.')).to.be.false
+
+      expect(utils.isValidNumber('    1.1')).to.be.false
+      expect(utils.isValidNumber('1.1     ')).to.be.false
+      expect(utils.isValidNumber('    1.1     ')).to.be.false
+
+      expect(utils.isValidNumber('1.1')).to.be.true
+      expect(utils.isValidNumber('-1.1')).to.be.false
+      expect(utils.isValidNumber('+1.1')).to.be.false
+
+      expect(utils.isValidNumber('0')).to.be.true
+      expect(utils.isValidNumber('+0')).to.be.false
+      expect(utils.isValidNumber('-0')).to.be.false
+
+      expect(utils.isValidNumber('1')).to.be.true
+      expect(utils.isValidNumber('-1')).to.be.false
+      expect(utils.isValidNumber('+1')).to.be.false
+    })
+
+    it('isValidNumber with allowSignal', () => {
+      expect(utils.isValidNumber('', true)).to.be.false
+
+      expect(utils.isValidNumber('a', true)).to.be.false
+      expect(utils.isValidNumber('-a', true)).to.be.false
+      expect(utils.isValidNumber('+a', true)).to.be.false
+
+      expect(utils.isValidNumber('1.', true)).to.be.false
+      expect(utils.isValidNumber('-1.', true)).to.be.false
+      expect(utils.isValidNumber('+1.', true)).to.be.false
+
+      expect(utils.isValidNumber('.1', true)).to.be.false
+      expect(utils.isValidNumber('-.1', true)).to.be.false
+      expect(utils.isValidNumber('+.1', true)).to.be.false
+
+      expect(utils.isValidNumber('-', true)).to.be.false
+      expect(utils.isValidNumber('+', true)).to.be.false
+
+      expect(utils.isValidNumber('.', true)).to.be.false
+      expect(utils.isValidNumber('-.', true)).to.be.false
+      expect(utils.isValidNumber('+.', true)).to.be.false
+
+      expect(utils.isValidNumber('    1.1', true)).to.be.false
+      expect(utils.isValidNumber('1.1     ', true)).to.be.false
+      expect(utils.isValidNumber('    1.1     ', true)).to.be.false
+
+      expect(utils.isValidNumber('1.1', true)).to.be.true
+      expect(utils.isValidNumber('-1.1', true)).to.be.true
+      expect(utils.isValidNumber('+1.1', true)).to.be.true
+
+      expect(utils.isValidNumber('0', true)).to.be.true
+      expect(utils.isValidNumber('+0', true)).to.be.true
+      expect(utils.isValidNumber('-0', true)).to.be.true
+
+      expect(utils.isValidNumber('1', true)).to.be.true
+      expect(utils.isValidNumber('-1', true)).to.be.true
+      expect(utils.isValidNumber('+1', true)).to.be.true
+    })
+  })
 })

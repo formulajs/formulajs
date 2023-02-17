@@ -77,7 +77,7 @@ export function CHOOSE() {
   if (typeof index === 'string') {
     index = index.trim()
 
-    if (!utils.validNumber.test(index)) {
+    if (!utils.isValidNumber(index)) {
       return error.value
     }
 
