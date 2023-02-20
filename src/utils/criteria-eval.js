@@ -1,3 +1,5 @@
+import { isValidNumber } from './common.js'
+
 const defaultOperator = '='
 const validSymbols = ['>', '>=', '<', '<=', '=', '<>']
 const _TOKEN_TYPE_OPERATOR = 'operator'
@@ -36,7 +38,7 @@ function castValueToCorrectType(value) {
     return value
   }
 
-  if (/^\d+(\.\d+)?$/.test(value)) {
+  if (isValidNumber(value)) {
     value = value.indexOf('.') === -1 ? parseInt(value, 10) : parseFloat(value)
   }
 
