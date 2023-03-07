@@ -388,6 +388,21 @@ export function UNARY_PERCENT(percentage) {
   return percentage / 100
 }
 
-export function UPLUS() {
-  throw new Error('UPLUS is not implemented')
+/**
+ * Convert a text string that represents a number to a numeric value.
+ *
+ * @param {*} value
+ * @returns
+ */
+
+export function UPLUS(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (isNaN(+value)) {
+    return error.error
+  }
+
+  return utils.parseNumber(value)
 }

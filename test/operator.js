@@ -253,7 +253,16 @@ describe('Operator', () => {
     expect(operator.UNARY_PERCENT(error.error)).to.equal(error.error)
   })
 
-  xit('UPLUS', () => {
-    expect(operator.UPLUS).to.throw('UPLUS is not implemented')
+  it('UPLUS', () => {
+    expect(operator.UPLUS('10')).to.equal(10)
+    expect(operator.UPLUS('-5')).to.equal(-5)
+    expect(operator.UPLUS(0)).to.equal(0)
+    expect(operator.UPLUS(-10.5)).to.equal(-10.5)
+    expect(operator.UPLUS('10.5')).to.equal(10.5)
+  
+    expect(operator.UPLUS()).to.equal(error.na)
+    expect(operator.UPLUS('')).to.equal(error.value)
+    expect(operator.UPLUS('string')).to.equal(error.error)
+    expect(operator.UPLUS('1a')).to.equal(error.error)
   })
 })
