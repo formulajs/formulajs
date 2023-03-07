@@ -203,8 +203,34 @@ describe('Operator', () => {
     expect(operator.POW(-1, 'invalid')).to.equal(error.value)
   })
 
-  xit('ISBETWEEN', () => {
-    expect(operator.ISBETWEEN).to.throw('ISBETWEEN is not implemented')
+  it('ISBETWEEN', () => {
+    expect(operator.ISBETWEEN(2, 1, 3)).to.equal(true);
+    expect(operator.ISBETWEEN(0, -1, 1)).to.equal(true);
+    expect(operator.ISBETWEEN(1, 1, 1)).to.equal(true);
+    expect(operator.ISBETWEEN(-1.5, -2, -1)).to.equal(true);
+    expect(operator.ISBETWEEN(4, 1, 3)).to.equal(false);
+    expect(operator.ISBETWEEN(-2, -1, 1)).to.equal(false);
+    expect(operator.ISBETWEEN(0, 1, 3)).to.equal(false);
+    expect(operator.ISBETWEEN(-1.5, -2, -2.5)).to.equal(false);
+    expect(operator.ISBETWEEN(10, 1, 10, true, false)).to.equal(false);
+    expect(operator.ISBETWEEN(1, 1, 10, false, false)).to.equal(false);
+    expect(operator.ISBETWEEN(5, 1, 10, false, false)).to.equal(true);
+    expect(operator.ISBETWEEN(1, 1, 10, false, true)).to.equal(false);
+    expect(operator.ISBETWEEN()).to.equal(error.na);
+    expect(operator.ISBETWEEN(error.error, 1, 10)).to.equal(error.error);
+    expect(operator.ISBETWEEN(error.error, undefined, undefined)).to.equal(error.error);
+    expect(operator.ISBETWEEN(1, error.error, 10)).to.equal(error.error);
+    expect(operator.ISBETWEEN(1, 1, error.error)).to.equal(error.error);
+    expect(operator.ISBETWEEN(undefined, 1, 10)).to.equal(false);
+    expect(operator.ISBETWEEN(1, undefined, 10)).to.equal(true);
+    expect(operator.ISBETWEEN(1, 10, undefined)).to.equal(true);
+    expect(operator.ISBETWEEN(1, undefined, undefined)).to.equal(false);
+    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(error.error);
+    expect(operator.ISBETWEEN(1, 'string', 10)).to.equal(error.error);
+    expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.error);
+    expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.error);
+    expect(operator.ISBETWEEN(5, 1, 10, 'string')).to.equal(error.error);
+    expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.error);
   })
 
   xit('UMINUS', () => {

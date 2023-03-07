@@ -304,8 +304,51 @@ export function POW(base, exponent) {
   return POWER(base, exponent)
 }
 
-export function ISBETWEEN() {
-  throw new Error('ISBETWEEN is not implemented')
+/**
+ * Returns a number raised to a power.
+ *
+ * @param {*} value
+ * @param {*} start
+ * @param {*} end
+ * @param {*} inclusiveLower
+ * @param {*} inclusiveUpper
+ * @returns
+ */
+
+export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpper = true) {
+  if (arguments.length < 3) {
+    return error.na
+  }
+
+  if (utils.anyIsString(value, start, end, inclusiveLower, inclusiveUpper)) {
+    return error.error
+  }
+
+  if (utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)) {
+    return error.error
+  }
+
+  if ((start === undefined && end === undefined) || value === undefined) {
+    return false
+  }
+
+  if (start === undefined || end === undefined) {
+    return true
+  }
+
+  if (start > end) {
+    [start, end] = [end, start];
+  }
+
+  if (inclusiveLower && inclusiveUpper) {
+    return value >= start && value <= end;
+  } else if (inclusiveLower) {
+    return value >= start && value < end;
+  } else if (inclusiveUpper) {
+    return value > start && value <= end;
+  } else {
+    return value > start && value < end;
+  }
 }
 
 export function UMINUS() {
