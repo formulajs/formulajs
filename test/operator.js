@@ -243,8 +243,14 @@ describe('Operator', () => {
     expect(operator.UMINUS(error.error)).to.equal(error.error)
   })
 
-  xit('UNARY_PERCENT', () => {
-    expect(operator.UNARY_PERCENT).to.throw('UNARY_PERCENT is not implemented')
+  it('UNARY_PERCENT', () => {
+    expect(operator.UNARY_PERCENT(10)).to.equal(0.1)
+    expect(operator.UNARY_PERCENT(100)).to.equal(1)
+    expect(operator.UNARY_PERCENT(50)).to.equal(0.5)
+
+    expect(operator.UNARY_PERCENT()).to.equal(error.na)
+    expect(operator.UNARY_PERCENT('string')).to.equal(error.error)
+    expect(operator.UNARY_PERCENT(error.error)).to.equal(error.error)
   })
 
   xit('UPLUS', () => {

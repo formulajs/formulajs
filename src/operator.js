@@ -336,17 +336,17 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
   }
 
   if (start > end) {
-    [start, end] = [end, start];
+    [start, end] = [end, start]
   }
 
   if (inclusiveLower && inclusiveUpper) {
-    return value >= start && value <= end;
+    return value >= start && value <= end
   } else if (inclusiveLower) {
-    return value >= start && value < end;
+    return value >= start && value < end
   } else if (inclusiveUpper) {
-    return value > start && value <= end;
+    return value > start && value <= end
   } else {
-    return value > start && value < end;
+    return value > start && value < end
   }
 }
 
@@ -369,8 +369,23 @@ export function UMINUS(value) {
   return -value
 }
 
-export function UNARY_PERCENT() {
-  throw new Error('UNARY_PERCENT is not implemented')
+/**
+ * Returns a value interpreted as a percentage; that is, `UNARY_PERCENT(100)` equals `1`.
+ *
+ * @param {*} percentage
+ * @returns
+ */
+
+export function UNARY_PERCENT(percentage) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (percentage instanceof Error || isNaN(percentage)) {
+    return error.error
+  }
+
+  return percentage / 100
 }
 
 export function UPLUS() {
