@@ -350,8 +350,23 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
   }
 }
 
-export function UMINUS() {
-  throw new Error('UMINUS is not implemented')
+/**
+ * Returns a number with the sign reversed.
+ *
+ * @param {*} value
+ * @returns
+ */
+
+export function UMINUS(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (value instanceof Error || isNaN(value)) {
+    return error.error
+  }
+
+  return -value
 }
 
 export function UNARY_PERCENT() {

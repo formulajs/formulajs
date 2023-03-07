@@ -233,8 +233,14 @@ describe('Operator', () => {
     expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.error)
   })
 
-  xit('UMINUS', () => {
-    expect(operator.UMINUS).to.throw('UMINUS is not implemented')
+  it('UMINUS', () => {
+    expect(operator.UMINUS(10)).to.equal(-10)
+    expect(operator.UMINUS(-5)).to.equal(5)
+    expect(operator.UMINUS(0)).to.equal(0)
+
+    expect(operator.UMINUS()).to.equal(error.na)
+    expect(operator.UMINUS('string')).to.equal(error.error)
+    expect(operator.UMINUS(error.error)).to.equal(error.error)
   })
 
   xit('UNARY_PERCENT', () => {
