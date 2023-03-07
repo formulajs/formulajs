@@ -305,7 +305,7 @@ export function POW(base, exponent) {
 }
 
 /**
- * Returns a number raised to a power.
+ * Checks whether a provided number is between two other numbers either inclusively or exclusively.
  *
  * @param {*} value
  * @param {*} start
@@ -320,11 +320,10 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
     return error.na
   }
 
-  if (utils.anyIsString(value, start, end, inclusiveLower, inclusiveUpper)) {
-    return error.error
-  }
-
-  if (utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)) {
+  if (
+    utils.anyIsString(value, start, end, inclusiveLower, inclusiveUpper) ||
+    utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)
+  ) {
     return error.error
   }
 
