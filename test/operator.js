@@ -225,12 +225,11 @@ describe('Operator', () => {
     expect(operator.ISBETWEEN(1, undefined, 10)).to.equal(true)
     expect(operator.ISBETWEEN(1, 10, undefined)).to.equal(true)
     expect(operator.ISBETWEEN(1, undefined, undefined)).to.equal(false)
-    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(error.error)
-    expect(operator.ISBETWEEN(1, 'string', 10)).to.equal(error.error)
-    expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.error)
-    expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.error)
-    expect(operator.ISBETWEEN(5, 1, 10, 'string')).to.equal(error.error)
-    expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.error)
+    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN(1, 'string', 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.num)
+    expect(operator.ISBETWEEN(5, 1, 10, 'string')).to.equal(error.value)
+    expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.value)
   })
 
   it('UMINUS', () => {
@@ -239,7 +238,7 @@ describe('Operator', () => {
     expect(operator.UMINUS(0)).to.equal(0)
 
     expect(operator.UMINUS()).to.equal(error.na)
-    expect(operator.UMINUS('string')).to.equal(error.error)
+    expect(operator.UMINUS('string')).to.equal(error.num)
     expect(operator.UMINUS(error.error)).to.equal(error.error)
   })
 
@@ -249,7 +248,7 @@ describe('Operator', () => {
     expect(operator.UNARY_PERCENT(50)).to.equal(0.5)
 
     expect(operator.UNARY_PERCENT()).to.equal(error.na)
-    expect(operator.UNARY_PERCENT('string')).to.equal(error.error)
+    expect(operator.UNARY_PERCENT('string')).to.equal(error.num)
     expect(operator.UNARY_PERCENT(error.error)).to.equal(error.error)
   })
 
@@ -259,10 +258,10 @@ describe('Operator', () => {
     expect(operator.UPLUS(0)).to.equal(0)
     expect(operator.UPLUS(-10.5)).to.equal(-10.5)
     expect(operator.UPLUS('10.5')).to.equal(10.5)
+    expect(operator.UPLUS('')).to.equal('')
+    expect(operator.UPLUS('string')).to.equal('string')
+    expect(operator.UPLUS('1a')).to.equal('1a')
   
     expect(operator.UPLUS()).to.equal(error.na)
-    expect(operator.UPLUS('')).to.equal(error.value)
-    expect(operator.UPLUS('string')).to.equal(error.error)
-    expect(operator.UPLUS('1a')).to.equal(error.error)
   })
 })

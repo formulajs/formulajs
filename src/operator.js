@@ -320,11 +320,16 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
     return error.na
   }
 
-  if (
-    utils.anyIsString(value, start, end, inclusiveLower, inclusiveUpper) ||
-    utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)
-  ) {
+  if (utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)) {
     return error.error
+  }
+
+  if (utils.anyIsString(value, start, end)) {
+    return error.num
+  }
+
+  if (utils.anyIsString(inclusiveLower, inclusiveUpper)) {
+    return error.value
   }
 
   if ((start === undefined && end === undefined) || value === undefined) {
@@ -362,8 +367,12 @@ export function UMINUS(value) {
     return error.na
   }
 
-  if (value instanceof Error || isNaN(value)) {
+  if (value instanceof Error) {
     return error.error
+  }
+
+  if (isNaN(value)) {
+    return error.num
   }
 
   return -value
@@ -381,9 +390,14 @@ export function UNARY_PERCENT(percentage) {
     return error.na
   }
 
-  if (percentage instanceof Error || isNaN(percentage)) {
+  if (percentage instanceof Error) {
     return error.error
   }
+
+  if (isNaN(percentage)) {
+    return error.num
+  }
+
 
   return percentage / 100
 }
@@ -400,9 +414,9 @@ export function UPLUS(value) {
     return error.na
   }
 
-  if (isNaN(+value)) {
-    return error.error
+  if (isNaN(+value) || value == false) {
+    return value
   }
 
-  return utils.parseNumber(value)
+  return +value
 }
