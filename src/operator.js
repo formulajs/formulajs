@@ -341,7 +341,7 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
   }
 
   if (start > end) {
-    [start, end] = [end, start]
+    ;[start, end] = [end, start]
   }
 
   if (inclusiveLower && inclusiveUpper) {
@@ -397,7 +397,6 @@ export function UNARY_PERCENT(percentage) {
   if (isNaN(percentage)) {
     return error.num
   }
-
 
   return percentage / 100
 }

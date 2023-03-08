@@ -261,7 +261,7 @@ describe('Operator', () => {
     expect(operator.UPLUS('')).to.equal('')
     expect(operator.UPLUS('string')).to.equal('string')
     expect(operator.UPLUS('1a')).to.equal('1a')
-  
+
     expect(operator.UPLUS()).to.equal(error.na)
   })
 })

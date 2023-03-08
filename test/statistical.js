@@ -1105,8 +1105,22 @@ describe('Statistical', () => {
     ).to.equal(1)
   })
 
-  xit('MAXIFS', () => {
-    expect(statistical.MAXIFS).to.throw('MAXIFS is not implemented')
+  it('MAXIFS', () => {
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A')).to.equal(4)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B')).to.equal(8)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'], 'D')).to.equal(6)
+    expect(
+      statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A', ['D', 'D', 'D', 'C'], 'D', ['Y', 'Z', 'Z', 'Z'], 'Z')
+    ).to.equal(4)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'C')).to.equal(0)
+
+    expect(statistical.MAXIFS([], [], 'A')).to.equal(0)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], null)).to.equal(0)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], undefined)).to.equal(error.na)
+    expect(statistical.MAXIFS([2, 4, 6], ['A', 'A', 'B', 'B'], 'B')).to.equal(error.value)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B'], 'B')).to.equal(error.value)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'])).to.equal(error.na)
+    expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'])).to.equal(error.na)
   })
 
   xit('MINIFS', () => {
