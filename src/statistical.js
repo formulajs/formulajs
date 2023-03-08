@@ -1891,8 +1891,40 @@ export function MAXIFS(range, ...criteria) {
   return max === -Infinity ? 0 : max
 }
 
-export function MINIFS() {
-  throw new Error('MINIFS is not implemented')
+export function MINIFS(range, ...criteria) {
+  if (arguments.length < 3) {
+    return error.na
+  }
+
+  let min = +Infinity
+
+  for (let i = 0; i < range.length; i++) {
+    let match = true
+
+    for (let j = 0; j < criteria.length; j += 2) {
+      let criteriaRange = criteria[j]
+      let criteriaValue = criteria[j + 1]
+
+      if ((criteriaRange && criteriaRange.length !== range.length) || criteriaRange instanceof Error) {
+        return error.value
+      }
+
+      if (criteriaValue === undefined) {
+        return error.na
+      }
+
+      if (criteriaRange[i] !== criteriaValue) {
+        match = false
+        break
+      }
+    }
+
+    if (match && range[i] < min) {
+      min = range[i]
+    }
+  }
+
+  return min === +Infinity ? 0 : min
 }
 
 /**

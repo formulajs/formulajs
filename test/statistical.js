@@ -1123,8 +1123,22 @@ describe('Statistical', () => {
     expect(statistical.MAXIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'])).to.equal(error.na)
   })
 
-  xit('MINIFS', () => {
-    expect(statistical.MINIFS).to.throw('MINIFS is not implemented')
+  it('MINIFS', () => {
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A')).to.equal(2)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B')).to.equal(6)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'], 'D')).to.equal(6)
+    expect(
+      statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A', ['D', 'D', 'D', 'C'], 'D', ['Y', 'Z', 'Z', 'Z'], 'Z')
+    ).to.equal(4)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'C')).to.equal(0)
+
+    expect(statistical.MINIFS([], [], 'A')).to.equal(0)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], null)).to.equal(0)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], undefined)).to.equal(error.na)
+    expect(statistical.MINIFS([2, 4, 6], ['A', 'A', 'B', 'B'], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B'], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'])).to.equal(error.na)
+    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'])).to.equal(error.na)
   })
 
   it('MIN', () => {
