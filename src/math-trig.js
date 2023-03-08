@@ -1663,8 +1663,45 @@ export function SERIESSUM(x, n, m, coefficients) {
   return result
 }
 
-export function SEQUENCE() {
-  throw new Error('SEQUENCE is not implemented')
+/**
+ * Returns an array of sequential numbers, such as 1, 2, 3, 4. 
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} rows Any integer bigger than 0.
+ * @param {*} columns Any integer bigger than 0.
+ * @param {*} start Any integer.
+ * @param {*} step Any integer.
+ * @returns
+ */
+export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
+  rows = utils.parseNumber(rows)
+  columns = utils.parseNumber(columns)
+  start = utils.parseNumber(start)
+  step = utils.parseNumber(step)
+
+  const anyError = utils.anyError(rows, columns, start, step)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (rows < 1 || columns < 1) {
+    return error.num
+  }
+
+  let result = []
+  let value = start
+  for (let i = 0; i < rows; i++) {
+    let row = []
+    for (let j = 0; j < columns; j++) {
+      row.push(value)
+      value += step
+    }
+    result.push(row)
+  }
+
+  return result
 }
 
 /**

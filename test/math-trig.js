@@ -1071,8 +1071,40 @@ describe('Math & Trig', () => {
     expect(mathTrig.SERIESSUM(1, 2, 3, 'invalid')).to.equal(error.value)
   })
 
-  xit('SEQUENCE', () => {
-    expect(mathTrig.SEQUENCE).to.throw('SEQUENCE is not implemented')
+  it('SEQUENCE', () => {
+    expect(mathTrig.SEQUENCE(1)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE(2)).to.eql([[1], [2]])
+    expect(mathTrig.SEQUENCE(2, 2)).to.eql([
+      [1, 2],
+      [3, 4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2)).to.eql([
+      [2, 3],
+      [4, 5]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, -2, 2)).to.eql([
+      [-2, 0],
+      [2, 4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, 2)).to.eql([
+      [2, 4],
+      [6, 8]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, -2)).to.eql([
+      [2, 0],
+      [-2, -4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, 0)).to.eql([
+      [2, 2],
+      [2, 2]
+    ])
+
+    expect(mathTrig.SEQUENCE()).to.eql([[1]])
+    expect(mathTrig.SEQUENCE('string')).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(error.value)).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(error.num)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(-1)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(0)).to.equal(error.num)
   })
 
   it('SIGN', () => {
