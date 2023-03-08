@@ -1373,8 +1373,8 @@ export function RANDARRAY(rows = 1, columns = 1) {
     return error.na
   }
 
-  rows = utils.parseNumber(rows);
-  columns = utils.parseNumber(columns);
+  rows = utils.parseNumber(rows)
+  columns = utils.parseNumber(columns)
 
   const anyError = utils.anyError(rows, columns)
 
@@ -1390,17 +1390,17 @@ export function RANDARRAY(rows = 1, columns = 1) {
     return error.num
   }
 
-  let result = [];
+  let result = []
 
   for (let i = 0; i < rows; i++) {
-    let row = [];
+    let row = []
     for (let j = 0; j < columns; j++) {
-      row.push(Math.random());
+      row.push(Math.random())
     }
-    result.push(row);
+    result.push(row)
   }
 
-  return result;
+  return result
 }
 
 /**
