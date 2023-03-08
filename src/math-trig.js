@@ -988,8 +988,61 @@ export function LOG10(number) {
   return Math.log(number) / Math.log(10)
 }
 
-export function MDETERM() {
-  throw new Error('MDETERM is not implemented')
+/**
+ * Returns the determinant of a given matrix. The matrix must be of type n x n.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} matrix Required. Square matrix.
+ * @returns
+ */
+export function MDETERM(matrix) {
+  if (!isNaN(matrix)) {
+    return matrix
+  }
+
+  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0])) {
+    return error.value
+  }
+
+  const rows = matrix.length
+  const cols = matrix[0].length
+
+  if (rows != cols) {
+    return error.value
+  }
+
+  if (rows > 64) {
+    return error.value
+  }
+
+  for (let j = 0; j < cols; j++) {
+    if (
+      utils.anyIsError(...matrix[j]) ||
+      utils.anyIsString(...matrix[j]) ||
+      utils.anyIsNull(...matrix[j]) ||
+      utils.anyIsUndefined(...matrix[j])
+    ) {
+      return error.value
+    }
+  }
+
+  let det = 0
+  if (rows == 1) {
+    det = matrix[0][0]
+  } else if (rows == 2) {
+    det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+  } else {
+    for (let j = 0; j < cols; j++) {
+      let subMatrix = []
+      for (let i = 1; i < rows; i++) {
+        subMatrix.push(matrix[i].slice(0, j).concat(matrix[i].slice(j + 1)))
+      }
+      let sign = j % 2 == 0 ? 1 : -1
+      det += sign * matrix[0][j] * MDETERM(subMatrix)
+    }
+  }
+  return det
 }
 
 export function MINVERSE() {

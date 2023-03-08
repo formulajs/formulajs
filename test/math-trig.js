@@ -485,8 +485,82 @@ describe('Math & Trig', () => {
     expect(mathTrig.LOG10('invalid')).to.equal(error.value)
   })
 
-  xit('MDETERM', () => {
-    expect(mathTrig.MDETERM).to.throw('MDETERM is not implemented')
+  it('MDETERM', () => {
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(-2)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [-2, 4, 1],
+        [0, 5, 2]
+      ])
+    ).to.equal(-19)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [0, 0, 0],
+        [3, 4, 5]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [0, 3, -5, 12],
+        [0, 1, 0, 4],
+        [0, -8, 1, 3],
+        [0, 4, 1, -2]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [1, 2, 3],
+        [-4, -2, -2]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [2, -4, 7],
+        [1, -2, 5],
+        [3, -6, 1]
+      ])
+    ).to.equal(0)
+    expect(mathTrig.MDETERM(2)).to.equal(2)
+
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 'a']
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, null]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, undefined]
+      ])
+    ).to.equal(error.value)
   })
 
   xit('MINVERSE', () => {
