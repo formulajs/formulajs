@@ -563,8 +563,74 @@ describe('Math & Trig', () => {
     ).to.equal(error.value)
   })
 
-  xit('MINVERSE', () => {
-    expect(mathTrig.MINVERSE).to.throw('MINVERSE is not implemented')
+  it('MINVERSE', () => {
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 3]
+      ])
+    ).to.eql([
+      [3, -1],
+      [-5, 2]
+    ])
+    expect(
+      mathTrig.MINVERSE([
+        [2, 3],
+        [1, 2]
+      ])
+    ).to.eql([
+      [2, -3],
+      [-1, 2]
+    ])
+    expect(
+      mathTrig.MINVERSE([
+        [1, 2, 3],
+        [0, 1, 4],
+        [0, 0, 1]
+      ])
+    ).to.eql([
+      [1, -2, 5],
+      [0, 1, -4],
+      [0, 0, 1]
+    ])
+
+    expect(mathTrig.MINVERSE(error.value)).to.eql(error.value)
+    expect(mathTrig.MINVERSE(error.num)).to.eql(error.num)
+    expect(mathTrig.MINVERSE(4)).to.eql(0.25)
+    expect(mathTrig.MINVERSE('a')).to.eql(error.value)
+    expect(mathTrig.MINVERSE(-2)).to.eql(-0.5)
+    expect(mathTrig.MINVERSE()).to.eql(error.na)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 1],
+        [5, 4]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1, 3],
+        [5, 1, 2]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 'a']
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, undefined]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, null]
+      ])
+    ).to.eql(error.value)
   })
 
   describe('MMULT', () => {

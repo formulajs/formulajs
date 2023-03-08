@@ -1016,12 +1016,12 @@ export function MDETERM(matrix) {
     return error.value
   }
 
-  for (let j = 0; j < cols; j++) {
+  for (let i = 0; i < rows; i++) {
     if (
-      utils.anyIsError(...matrix[j]) ||
-      utils.anyIsString(...matrix[j]) ||
-      utils.anyIsNull(...matrix[j]) ||
-      utils.anyIsUndefined(...matrix[j])
+      utils.anyIsError(...matrix[i]) ||
+      utils.anyIsString(...matrix[i]) ||
+      utils.anyIsNull(...matrix[i]) ||
+      utils.anyIsUndefined(...matrix[i])
     ) {
       return error.value
     }
@@ -1045,8 +1045,79 @@ export function MDETERM(matrix) {
   return det
 }
 
-export function MINVERSE() {
-  throw new Error('MINVERSE is not implemented')
+/**
+ * Returns the matrix product of two arrays. The result is an array with the same number of rows as array1 and the same number of columns as array2.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} matrix Required. Square matrix with possible inverse.
+ * @returns
+ */
+export function MINVERSE(matrix) {
+  if (matrix == undefined || matrix == null) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(matrix)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (!isNaN(matrix)) {
+    return 1 / matrix
+  }
+
+  const rows = matrix.length
+  const cols = matrix[0].length
+
+  for (let i = 0; i < rows; i++) {
+    if (
+      utils.anyIsError(...matrix[i]) ||
+      utils.anyIsString(...matrix[i]) ||
+      utils.anyIsNull(...matrix[i]) ||
+      utils.anyIsUndefined(...matrix[i])
+    ) {
+      return error.value
+    }
+  }
+
+  if (rows != cols) {
+    return error.value
+  }
+
+  const identity = []
+  for (let i = 0; i < rows; i++) {
+    identity[i] = []
+    for (let j = 0; j < rows; j++) {
+      identity[i][j] = i === j ? 1 : 0
+    }
+  }
+
+  const augmented = matrix.map((row, i) => row.concat(identity[i]))
+  for (let i = 0; i < rows; i++) {
+    let pivot = augmented[i][i]
+    if (pivot === 0) {
+      return error.num
+    }
+
+    for (let j = i; j < 2 * rows; j++) {
+      augmented[i][j] /= pivot
+    }
+
+    for (let k = 0; k < rows; k++) {
+      if (k !== i) {
+        let factor = augmented[k][i]
+        for (let j = i; j < 2 * rows; j++) {
+          augmented[k][j] -= factor * augmented[i][j]
+        }
+      }
+    }
+  }
+
+  const inverse = augmented.map((row) => row.slice(rows))
+
+  return inverse
 }
 
 /**
@@ -1664,7 +1735,7 @@ export function SERIESSUM(x, n, m, coefficients) {
 }
 
 /**
- * Returns an array of sequential numbers, such as 1, 2, 3, 4. 
+ * Returns an array of sequential numbers, such as 1, 2, 3, 4.
  *
  * Category: Math and trigonometry
  *
