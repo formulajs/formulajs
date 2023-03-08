@@ -1359,8 +1359,48 @@ export function RAND() {
   return Math.random()
 }
 
-export function RANDARRAY() {
-  throw new Error('RANDARRAY is not implemented')
+/**
+ * Generates an array of random numbers between 0 and 1.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} rows Number of quantity of rows generated.
+ * @param {*} columns Number of quantity of columns generated.
+ * @returns
+ */
+export function RANDARRAY(rows = 1, columns = 1) {
+  if (arguments.length > 2) {
+    return error.na
+  }
+
+  rows = utils.parseNumber(rows);
+  columns = utils.parseNumber(columns);
+
+  const anyError = utils.anyError(rows, columns)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (utils.anyIsString(rows, columns)) {
+    return error.value
+  }
+
+  if (rows <= 0 || columns <= 0) {
+    return error.num
+  }
+
+  let result = [];
+
+  for (let i = 0; i < rows; i++) {
+    let row = [];
+    for (let j = 0; j < columns; j++) {
+      row.push(Math.random());
+    }
+    result.push(row);
+  }
+
+  return result;
 }
 
 /**

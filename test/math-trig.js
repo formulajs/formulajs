@@ -878,8 +878,20 @@ describe('Math & Trig', () => {
     expect(mathTrig.RAND(true)).to.equal(error.na)
   })
 
-  xit('RANDARRAY', () => {
-    expect(mathTrig.RANDARRAY).to.throw('RANDARRAY is not implemented')
+  it('RANDARRAY', () => {
+    expect(mathTrig.RANDARRAY(1)[0][0]).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(1).length).to.equal(1)
+    expect(mathTrig.RANDARRAY(2).length).to.equal(2)
+    expect(mathTrig.RANDARRAY(1)[0].length).to.equal(1)
+    expect(mathTrig.RANDARRAY(1, 2)[0].length).to.equal(2)
+
+    expect(mathTrig.RANDARRAY('a')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 'a')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY().length).to.equal(1)
+    expect(mathTrig.RANDARRAY(0)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(-1)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(error.value)).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(error.num)).to.equal(error.num)
   })
 
   it('RANDBETWEEN', () => {
