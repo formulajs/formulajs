@@ -1,12 +1,10 @@
-export function getColumnName(i) {
-  var letter = ''
-  if (i > 701) {
-    letter += String.fromCharCode(64 + parseInt(i / 676))
-    letter += String.fromCharCode(64 + parseInt((i % 676) / 26))
-  } else if (i > 25) {
-    letter += String.fromCharCode(64 + parseInt(i / 26))
+export function getColumnName(num) {
+  let letter = ''
+  let quotient = num + 1
+  while (quotient > 0) {
+    const remainder = (quotient - 1) % 26
+    letter = String.fromCharCode(65 + remainder) + letter
+    quotient = ((quotient - remainder) / 26) | 0
   }
-  letter += String.fromCharCode(65 + (i % 26))
-
   return letter
 }
