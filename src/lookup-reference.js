@@ -561,8 +561,33 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup =
   return error.na
 }
 
-export function FILTER() {
-  throw new Error('FILTER is not implemented')
+/**
+ * Extract a subset of data from a range based on specified criteria
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} sample The data set that the criteria will be applied to.
+ * @param {*} conditions The criteria that the sample will be filtered on. Array of array of booleans.
+ * @returns
+ */
+export function FILTER(sample, ...conditions) {
+  if (
+    arguments.length < 2 ||
+    !Array.isArray(sample) ||
+    !Array.isArray(conditions) ||
+    !Array.isArray(sample[0]) ||
+    sample.length !== conditions[0].length
+  ) {
+    return error.na
+  }
+
+  let result = [...sample]
+
+  conditions.forEach((condition) => {
+    result = result.map((row, i) => (condition[i] ? row : false))
+  })
+
+  return result.filter((row) => row)
 }
 
 const startsWithNumber = /^-*\d/
