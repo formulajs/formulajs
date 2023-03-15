@@ -2513,35 +2513,6 @@ RANK.EQ = (number, ref, order) => {
 }
 
 /**
- * Returns the row number of a reference.
- *
- * Category: Lookup and reference
- *
- * @param {*} reference the value or range of values for which you want the row number.
- * @param {*} index
- * @returns
- */
-export function ROW(reference, index) {
-  if (arguments.length !== 2) {
-    return error.na
-  }
-
-  if (index < 0) {
-    return error.num
-  }
-
-  if (!(reference instanceof Array) || typeof index !== 'number') {
-    return error.value
-  }
-
-  if (reference.length === 0) {
-    return undefined
-  }
-
-  return jStat.row(reference, index)
-}
-
-/**
  * Returns the square of the Pearson product moment correlation coefficient.
  *
  * Category: Statistical

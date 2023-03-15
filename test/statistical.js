@@ -1362,59 +1362,6 @@ describe('Statistical', () => {
     expect(statistical.RANK.EQ('invalid', data, true)).to.equal(error.value)
   })
 
-  it('ROW', () => {
-    expect(statistical.ROW()).to.equal(error.na)
-    expect(
-      statistical.ROW([
-        [1, 2],
-        [2, 3],
-        [2, 4]
-      ])
-    ).to.equal(error.na)
-    expect(
-      statistical.ROW(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        -1
-      )
-    ).to.equal(error.num)
-    expect(statistical.ROW('hello', 1)).to.equal(error.value)
-    expect(
-      statistical.ROW(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        0
-      )
-    ).to.eql([1, 2])
-    expect(
-      statistical.ROW(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        2
-      )
-    ).to.eql([2, 4])
-    expect(
-      statistical.ROW(
-        [
-          [1, 2],
-          [2, 3],
-          [2, 4]
-        ],
-        3
-      )
-    ).to.not.exist
-    expect(statistical.ROW([], 3)).to.not.exist
-  })
-
   it('RSQ', () => {
     const y = [2, 3, 9, 1, 8, 7, 5]
     const x = [6, 5, 11, 7, 5, 4, 4]
