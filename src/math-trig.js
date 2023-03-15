@@ -1674,6 +1674,27 @@ export function SQRTPI(number) {
   return Math.sqrt(number * Math.PI)
 }
 
+const sum = function (value) {
+  if (typeof value !== 'object' || value === null || typeof value.length === 'undefined') {
+    return value
+  }
+
+  let result = 0
+
+  const valueLength = value.length
+  for (let i = 0; i < valueLength; i++) {
+    const partialResult = sum(value[i])
+
+    if (typeof partialResult === 'number') {
+      result += partialResult
+    } else if (partialResult && partialResult.formulaError) {
+      return partialResult
+    }
+  }
+
+  return result
+}
+
 /**
  * Adds its arguments.
  *
@@ -1686,27 +1707,7 @@ export function SUM() {
     return error.na
   }
 
-  let result = 0
-
-  utils.arrayEach(utils.argsToArray(arguments), (value) => {
-    if (result instanceof Error) {
-      return false
-    } else if (value instanceof Error) {
-      result = value
-    } else if (typeof value === 'number') {
-      result += value
-    } else if (Array.isArray(value)) {
-      const inner_result = SUM.apply(null, value)
-
-      if (inner_result instanceof Error) {
-        result = inner_result
-      } else {
-        result += inner_result
-      }
-    }
-  })
-
-  return result
+  return sum(arguments)
 }
 
 /**
