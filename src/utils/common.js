@@ -557,7 +557,7 @@ export function getHour(something) {
  * @returns {string}
  */
 export const getVariableType = function (variable) {
-  if (typeof variable !== 'object' || typeof variable.length === 'undefined') {
+  if (typeof variable !== 'object' || !variable || typeof variable.length === 'undefined') {
     return 'single'
   }
 
