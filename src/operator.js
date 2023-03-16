@@ -304,18 +304,118 @@ export function POW(base, exponent) {
   return POWER(base, exponent)
 }
 
-export function ISBETWEEN() {
-  throw new Error('ISBETWEEN is not implemented')
+/**
+ * Checks whether a provided number is between two other numbers either inclusively or exclusively.
+ *
+ * @param {*} value
+ * @param {*} start
+ * @param {*} end
+ * @param {*} inclusiveLower
+ * @param {*} inclusiveUpper
+ * @returns
+ */
+
+export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpper = true) {
+  if (arguments.length < 3) {
+    return error.na
+  }
+
+  if (utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)) {
+    return error.error
+  }
+
+  if (utils.anyIsString(value, start, end)) {
+    return error.num
+  }
+
+  if (utils.anyIsString(inclusiveLower, inclusiveUpper)) {
+    return error.value
+  }
+
+  if ((start === undefined && end === undefined) || value === undefined) {
+    return false
+  }
+
+  if (start === undefined || end === undefined) {
+    return true
+  }
+
+  if (start > end) {
+    ;[start, end] = [end, start]
+  }
+
+  if (inclusiveLower && inclusiveUpper) {
+    return value >= start && value <= end
+  } else if (inclusiveLower) {
+    return value >= start && value < end
+  } else if (inclusiveUpper) {
+    return value > start && value <= end
+  } else {
+    return value > start && value < end
+  }
 }
 
-export function UMINUS() {
-  throw new Error('UMINUS is not implemented')
+/**
+ * Returns a number with the sign reversed.
+ *
+ * @param {*} value
+ * @returns
+ */
+
+export function UMINUS(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (value instanceof Error) {
+    return error.error
+  }
+
+  if (isNaN(value)) {
+    return error.num
+  }
+
+  return -value
 }
 
-export function UNARY_PERCENT() {
-  throw new Error('UNARY_PERCENT is not implemented')
+/**
+ * Returns a value interpreted as a percentage; that is, `UNARY_PERCENT(100)` equals `1`.
+ *
+ * @param {*} percentage
+ * @returns
+ */
+
+export function UNARY_PERCENT(percentage) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (percentage instanceof Error) {
+    return error.error
+  }
+
+  if (isNaN(percentage)) {
+    return error.num
+  }
+
+  return percentage / 100
 }
 
-export function UPLUS() {
-  throw new Error('UPLUS is not implemented')
+/**
+ * Convert a text string that represents a number to a numeric value.
+ *
+ * @param {*} value
+ * @returns
+ */
+
+export function UPLUS(value) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (isNaN(+value) || value == false) {
+    return value
+  }
+
+  return +value
 }

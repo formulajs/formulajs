@@ -485,12 +485,152 @@ describe('Math & Trig', () => {
     expect(mathTrig.LOG10('invalid')).to.equal(error.value)
   })
 
-  xit('MDETERM', () => {
-    expect(mathTrig.MDETERM).to.throw('MDETERM is not implemented')
+  it('MDETERM', () => {
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 4]
+      ])
+    ).to.equal(-2)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [-2, 4, 1],
+        [0, 5, 2]
+      ])
+    ).to.equal(-19)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [0, 0, 0],
+        [3, 4, 5]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [0, 3, -5, 12],
+        [0, 1, 0, 4],
+        [0, -8, 1, 3],
+        [0, 4, 1, -2]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [1, 2, 3],
+        [-4, -2, -2]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [2, -4, 7],
+        [1, -2, 5],
+        [3, -6, 1]
+      ])
+    ).to.equal(0)
+    expect(mathTrig.MDETERM(2)).to.equal(2)
+
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 4],
+        [5, 6]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2, 3],
+        [4, 5, 6]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, 'a']
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, null]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, undefined]
+      ])
+    ).to.equal(error.value)
   })
 
-  xit('MINVERSE', () => {
-    expect(mathTrig.MINVERSE).to.throw('MINVERSE is not implemented')
+  it('MINVERSE', () => {
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 3]
+      ])
+    ).to.eql([
+      [3, -1],
+      [-5, 2]
+    ])
+    expect(
+      mathTrig.MINVERSE([
+        [2, 3],
+        [1, 2]
+      ])
+    ).to.eql([
+      [2, -3],
+      [-1, 2]
+    ])
+    expect(
+      mathTrig.MINVERSE([
+        [1, 2, 3],
+        [0, 1, 4],
+        [0, 0, 1]
+      ])
+    ).to.eql([
+      [1, -2, 5],
+      [0, 1, -4],
+      [0, 0, 1]
+    ])
+
+    expect(mathTrig.MINVERSE(error.value)).to.eql(error.value)
+    expect(mathTrig.MINVERSE(error.num)).to.eql(error.num)
+    expect(mathTrig.MINVERSE(4)).to.eql(0.25)
+    expect(mathTrig.MINVERSE('a')).to.eql(error.value)
+    expect(mathTrig.MINVERSE(-2)).to.eql(-0.5)
+    expect(mathTrig.MINVERSE()).to.eql(error.na)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 1],
+        [5, 4]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1, 3],
+        [5, 1, 2]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, 'a']
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, undefined]
+      ])
+    ).to.eql(error.value)
+    expect(
+      mathTrig.MINVERSE([
+        [2, 1],
+        [5, null]
+      ])
+    ).to.eql(error.value)
   })
 
   describe('MMULT', () => {
@@ -804,8 +944,20 @@ describe('Math & Trig', () => {
     expect(mathTrig.RAND(true)).to.equal(error.na)
   })
 
-  xit('RANDARRAY', () => {
-    expect(mathTrig.RANDARRAY).to.throw('RANDARRAY is not implemented')
+  it('RANDARRAY', () => {
+    expect(mathTrig.RANDARRAY(1)[0][0]).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(1).length).to.equal(1)
+    expect(mathTrig.RANDARRAY(2).length).to.equal(2)
+    expect(mathTrig.RANDARRAY(1)[0].length).to.equal(1)
+    expect(mathTrig.RANDARRAY(1, 2)[0].length).to.equal(2)
+
+    expect(mathTrig.RANDARRAY('a')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 'a')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY().length).to.equal(1)
+    expect(mathTrig.RANDARRAY(0)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(-1)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(error.value)).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(error.num)).to.equal(error.num)
   })
 
   it('RANDBETWEEN', () => {
@@ -985,8 +1137,40 @@ describe('Math & Trig', () => {
     expect(mathTrig.SERIESSUM(1, 2, 3, 'invalid')).to.equal(error.value)
   })
 
-  xit('SEQUENCE', () => {
-    expect(mathTrig.SEQUENCE).to.throw('SEQUENCE is not implemented')
+  it('SEQUENCE', () => {
+    expect(mathTrig.SEQUENCE(1)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE(2)).to.eql([[1], [2]])
+    expect(mathTrig.SEQUENCE(2, 2)).to.eql([
+      [1, 2],
+      [3, 4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2)).to.eql([
+      [2, 3],
+      [4, 5]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, -2, 2)).to.eql([
+      [-2, 0],
+      [2, 4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, 2)).to.eql([
+      [2, 4],
+      [6, 8]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, -2)).to.eql([
+      [2, 0],
+      [-2, -4]
+    ])
+    expect(mathTrig.SEQUENCE(2, 2, 2, 0)).to.eql([
+      [2, 2],
+      [2, 2]
+    ])
+
+    expect(mathTrig.SEQUENCE()).to.eql([[1]])
+    expect(mathTrig.SEQUENCE('string')).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(error.value)).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(error.num)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(-1)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(0)).to.equal(error.num)
   })
 
   it('SIGN', () => {

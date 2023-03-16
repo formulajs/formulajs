@@ -988,12 +988,136 @@ export function LOG10(number) {
   return Math.log(number) / Math.log(10)
 }
 
-export function MDETERM() {
-  throw new Error('MDETERM is not implemented')
+/**
+ * Returns the determinant of a given matrix. The matrix must be of type n x n.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} matrix Required. Square matrix.
+ * @returns
+ */
+export function MDETERM(matrix) {
+  if (!isNaN(matrix)) {
+    return matrix
+  }
+
+  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0])) {
+    return error.value
+  }
+
+  const rows = matrix.length
+  const cols = matrix[0].length
+
+  if (rows != cols) {
+    return error.value
+  }
+
+  if (rows > 64) {
+    return error.value
+  }
+
+  for (let i = 0; i < rows; i++) {
+    if (
+      utils.anyIsError(...matrix[i]) ||
+      utils.anyIsString(...matrix[i]) ||
+      utils.anyIsNull(...matrix[i]) ||
+      utils.anyIsUndefined(...matrix[i])
+    ) {
+      return error.value
+    }
+  }
+
+  let det = 0
+  if (rows == 1) {
+    det = matrix[0][0]
+  } else if (rows == 2) {
+    det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+  } else {
+    for (let j = 0; j < cols; j++) {
+      let subMatrix = []
+      for (let i = 1; i < rows; i++) {
+        subMatrix.push(matrix[i].slice(0, j).concat(matrix[i].slice(j + 1)))
+      }
+      let sign = j % 2 == 0 ? 1 : -1
+      det += sign * matrix[0][j] * MDETERM(subMatrix)
+    }
+  }
+  return det
 }
 
-export function MINVERSE() {
-  throw new Error('MINVERSE is not implemented')
+/**
+ * Returns the matrix product of two arrays. The result is an array with the same number of rows as array1 and the same number of columns as array2.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} matrix Required. Square matrix with possible inverse.
+ * @returns
+ */
+export function MINVERSE(matrix) {
+  if (matrix == undefined || matrix == null) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(matrix)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (!isNaN(matrix)) {
+    return 1 / matrix
+  }
+
+  const rows = matrix.length
+  const cols = matrix[0].length
+
+  for (let i = 0; i < rows; i++) {
+    if (
+      utils.anyIsError(...matrix[i]) ||
+      utils.anyIsString(...matrix[i]) ||
+      utils.anyIsNull(...matrix[i]) ||
+      utils.anyIsUndefined(...matrix[i])
+    ) {
+      return error.value
+    }
+  }
+
+  if (rows != cols) {
+    return error.value
+  }
+
+  const identity = []
+  for (let i = 0; i < rows; i++) {
+    identity[i] = []
+    for (let j = 0; j < rows; j++) {
+      identity[i][j] = i === j ? 1 : 0
+    }
+  }
+
+  const augmented = matrix.map((row, i) => row.concat(identity[i]))
+  for (let i = 0; i < rows; i++) {
+    let pivot = augmented[i][i]
+    if (pivot === 0) {
+      return error.num
+    }
+
+    for (let j = i; j < 2 * rows; j++) {
+      augmented[i][j] /= pivot
+    }
+
+    for (let k = 0; k < rows; k++) {
+      if (k !== i) {
+        let factor = augmented[k][i]
+        for (let j = i; j < 2 * rows; j++) {
+          augmented[k][j] -= factor * augmented[i][j]
+        }
+      }
+    }
+  }
+
+  const inverse = augmented.map((row) => row.slice(rows))
+
+  return inverse
 }
 
 /**
@@ -1306,8 +1430,48 @@ export function RAND() {
   return Math.random()
 }
 
-export function RANDARRAY() {
-  throw new Error('RANDARRAY is not implemented')
+/**
+ * Generates an array of random numbers between 0 and 1.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} rows Number of quantity of rows generated.
+ * @param {*} columns Number of quantity of columns generated.
+ * @returns
+ */
+export function RANDARRAY(rows = 1, columns = 1) {
+  if (arguments.length > 2) {
+    return error.na
+  }
+
+  rows = utils.parseNumber(rows)
+  columns = utils.parseNumber(columns)
+
+  const anyError = utils.anyError(rows, columns)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (utils.anyIsString(rows, columns)) {
+    return error.value
+  }
+
+  if (rows <= 0 || columns <= 0) {
+    return error.num
+  }
+
+  let result = []
+
+  for (let i = 0; i < rows; i++) {
+    let row = []
+    for (let j = 0; j < columns; j++) {
+      row.push(Math.random())
+    }
+    result.push(row)
+  }
+
+  return result
 }
 
 /**
@@ -1570,8 +1734,45 @@ export function SERIESSUM(x, n, m, coefficients) {
   return result
 }
 
-export function SEQUENCE() {
-  throw new Error('SEQUENCE is not implemented')
+/**
+ * Returns an array of sequential numbers, such as 1, 2, 3, 4.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} rows Any integer bigger than 0.
+ * @param {*} columns Any integer bigger than 0.
+ * @param {*} start Any integer.
+ * @param {*} step Any integer.
+ * @returns
+ */
+export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
+  rows = utils.parseNumber(rows)
+  columns = utils.parseNumber(columns)
+  start = utils.parseNumber(start)
+  step = utils.parseNumber(step)
+
+  const anyError = utils.anyError(rows, columns, start, step)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (rows < 1 || columns < 1) {
+    return error.num
+  }
+
+  let result = []
+  let value = start
+  for (let i = 0; i < rows; i++) {
+    let row = []
+    for (let j = 0; j < columns; j++) {
+      row.push(value)
+      value += step
+    }
+    result.push(row)
+  }
+
+  return result
 }
 
 /**

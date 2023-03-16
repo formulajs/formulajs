@@ -1855,8 +1855,63 @@ describe('Lookup Reference', () => {
     ).to.equal(error.value)
   })
 
-  xit('FILTER', () => {
-    expect(lookup.FILTER).to.throw('FILTER is not implemented')
+  it('FILTER', () => {
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [true, false, true, false]
+      )
+    ).to.eql([
+      ['Game', 'Asia', '41334'],
+      ['Utility', 'Asia', '54234']
+    ])
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [true, false, true, false],
+        [false, false, true, false]
+      )
+    ).to.eql([['Utility', 'Asia', '54234']])
+
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [true, false, true]
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [true, false, true, false]
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.FILTER([
+        ['Game', 'Asia', '41334'],
+        ['Game', 'Europe', '25234'],
+        ['Utility', 'Asia', '54234']
+      ])
+    ).to.equal(error.na)
+    expect(lookup.FILTER()).to.equal(error.na)
   })
 
   it('HLOOKUP', () => {

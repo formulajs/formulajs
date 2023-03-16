@@ -396,6 +396,30 @@ export function anyIsString() {
   return false
 }
 
+export function anyIsNull() {
+  let n = arguments.length
+
+  while (n--) {
+    if (arguments[n] === null) {
+      return true
+    }
+  }
+
+  return false
+}
+
+export function anyIsUndefined() {
+  let n = arguments.length
+
+  while (n--) {
+    if (arguments[n] === undefined) {
+      return true
+    }
+  }
+
+  return false
+}
+
 // Misc
 export function isDefined(arg) {
   return arg !== undefined && arg !== null
