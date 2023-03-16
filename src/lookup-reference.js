@@ -575,6 +575,10 @@ export function FILTER(array, include, if_empty) {
     return error.na
   }
 
+  if (typeof array === 'undefined' || typeof include === 'undefined') {
+    return error.value
+  }
+
   const validationArrayType = utils.getVariableType(include)
 
   if (validationArrayType === 'matrix') {
@@ -595,10 +599,22 @@ export function FILTER(array, include, if_empty) {
     }
 
     if (parsedValidation) {
+      if (array === null) {
+        return 0
+      }
+
       return array
     }
 
-    return arguments.length === 3 ? if_empty : error.calc
+    if (typeof if_empty === 'undefined') {
+      return error.calc
+    }
+
+    if (if_empty === null) {
+      return 0
+    }
+
+    return if_empty
   }
 
   if (sourceArrayType === 'single') {
@@ -628,7 +644,9 @@ export function FILTER(array, include, if_empty) {
         return parsedValidation
       } else if (parsedValidation) {
         for (let y = 0; y < numberOfRows; y++) {
-          result[y].push(array[y][x])
+          const item = array[y][x]
+
+          result[y].push(item !== null ? item : 0)
         }
       }
     }
@@ -637,25 +655,45 @@ export function FILTER(array, include, if_empty) {
       return result
     }
 
-    return arguments.length === 3 ? if_empty : error.calc
+    if (typeof if_empty === 'undefined') {
+      return error.calc
+    }
+
+    if (if_empty === null) {
+      return 0
+    }
+
+    return if_empty
   }
 
   // validationArrayType === 'column'
 
-  if (array.length !== include.length) {
+  const numberOfRows = include.length
+
+  if (array.length !== numberOfRows) {
     return error.value
   }
 
+  const numberOfCols = array[0].length
+
   const result = []
 
-  const length = include.length
-  for (let y = 0; y < length; y++) {
+  for (let y = 0; y < numberOfRows; y++) {
     const parsedValidation = utils.parseBool(include[y][0])
 
     if (typeof parsedValidation !== 'boolean') {
       return parsedValidation
     } else if (parsedValidation) {
-      result.push(array[y])
+      const row = array[y]
+
+      const parsedRow = []
+      for (let x = 0; x < numberOfCols; x++) {
+        const item = row[x]
+
+        parsedRow.push(item !== null ? item : 0)
+      }
+
+      result.push(parsedRow)
     }
   }
 
@@ -663,7 +701,15 @@ export function FILTER(array, include, if_empty) {
     return result
   }
 
-  return arguments.length === 3 ? if_empty : error.calc
+  if (typeof if_empty === 'undefined') {
+    return error.calc
+  }
+
+  if (if_empty === null) {
+    return 0
+  }
+
+  return if_empty
 }
 
 const startsWithNumber = /^-*\d/
