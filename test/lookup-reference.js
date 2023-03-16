@@ -1864,24 +1864,78 @@ describe('Lookup Reference', () => {
           ['Utility', 'Asia', '54234'],
           ['Utility', 'Europe', '32345']
         ],
-        [true, false, true, false]
+        [[true], [false], [1], [0]]
       )
     ).to.eql([
       ['Game', 'Asia', '41334'],
       ['Utility', 'Asia', '54234']
     ])
+
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', error.div0],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [[2], [false], ['true'], ['false']]
+      )
+    ).to.eql([
+      ['Game', 'Asia', '41334'],
+      ['Utility', 'Asia', '54234']
+    ])
+
     expect(
       lookup.FILTER(
         [
           ['Game', 'Asia', '41334'],
           ['Game', 'Europe', '25234'],
-          ['Utility', 'Asia', '54234'],
-          ['Utility', 'Europe', '32345']
+          ['Utility', 'Asia', '54234']
         ],
-        [true, false, true, false],
-        [false, false, true, false]
+        [[true], ['1'], [true]]
       )
-    ).to.eql([['Utility', 'Asia', '54234']])
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true], [error.name], [error.div0]]
+      )
+    ).to.equal(error.name)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true], [error.div0], [error.name]]
+      )
+    ).to.equal(error.div0)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true], ['test'], [error.name]]
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true], [error.name], ['test']]
+      )
+    ).to.equal(error.name)
 
     expect(
       lookup.FILTER(
@@ -1891,8 +1945,60 @@ describe('Lookup Reference', () => {
           ['Utility', 'Asia', '54234'],
           ['Utility', 'Europe', '32345']
         ],
-        [true, false, true]
+        [[true], [false], [true]]
       )
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true], [false], [true], [false]]
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true, false]]
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [[true, false, true, false]]
+      )
+    ).to.equal(error.value)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234']
+        ],
+        [
+          [true, false, true],
+          [true, false, true]
+        ]
+      )
+    ).to.equal(error.value)
+
+    expect(lookup.FILTER()).to.equal(error.na)
+    expect(
+      lookup.FILTER([
+        ['Game', 'Asia', '41334'],
+        ['Game', 'Europe', '25234'],
+        ['Utility', 'Asia', '54234']
+      ])
     ).to.equal(error.na)
     expect(
       lookup.FILTER(
@@ -1901,17 +2007,108 @@ describe('Lookup Reference', () => {
           ['Game', 'Europe', '25234'],
           ['Utility', 'Asia', '54234']
         ],
-        [true, false, true, false]
+        [[true], [true], [true]],
+        'No match',
+        'test'
       )
     ).to.equal(error.na)
+
     expect(
-      lookup.FILTER([
-        ['Game', 'Asia', '41334'],
-        ['Game', 'Europe', '25234'],
-        ['Utility', 'Asia', '54234']
-      ])
-    ).to.equal(error.na)
-    expect(lookup.FILTER()).to.equal(error.na)
+      lookup.FILTER(
+        [
+          ['East', 1],
+          ['West', 2],
+          ['North', 3]
+        ],
+        [[false], [false], [false]]
+      )
+    ).to.equal(error.calc)
+    expect(
+      lookup.FILTER(
+        [
+          ['East', 1],
+          ['West', 2],
+          ['North', 3]
+        ],
+        [[false], [false], [false]],
+        'No match'
+      )
+    ).to.equal('No match')
+
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [[true, false, 1]]
+      )
+    ).to.eql([
+      ['Game', '41334'],
+      ['Game', '25234'],
+      ['Utility', '54234'],
+      ['Utility', '32345']
+    ])
+
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [[true, false, '1']]
+      )
+    ).to.equal(error.value)
+
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [[false, false, false]]
+      )
+    ).to.equal(error.calc)
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Asia', '41334'],
+          ['Game', 'Europe', '25234'],
+          ['Utility', 'Asia', '54234'],
+          ['Utility', 'Europe', '32345']
+        ],
+        [[false, false, false]],
+        'No match'
+      )
+    ).to.equal('No match')
+
+    expect(lookup.FILTER(error.na, error.div0)).to.equal(error.div0)
+
+    expect(lookup.FILTER('test', true)).to.equal('test')
+    expect(lookup.FILTER('test', false)).to.equal(error.calc)
+    expect(lookup.FILTER('test', false, 'No match')).to.equal('No match')
+
+    expect(lookup.FILTER(4, [[1, true]])).to.equal(error.value)
+    expect(lookup.FILTER(5, [[1], [true]])).to.equal(error.value)
+    expect(lookup.FILTER(5, [[1], [true]])).to.equal(error.value)
+
+    expect(lookup.FILTER([['Game'], ['Utility']], true)).to.eql([['Game'], ['Utility']])
+    expect(lookup.FILTER([['Game', 'Utility']], 'true')).to.eql([['Game', 'Utility']])
+    expect(
+      lookup.FILTER(
+        [
+          ['Game', 'Utility'],
+          [1, 2]
+        ],
+        true
+      )
+    ).to.eql(error.value)
   })
 
   it('HLOOKUP', () => {

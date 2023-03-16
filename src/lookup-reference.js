@@ -570,24 +570,100 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup =
  * @param {*} conditions The criteria that the sample will be filtered on. Array of array of booleans.
  * @returns
  */
-export function FILTER(sample, ...conditions) {
-  if (
-    arguments.length < 2 ||
-    !Array.isArray(sample) ||
-    !Array.isArray(conditions) ||
-    !Array.isArray(sample[0]) ||
-    sample.length !== conditions[0].length
-  ) {
+export function FILTER(array, include, if_empty) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
   }
 
-  let result = [...sample]
+  const validationArrayType = utils.getVariableType(include)
 
-  conditions.forEach((condition) => {
-    result = result.map((row, i) => (condition[i] ? row : false))
-  })
+  if (validationArrayType === 'matrix') {
+    return error.value
+  }
 
-  return result.filter((row) => row)
+  const sourceArrayType = utils.getVariableType(array)
+
+  if (validationArrayType === 'single') {
+    if (sourceArrayType === 'matrix') {
+      return error.value
+    }
+
+    const parsedValidation = utils.parseBool(include)
+
+    if (typeof parsedValidation !== 'boolean') {
+      return parsedValidation
+    }
+
+    if (parsedValidation) {
+      return array
+    }
+
+    return arguments.length === 3 ? if_empty : error.calc
+  }
+
+  if (sourceArrayType === 'single') {
+    return error.value
+  }
+
+  if (validationArrayType === 'line') {
+    const validations = include[0]
+
+    const numberOfCols = validations.length
+
+    if (array[0].length !== numberOfCols) {
+      return error.value
+    }
+
+    const numberOfRows = array.length
+
+    const result = []
+    for (let y = 0; y < numberOfRows; y++) {
+      result.push([])
+    }
+
+    for (let x = 0; x < numberOfCols; x++) {
+      const parsedValidation = utils.parseBool(validations[x])
+
+      if (typeof parsedValidation !== 'boolean') {
+        return parsedValidation
+      } else if (parsedValidation) {
+        for (let y = 0; y < numberOfRows; y++) {
+          result[y].push(array[y][x])
+        }
+      }
+    }
+
+    if (result[0].length !== 0) {
+      return result
+    }
+
+    return arguments.length === 3 ? if_empty : error.calc
+  }
+
+  // validationArrayType === 'column'
+
+  if (array.length !== include.length) {
+    return error.value
+  }
+
+  const result = []
+
+  const length = include.length
+  for (let y = 0; y < length; y++) {
+    const parsedValidation = utils.parseBool(include[y][0])
+
+    if (typeof parsedValidation !== 'boolean') {
+      return parsedValidation
+    } else if (parsedValidation) {
+      result.push(array[y])
+    }
+  }
+
+  if (result.length !== 0) {
+    return result
+  }
+
+  return arguments.length === 3 ? if_empty : error.calc
 }
 
 const startsWithNumber = /^-*\d/

@@ -550,3 +550,24 @@ export function getHour(something) {
   }
   return something
 }
+
+/**
+ * Returns the type of the sent variable.
+ * @param {any|any[][]} variable - Analyzed variable.
+ * @returns {string}
+ */
+export const getVariableType = function (variable) {
+  if (typeof variable !== 'object' || typeof variable.length === 'undefined') {
+    return 'single'
+  }
+
+  if (variable.length === 1) {
+    return 'line'
+  }
+
+  if (variable[0].length !== 1) {
+    return 'matrix'
+  }
+
+  return 'column'
+}
