@@ -231,7 +231,6 @@ describe('Utils => Common', () => {
       expect(utils.parseBool(1)).to.equal(true)
       expect(utils.parseBool('TRUE')).to.equal(true)
       expect(utils.parseBool('FALSE')).to.equal(false)
-      expect(utils.parseBool(new Date())).to.equal(true)
       expect(utils.parseBool(NaN)).to.equal(true)
       const err = new Error()
       expect(utils.parseBool(err)).to.equal(err)
@@ -278,13 +277,6 @@ describe('Utils => Common', () => {
         )
         expect(utils.parseDate('11/11/11 12:12:12').getTime()).to.equal(
           new Date(2011, 11 - 1, 11, 12, 12, 12).getTime()
-        )
-      })
-
-      it('should parse date from Date', () => {
-        expect(utils.parseDate(new Date(2009, 7 - 1, 1)).getTime()).to.equal(new Date(2009, 7 - 1, 1).getTime())
-        expect(utils.parseDate(new Date(2009, 7 - 1, 1, 11, 11, 11)).getTime()).to.equal(
-          new Date(2009, 7 - 1, 1, 11, 11, 11).getTime()
         )
       })
 

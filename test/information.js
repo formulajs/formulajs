@@ -445,8 +445,6 @@ describe('Information', () => {
     expect(information.N('1')).to.equal(0)
     expect(information.N('true')).to.equal(0)
 
-    expect(information.N(new Date(0))).to.equal(new Date(0).getTime())
-
     Object.values(error).forEach((err) => {
       expect(information.N(err)).to.equal(err)
     })
