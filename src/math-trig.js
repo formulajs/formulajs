@@ -1054,8 +1054,18 @@ export function MDETERM(matrix) {
  * @returns
  */
 export function MINVERSE(matrix) {
-  if (matrix == undefined || matrix == null) {
+  if (arguments.length > 1) {
     return error.na
+  }
+
+  const variableType = typeof matrix
+
+  if (variableType === 'undefined') {
+    return error.na
+  }
+
+  if (!matrix || variableType === 'boolean') {
+    return error.value
   }
 
   const anyError = utils.anyError(matrix)
@@ -1094,7 +1104,11 @@ export function MINVERSE(matrix) {
     }
   }
 
-  const augmented = matrix.map((row, i) => row.concat(identity[i]))
+  const augmented = []
+  for (let i = 0; i < matrix.length; i++) {
+    augmented[i] = matrix[i].concat(identity[i])
+  }
+
   for (let i = 0; i < rows; i++) {
     let pivot = augmented[i][i]
     if (pivot === 0) {
@@ -1115,7 +1129,10 @@ export function MINVERSE(matrix) {
     }
   }
 
-  const inverse = augmented.map((row) => row.slice(rows))
+  const inverse = []
+  for (let i = 0; i < rows; i++) {
+    inverse[i] = augmented[i].slice(rows)
+  }
 
   return inverse
 }
