@@ -997,11 +997,21 @@ export function LOG10(number) {
  * @returns
  */
 export function MDETERM(matrix) {
-  if (!isNaN(matrix)) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (matrix instanceof Error) {
     return matrix
   }
 
-  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0])) {
+  let variableType = typeof matrix
+
+  if (variableType !== 'string' && variableType === 'number') {
+    return matrix
+  }
+
+  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0]) || variableType === 'string') {
     return error.value
   }
 
@@ -1021,7 +1031,8 @@ export function MDETERM(matrix) {
       utils.anyIsError(...matrix[i]) ||
       utils.anyIsString(...matrix[i]) ||
       utils.anyIsNull(...matrix[i]) ||
-      utils.anyIsUndefined(...matrix[i])
+      utils.anyIsUndefined(...matrix[i]) ||
+      utils.anyIsBoolean(...matrix[i])
     ) {
       return error.value
     }

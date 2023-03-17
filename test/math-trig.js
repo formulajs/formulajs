@@ -486,12 +486,31 @@ describe('Math & Trig', () => {
   })
 
   it('MDETERM', () => {
+    expect(mathTrig.MDETERM(4)).to.equal(4)
     expect(
       mathTrig.MDETERM([
         [1, 2],
         [3, 4]
       ])
     ).to.equal(-2)
+    expect(
+      mathTrig.MDETERM([
+        [1, -2],
+        [3, -4]
+      ])
+    ).to.equal(2)
+    expect(
+      mathTrig.MDETERM([
+        [4, 4],
+        [4, 4]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [1, 0.5],
+        [4.4, 1.5]
+      ])
+    ).to.be.approximately(-0.7, 0.00001)
     expect(
       mathTrig.MDETERM([
         [1, 2, 3],
@@ -561,6 +580,44 @@ describe('Math & Trig', () => {
         [3, undefined]
       ])
     ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, false]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, true]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM(
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ]
+      )
+    ).to.equal(error.na)
+    expect(mathTrig.MDETERM(1, 2)).to.equal(error.na)
+    expect(mathTrig.MDETERM('4')).to.equal(error.value)
+    expect(mathTrig.MDETERM('string')).to.equal(error.value)
+    expect(mathTrig.MDETERM(true)).to.equal(error.value)
+    expect(mathTrig.MDETERM(false)).to.equal(error.value)
+    expect(mathTrig.MDETERM('true')).to.equal(error.value)
+    expect(mathTrig.MDETERM('false')).to.equal(error.value)
+    expect(mathTrig.MDETERM(undefined, undefined)).to.equal(error.na)
+    expect(mathTrig.MDETERM()).to.equal(error.na)
+    expect(mathTrig.MDETERM(error.na)).to.equal(error.na)
+    expect(mathTrig.MDETERM(error.calc)).to.equal(error.calc)
+    expect(mathTrig.MDETERM(error.num)).to.equal(error.num)
+    expect(mathTrig.MDETERM(error.value)).to.equal(error.value)
+    expect(mathTrig.MDETERM(error.error)).to.equal(error.error)
   })
 
   it('MINVERSE', () => {
