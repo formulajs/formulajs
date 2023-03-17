@@ -1746,6 +1746,10 @@ export function SERIESSUM(x, n, m, coefficients) {
  * @returns
  */
 export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
+  if (arguments.length > 4) {
+    return error.error
+  }
+
   rows = utils.parseNumber(rows)
   columns = utils.parseNumber(columns)
   start = utils.parseNumber(start)
