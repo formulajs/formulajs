@@ -559,3 +559,15 @@ export const getVariableType = function (variable) {
 
   return 'column'
 }
+
+export function anyIsBoolean() {
+  let n = arguments.length
+
+  while (n--) {
+    if (typeof arguments[n] === 'boolean') {
+      return true
+    }
+  }
+
+  return false
+}
