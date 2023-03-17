@@ -390,12 +390,14 @@ export function UNARY_PERCENT(percentage) {
     return error.na
   }
 
-  if (percentage instanceof Error) {
-    return error.error
+  const variableType = typeof percentage
+
+  if (percentage.formulaError) {
+    return percentage
   }
 
-  if (isNaN(percentage)) {
-    return error.num
+  if ((variableType !== 'number' && variableType !== 'string') || isNaN(percentage)) {
+    return error.value
   }
 
   return percentage / 100

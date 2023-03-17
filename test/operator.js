@@ -244,12 +244,26 @@ describe('Operator', () => {
 
   it('UNARY_PERCENT', () => {
     expect(operator.UNARY_PERCENT(10)).to.equal(0.1)
+    expect(operator.UNARY_PERCENT(1)).to.equal(0.01)
+    expect(operator.UNARY_PERCENT(0.01)).to.equal(0.0001)
+    expect(operator.UNARY_PERCENT(-10)).to.equal(-0.1)
     expect(operator.UNARY_PERCENT(100)).to.equal(1)
+    expect(operator.UNARY_PERCENT(200)).to.equal(2)
     expect(operator.UNARY_PERCENT(50)).to.equal(0.5)
 
+    expect(operator.UNARY_PERCENT(10, 10)).to.equal(error.na)
     expect(operator.UNARY_PERCENT()).to.equal(error.na)
-    expect(operator.UNARY_PERCENT('string')).to.equal(error.num)
+    expect(operator.UNARY_PERCENT('50')).to.equal(0.5)
+    expect(operator.UNARY_PERCENT(true)).to.equal(error.value)
+    expect(operator.UNARY_PERCENT(false)).to.equal(error.value)
+    expect(operator.UNARY_PERCENT('true')).to.equal(error.value)
+    expect(operator.UNARY_PERCENT('false')).to.equal(error.value)
+    expect(operator.UNARY_PERCENT('string')).to.equal(error.value)
     expect(operator.UNARY_PERCENT(error.error)).to.equal(error.error)
+    expect(operator.UNARY_PERCENT(error.value)).to.equal(error.value)
+    expect(operator.UNARY_PERCENT(error.calc)).to.equal(error.calc)
+    expect(operator.UNARY_PERCENT(error.num)).to.equal(error.num)
+    expect(operator.UNARY_PERCENT(error.na)).to.equal(error.na)
   })
 
   it('UPLUS', () => {
