@@ -1174,7 +1174,7 @@ describe('Math & Trig', () => {
   })
 
   it('SEQUENCE', () => {
-    expect(mathTrig.SEQUENCE(1)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE(1)).to.eql(1)
     expect(mathTrig.SEQUENCE(2)).to.eql([[1], [2]])
     expect(mathTrig.SEQUENCE(2, 2)).to.eql([
       [1, 2],
@@ -1212,12 +1212,11 @@ describe('Math & Trig', () => {
       [5, 6, 7],
       [8, 9, 10]
     ])
-    expect(mathTrig.SEQUENCE('1')).to.eql([[1]])
-    expect(mathTrig.SEQUENCE(true)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE('1')).to.eql(1)
+    expect(mathTrig.SEQUENCE(true)).to.eql(1)
 
-    expect(mathTrig.SEQUENCE()).to.eql([[1]])
-    expect(mathTrig.SEQUENCE(undefined)).to.eql([[1]])
-    expect(mathTrig.SEQUENCE(undefined, undefined)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE()).to.eql(error.na)
+    expect(mathTrig.SEQUENCE(undefined, undefined)).to.eql(1)
     expect(mathTrig.SEQUENCE('string')).to.equal(error.value)
     expect(mathTrig.SEQUENCE(error.value)).to.equal(error.value)
     expect(mathTrig.SEQUENCE(error.num)).to.equal(error.num)
@@ -1277,7 +1276,7 @@ describe('Math & Trig', () => {
         [3, 4]
       ])
     ).to.equal(error.value)
-    expect(mathTrig.SEQUENCE(1, 1, 1, 1, 1)).to.equal(error.error)
+    expect(mathTrig.SEQUENCE(1, 1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('SIGN', () => {
