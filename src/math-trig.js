@@ -1464,11 +1464,10 @@ export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = fal
     return error.na
   }
 
-  
   if (utils.anyIsNull(rows, columns, min, max) || rows == 0 || columns == 0) {
     return error.calc
   }
-  
+
   rows = utils.parseNumber(rows)
   columns = utils.parseNumber(columns)
   min = utils.parseNumber(min)
@@ -1481,13 +1480,12 @@ export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = fal
     return anyError
   }
 
-
   if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
     return error.value
   }
 
   let result = []
-  
+
   if (integer) {
     for (let i = 0; i < rows; i++) {
       let row = []

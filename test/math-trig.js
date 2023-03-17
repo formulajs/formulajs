@@ -987,10 +987,10 @@ describe('Math & Trig', () => {
     expect(mathTrig.RANDARRAY(2).length).to.equal(2)
     expect(mathTrig.RANDARRAY(1, 2)[0].length).to.equal(2)
     expect(mathTrig.RANDARRAY(2, 2, 5, 6)[0][0]).to.be.within(5, 6)
-    expect(mathTrig.RANDARRAY("4", 1).length).to.equal(4)
-    expect(mathTrig.RANDARRAY(1, "4")[0].length).to.equal(4)
-    expect(mathTrig.RANDARRAY(2, 2, "0", "1")[0][0]).to.be.within(0, 1)
-    expect(mathTrig.RANDARRAY(2, 2, "-10", "-2")[0][0]).to.be.within(-10, -2)
+    expect(mathTrig.RANDARRAY('4', 1).length).to.equal(4)
+    expect(mathTrig.RANDARRAY(1, '4')[0].length).to.equal(4)
+    expect(mathTrig.RANDARRAY(2, 2, '0', '1')[0][0]).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(2, 2, '-10', '-2')[0][0]).to.be.within(-10, -2)
     expect(mathTrig.RANDARRAY(2, 2, -5, 0)[0][0]).to.be.within(-5, 0)
     expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, true)[0][0])).to.be.true
     expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, false)[0][0])).to.be.false
