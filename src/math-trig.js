@@ -1007,7 +1007,7 @@ export function MDETERM(matrix) {
 
   let variableType = typeof matrix
 
-  if (variableType !== 'string' && variableType === 'number') {
+  if (variableType === 'number') {
     return matrix
   }
 
