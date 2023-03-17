@@ -725,6 +725,8 @@ describe('Financial', () => {
     expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLEQ('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLEQ('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLEQ('03/31/2008', '03/31/2009', 0.0914)).to.approximately(0.10199146427959986, 1e-9)
+    expect(financial.TBILLEQ('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
   })
 
   it('TBILLPRICE', () => {
@@ -733,6 +735,8 @@ describe('Financial', () => {
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLPRICE('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLPRICE('03/31/2008', '03/31/2009', 0.0914)).to.equal(90.86)
+    expect(financial.TBILLPRICE('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
   })
 
   it('TBILLYIELD', () => {
@@ -744,6 +748,8 @@ describe('Financial', () => {
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLYIELD('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLYIELD('03/31/2008', '03/31/2009', 0.0914)).to.approximately(1093.0919037199128, 1e-9)
+    expect(financial.TBILLYIELD('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
   })
 
   // TODO: implement

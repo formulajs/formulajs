@@ -275,19 +275,11 @@ export function parseBool(bool) {
     }
   }
 
-  if (bool instanceof Date) {
-    return true
-  }
-
   return error.value
 }
 
 export function parseDate(date) {
   if (!isNaN(date)) {
-    if (date instanceof Date) {
-      return new Date(date)
-    }
-
     const d = parseFloat(date)
 
     if (d < 0 || d >= 2958466) {
@@ -460,10 +452,6 @@ export const isValidNumber = (text, allowSignal) => {
 }
 
 export function getNumber(something) {
-  if (something instanceof Date) {
-    return dateToSerialNumber(something)
-  }
-
   var type = typeof something
   if (type === 'number') {
     return something

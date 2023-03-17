@@ -310,10 +310,6 @@ export function N(value) {
     return value
   }
 
-  if (value instanceof Date) {
-    return value.getTime()
-  }
-
   if (value === true) {
     return 1
   }
