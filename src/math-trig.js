@@ -1054,7 +1054,7 @@ export function MDETERM(matrix) {
  * @returns
  */
 export function MINVERSE(matrix) {
-  if (arguments.length > 1) {
+  if (arguments.length !== 1) {
     return error.na
   }
 
@@ -1796,7 +1796,7 @@ export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
   if (result.length === 1 && result[0].length === 1) {
     return result[0][0]
   }
-  
+
   return result
 }
 

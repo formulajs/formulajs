@@ -603,7 +603,7 @@ describe('Math & Trig', () => {
     expect(mathTrig.MINVERSE(-2)).to.eql(-0.5)
     expect(mathTrig.MINVERSE()).to.eql(error.na)
     expect(mathTrig.MINVERSE(null)).to.eql(error.value)
-    expect(mathTrig.MINVERSE(undefined)).to.eql(error.na)
+    expect(mathTrig.MINVERSE(undefined, undefined)).to.eql(error.na)
     expect(mathTrig.MINVERSE(error.value)).to.eql(error.value)
     expect(mathTrig.MINVERSE(error.num)).to.eql(error.num)
     expect(mathTrig.MINVERSE(error.name)).to.eql(error.name)
