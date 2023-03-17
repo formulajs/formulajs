@@ -981,17 +981,39 @@ describe('Math & Trig', () => {
   })
 
   it('RANDARRAY', () => {
-    expect(mathTrig.RANDARRAY(1)[0][0]).to.be.within(0, 1)
-    expect(mathTrig.RANDARRAY(1).length).to.equal(1)
+    expect(mathTrig.RANDARRAY()).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(1)).to.be.within(0, 1)
+    expect(Number.isInteger(mathTrig.RANDARRAY(1, 1, 0, 1, true))).to.be.true
     expect(mathTrig.RANDARRAY(2).length).to.equal(2)
-    expect(mathTrig.RANDARRAY(1)[0].length).to.equal(1)
     expect(mathTrig.RANDARRAY(1, 2)[0].length).to.equal(2)
+    expect(mathTrig.RANDARRAY(2, 2, 5, 6)[0][0]).to.be.within(5, 6)
+    expect(mathTrig.RANDARRAY("4", 1).length).to.equal(4)
+    expect(mathTrig.RANDARRAY(1, "4")[0].length).to.equal(4)
+    expect(mathTrig.RANDARRAY(2, 2, "0", "1")[0][0]).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(2, 2, "-10", "-2")[0][0]).to.be.within(-10, -2)
+    expect(mathTrig.RANDARRAY(2, 2, -5, 0)[0][0]).to.be.within(-5, 0)
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, true)[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, false)[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 'true')[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 'false')[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, null)[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 1)[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 0)[0][0])).to.be.false
 
+    expect(mathTrig.RANDARRAY(undefined, undefined)).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 1, 1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(-1)).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, -1)).to.equal(error.value)
     expect(mathTrig.RANDARRAY('a')).to.equal(error.value)
     expect(mathTrig.RANDARRAY(1, 'a')).to.equal(error.value)
-    expect(mathTrig.RANDARRAY().length).to.equal(1)
-    expect(mathTrig.RANDARRAY(0)).to.equal(error.num)
-    expect(mathTrig.RANDARRAY(-1)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(0)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 0)).to.equal(error.calc)
     expect(mathTrig.RANDARRAY(error.value)).to.equal(error.value)
     expect(mathTrig.RANDARRAY(error.num)).to.equal(error.num)
   })

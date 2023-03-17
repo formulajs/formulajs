@@ -1452,40 +1452,62 @@ export function RAND() {
  *
  * Category: Math and trigonometry
  *
- * @param {*} rows Number of quantity of rows generated.
- * @param {*} columns Number of quantity of columns generated.
+ * @param {number} rows Number of quantity of rows generated.
+ * @param {number} columns Number of quantity of columns generated.
+ * @param {number} min The minimum number returned.
+ * @param {number} max The maximum number returned.
+ * @param {boolean} integer Return integer or a decimal value, true for integer, false for decimal
  * @returns
  */
-export function RANDARRAY(rows = 1, columns = 1) {
-  if (arguments.length > 2) {
+export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = false) {
+  if (arguments.length > 5) {
     return error.na
   }
 
+  
+  if (utils.anyIsNull(rows, columns, min, max) || rows == 0 || columns == 0) {
+    return error.calc
+  }
+  
   rows = utils.parseNumber(rows)
   columns = utils.parseNumber(columns)
+  min = utils.parseNumber(min)
+  max = utils.parseNumber(max)
+  integer = utils.parseBool(integer)
 
-  const anyError = utils.anyError(rows, columns)
+  const anyError = utils.anyError(rows, columns, min, max, integer)
 
   if (anyError) {
     return anyError
   }
 
-  if (utils.anyIsString(rows, columns)) {
+
+  if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
     return error.value
   }
 
-  if (rows <= 0 || columns <= 0) {
-    return error.num
+  let result = []
+  
+  if (integer) {
+    for (let i = 0; i < rows; i++) {
+      let row = []
+      for (let j = 0; j < columns; j++) {
+        row.push(Math.floor(Math.random() * (max - min + 1)) + min)
+      }
+      result.push(row)
+    }
+  } else {
+    for (let i = 0; i < rows; i++) {
+      let row = []
+      for (let j = 0; j < columns; j++) {
+        row.push(Math.random() * (max - min) + min)
+      }
+      result.push(row)
+    }
   }
 
-  let result = []
-
-  for (let i = 0; i < rows; i++) {
-    let row = []
-    for (let j = 0; j < columns; j++) {
-      row.push(Math.random())
-    }
-    result.push(row)
+  if (result.length === 1 && result[0].length === 1) {
+    return result[0][0]
   }
 
   return result
