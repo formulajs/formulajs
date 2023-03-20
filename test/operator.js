@@ -367,6 +367,13 @@ describe('Operator', () => {
     expect(operator.UNARY_PERCENT(error.calc)).to.equal(error.calc)
     expect(operator.UNARY_PERCENT(error.num)).to.equal(error.num)
     expect(operator.UNARY_PERCENT(error.na)).to.equal(error.na)
+    expect(operator.UNARY_PERCENT([[1]])).to.equal(error.value)
+    expect(
+      operator.UNARY_PERCENT([
+        [1, 10],
+        [5, 30]
+      ])
+    ).to.equal(error.value)
   })
 
   it('UPLUS', () => {
