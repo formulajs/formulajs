@@ -320,17 +320,25 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
     return error.na
   }
 
-  if (utils.anyIsError(value, start, end, inclusiveLower, inclusiveUpper)) {
-    return error.error
+  const anyError = utils.anyError(value, start, end, inclusiveLower, inclusiveUpper)
+
+  if (anyError) {
+    return anyError
   }
 
-  if (utils.anyIsString(value, start, end)) {
+  if (Array.isArray(start) || Array.isArray(end) || Array.isArray(inclusiveLower) || Array.isArray(inclusiveUpper)) {
+    return error.value
+  }
+
+  if (utils.anyIsString(start, end) && (isNaN(start) || isNaN(end))) {
     return error.num
   }
 
   if (utils.anyIsString(inclusiveLower, inclusiveUpper)) {
     return error.value
   }
+
+  const validationArrayType = utils.getVariableType(value)
 
   if ((start === undefined && end === undefined) || value === undefined) {
     return false
@@ -344,14 +352,39 @@ export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpp
     ;[start, end] = [end, start]
   }
 
-  if (inclusiveLower && inclusiveUpper) {
-    return value >= start && value <= end
-  } else if (inclusiveLower) {
-    return value >= start && value < end
-  } else if (inclusiveUpper) {
-    return value > start && value <= end
+  if (validationArrayType === 'single') {
+    if (inclusiveLower && inclusiveUpper) {
+      return value >= start && value <= end
+    } else if (inclusiveLower) {
+      return value >= start && value < end
+    } else if (inclusiveUpper) {
+      return value > start && value <= end
+    } else {
+      return value > start && value < end
+    }
   } else {
-    return value > start && value < end
+    let rows = value.length
+    let columns = value[0].length
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < columns; j++) {
+        let cellValue = value[i][j]
+        let valueType = typeof cellValue
+
+        if (valueType !== 'number') {
+          value[i][j] = false
+        } else if (inclusiveLower && inclusiveUpper) {
+          value[i][j] = cellValue >= start && cellValue <= end
+        } else if (inclusiveLower) {
+          value[i][j] = cellValue >= start && cellValue < end
+        } else if (inclusiveUpper) {
+          value[i][j] = cellValue > start && cellValue <= end
+        } else {
+          value[i][j] = cellValue > start && cellValue < end
+        }
+      }
+    }
+    return value
   }
 }
 

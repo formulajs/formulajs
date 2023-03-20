@@ -216,20 +216,122 @@ describe('Operator', () => {
     expect(operator.ISBETWEEN(1, 1, 10, false, false)).to.equal(false)
     expect(operator.ISBETWEEN(5, 1, 10, false, false)).to.equal(true)
     expect(operator.ISBETWEEN(1, 1, 10, false, true)).to.equal(false)
+    expect(operator.ISBETWEEN(1, 1, 10, null, true)).to.equal(false)
+    expect(operator.ISBETWEEN(1, 1, 10, 4, true)).to.equal(true)
     expect(operator.ISBETWEEN()).to.equal(error.na)
     expect(operator.ISBETWEEN(error.error, 1, 10)).to.equal(error.error)
+    expect(operator.ISBETWEEN(error.na, 1, 10)).to.equal(error.na)
+    expect(operator.ISBETWEEN(error.num, 1, 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN(error.value, 1, 10)).to.equal(error.value)
+    expect(operator.ISBETWEEN(error.calc, 1, 10)).to.equal(error.calc)
     expect(operator.ISBETWEEN(error.error, undefined, undefined)).to.equal(error.error)
     expect(operator.ISBETWEEN(1, error.error, 10)).to.equal(error.error)
     expect(operator.ISBETWEEN(1, 1, error.error)).to.equal(error.error)
+    expect(operator.ISBETWEEN(null, 1, 10)).to.equal(false)
+    expect(operator.ISBETWEEN(1, null, 10)).to.equal(true)
+    expect(operator.ISBETWEEN(1, 4, null)).to.equal(true)
     expect(operator.ISBETWEEN(undefined, 1, 10)).to.equal(false)
     expect(operator.ISBETWEEN(1, undefined, 10)).to.equal(true)
     expect(operator.ISBETWEEN(1, 10, undefined)).to.equal(true)
     expect(operator.ISBETWEEN(1, undefined, undefined)).to.equal(false)
-    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(false)
     expect(operator.ISBETWEEN(1, 'string', 10)).to.equal(error.num)
     expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.num)
     expect(operator.ISBETWEEN(5, 1, 10, 'string')).to.equal(error.value)
     expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.value)
+    expect(operator.ISBETWEEN('5', 1, 10)).to.equal(true)
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [1, 2],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [true, true],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          ['string', '1'],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [true, false],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        [[1, 2]],
+        10
+      )
+    ).to.equal(error.value)
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        1,
+        10,
+        [[1, 2]]
+      )
+    ).to.equal(error.value)
   })
 
   it('UMINUS', () => {
