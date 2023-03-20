@@ -1463,15 +1463,17 @@ export function RAND() {
  *
  * Category: Math and trigonometry
  *
- * @param {number} rows Number of quantity of rows generated.
- * @param {number} columns Number of quantity of columns generated.
- * @param {number} min The minimum number returned.
- * @param {number} max The maximum number returned.
- * @param {boolean} integer Return integer or a decimal value, true for integer, false for decimal
+ * @param {*} rows Number of quantity of rows generated.
+ * @param {*} columns Number of quantity of columns generated.
+ * @param {*} min The minimum number returned.
+ * @param {*} max The maximum number returned.
+ * @param {*} integer Return integer or a decimal value, true for integer, false for decimal
  * @returns
  */
 export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = false) {
-  if (arguments.length > 5) {
+  let argumentsLength = arguments.length
+
+  if (argumentsLength > 5) {
     return error.na
   }
 
@@ -1479,39 +1481,76 @@ export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = fal
     return error.calc
   }
 
-  rows = utils.parseNumber(rows)
-  columns = utils.parseNumber(columns)
-  min = utils.parseNumber(min)
-  max = utils.parseNumber(max)
-  integer = utils.parseBool(integer)
-
-  const anyError = utils.anyError(rows, columns, min, max, integer)
-
-  if (anyError) {
-    return anyError
-  }
-
-  if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
-    return error.value
-  }
-
   let result = []
 
-  if (integer) {
-    for (let i = 0; i < rows; i++) {
-      let row = []
-      for (let j = 0; j < columns; j++) {
-        row.push(Math.floor(Math.random() * (max - min + 1)) + min)
+  if (
+    utils.getVariableType(rows) !== 'single' ||
+    utils.getVariableType(columns) !== 'single' ||
+    utils.getVariableType(min) !== 'single' ||
+    utils.getVariableType(max) !== 'single' ||
+    utils.getVariableType(integer) !== 'single'
+  ) {
+    let resultColumns = 0
+    let resultRows = 0
+
+    for (let i = 0; i < argumentsLength; i++) {
+      if (utils.getVariableType(arguments[i]) !== 'single') {
+        resultRows = Math.max(arguments[i].length, resultRows)
+        resultColumns = Math.max(arguments[i].length, resultColumns)
       }
-      result.push(row)
+    }
+
+    for (let i = 0; i < resultRows; i++) {
+      result[i] = []
+      for (let j = 0; j < resultColumns; j++) {
+        let tempMin = min
+        let tempMax = max
+
+        if (utils.getVariableType(min) !== 'single') {
+          tempMin = min[i][j]
+        }
+        if (utils.getVariableType(max) !== 'single') {
+          tempMax = max[i][j]
+        }
+
+        if (integer === true || (integer && integer[i] && integer[i][j] === true)) {
+          result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
+        } else {
+          result[i][j] = Math.random() * (tempMax - tempMin) + tempMin
+        }
+      }
     }
   } else {
-    for (let i = 0; i < rows; i++) {
-      let row = []
-      for (let j = 0; j < columns; j++) {
-        row.push(Math.random() * (max - min) + min)
+    rows = utils.parseNumber(rows)
+    columns = utils.parseNumber(columns)
+    min = utils.parseNumber(min)
+    max = utils.parseNumber(max)
+    integer = utils.parseBool(integer)
+
+    const anyError = utils.anyError(rows, columns, min, max, integer)
+
+    if (anyError) {
+      return anyError
+    }
+
+    if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
+      return error.value
+    }
+
+    if (integer) {
+      for (let i = 0; i < rows; i++) {
+        result[i] = []
+        for (let j = 0; j < columns; j++) {
+          result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
+        }
       }
-      result.push(row)
+    } else {
+      for (let i = 0; i < rows; i++) {
+        result[i] = []
+        for (let j = 0; j < columns; j++) {
+          result[i][j] = Math.random() * (max - min) + min
+        }
+      }
     }
   }
 
