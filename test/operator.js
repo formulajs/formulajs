@@ -332,6 +332,7 @@ describe('Operator', () => {
         [[1, 2]]
       )
     ).to.equal(error.value)
+    expect(operator.ISBETWEEN(10, 1, 10, true, false, 1)).to.equal(error.na)
   })
 
   it('UMINUS', () => {

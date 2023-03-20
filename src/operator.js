@@ -316,7 +316,7 @@ export function POW(base, exponent) {
  */
 
 export function ISBETWEEN(value, start, end, inclusiveLower = true, inclusiveUpper = true) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || arguments.length > 5) {
     return error.na
   }
 
