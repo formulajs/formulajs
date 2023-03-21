@@ -339,10 +339,17 @@ describe('Operator', () => {
     expect(operator.UMINUS(10)).to.equal(-10)
     expect(operator.UMINUS(-5)).to.equal(5)
     expect(operator.UMINUS(0)).to.equal(0)
+    expect(operator.UMINUS(true)).to.equal(-1)
+    expect(operator.UMINUS(false)).to.equal(0)
+    expect(operator.UMINUS('-1')).to.equal(1)
+    expect(operator.UMINUS('1')).to.equal(-1)
 
     expect(operator.UMINUS()).to.equal(error.na)
+    expect(operator.UMINUS(1, 2)).to.equal(error.na)
+    expect(operator.UMINUS(1, 2, 3)).to.equal(error.na)
     expect(operator.UMINUS('string')).to.equal(error.num)
     expect(operator.UMINUS(error.error)).to.equal(error.error)
+    expect(operator.UMINUS([[1]])).to.equal(error.value)
   })
 
   it('UNARY_PERCENT', () => {
@@ -385,7 +392,11 @@ describe('Operator', () => {
     expect(operator.UPLUS('')).to.equal('')
     expect(operator.UPLUS('string')).to.equal('string')
     expect(operator.UPLUS('1a')).to.equal('1a')
+    expect(operator.UPLUS(true)).to.equal(true)
+    expect(operator.UPLUS(false)).to.equal(false)
 
     expect(operator.UPLUS()).to.equal(error.na)
+    expect(operator.UPLUS([[1]])).to.equal(error.value)
+    expect(operator.UPLUS([['1']])).to.equal(error.value)
   })
 })

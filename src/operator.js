@@ -400,15 +400,19 @@ export function UMINUS(value) {
     return error.na
   }
 
-  if (value instanceof Error) {
-    return error.error
+  if (utils.getVariableType(value) !== 'single') {
+    return error.value
   }
 
-  if (isNaN(value)) {
+  if (value.formulaError) {
+    return value
+  }
+
+  if (isNaN(+value)) {
     return error.num
   }
 
-  return -value
+  return -+value
 }
 
 /**
@@ -448,7 +452,11 @@ export function UPLUS(value) {
     return error.na
   }
 
-  if (isNaN(+value) || value == false) {
+  if (utils.getVariableType(value) !== 'single') {
+    return error.value
+  }
+
+  if (isNaN(+value) || typeof value === 'boolean' || !value) {
     return value
   }
 
