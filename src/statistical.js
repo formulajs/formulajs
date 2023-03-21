@@ -1856,35 +1856,92 @@ export function MAXA() {
 }
 
 export function MAXIFS(range, ...criteria) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || (arguments.length > 3 && arguments.length % 2 === 0)) {
+    return error.na
+  }
+
+  if (utils.getVariableType(range) === 'single') {
     return error.na
   }
 
   let max = -Infinity
+  let rows = range.length
+  let columns = range[0].length
+  let criteriaLength = criteria.length
 
-  for (let i = 0; i < range.length; i++) {
-    let match = true
+  if (utils.getVariableType(criteria[1]) !== 'single') {
+    let result = []
+    for (let c = 0; c < criteriaLength; c += 2) {
+      let criteriaRange = criteria[c]
+      let criteriaValue = [...criteria[c + 1]]
+      let criteriaRows = criteriaValue.length
+      let criteriaColumns = criteriaValue[0].length
 
-    for (let j = 0; j < criteria.length; j += 2) {
-      let criteriaRange = criteria[j]
-      let criteriaValue = criteria[j + 1]
+      for (let m = 0; m < criteriaRows; m++) {
+        result[m] = []
+        if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
+          return error.na
+        }
 
-      if ((criteriaRange && criteriaRange.length !== range.length) || criteriaRange instanceof Error) {
-        return error.value
-      }
+        if (
+          (criteriaRange && criteriaRange.length !== rows) ||
+          criteriaRange[0].length !== columns ||
+          criteriaRange.formulaError
+        ) {
+          return error.value
+        }
 
-      if (criteriaValue === undefined) {
-        return error.na
-      }
-
-      if (criteriaRange[i] !== criteriaValue) {
-        match = false
-        break
+        for (let n = 0; n < criteriaColumns; n++) {
+          for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < columns; j++) {
+              let match = true
+              if (criteriaRange[i][j] !== criteriaValue[m][n]) {
+                match = false
+                break
+              }
+              if (match && (range[i][j] > result[m][n] || isNaN(result[m][n]))) {
+                result[m][n] = range[i][j]
+              }
+            }
+          }
+          if (!result[m][n]) {
+            result[m][n] = 0
+          }
+        }
       }
     }
+    return result
+  } else {
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < columns; j++) {
+        let match = true
 
-    if (match && range[i] > max) {
-      max = range[i]
+        for (let c = 0; c < criteriaLength; c += 2) {
+          let criteriaRange = criteria[c]
+          let criteriaValue = criteria[c + 1]
+
+          if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
+            return error.na
+          }
+
+          if (
+            (criteriaRange && criteriaRange.length !== rows) ||
+            criteriaRange[0].length !== columns ||
+            criteriaRange.formulaError
+          ) {
+            return error.value
+          }
+
+          if (criteriaRange[i][j] !== criteriaValue) {
+            match = false
+            break
+          }
+        }
+
+        if (match && range[i][j] > max) {
+          max = range[i][j]
+        }
+      }
     }
   }
 
@@ -1897,15 +1954,17 @@ export function MINIFS(range, ...criteria) {
   }
 
   let min = +Infinity
+  let rows = range.length
 
-  for (let i = 0; i < range.length; i++) {
+  for (let i = 0; i < rows; i++) {
     let match = true
 
     for (let j = 0; j < criteria.length; j += 2) {
       let criteriaRange = criteria[j]
       let criteriaValue = criteria[j + 1]
+      let criteriaRows = criteriaRange.length
 
-      if ((criteriaRange && criteriaRange.length !== range.length) || criteriaRange instanceof Error) {
+      if ((criteriaRange && criteriaRows !== rows) || criteriaRange.formulaError) {
         return error.value
       }
 
