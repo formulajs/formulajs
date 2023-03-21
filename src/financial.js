@@ -411,6 +411,28 @@ export function CUMPRINC(rate, nper, pv, start_period, end, type) {
  * @returns
  */
 export function DB(cost, salvage, life, period, month) {
+  if (arguments.length < 4 || arguments.length > 5) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(cost, salvage, life, period, month)) {
+    return error.value
+  }
+
+  if (utils.anyIsNull(life, period, month)) {
+    return error.num
+  }
+
+  if (utils.anyIsUndefined(cost, salvage, life, period)) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(cost, salvage, life, period, month)
+
+  if (anyError) {
+    return anyError
+  }
+
   // Initialize month
   month = month === undefined ? 12 : month
 
