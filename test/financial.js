@@ -250,6 +250,27 @@ describe('Financial', () => {
       16.11111111111111,
       1e-9
     )
+    expect(financial.ACCRINT('2/2/2012', '12/4/2013', '3/30/2012', '0.1', 1000, 4, 4, false)).to.approximately(
+      16.11111111111111,
+      1e-9
+    )
+    expect(financial.ACCRINT('2/2/2012', '12/4/2013', '3/30/2012', 0.1, '1000', 4, 4, false)).to.approximately(
+      16.11111111111111,
+      1e-9
+    )
+    expect(financial.ACCRINT('2/2/2012', '12/4/2013', '3/30/2012', 0.1, 1000, '4', 4, false)).to.approximately(
+      16.11111111111111,
+      1e-9
+    )
+    expect(financial.ACCRINT('2/2/2012', '12/4/2013', '3/30/2012', 0.1, 1000, 4, '4', false)).to.approximately(
+      16.11111111111111,
+      1e-9
+    )
+    expect(financial.ACCRINT(40001, '3/30/2012', '12/4/2013', 0.1, 1000, 1, 0, true)).to.approximately(
+      440.8333333333333,
+      1e-9,
+      1e-9
+    )
     expect(financial.ACCRINT('2/2/2012', '12/4/2013', '2/1/2012', 0.1, 1000, 4, 4, false)).to.equal(error.num)
     expect(financial.ACCRINT('Hello World!', '3/30/2012', '12/4/2013', 0.1, 1000, 2, 0)).to.equal(error.value)
     expect(financial.ACCRINT('2/2/2012', 'Hello World!', '12/4/2013', 0.1, 1000, 2, 0)).to.equal(error.value)
@@ -260,6 +281,40 @@ describe('Financial', () => {
     expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, -1000, 2, 0)).to.equal(error.num)
     expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 3, 0)).to.equal(error.num)
     expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT([['2/2/2012'], ['2/2/2012']], '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(
+      error.value
+    )
+    expect(financial.ACCRINT('2/2/2012', [['3/30/2012'], ['3/30/2012']], '12/4/2013', 0.1, 1000, 2, 5)).to.equal(
+      error.value
+    )
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', [['12/4/2013'], ['12/4/2013']], 0.1, 1000, 2, 5)).to.equal(
+      error.value
+    )
+    expect(financial.ACCRINT(undefined, '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.value)
+    expect(financial.ACCRINT('2/2/2012', undefined, '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.value)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', undefined, 0.1, 1000, 2, 5)).to.equal(error.value)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', undefined, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, undefined, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, undefined, 5)).to.equal(error.num)
+    expect(financial.ACCRINT(null, '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', null, '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', null, 0.1, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', null, 1000, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, null, 2, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, null, 5)).to.equal(error.num)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5, true, 4)).to.equal(error.na)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000)).to.equal(error.na)
+    expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013')).to.equal(error.na)
+    expect(financial.ACCRINT()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.ACCRINT(err, '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(err)
+      expect(financial.ACCRINT('2/2/2012', err, '12/4/2013', 0.1, 1000, 2, 5)).to.equal(err)
+      expect(financial.ACCRINT('2/2/2012', '3/30/2012', err, 0.1, 1000, 2, 5)).to.equal(err)
+      expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', err, 1000, 2, 5)).to.equal(err)
+      expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, err, 2, 5)).to.equal(err)
+      expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, err, 5)).to.equal(err)
+    })
   })
 
   // TODO: implement

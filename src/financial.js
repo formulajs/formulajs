@@ -18,10 +18,24 @@ import * as utils from './utils/common.js'
  * @returns
  */
 export function ACCRINT(issue, first_interest, settlement, rate, par, frequency, basis) {
+  if (arguments.length > 8 || arguments.length < 6) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(issue, first_interest, settlement, rate, par, frequency, basis)
+
+  if (anyError) {
+    return anyError
+  }
+
   // Return error if either date is invalid
   issue = utils.parseDate(issue)
   first_interest = utils.parseDate(first_interest)
   settlement = utils.parseDate(settlement)
+  rate = utils.parseNumber(rate)
+  par = utils.parseNumber(par)
+  frequency = utils.parseNumber(frequency)
+  basis = utils.parseNumber(basis)
 
   if (utils.anyIsError(issue, first_interest, settlement)) {
     return error.value
