@@ -1262,21 +1262,136 @@ describe('Statistical', () => {
   })
 
   it('MINIFS', () => {
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A')).to.equal(2)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B')).to.equal(6)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'], 'D')).to.equal(6)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], 'A')).to.equal(2)
+    expect(statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B'], ['B']], 'A')).to.equal(2)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], 'B')).to.equal(6)
     expect(
-      statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'A', ['D', 'D', 'D', 'C'], 'D', ['Y', 'Z', 'Z', 'Z'], 'Z')
+      statistical.MINIFS(
+        [
+          [2, 3],
+          [4, 5],
+          [6, 7],
+          [8, 9]
+        ],
+        [
+          ['A', 'B'],
+          ['A', 'B'],
+          ['B', 'A'],
+          ['A', 'A']
+        ],
+        'A'
+      )
+    ).to.equal(2)
+    expect(
+      statistical.MINIFS(
+        [
+          [2, 3],
+          [4, 5],
+          [6, 7],
+          [8, 9]
+        ],
+        [
+          ['A', 'B'],
+          ['A', 'B'],
+          ['B', 'A'],
+          ['A', 'A']
+        ],
+        'B'
+      )
+    ).to.equal(3)
+    expect(statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B'], ['B']], 'B')).to.equal(6)
+    expect(
+      statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B'], ['B']], 'B', [['D'], ['C'], ['D'], ['C']], 'D')
+    ).to.equal(6)
+    expect(
+      statistical.MINIFS(
+        [[2], [4], [6], [8]],
+        [['A'], ['A'], ['B'], ['B']],
+        'A',
+        [['D'], ['D'], ['D'], ['C']],
+        'D',
+        [['Y'], ['Z'], ['Z'], ['Z']],
+        'Z'
+      )
     ).to.equal(4)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'C')).to.equal(0)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], 'C')).to.equal(0)
+    expect(statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B'], ['B']], [['A'], ['B']])).to.eql([[2], [6]])
+    expect(statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B'], ['B']], [['A'], ['A']])).to.eql([[2], [2]])
+    expect(
+      statistical.MINIFS(
+        [[2], [4], [6], [8]],
+        [['A'], ['B'], ['C'], ['D']],
+        [
+          ['A', 'B'],
+          ['C', 'D']
+        ]
+      )
+    ).to.eql([
+      [2, 4],
+      [6, 8]
+    ])
 
-    expect(statistical.MINIFS([], [], 'A')).to.equal(0)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], null)).to.equal(0)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], undefined)).to.equal(error.na)
-    expect(statistical.MINIFS([2, 4, 6], ['A', 'A', 'B', 'B'], 'B')).to.equal(error.value)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B'], 'B')).to.equal(error.value)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'])).to.equal(error.na)
-    expect(statistical.MINIFS([2, 4, 6, 8], ['A', 'A', 'B', 'B'], 'B', ['D', 'C', 'D', 'C'])).to.equal(error.na)
+    expect(
+      statistical.MINIFS(
+        [
+          [2, -2],
+          [4, -4],
+          [6, -6],
+          [8, -8]
+        ],
+        [
+          ['A', 'B'],
+          ['A', 'B'],
+          ['A', 'B'],
+          ['A', 'B']
+        ],
+        [['A', 'A']],
+        [
+          ['X', 'Y'],
+          ['X', 'Y'],
+          ['X', 'Y'],
+          ['X', 'Y']
+        ],
+        [['X', 'Y']]
+      )
+    ).to.eql([[2, 0]])
+
+    expect(
+      statistical.MINIFS(
+        [[2], [4], [6], [8]],
+        [['A'], ['B'], ['C'], ['D']],
+        [
+          ['A', 'B'],
+          ['C', 'D']
+        ],
+        [['A'], ['B'], ['C']],
+        [['A'], ['B'], ['C']]
+      )
+    ).to.equal(error.value)
+    expect(
+      statistical.MINIFS(
+        [[2], [4], [6], [8]],
+        [['A'], ['B'], ['C'], ['D']],
+        [
+          ['A', 'B'],
+          ['C', 'D']
+        ],
+        'string',
+        'string'
+      )
+    ).to.equal(error.na)
+    expect(statistical.MINIFS([[]], [[]], 'A')).to.equal(0)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], null)).to.equal(0)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], undefined)).to.equal(error.na)
+    expect(statistical.MINIFS([[2, 4, 6]], [['A', 'A', 'B', 'B']], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([[2], [4], [6]], [['A'], ['A'], ['B'], ['B']], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([[2], [4], [6], [8]], [['A'], ['A'], ['B']], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B']], 'B')).to.equal(error.value)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']])).to.equal(error.na)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], [['A', 'A', 'B', 'B']], 'B', [['D', 'C', 'D', 'C']])).to.equal(error.na)
+    expect(statistical.MINIFS(undefined, [['A', 'A', 'B', 'B']], 'B', [['D', 'C', 'D', 'C']])).to.equal(error.na)
+    expect(statistical.MINIFS('string', [['A', 'A', 'B', 'B']], 'B')).to.equal(error.na)
+    expect(statistical.MINIFS([[2, 4, 6, 8]], 'string', 'B')).to.equal(error.na)
   })
 
   it('MIN', () => {
