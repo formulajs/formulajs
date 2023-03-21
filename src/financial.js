@@ -332,11 +332,27 @@ export function CUMIPMT(rate, nper, pv, start_period, end_period, type) {
 export function CUMPRINC(rate, nper, pv, start_period, end, type) {
   // Credits: algorithm inspired by Apache OpenOffice
   // Credits: Hannes Stiebitzhofer for the translations of function and variable names
+
+  if (arguments.length !== 6 || utils.anyIsUndefined(rate, nper, pv, start_period, end, type)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(rate, nper, pv, start_period, end, type)) {
+    return error.num
+  }
+
+  if (utils.anyIsBoolean(rate, nper, pv, start_period, end, type)) {
+    return error.value
+  }
+
   rate = utils.parseNumber(rate)
   nper = utils.parseNumber(nper)
   pv = utils.parseNumber(pv)
+  start_period = utils.parseNumber(start_period)
+  end = utils.parseNumber(end)
+  type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, nper, pv)) {
+  if (utils.anyIsError(rate, nper, pv, start_period, end, type)) {
     return error.value
   }
 
