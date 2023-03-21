@@ -345,6 +345,12 @@ export function CUMPRINC(rate, nper, pv, start_period, end, type) {
     return error.value
   }
 
+  const anyError = utils.anyError(rate, nper, pv, start_period, end, type)
+
+  if (anyError) {
+    return anyError
+  }
+
   rate = utils.parseNumber(rate)
   nper = utils.parseNumber(nper)
   pv = utils.parseNumber(pv)

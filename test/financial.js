@@ -479,12 +479,12 @@ describe('Financial', () => {
     expect(financial.CUMPRINC('false', 30 * 12, 100000, 13, 24, 1)).to.equal(error.value)
 
     Object.values(error).forEach((err) => {
-      expect(financial.CUMIPMT(err, 30 * 12, 100000, 13, 24, 0)).to.equal(err)
-      expect(financial.CUMIPMT(0.1, err, 100000, 13, 24, 0)).to.equal(err)
-      expect(financial.CUMIPMT(0.1, 30 * 12, err, 13, 24, 0)).to.equal(err)
-      expect(financial.CUMIPMT(0.1, 30 * 12, 100000, err, 24, 0)).to.equal(err)
-      expect(financial.CUMIPMT(0.1, 30 * 12, 100000, 13, err, 0)).to.equal(err)
-      expect(financial.CUMIPMT(0.1, 30 * 12, 100000, 13, 24, err)).to.equal(err)
+      expect(financial.CUMPRINC(err, 30 * 12, 100000, 13, 24, 0)).to.equal(err)
+      expect(financial.CUMPRINC(0.1, err, 100000, 13, 24, 0)).to.equal(err)
+      expect(financial.CUMPRINC(0.1, 30 * 12, err, 13, 24, 0)).to.equal(err)
+      expect(financial.CUMPRINC(0.1, 30 * 12, 100000, err, 24, 0)).to.equal(err)
+      expect(financial.CUMPRINC(0.1, 30 * 12, 100000, 13, err, 0)).to.equal(err)
+      expect(financial.CUMPRINC(0.1, 30 * 12, 100000, 13, 24, err)).to.equal(err)
     })
   })
 
