@@ -255,11 +255,32 @@ export function COUPPCD() {
  * @returns
  */
 export function CUMIPMT(rate, nper, pv, start_period, end_period, type) {
+  if (arguments.length !== 6 || utils.anyIsUndefined(rate, nper, pv, start_period, end_period, type)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(rate, nper, pv, start_period, end_period, type)) {
+    return error.num
+  }
+
+  if (utils.anyIsBoolean(rate, nper, pv, start_period, end_period, type)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(rate, nper, pv, start_period, end_period, type)
+
+  if (anyError) {
+    return anyError
+  }
+
   rate = utils.parseNumber(rate)
   nper = utils.parseNumber(nper)
   pv = utils.parseNumber(pv)
+  start_period = utils.parseNumber(start_period)
+  end_period = utils.parseNumber(end_period)
+  type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, nper, pv)) {
+  if (utils.anyIsError(rate, nper, pv, start_period, end_period, type)) {
     return error.value
   }
 
