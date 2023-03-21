@@ -508,6 +508,28 @@ export function DB(cost, salvage, life, period, month) {
  * @returns
  */
 export function DDB(cost, salvage, life, period, factor) {
+  if (arguments.length < 4 || arguments.length > 5) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(cost, salvage, life, period, factor)) {
+    return error.value
+  }
+
+  if (utils.anyIsNull(life, period, factor)) {
+    return error.num
+  }
+
+  if (utils.anyIsUndefined(cost, salvage, life, period)) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(cost, salvage, life, period, factor)
+
+  if (anyError) {
+    return anyError
+  }
+
   // Initialize factor
   factor = factor === undefined ? 2 : factor
 
