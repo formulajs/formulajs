@@ -1016,7 +1016,30 @@ describe('Financial', () => {
       0.07971710360838036,
       1e-9
     )
+    expect(financial.MIRR([-120000, 39000, 30000, 21000, 37000, 46000], 0.1, 0.12)).to.approximately(0.12609413, 1e-9)
+    expect(financial.MIRR([-75000], 0.1, 0.12)).to.equal(error.num)
     expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 'invalid', 0.12)).to.equal(error.value)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, 'invalid')).to.equal(error.value)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000, 'string', 24000], 0.1, 0.12)).to.equal(error.value)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000, true, 24000], 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000, true, 24000], 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, 0.12, 1)).to.equal(error.na)
+    expect(financial.MIRR([12000, 15000, 18000, 21000, 24000], 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR([-12000, -15000, -18000, -21000, -24000], 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR([-75000, 12000, 15000, 18000], true, 0.12)).to.equal(error.num)
+    expect(financial.MIRR()).to.equal(error.na)
+    expect(financial.MIRR('invalid', 0.1, 0.12)).to.equal(error.value)
+    expect(financial.MIRR(-7500, 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR(true, 0.1, 0.12)).to.equal(error.num)
+    expect(financial.MIRR('true', 0.1, 0.12)).to.equal(error.value)
+    expect(financial.MIRR(false, 0.1, 0.12)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.MIRR(err, 0.1, 0.12)).to.equal(err)
+      expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], err, 0.12)).to.equal(err)
+      expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, err)).to.equal(err)
+      expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, err], 0.1, 0.12)).to.equal(err)
+    })
   })
 
   it('NOMINAL', () => {

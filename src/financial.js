@@ -1201,6 +1201,20 @@ export function MDURATION() {
  * @returns
  */
 export function MIRR(values, finance_rate, reinvest_rate) {
+  if (arguments.length !== 3 || utils.anyIsUndefined(...utils.flatten(values), finance_rate, reinvest_rate)) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(...utils.flatten(values), finance_rate, reinvest_rate)) {
+    return error.num
+  }
+
+  const anyError = utils.anyError(...utils.flatten(values), finance_rate, reinvest_rate)
+
+  if (anyError) {
+    return anyError
+  }
+
   values = utils.parseNumberArray(utils.flatten(values))
   finance_rate = utils.parseNumber(finance_rate)
   reinvest_rate = utils.parseNumber(reinvest_rate)
@@ -1224,6 +1238,24 @@ export function MIRR(values, finance_rate, reinvest_rate) {
     }
   }
 
+  let valuesLength = values.length
+  let positive = false
+  let negative = false
+
+  for (let i = 0; i < valuesLength; i++) {
+    if (values[i] > 0) {
+      positive = true
+    }
+
+    if (values[i] < 0) {
+      negative = true
+    }
+  }
+
+  // Return error if values does not contain at least one positive value and one negative value
+  if (!positive || !negative) {
+    return error.num
+  }
   // Return modified internal rate of return
   const num = -NPV(reinvest_rate, incomes) * Math.pow(1 + reinvest_rate, n - 1)
   const den = NPV(finance_rate, payments) * (1 + finance_rate)
