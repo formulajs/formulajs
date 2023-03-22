@@ -849,10 +849,21 @@ export function EFFECT(nominal_rate, npery) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
-export function FV(rate, nper, payment, value, type) {
+export function FV(rate, nper, payment, value = 0, type = 0) {
   // Credits: algorithm inspired by Apache OpenOffice
-  value = value || 0
-  type = type || 0
+  if (arguments.length < 3 || arguments.length > 5 || utils.anyIsUndefined(rate, nper, payment)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(rate, nper, payment)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(rate, nper, payment, value, type)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
   nper = utils.parseNumber(nper)
