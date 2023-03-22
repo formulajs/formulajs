@@ -1044,11 +1044,34 @@ describe('Financial', () => {
 
   it('NOMINAL', () => {
     expect(financial.NOMINAL(0.1, 4)).to.approximately(0.09645475633778045, 1e-9)
-    expect(financial.NOMINAL(0.1, 4.5)).to.approximately(0.09645475633778045, 1e-9)
+    expect(financial.NOMINAL('0.1', '4')).to.approximately(0.09645475633778045, 1e-9)
+    expect(financial.NOMINAL(0.053543, 4)).to.approximately(0.052500319868356016, 1e-9)
+    expect(financial.NOMINAL('0.1', '4.5')).to.approximately(0.09645475633778045, 1e-9)
     expect(financial.NOMINAL('Hello', 4)).to.equal(error.value)
     expect(financial.NOMINAL(0.1, 'World')).to.equal(error.value)
     expect(financial.NOMINAL(-0.1, 4)).to.equal(error.num)
     expect(financial.NOMINAL(0.1, 0.5)).to.equal(error.num)
+
+    expect(financial.NOMINAL()).to.equal(error.na)
+    expect(financial.NOMINAL(0.1)).to.equal(error.na)
+    expect(financial.NOMINAL(0.1, 4, 1)).to.equal(error.na)
+    expect(financial.NOMINAL(undefined, 4)).to.equal(error.na)
+    expect(financial.NOMINAL(0.1, undefined)).to.equal(error.na)
+    expect(financial.NOMINAL(null, 4)).to.equal(error.value)
+    expect(financial.NOMINAL(0.1, null)).to.equal(error.value)
+    expect(financial.NOMINAL(true, 4)).to.equal(error.value)
+    expect(financial.NOMINAL(0.1, true)).to.equal(error.value)
+    expect(financial.NOMINAL('true', 4)).to.equal(error.value)
+    expect(financial.NOMINAL(0.1, 'true')).to.equal(error.value)
+    expect(financial.NOMINAL(false, 4)).to.equal(error.value)
+    expect(financial.NOMINAL(0.1, false)).to.equal(error.value)
+    expect(financial.NOMINAL([[0.1], [0.2]], 4)).to.equal(error.value)
+    expect(financial.NOMINAL(0.1, [[4], [3]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.NOMINAL(err, 4)).to.equal(err)
+      expect(financial.NOMINAL(0.1, err)).to.equal(err)
+    })
   })
 
   it('NPER', () => {

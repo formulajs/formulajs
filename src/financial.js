@@ -1273,6 +1273,20 @@ export function MIRR(values, finance_rate, reinvest_rate) {
  * @returns
  */
 export function NOMINAL(effect_rate, npery) {
+  if (arguments.length !== 2 || utils.anyIsUndefined(effect_rate, npery)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(effect_rate, npery) || utils.anyIsBoolean(effect_rate, npery)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(effect_rate, npery)
+
+  if (anyError) {
+    return anyError
+  }
+
   effect_rate = utils.parseNumber(effect_rate)
   npery = utils.parseNumber(npery)
 
