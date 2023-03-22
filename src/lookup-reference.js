@@ -229,7 +229,17 @@ export function MATCH(lookup_value, lookup_array, match_type) {
       }
     } else if (match_type === 0) {
       if (typeof lookup_value === 'string' && typeof lookup_array[idx] === 'string') {
-        const lookupValueStr = lookup_value.toLowerCase().replace(/\?/g, '.').replace(/\*/g, '.*').replace(/~/g, '\\')
+        const lookupValueStr = lookup_value
+          .toLowerCase()
+          .replace(/\?/g, '.')
+          .replace(/\*/g, '.*')
+          .replace(/~/g, '\\')
+          .replace(/\+/g, '\\+')
+          .replace(/\(/g, '\\(')
+          .replace(/\)/g, '\\)')
+          .replace(/\[/g, '\\[')
+          .replace(/\]/g, '\\]')
+
         const regex = new RegExp('^' + lookupValueStr + '$')
 
         if (regex.test(lookup_array[idx].toLowerCase())) {

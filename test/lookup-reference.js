@@ -107,6 +107,13 @@ describe('Lookup Reference', () => {
       expect(lookup.MATCH('selected', ['not_selected', 'not_selected', 'selected', 'not_selected'], 0)).to.equal(3)
     })
 
+    it('should match with string containing ignored regex symbols', () => {
+      expect(lookup.MATCH('Under (200)', [['Under (200)'], ['200-350']], 0)).to.equal(1)
+      expect(lookup.MATCH('Under [200]', [['Under [200]'], ['200-350']], 0)).to.equal(1)
+      expect(lookup.MATCH('500+', [['Under 200'], ['200-349'], ['350-500'], ['500+']], 0)).to.equal(4)
+      expect(lookup.MATCH('5*3', [['Under 200'], ['200-349'], ['5*3'], ['500+']], 0)).to.equal(3)
+    })
+
     it('should work with mixed type elements in the lookup_array', () => {
       expect(lookup.MATCH('jimc', ['jima', 4, null, undefined, 'jimc', 'bernie'], 0)).to.equal(5)
     })
