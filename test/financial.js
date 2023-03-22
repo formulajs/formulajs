@@ -791,6 +791,28 @@ describe('Financial', () => {
     expect(financial.EFFECT(0.1, 'World')).to.equal(error.value)
     expect(financial.EFFECT(-0.1, 4)).to.equal(error.num)
     expect(financial.EFFECT(0.1, 0.5)).to.equal(error.num)
+
+    expect(financial.EFFECT(undefined, 4)).to.equal(error.na)
+    expect(financial.EFFECT(0.1, undefined)).to.equal(error.na)
+    expect(financial.EFFECT(0.1, -1)).to.equal(error.num)
+    expect(financial.EFFECT()).to.equal(error.na)
+    expect(financial.EFFECT(0.1)).to.equal(error.na)
+    expect(financial.EFFECT(0.1, 1, 3)).to.equal(error.na)
+    expect(financial.EFFECT([[0.1], [1.2]], 1)).to.equal(error.value)
+    expect(financial.EFFECT([[0.1, 1.2]], 1)).to.equal(error.value)
+    expect(financial.EFFECT(0.1, [[0.1], [2]])).to.equal(error.value)
+    expect(financial.EFFECT(0.1, [[1, 2]])).to.equal(error.value)
+    expect(financial.EFFECT(false, 2)).to.equal(error.value)
+    expect(financial.EFFECT(0.1, false)).to.equal(error.value)
+    expect(financial.EFFECT(true, 2)).to.equal(error.value)
+    expect(financial.EFFECT(0.1, true)).to.equal(error.value)
+    expect(financial.EFFECT('true', 2)).to.equal(error.value)
+    expect(financial.EFFECT(0.1, 'true')).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.EFFECT(err, 4)).to.equal(err)
+      expect(financial.EFFECT(0.1, err)).to.equal(err)
+    })
   })
 
   it('FV', () => {

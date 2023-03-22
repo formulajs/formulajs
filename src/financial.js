@@ -804,6 +804,20 @@ export function DURATION() {
  * @returns
  */
 export function EFFECT(nominal_rate, npery) {
+  if (arguments.length !== 2 || utils.anyIsUndefined(nominal_rate, npery)) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(nominal_rate, npery)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(nominal_rate, npery)
+
+  if (anyError) {
+    return anyError
+  }
+
   nominal_rate = utils.parseNumber(nominal_rate)
   npery = utils.parseNumber(npery)
 
