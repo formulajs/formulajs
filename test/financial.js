@@ -927,11 +927,22 @@ describe('Financial', () => {
 
   it('IRR', () => {
     expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000])).to.approximately(0.05715142887178467, 1e-9)
+    expect(financial.IRR(['-75000', 12000, 15000, 18000, 21000, '24000'])).to.approximately(0.05715142887178467, 1e-9)
     expect(
       financial.IRR([
         [-75000, 12000],
         [15000, 18000],
         [21000, 24000]
+      ])
+    ).to.approximately(0.05715142887178467, 1e-9)
+    expect(
+      financial.IRR([
+        [-75000],
+        [12000],
+        [15000],
+        [18000],
+        [21000],
+        [24000]
       ])
     ).to.approximately(0.05715142887178467, 1e-9)
     expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1)).to.approximately(0.05715142887178467, 1e-9)
@@ -940,9 +951,27 @@ describe('Financial', () => {
       1e-9
     )
     expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.05)).to.approximately(0.05715142887178453, 1e-9)
+
+    expect(financial.IRR([-75000, 12000, 15000, 18000, 'string', 24000], 0.05)).to.equal(error.value)
+    expect(financial.IRR([-75000, 12000, 15000, 18000, true, 24000], 0.05)).to.equal(error.num)
+    expect(financial.IRR([-75000, 12000, 15000, 18000, true, 24000], 0.05)).to.equal(error.num)
+    expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, 1)).to.equal(error.na)
     expect(financial.IRR([12000, 15000, 18000, 21000, 24000])).to.equal(error.num)
     expect(financial.IRR([-12000, -15000, -18000, -21000, -24000])).to.equal(error.num)
     expect(financial.IRR([-12000, -15000, -18000, -21000, -24000], 'invalid')).to.equal(error.value)
+    expect(financial.IRR([-75000, 12000, 15000, 18000], true)).to.equal(error.num)
+    expect(financial.IRR()).to.equal(error.na)
+    expect(financial.IRR('invalid')).to.equal(error.num)
+    expect(financial.IRR(-7500)).to.equal(error.num)
+    expect(financial.IRR(true)).to.equal(error.num)
+    expect(financial.IRR('true')).to.equal(error.num)
+    expect(financial.IRR(false)).to.equal(error.num)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.IRR(err, 0.1)).to.equal(err)
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], err)).to.equal(err)
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, err], 0.1)).to.equal(err)
+    })
   })
 
   it('ISPMT', () => {

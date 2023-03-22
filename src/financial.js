@@ -1028,9 +1028,26 @@ export function IPMT(rate, per, nper, pv, fv = 0, type = 0) {
  - If IRR gives the #NUM! error value, or if the result is not close to what you expected, try again with a different value for guess.
  * @returns
  */
-export function IRR(values, guess) {
+export function IRR(values, guess = 0) {
   // Credits: algorithm inspired by Apache OpenOffice
-  guess = guess || 0
+  if (arguments.length < 1 || arguments.length > 2 || utils.anyIsUndefined(...utils.flatten(values), guess)) {
+    return error.na
+  }
+
+  
+  if (utils.anyIsBoolean(...utils.flatten(values), guess)) {
+    return error.num
+  }
+  
+  const anyError = utils.anyError(...utils.flatten(values), guess)
+  
+  if (anyError) {
+    return anyError
+  }
+
+  if (utils.getVariableType(values) === 'single') {
+    return error.num
+  }
 
   values = utils.parseNumberArray(utils.flatten(values))
   guess = utils.parseNumber(guess)
