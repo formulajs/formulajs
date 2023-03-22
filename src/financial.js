@@ -584,6 +584,30 @@ export function DDB(cost, salvage, life, period, factor) {
  * @returns
  */
 export function DISC(settlement, maturity, pr, redemption, basis) {
+  if (arguments.length < 4 || arguments.length > 5 || utils.anyIsUndefined(settlement, maturity, pr, redemption)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(settlement, maturity, pr, redemption)) {
+    return error.num
+  }
+
+  if (
+    utils.anyIsBoolean(settlement, maturity, pr, redemption, basis) ||
+    utils.getVariableType(settlement) !== 'single' ||
+    utils.getVariableType(maturity) !== 'single' ||
+    utils.getVariableType(pr) !== 'single' ||
+    utils.getVariableType(redemption) !== 'single'
+  ) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(settlement, maturity, pr, redemption, basis)
+
+  if (anyError) {
+    return anyError
+  }
+
   settlement = utils.parseDate(settlement)
   maturity = utils.parseDate(maturity)
   pr = utils.parseNumber(pr)
