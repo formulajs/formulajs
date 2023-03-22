@@ -902,6 +902,20 @@ export function FV(rate, nper, payment, value = 0, type = 0) {
  * @returns
  */
 export function FVSCHEDULE(principal, schedule) {
+  if (arguments.length !== 2 || utils.anyIsUndefined(principal, ...utils.flatten(schedule))) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(principal, ...utils.flatten(schedule))) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(principal, ...utils.flatten(schedule))
+
+  if (anyError) {
+    return anyError
+  }
+
   principal = utils.parseNumber(principal)
   schedule = utils.parseNumberArray(utils.flatten(schedule))
 

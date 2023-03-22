@@ -853,7 +853,26 @@ describe('Financial', () => {
 
   it('FVSCHEDULE', () => {
     expect(financial.FVSCHEDULE(100, [0.09, 0.1, 0.11])).to.approximately(133.08900000000003, 1e-9)
+    expect(financial.FVSCHEDULE(100, [[0.09], [0.1], [0.11]])).to.approximately(133.08900000000003, 1e-9)
+    expect(financial.FVSCHEDULE(100, [[0.09, 0.1, 0.11]])).to.approximately(133.08900000000003, 1e-9)
+    expect(financial.FVSCHEDULE(100, [[0.09, 0.1], [0.11]])).to.approximately(133.08900000000003, 1e-9)
+    expect(financial.FVSCHEDULE('100', [['0.09', '0.1'], ['0.11']])).to.approximately(133.08900000000003, 1e-9)
+    expect(financial.FVSCHEDULE(true, [['0.09', '0.1'], ['0.11']])).to.equal(error.value)
+    expect(financial.FVSCHEDULE(100, [[true], [0.11]])).to.equal(error.value)
+    expect(financial.FVSCHEDULE(100, true)).to.equal(error.value)
+    expect(financial.FVSCHEDULE(100, 'true')).to.equal(error.value)
     expect(financial.FVSCHEDULE(100, ['Hello World!', 0.1, 0.11])).to.equal(error.value)
+    expect(financial.FVSCHEDULE()).to.equal(error.na)
+    expect(financial.FVSCHEDULE(100)).to.equal(error.na)
+    expect(financial.FVSCHEDULE(100, 1, 1)).to.equal(error.na)
+    expect(financial.FVSCHEDULE(undefined, 1)).to.equal(error.na)
+    expect(financial.FVSCHEDULE(100, undefined)).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.FVSCHEDULE(err, 1)).to.equal(err)
+      expect(financial.FVSCHEDULE(100, err)).to.equal(err)
+      expect(financial.FVSCHEDULE(100, [[err], [1]])).to.equal(err)
+    })
   })
 
   // TODO: implement
