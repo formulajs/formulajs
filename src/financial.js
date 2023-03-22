@@ -969,10 +969,21 @@ export function INTRATE() {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
-export function IPMT(rate, per, nper, pv, fv, type) {
+export function IPMT(rate, per, nper, pv, fv = 0, type = 0) {
   // Credits: algorithm inspired by Apache OpenOffice
-  fv = fv || 0
-  type = type || 0
+  if (arguments.length < 4 || arguments.length > 6 || utils.anyIsUndefined(rate, per, nper, pv)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(rate, per, nper, pv) || utils.anyIsBoolean(...arguments)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
   per = utils.parseNumber(per)

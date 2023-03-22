@@ -882,10 +882,47 @@ describe('Financial', () => {
 
   it('IPMT', () => {
     expect(financial.IPMT(0.1 / 12, 6, 2 * 12, 100000, 1000000, 0)).to.approximately(928.8235718400465, 1e-9)
+    expect(financial.IPMT('0.1' / '12', '6', '2' * '12', '100000', '1000000', '0')).to.approximately(
+      928.8235718400465,
+      1e-9
+    )
     expect(financial.IPMT(0.1 / 12, 6, 2 * 12, 100000, 1000000, 1)).to.approximately(921.1473439736042, 1e-9)
     expect(financial.IPMT(0.1 / 12, 1, 2 * 12, 100000, 1000000, 1)).to.equal(0)
     expect(financial.IPMT(0.1 / 12, 1, 2 * 12, 100000, 1000000, 0)).to.approximately(-833.3333333333334, 1e-9)
-    expect(financial.IPMT('invalid', 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 24, 100000, 1000000, 0, 1)).to.equal(error.na)
+    expect(financial.IPMT(0.1, 1, 24)).to.equal(error.na)
+    expect(financial.IPMT(0.1, 1)).to.equal(error.na)
+    expect(financial.IPMT(0.1)).to.equal(error.na)
+    expect(financial.IPMT()).to.equal(error.na)
+    expect(financial.IPMT('hello', 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 'hello', 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 'hello', 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 2 * 12, 'hello', 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 2 * 12, 100000, 'hello', 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 2 * 12, 100000, 1000000, 'hello')).to.equal(error.value)
+    expect(financial.IPMT(undefined, 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.na)
+    expect(financial.IPMT(0.1, undefined, 2 * 12, 100000, 1000000, 1)).to.equal(error.na)
+    expect(financial.IPMT(0.1, 1, undefined, 100000, 1000000, 1)).to.equal(error.na)
+    expect(financial.IPMT(0.1, 1, 2 * 12, undefined, 1000000, 1)).to.equal(error.na)
+    expect(financial.IPMT(null, 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, null, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, null, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 2 * 12, null, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(true, 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT('true', 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(false, 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, true, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, true, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.IPMT(0.1, 1, 2 * 12, true, 1000000, 1)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.IPMT(err, 1, 24, 100000, 1000000, 0)).to.equal(err)
+      expect(financial.IPMT(0.1, err, 24, 100000, 1000000, 0)).to.equal(err)
+      expect(financial.IPMT(0.1, 1, err, 100000, 1000000, 0)).to.equal(err)
+      expect(financial.IPMT(0.1, 1, 24, err, 1000000, 0)).to.equal(err)
+      expect(financial.IPMT(0.1, 1, 24, 100000, err, 0)).to.equal(err)
+      expect(financial.IPMT(0.1, 1, 24, 100000, 1000000, err)).to.equal(err)
+    })
   })
 
   it('IRR', () => {
