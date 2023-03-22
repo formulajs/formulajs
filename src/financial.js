@@ -730,6 +730,20 @@ export function DOLLARDE(fractional_dollar, fraction) {
  */
 export function DOLLARFR(decimal_dollar, fraction) {
   // Credits: algorithm inspired by Apache OpenOffice
+  if (arguments.length !== 2 || utils.anyIsUndefined(decimal_dollar, fraction)) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(decimal_dollar, fraction)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(decimal_dollar, fraction)
+
+  if (anyError) {
+    return anyError
+  }
+
   decimal_dollar = utils.parseNumber(decimal_dollar)
   fraction = utils.parseNumber(fraction)
 
