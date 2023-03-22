@@ -1034,13 +1034,12 @@ export function IRR(values, guess = 0) {
     return error.na
   }
 
-  
   if (utils.anyIsBoolean(...utils.flatten(values), guess)) {
     return error.num
   }
-  
+
   const anyError = utils.anyError(...utils.flatten(values), guess)
-  
+
   if (anyError) {
     return anyError
   }
@@ -1138,6 +1137,20 @@ export function IRR(values, guess = 0) {
  * @returns
  */
 export function ISPMT(rate, per, nper, pv) {
+  if (arguments.length !== 4 || utils.anyIsUndefined(...arguments)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(...arguments)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   rate = utils.parseNumber(rate)
   per = utils.parseNumber(per)
   nper = utils.parseNumber(nper)
@@ -1145,6 +1158,10 @@ export function ISPMT(rate, per, nper, pv) {
 
   if (utils.anyIsError(rate, per, nper, pv)) {
     return error.value
+  }
+
+  if (nper === 0) {
+    return error.div0
   }
 
   // Return interest

@@ -935,16 +935,10 @@ describe('Financial', () => {
         [21000, 24000]
       ])
     ).to.approximately(0.05715142887178467, 1e-9)
-    expect(
-      financial.IRR([
-        [-75000],
-        [12000],
-        [15000],
-        [18000],
-        [21000],
-        [24000]
-      ])
-    ).to.approximately(0.05715142887178467, 1e-9)
+    expect(financial.IRR([[-75000], [12000], [15000], [18000], [21000], [24000]])).to.approximately(
+      0.05715142887178467,
+      1e-9
+    )
     expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1)).to.approximately(0.05715142887178467, 1e-9)
     expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.075)).to.approximately(
       0.05715142887178447,
@@ -976,7 +970,40 @@ describe('Financial', () => {
 
   it('ISPMT', () => {
     expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, 100000)).to.equal(-625)
-    expect(financial.ISPMT('invalid', 6, 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1, 2, 5, 1000)).to.equal(-60)
+    expect(financial.ISPMT('0.1', '2', '5', '1000')).to.equal(-60)
+    expect(financial.ISPMT(true, 2, 5, 1000)).to.equal(-600)
+    expect(financial.ISPMT(0.1, true, 5, 1000)).to.equal(-80)
+    expect(financial.ISPMT(0.1, 2, true, 1000)).to.equal(100)
+    expect(financial.ISPMT(0.1, 2, 5, true)).to.equal(-0.06)
+    expect(financial.ISPMT(false, 2, 5, 1000)).to.equal(0)
+    expect(financial.ISPMT(0.1, false, 5, 1000)).to.equal(-100)
+    expect(financial.ISPMT(0.1, 2, false, 1000)).to.equal(error.div0)
+    expect(financial.ISPMT(0.1, 2, 5, false)).to.equal(0)
+    expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, 100000, 1)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12, 6, 2 * 12)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12, 6)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12)).to.equal(error.na)
+    expect(financial.ISPMT()).to.equal(error.na)
+    expect(financial.ISPMT('true', 6, 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, 'true', 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, 6, 'true', 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, 'true')).to.equal(error.value)
+    expect(financial.ISPMT(undefined, 6, 2 * 12, 100000)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12, undefined, 2 * 12, 100000)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12, 6, undefined, 100000)).to.equal(error.na)
+    expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, undefined)).to.equal(error.na)
+    expect(financial.ISPMT(null, 6, 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, null, 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, 6, null, 100000)).to.equal(error.value)
+    expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, null)).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.ISPMT(err, 6, 2 * 12, 100000)).to.equal(err)
+      expect(financial.ISPMT(0.1 / 12, err, 2 * 12, 100000)).to.equal(err)
+      expect(financial.ISPMT(0.1 / 12, 6, err, 100000)).to.equal(err)
+      expect(financial.ISPMT(0.1 / 12, 6, 2 * 12, err)).to.equal(err)
+    })
   })
 
   // TODO: implement
