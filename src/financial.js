@@ -671,6 +671,20 @@ export function DISC(settlement, maturity, pr, redemption, basis) {
  */
 export function DOLLARDE(fractional_dollar, fraction) {
   // Credits: algorithm inspired by Apache OpenOffice
+  if (arguments.length !== 2 || utils.anyIsUndefined(fractional_dollar, fraction)) {
+    return error.na
+  }
+
+  if (utils.anyIsBoolean(fractional_dollar, fraction)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(fractional_dollar, fraction)
+
+  if (anyError) {
+    return anyError
+  }
+
   fractional_dollar = utils.parseNumber(fractional_dollar)
   fraction = utils.parseNumber(fraction)
 
