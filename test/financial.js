@@ -1216,7 +1216,50 @@ describe('Financial', () => {
     expect(financial.PMT(0.1 / 12, 2 * 12, 0, 1000000)).to.approximately(-37811.59300418336, 1e-9)
     expect(financial.PMT(0.1 / 12, 2 * 12, 100000)).to.approximately(-4614.49263375167, 1e-9)
     expect(financial.PMT(0, 2 * 12, 100000)).to.approximately(-4166.666666666667, 1e-9)
-    expect(financial.PMT('invalid', 2 * 12, 100000)).to.equal(error.value)
+    expect(financial.PMT(0.06 / 12, 18 * 12, '0', '50000')).to.approximately(-129.0811608679973, 1e-9)
+    expect(financial.PMT('0', '24', '100000')).to.approximately(-4166.666666666667, 1e-9)
+    expect(financial.PMT('invalid', 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 'invalid', 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 'invalid', 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, 'invalid', 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, 1000000, 'invalid')).to.equal(error.value)
+    expect(financial.PMT('true', 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 'true', 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 'true', 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, 'true', 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, 1000000, 'true')).to.equal(error.value)
+    expect(financial.PMT(undefined, 12, 100000, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, undefined, 100000, 1000000, 1)).to.equal(error.num)
+    expect(financial.PMT(0.1, 12, undefined, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, undefined, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, 1000000, undefined)).not.to.be.NaN
+    expect(financial.PMT(null, 12, 100000, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, null, 100000, 1000000, 1)).to.equal(error.num)
+    expect(financial.PMT(0.1, 12, null, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, null, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, 1000000, null)).not.to.be.NaN
+    expect(financial.PMT(true, 12, 100000, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, true, 100000, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, true, 1000000, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, true, 1)).not.to.be.NaN
+    expect(financial.PMT(0.1, 12, 100000, 1000000, true)).not.to.be.NaN
+    expect(financial.PMT([[1], [2]], 12, 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, [[1], [2]], 100000, 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, [[1], [2]], 1000000, 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, [[1], [2]], 1)).to.equal(error.value)
+    expect(financial.PMT(0.1, 12, 100000, 1000000, [[1], [2]])).to.equal(error.value)
+    expect(financial.PMT(0.1 / 12, 2 * 12, 100000, 1000000, 1, 1)).to.equal(error.na)
+    expect(financial.PMT(0.1 / 12, 2 * 12)).to.equal(error.na)
+    expect(financial.PMT(0.1 / 12)).to.equal(error.na)
+    expect(financial.PMT()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.PMT(err, 12, 100000, 1000000, 1)).to.equal(err)
+      expect(financial.PMT(0.1, err, 100000, 1000000, 1)).to.equal(err)
+      expect(financial.PMT(0.1, 12, err, 1000000, 1)).to.equal(err)
+      expect(financial.PMT(0.1, 12, 100000, err, 1)).to.equal(err)
+      expect(financial.PMT(0.1, 12, 100000, 1000000, err)).to.equal(err)
+    })
   })
 
   it('PPMT', () => {

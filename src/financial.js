@@ -1537,10 +1537,16 @@ export function PDURATION(rate, pv, fv) {
  * @param {*} type Optional. The number 0 (zero) or 1 and indicates when payments are due.
  * @returns
  */
-export function PMT(rate, nper, pv, fv, type) {
-  // Credits: algorithm inspired by Apache OpenOffice
-  fv = fv || 0
-  type = type || 0
+export function PMT(rate, nper, pv, fv = 0, type = 0) {
+  if (arguments.length < 3 || arguments.length > 5) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
   nper = utils.parseNumber(nper)
@@ -1566,7 +1572,7 @@ export function PMT(rate, nper, pv, fv, type) {
         : (fv * rate) / (term - 1) + (pv * rate) / (1 - 1 / term)
   }
 
-  return -result
+  return isFinite(result) ? -result : error.num
 }
 
 /**
