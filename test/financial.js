@@ -1489,8 +1489,34 @@ describe('Financial', () => {
 
   it('RRI', () => {
     expect(financial.RRI(8, 10000, 11000)).to.approximately(0.011985024140399592, 1e-9)
+    expect(financial.RRI('8', '10000', '11000')).to.approximately(0.011985024140399592, 1e-9)
     expect(financial.RRI(NaN, 10000, 11000)).to.equal(error.value)
     expect(financial.RRI(0, 10000, 11000)).to.equal(error.num)
+    expect(financial.RRI(undefined, 10000, 11000)).to.equal(error.na)
+    expect(financial.RRI(8, undefined, 11000)).to.equal(error.na)
+    expect(financial.RRI(8, 10000, undefined)).to.equal(error.na)
+    expect(financial.RRI(null, 10000, 11000)).to.equal(error.num)
+    expect(financial.RRI(8, null, 11000)).to.equal(error.num)
+    expect(financial.RRI(8, 10000, null)).not.to.be.NaN
+    expect(financial.RRI(true, 10000, 11000)).not.to.be.NaN
+    expect(financial.RRI(8, true, 11000)).not.to.be.NaN
+    expect(financial.RRI(8, 10000, true)).not.to.be.NaN
+    expect(financial.RRI(false, 10000, 11000)).to.equal(error.num)
+    expect(financial.RRI(8, false, 11000)).to.equal(error.num)
+    expect(financial.RRI(8, 10000, false)).not.to.be.NaN
+    expect(financial.RRI([[1, 2]], 10000, 11000)).to.equal(error.value)
+    expect(financial.RRI(8, [[1, 2]], 11000)).to.equal(error.value)
+    expect(financial.RRI(8, 10000, [[1, 2]])).to.equal(error.value)
+    expect(financial.RRI(8, 10000, 11000, 1)).to.equal(error.na)
+    expect(financial.RRI(8, 10000)).to.equal(error.na)
+    expect(financial.RRI(8)).to.equal(error.na)
+    expect(financial.RRI()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.RRI(err, 10000, 11000)).to.equal(err)
+      expect(financial.RRI(8, err, 11000)).to.equal(err)
+      expect(financial.RRI(8, 10000, err)).to.equal(err)
+    })
   })
 
   it('SLN', () => {

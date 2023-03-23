@@ -1883,6 +1883,16 @@ export function RECEIVED() {
  * @returns
  */
 export function RRI(nper, pv, fv) {
+  if (arguments.length !== 3 || utils.anyIsUndefined(...arguments)) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   nper = utils.parseNumber(nper)
   pv = utils.parseNumber(pv)
   fv = utils.parseNumber(fv)
