@@ -1625,12 +1625,34 @@ describe('Financial', () => {
 
   it('TBILLPRICE', () => {
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0.0914)).to.approximately(98.45127777777778, 1e-9)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', '0.0914')).to.approximately(98.45127777777778, 1e-9)
     expect(financial.TBILLPRICE('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', 'invalid date', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 'invalid')).to.equal(error.value)
+    expect(financial.TBILLPRICE(undefined, '06/01/2008', 0.0914)).to.equal(error.na)
+    expect(financial.TBILLPRICE('03/31/2008', undefined, 0.0914)).to.equal(error.na)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', undefined)).to.equal(error.na)
+    expect(financial.TBILLPRICE(null, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', null, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE(true, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', true, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', null)).to.equal(error.num)
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLPRICE('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
-    expect(financial.TBILLPRICE('03/31/2008', '03/31/2009', 0.0914)).to.equal(90.86)
     expect(financial.TBILLPRICE('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0.0914, 1)).to.equal(error.na)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008')).to.equal(error.na)
+    expect(financial.TBILLPRICE()).to.equal(error.na)
+    expect(financial.TBILLPRICE([[1], [2]], '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', [[1], [2]], 0.0914)).to.equal(error.value)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', [[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.TBILLPRICE(err, '06/01/2008', 0.0914)).to.equal(err)
+      expect(financial.TBILLPRICE('03/31/2008', err, 0.0914)).to.equal(err)
+      expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', err)).to.equal(err)
+    })
   })
 
   it('TBILLYIELD', () => {
@@ -1638,12 +1660,34 @@ describe('Financial', () => {
       0.09283779963354702,
       1e-9
     )
+    expect(financial.TBILLYIELD('03/31/2008', '03/31/2009', 0.0914)).to.approximately(1093.0919037199128, 1e-9)
     expect(financial.TBILLYIELD('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', 'invalid date', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 'invalid')).to.equal(error.value)
+    expect(financial.TBILLYIELD(undefined, '06/01/2008', 0.0914)).to.equal(error.na)
+    expect(financial.TBILLYIELD('03/31/2008', undefined, 0.0914)).to.equal(error.na)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', undefined)).to.equal(error.na)
+    expect(financial.TBILLYIELD(null, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', null, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD(true, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', true, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', null)).to.equal(error.num)
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLYIELD('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
-    expect(financial.TBILLYIELD('03/31/2008', '03/31/2009', 0.0914)).to.approximately(1093.0919037199128, 1e-9)
     expect(financial.TBILLYIELD('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 0.0914, 1)).to.equal(error.na)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008')).to.equal(error.na)
+    expect(financial.TBILLYIELD()).to.equal(error.na)
+    expect(financial.TBILLYIELD([[1], [2]], '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', [[1], [2]], 0.0914)).to.equal(error.value)
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', [[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.TBILLYIELD(err, '06/01/2008', 0.0914)).to.equal(err)
+      expect(financial.TBILLYIELD('03/31/2008', err, 0.0914)).to.equal(err)
+      expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', err)).to.equal(err)
+    })
   })
 
   // TODO: implement
