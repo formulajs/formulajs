@@ -1122,10 +1122,34 @@ describe('Financial', () => {
 
   it('NPV', () => {
     expect(financial.NPV(0.1, -10000, 2000, 4000, 8000)).to.approximately(1031.3503176012546, 1e-9)
+    expect(financial.NPV('0.1', -10000, '2000', '4000', 8000)).to.approximately(1031.3503176012546, 1e-9)
     expect(financial.NPV(0.1, [-10000, 2000, 4000, 8000])).to.approximately(1031.3503176012546, 1e-9)
+    expect(financial.NPV(0.1, [[-10000, 2000, 4000, 8000]])).to.approximately(1031.3503176012546, 1e-9)
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], [8000]])).to.approximately(1031.3503176012546, 1e-9)
     expect(financial.NPV(0.1, [-75000])).to.approximately(-68181.81818181818, 1e-9)
     expect(financial.NPV(0.12, [12000, 15000, 18000, 21000, 24000])).to.approximately(62448.362521940246, 1e-9)
+    expect(financial.NPV(undefined, [-10000, 2000, 4000, 8000])).to.approximately(4000, 1e-9)
+    expect(financial.NPV(null, [-10000, 2000, 4000, 8000])).to.approximately(4000, 1e-9)
+    expect(financial.NPV(false, [-10000, 2000, 4000, 8000])).to.approximately(4000, 1e-9)
+    expect(financial.NPV(true, [-10000, 2000, 4000, 8000])).to.approximately(-3500, 1e-9)
+    expect(financial.NPV('true', [-10000, 2000, 4000, 8000])).to.equal(error.value)
     expect(financial.NPV('invalid', [12000, 15000, 18000, 21000, 24000])).to.equal(error.value)
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], ['string']])).to.equal(error.value)
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], [true]])).not.to.be.NaN
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], [false]])).not.to.be.NaN
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], [null]])).not.to.be.NaN
+    expect(financial.NPV(0.1, [[-10000], [2000], [4000], [undefined]])).not.to.be.NaN
+    expect(financial.NPV([[0.1], [0.2]], -10000, 2000, 4000, 8000)).to.equal(error.value)
+    expect(financial.NPV(0.1)).to.equal(error.na)
+    expect(financial.NPV()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.NPV(err, -10000, 2000, 4000, 8000)).to.equal(err)
+      expect(financial.NPV(0.1, err, 2000, 4000, 8000)).to.equal(err)
+      expect(financial.NPV(0.1, [err, 2000, 4000, 8000])).to.equal(err)
+      expect(financial.NPV(0.1, [[-10000, err, 4000, 8000]])).to.equal(err)
+      expect(financial.NPV(0.1, [[10000], [2000], [err]])).to.equal(err)
+    })
   })
 
   // TODO: implement

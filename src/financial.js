@@ -1366,21 +1366,31 @@ export function NPER(rate, pmt, pv, fv = 0, type = 0) {
  - If an argument is an array or reference, only numbers in that array or reference are counted. Empty values, logical values, text, or error values in the array or reference are ignored.
  * @returns
  */
-export function NPV() {
-  const args = utils.parseNumberArray(utils.flatten(arguments))
-
-  if (args instanceof Error) {
-    return args
+export function NPV(rate) {
+  if (arguments.length < 2) {
+    return error.na
   }
 
-  // Lookup rate
-  const rate = args[0]
+  if (utils.getVariableType(rate) !== 'single') {
+    return error.value
+  }
+
+  const args = utils.parseNumberArray(utils.flatten(arguments))
+
+  const anyError = utils.anyError(rate, args)
+
+  if (anyError) {
+    return anyError
+  }
+
+  rate = utils.parseNumber(rate)
 
   // Initialize net present value
   let value = 0
+  let argsLenth = args.length
 
   // Loop on all values
-  for (let j = 1; j < args.length; j++) {
+  for (let j = 1; j < argsLenth; j++) {
     value += args[j] / Math.pow(1 + rate, j)
   }
 
