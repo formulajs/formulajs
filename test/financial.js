@@ -1441,9 +1441,45 @@ describe('Financial', () => {
     expect(financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.75)).to.approximately(0.0651789117718154, 1e-9)
     expect(financial.RATE(2 * 12, -1000, -10000, 100000, 0, 0.065)).to.approximately(0.06517891177181524, 1e-9)
     expect(financial.RATE(2 * 12, -1000, -10000, 100000, 1, 0.1)).to.approximately(0.0632395800018064, 1e-9)
-    expect(financial.RATE('invalid', -1000, -10000, 100000, 1, 1e-11)).to.equal(error.value)
     expect(financial.RATE(4 * 12, -200, 8000)).to.approximately(0.007701472, 1e-9)
     expect(financial.RATE(37, -7200, -40000, 4477839, 0)).to.approximately(0.10646164, 1e-9)
+    expect(financial.RATE('24', '-1000', '-10000', '100000')).to.approximately(0.06517891177181546, 1e-9)
+    expect(financial.RATE('invalid', -1000, -10000, 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, 'invalid', -10000, 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, 'invalid', 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, 'invalid', 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, 100000, 'invalid', 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, 100000, 1, 'invalid')).to.equal(error.value)
+    expect(financial.RATE(undefined, -1000, -10000, 100000, 1, 1e-11)).to.equal(error.na)
+    expect(financial.RATE(24, undefined, -10000, 100000, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, undefined, 100000, 1, 1e-11)).to.equal(error.na)
+    expect(financial.RATE(null, -1000, -10000, 100000, 1, 1e-11)).to.equal(error.num)
+    expect(financial.RATE(24, null, -10000, 100000, 1, 1e-11)).to.equal(error.num)
+    expect(financial.RATE(24, -1000, null, 100000, 1, 1e-11)).to.equal(error.num)
+    expect(financial.RATE(24, -1000, -10000, null, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, -10000, 100000, null, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, -10000, 100000, 1, null)).not.to.be.NaN
+    expect(financial.RATE(true, -1000, -10000, 100000, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, true, -10000, 100000, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, true, 100000, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, -10000, true, 1, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, -10000, 100000, true, 1e-11)).not.to.be.NaN
+    expect(financial.RATE(24, -1000, -10000, 100000, 1, true)).not.to.be.NaN
+    expect(financial.RATE([[1], [2]], -1000, -10000, 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, [[1], [2]], -10000, 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, [[1], [2]], 100000, 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, [[1], [2]], 1, 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, 100000, [[1], [2]], 1e-11)).to.equal(error.value)
+    expect(financial.RATE(24, -1000, -10000, 100000, 1, [[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.RATE(err, -1000, -10000, 100000, 1, 0.1)).to.equal(err)
+      expect(financial.RATE(24, err, -10000, 100000, 1, 0.1)).to.equal(err)
+      expect(financial.RATE(24, -1000, err, 100000, 1, 0.1)).to.equal(err)
+      expect(financial.RATE(24, -1000, -10000, err, 1, 0.1)).to.equal(err)
+      expect(financial.RATE(24, -1000, -10000, 100000, err, 0.1)).to.equal(err)
+      expect(financial.RATE(24, -1000, -10000, 100000, 1, err)).to.equal(err)
+    })
   })
 
   // TODO: implement

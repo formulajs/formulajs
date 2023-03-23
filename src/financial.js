@@ -1787,10 +1787,20 @@ export function PV(rate, per, pmt, fv = 0, type = 0) {
  - If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
  * @returns
  */
-export function RATE(nper, pmt, pv, fv, type, guess) {
-  guess = guess === undefined ? 0.01 : guess
-  fv = fv === undefined ? 0 : fv
-  type = type === undefined ? 0 : type
+export function RATE(nper, pmt, pv, fv = 0, type = 0, guess = 0.01) {
+  if (arguments.length < 3 || arguments.length > 6 || utils.anyIsUndefined(nper, pv)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(nper, pmt, pv)) {
+    return error.num
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   nper = utils.parseNumber(nper)
   pmt = utils.parseNumber(pmt)
