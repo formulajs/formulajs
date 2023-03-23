@@ -1076,11 +1076,48 @@ describe('Financial', () => {
 
   it('NPER', () => {
     expect(financial.NPER(0, -100, -1000, 10000)).to.equal(90)
+    expect(financial.NPER('0', '-100', '-1000', '10000')).to.equal(90)
     expect(financial.NPER(0.1 / 12, -100, -1000, 10000, 0)).to.approximately(63.39385422740764, 1e-9)
     expect(financial.NPER(0.1 / 12, -100, -1000, 10000, 1)).to.approximately(63.016966422019685, 1e-9)
     expect(financial.NPER(0.1 / 12, -100, -1000, 10000)).to.approximately(63.39385422740764, 1e-9)
     expect(financial.NPER(0.1 / 12, -100, -1000)).to.approximately(-9.645090919837394, 1e-9)
     expect(financial.NPER('invalid', -100, -1000)).to.equal(error.value)
+    expect(financial.NPER(0.1, 'invalid', -1000)).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, 'invalid')).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, -1000, 'invalid', 1)).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, -1000, 1, 'invalid')).to.equal(error.value)
+    expect(financial.NPER(null, -100, -1000)).not.to.be.NaN
+    expect(financial.NPER(0.1, null, -1000)).to.equal(error.num)
+    expect(financial.NPER(0.1, -100, null)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, null, 1)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, 1, null)).not.to.be.NaN
+    expect(financial.NPER(undefined, -100, -1000)).not.to.be.NaN
+    expect(financial.NPER(0.1, undefined, -1000)).to.equal(error.num)
+    expect(financial.NPER(0.1, -100, undefined)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, undefined, 1)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, 1, undefined)).not.to.be.NaN
+    expect(financial.NPER(true, -100, -1000)).not.to.be.NaN
+    expect(financial.NPER(0.1, true, -1000)).to.equal(error.num)
+    expect(financial.NPER(0.1, -100, true)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, true, 1)).not.to.be.NaN
+    expect(financial.NPER(0.1, -100, -1000, 1, true)).not.to.be.NaN
+    expect(financial.NPER('true', -100, -1000)).to.equal(error.value)
+    expect(financial.NPER(0.1, 'true', -1000)).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, 'true')).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, -1000, 'true', 1)).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, -1000, 1, 'true')).to.equal(error.value)
+    expect(financial.NPER(0.1, -100, -1000, 1, 1, 1)).to.equal(error.na)
+    expect(financial.NPER(0.1, -100)).to.equal(error.na)
+    expect(financial.NPER(0.1)).to.equal(error.na)
+    expect(financial.NPER()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.NPER(err, -100, -1000, 1, 1)).to.equal(err)
+      expect(financial.NPER(0.1, err, -1000, 1, 1)).to.equal(err)
+      expect(financial.NPER(0.1, -100, err, 1, 1)).to.equal(err)
+      expect(financial.NPER(0.1, -100, -1000, err, 1)).to.equal(err)
+      expect(financial.NPER(0.1, -100, -1000, 1, err)).to.equal(err)
+    })
   })
 
   it('NPV', () => {

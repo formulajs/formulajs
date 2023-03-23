@@ -1318,27 +1318,38 @@ export function NOMINAL(effect_rate, npery) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function NPER(rate, pmt, pv, fv, type) {
-  type = type === undefined ? 0 : type
-  fv = fv === undefined ? 0 : fv
+export function NPER(rate, pmt, pv, fv = 0, type = 0) {
+  if (arguments.length < 3 || arguments.length > 5) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
   pmt = utils.parseNumber(pmt)
   pv = utils.parseNumber(pv)
   fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
+  let result = undefined
 
   if (utils.anyIsError(rate, pmt, pv, fv, type)) {
     return error.value
   }
 
   if (rate === 0) {
-    return -(pv + fv) / pmt
+    result = -(pv + fv) / pmt
+
+    return isFinite(result) ? result : error.num
   } else {
     const num = pmt * (1 + rate * type) - fv * rate
     const den = pv * rate + pmt * (1 + rate * type)
+    result = Math.log(num / den) / Math.log(1 + rate)
 
-    return Math.log(num / den) / Math.log(1 + rate)
+    return isFinite(result) ? result : error.num
   }
 }
 
