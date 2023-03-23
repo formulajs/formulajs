@@ -1960,6 +1960,16 @@ export function SLN(cost, salvage, life) {
  * @returns
  */
 export function SYD(cost, salvage, life, per) {
+  if (arguments.length !== 4) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   // Return error if any of the parameters is not a number
   cost = utils.parseNumber(cost)
   salvage = utils.parseNumber(salvage)

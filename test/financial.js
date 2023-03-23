@@ -1556,6 +1556,38 @@ describe('Financial', () => {
     expect(financial.SYD(NaN, 7, 10, 1)).to.equal(error.value)
     expect(financial.SYD(30, 7, 0, 1)).to.equal(error.num)
     expect(financial.SYD(30, 7, 10, 11)).to.equal(error.num)
+    expect(financial.SYD(undefined, 10000, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, undefined, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, 10000, undefined, 1)).to.equal(error.num)
+    expect(financial.SYD(8, 10000, 11000, undefined)).to.equal(error.num)
+    expect(financial.SYD(null, 10000, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, null, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, 10000, null, 1)).to.equal(error.num)
+    expect(financial.SYD(8, 10000, 11000, null)).to.equal(error.num)
+    expect(financial.SYD(true, 10000, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, true, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, 10000, true, 1)).not.to.be.NaN
+    expect(financial.SYD(8, 10000, 1, true)).not.to.be.NaN
+    expect(financial.SYD(false, 10000, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, false, 11000, 1)).not.to.be.NaN
+    expect(financial.SYD(8, 10000, false, 1)).to.equal(error.num)
+    expect(financial.SYD(8, 10000, 11000, false)).to.equal(error.num)
+    expect(financial.SYD([[1, 2]], 10000, 11000, 1)).to.equal(error.value)
+    expect(financial.SYD(8, [[1, 2]], 11000, 1)).to.equal(error.value)
+    expect(financial.SYD(8, 10000, [[1, 2]], 1)).to.equal(error.value)
+    expect(financial.SYD(8, 10000, 11000, [[1, 2]])).to.equal(error.value)
+    expect(financial.SYD(8, 10000, 11000, 1, 1)).to.equal(error.na)
+    expect(financial.SYD(8, 10000, 11000)).to.equal(error.na)
+    expect(financial.SYD(8, 10000)).to.equal(error.na)
+    expect(financial.SYD(8)).to.equal(error.na)
+    expect(financial.SYD()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.SYD(err, 10000, 11000, 1)).to.equal(err)
+      expect(financial.SYD(8, err, 11000, 1)).to.equal(err)
+      expect(financial.SYD(8, 10000, err, 1)).to.equal(err)
+      expect(financial.SYD(8, 10000, 11000, err)).to.equal(err)
+    })
   })
 
   it('TBILLEQ', () => {
