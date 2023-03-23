@@ -1648,14 +1648,26 @@ export function PRICE() {
  * @param {*} basis Optional. The type of day count basis to use.
  * @returns
  */
-export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
+export function PRICEDISC(settlement, maturity, discount, redemption, basis = 0) {
+  if (arguments.length < 4 || arguments.length > 5) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(settlement, maturity) || utils.anyIsBoolean(settlement, maturity)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   settlement = utils.parseDate(settlement)
   maturity = utils.parseDate(maturity)
   discount = utils.parseNumber(discount)
   redemption = utils.parseNumber(redemption)
   basis = utils.parseNumber(basis)
-
-  basis = basis || 0
 
   if (utils.anyIsError(settlement, maturity, discount, redemption, basis)) {
     return error.value

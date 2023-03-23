@@ -1339,6 +1339,7 @@ describe('Financial', () => {
       expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 2)).to.approximately(95.63666667, 1e-8)
       expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 3)).to.approximately(95.69643836, 1e-8)
       expect(financial.PRICEDISC('01/05/2023', '12/28/2023', 0.044, 100, 4)).to.approximately(95.68555556, 1e-8)
+      expect(financial.PRICEDISC('01/05/2023', '12/28/2023', '0.044', '100', '4')).to.approximately(95.68555556, 1e-8)
     })
 
     it('should throw an error if input is out-of-bounds', () => {
@@ -1354,10 +1355,35 @@ describe('Financial', () => {
       expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 'Hello World!', 100, 1)).to.equal(error.value)
       expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 'Hello World!', 1)).to.equal(error.value)
       expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, 'Hello World!')).to.equal(error.value)
+      expect(financial.PRICEDISC(undefined, '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', undefined, 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', undefined, 100, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, undefined, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC(null, '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', null, 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', null, 100, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, null, 1)).to.equal(error.num)
+      expect(financial.PRICEDISC(true, '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', true, 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('true', '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', 'true', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC([[1], [2]], '01/31/2023', 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', [[1], [2]], 0.038, 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', [[1], [2]], 100, 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, [[1], [2]], 1)).to.equal(error.value)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, [[1], [2]])).to.equal(error.value)
     })
 
     it('should throw an error if maturity is earlier than settlement', () => {
       expect(financial.PRICEDISC('01/05/2023', '01/04/2023', 0.038, 100, 1)).to.equal(error.value)
+    })
+
+    Object.values(error).forEach((err) => {
+      expect(financial.PRICEDISC(err, '01/31/2023', 0.038, 100, 0)).to.equal(err)
+      expect(financial.PRICEDISC('01/05/2023', err, 0.038, 100, 0)).to.equal(err)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', err, 100, 0)).to.equal(err)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, err, 0)).to.equal(err)
+      expect(financial.PRICEDISC('01/05/2023', '01/31/2023', 0.038, 100, err)).to.equal(err)
     })
   })
 
