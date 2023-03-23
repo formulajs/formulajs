@@ -2049,7 +2049,7 @@ export function TBILLEQ(settlement, maturity, discount) {
   }
 
   // Return bond-equivalent yield
-  return (365 * discount) / (360 - discount * dateTime.DAYS360(settlement, maturity, false))
+  return (365 * discount) / (360 - discount * (dateTime.DAYS360(settlement, maturity, false) + 1))
 }
 
 /**
@@ -2104,7 +2104,7 @@ export function TBILLPRICE(settlement, maturity, discount) {
   }
 
   // Return bond-equivalent yield
-  return 100 * (1 - (discount * dateTime.DAYS360(settlement, maturity, false)) / 360)
+  return 100 * (1 - (discount * (dateTime.DAYS360(settlement, maturity, false) + 1)) / 360)
 }
 
 /**
@@ -2159,7 +2159,7 @@ export function TBILLYIELD(settlement, maturity, pr) {
   }
 
   // Return bond-equivalent yield
-  return ((100 - pr) * 360) / (pr * dateTime.DAYS360(settlement, maturity, false))
+  return ((100 - pr) * 360) / (pr * (dateTime.DAYS360(settlement, maturity, false) + 1))
 }
 
 // TODO
