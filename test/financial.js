@@ -1521,8 +1521,34 @@ describe('Financial', () => {
 
   it('SLN', () => {
     expect(financial.SLN(30000, 7500, 10)).to.equal(2250)
+    expect(financial.SLN('30000', '7500', '10')).to.equal(2250)
     expect(financial.SLN(NaN, 7500, 10)).to.equal(error.value)
     expect(financial.SLN(30000, 7500, 0)).to.equal(error.num)
+    expect(financial.SLN(undefined, 10000, 11000)).to.equal(error.na)
+    expect(financial.SLN(8, undefined, 11000)).to.equal(error.na)
+    expect(financial.SLN(8, 10000, undefined)).to.equal(error.na)
+    expect(financial.SLN(null, 10000, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, null, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, 10000, null)).to.equal(error.num)
+    expect(financial.SLN(true, 10000, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, true, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, 10000, true)).not.to.be.NaN
+    expect(financial.SLN(false, 10000, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, false, 11000)).not.to.be.NaN
+    expect(financial.SLN(8, 10000, false)).to.equal(error.num)
+    expect(financial.SLN([[1, 2]], 10000, 11000)).to.equal(error.value)
+    expect(financial.SLN(8, [[1, 2]], 11000)).to.equal(error.value)
+    expect(financial.SLN(8, 10000, [[1, 2]])).to.equal(error.value)
+    expect(financial.SLN(8, 10000, 11000, 1)).to.equal(error.na)
+    expect(financial.SLN(8, 10000)).to.equal(error.na)
+    expect(financial.SLN(8)).to.equal(error.na)
+    expect(financial.SLN()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.SLN(err, 10000, 11000)).to.equal(err)
+      expect(financial.SLN(8, err, 11000)).to.equal(err)
+      expect(financial.SLN(8, 10000, err)).to.equal(err)
+    })
   })
 
   it('SYD', () => {

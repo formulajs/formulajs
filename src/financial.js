@@ -1921,6 +1921,16 @@ export function RRI(nper, pv, fv) {
  * @returns
  */
 export function SLN(cost, salvage, life) {
+  if (arguments.length !== 3 || utils.anyIsUndefined(...arguments)) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   cost = utils.parseNumber(cost)
   salvage = utils.parseNumber(salvage)
   life = utils.parseNumber(life)
