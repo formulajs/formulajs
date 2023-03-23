@@ -2008,6 +2008,20 @@ export function SYD(cost, salvage, life, per) {
  * @returns
  */
 export function TBILLEQ(settlement, maturity, discount) {
+  if (arguments.length !== 3 || utils.anyIsUndefined(...arguments)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(settlement, maturity) || utils.anyIsBoolean(settlement, maturity)) {
+    return error.value
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   settlement = utils.parseDate(settlement)
   maturity = utils.parseDate(maturity)
   discount = utils.parseNumber(discount)

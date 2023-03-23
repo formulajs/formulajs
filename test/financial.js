@@ -1592,12 +1592,35 @@ describe('Financial', () => {
 
   it('TBILLEQ', () => {
     expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0.0914)).to.approximately(0.09412721351734614, 1e-9)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', '0.0914')).to.approximately(0.09412721351734614, 1e-9)
     expect(financial.TBILLEQ('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', 'invalid date', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 'invalid')).to.equal(error.value)
+    expect(financial.TBILLEQ(undefined, '06/01/2008', 0.0914)).to.equal(error.na)
+    expect(financial.TBILLEQ('03/31/2008', undefined, 0.0914)).to.equal(error.na)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', undefined)).to.equal(error.na)
+    expect(financial.TBILLEQ(null, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', null, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ(true, '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', true, 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', null)).to.equal(error.num)
     expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLEQ('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
     expect(financial.TBILLEQ('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
     expect(financial.TBILLEQ('03/31/2008', '03/31/2009', 0.0914)).to.approximately(0.10199146427959986, 1e-9)
     expect(financial.TBILLEQ('03/31/2008', '04/01/2009', 0.0914)).to.equal(error.num)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0.0914, 1)).to.equal(error.na)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008')).to.equal(error.na)
+    expect(financial.TBILLEQ()).to.equal(error.na)
+    expect(financial.TBILLEQ([[1], [2]], '06/01/2008', 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', [[1], [2]], 0.0914)).to.equal(error.value)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', [[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.TBILLEQ(err, '06/01/2008', 0.0914)).to.equal(err)
+      expect(financial.TBILLEQ('03/31/2008', err, 0.0914)).to.equal(err)
+      expect(financial.TBILLEQ('03/31/2008', '06/01/2008', err)).to.equal(err)
+    })
   })
 
   it('TBILLPRICE', () => {
