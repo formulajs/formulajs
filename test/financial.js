@@ -1174,11 +1174,39 @@ describe('Financial', () => {
 
   it('PDURATION', () => {
     expect(financial.PDURATION(0.1, 1000, 2000)).to.approximately(7.272540897341714, 1e-9)
+    expect(financial.PDURATION(0.12, 2000, 2200)).to.approximately(0.8410066661, 1e-9)
+    expect(financial.PDURATION(0.12, 2000, 2200)).to.approximately(0.8410066661, 1e-9)
+    expect(financial.PDURATION('0.12', '2000', '2200')).to.approximately(0.8410066661, 1e-9)
     expect(financial.PDURATION('Hello World!', 1000, 2000)).to.equal(error.value)
     expect(financial.PDURATION(0.1, 'Hello World!', 2000)).to.equal(error.value)
     expect(financial.PDURATION(0.1, 1000, 'Hello World!')).to.equal(error.value)
     expect(financial.PDURATION(0, 1000, 2000)).to.equal(error.num)
     expect(financial.PDURATION(-0.1, 1000, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, -1000, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, 1000, -2000)).to.equal(error.num)
+    expect(financial.PDURATION(undefined, 1000, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, undefined, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, 1000, undefined)).to.equal(error.num)
+    expect(financial.PDURATION(null, 1000, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, null, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, 1000, null)).to.equal(error.num)
+    expect(financial.PDURATION(true, 1000, 2000)).not.to.be.NaN
+    expect(financial.PDURATION(0.1, true, 2000)).not.to.be.NaN
+    expect(financial.PDURATION(0.1, 1000, true)).not.to.be.NaN
+    expect(financial.PDURATION([[1], [2]], 1000, 2000)).to.equal(error.value)
+    expect(financial.PDURATION(0.1, [[1], [2]], 2000)).to.equal(error.value)
+    expect(financial.PDURATION(0.1, 1000, [[1], [2]])).to.equal(error.value)
+    expect(financial.PDURATION(-0.1, 1000, 2000)).to.equal(error.num)
+    expect(financial.PDURATION(0.1, 1000, 2000, 1)).to.equal(error.na)
+    expect(financial.PDURATION(0.1, 1000)).to.equal(error.na)
+    expect(financial.PDURATION(0.1)).to.equal(error.na)
+    expect(financial.PDURATION()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.PDURATION(err, 1000, 2000)).to.equal(err)
+      expect(financial.PDURATION(0.1, err, 2000)).to.equal(err)
+      expect(financial.PDURATION(0.1, 1000, err)).to.equal(err)
+    })
   })
 
   it('PMT', () => {

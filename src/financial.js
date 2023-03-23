@@ -1499,6 +1499,16 @@ export function ODDLYIELD() {
  * @returns
  */
 export function PDURATION(rate, pv, fv) {
+  if (arguments.length !== 3) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
+
   rate = utils.parseNumber(rate)
   pv = utils.parseNumber(pv)
   fv = utils.parseNumber(fv)
@@ -1507,8 +1517,7 @@ export function PDURATION(rate, pv, fv) {
     return error.value
   }
 
-  // Return error if rate <=0
-  if (rate <= 0) {
+  if (rate <= 0 || pv <= 0 || fv <= 0) {
     return error.num
   }
 
