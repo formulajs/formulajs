@@ -1411,6 +1411,11 @@ describe('Financial', () => {
     expect(financial.PV(0, 24, null, 10000, 1)).not.to.be.NaN
     expect(financial.PV(0, 24, 1000, null, 1)).not.to.be.NaN
     expect(financial.PV(0, 24, 1000, 10000, null)).not.to.be.NaN
+    expect(financial.PV(true, 24, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, true, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, true, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, true, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, 10000, true)).not.to.be.NaN
     expect(financial.PV(0, 24, 1000, 10000, 1, 2)).to.equal(error.na)
     expect(financial.PV(0, 24)).to.equal(error.na)
     expect(financial.PV(0)).to.equal(error.na)
