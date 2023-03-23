@@ -1588,21 +1588,31 @@ export function PMT(rate, nper, pv, fv = 0, type = 0) {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function PPMT(rate, per, nper, pv, fv, type) {
-  fv = fv || 0
-  type = type || 0
+export function PPMT(rate, per, nper, pv, fv = 0, type = 0) {
+  if (arguments.length < 4 || arguments.length > 6) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
+  per = utils.parseNumber(per)
   nper = utils.parseNumber(nper)
   pv = utils.parseNumber(pv)
   fv = utils.parseNumber(fv)
   type = utils.parseNumber(type)
 
-  if (utils.anyIsError(rate, nper, pv, fv, type)) {
+  if (utils.anyIsError(rate, nper, pv, fv, type, per)) {
     return error.value
   }
 
-  return PMT(rate, nper, pv, fv, type) - IPMT(rate, per, nper, pv, fv, type)
+  let result = PMT(rate, nper, pv, fv, type) - IPMT(rate, per, nper, pv, fv, type)
+
+  return isFinite(result) ? result : error.num
 }
 
 // TODO
