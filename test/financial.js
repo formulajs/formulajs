@@ -1393,10 +1393,41 @@ describe('Financial', () => {
   })
 
   it('PV', () => {
-    expect(financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 0)).to.approximately(-29864.950264779152, 1e-9)
-    expect(financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 1)).to.approximately(-30045.54072173169, 1e-9)
-    expect(financial.PV(0, 2 * 12, 1000, 10000, 1)).to.equal(-34000)
-    expect(financial.PV('invalid', 2 * 12, 1000, 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0.1 / 12, 24, 1000, 10000, 0)).to.approximately(-29864.950264779152, 1e-9)
+    expect(financial.PV(0.1 / 12, 24, 1000, 10000, 1)).to.approximately(-30045.54072173169, 1e-9)
+    expect(financial.PV('0', '24', '1000', '10000', '1')).to.equal(-34000)
+    expect(financial.PV('invalid', 24, 1000, 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, 'invalid', 1000, 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, 'invalid', 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, 1000, 'invalid', 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, 1000, 10000, 'invalid')).to.equal(error.value)
+    expect(financial.PV(undefined, 24, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, undefined, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, undefined, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, undefined, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, 10000, undefined)).not.to.be.NaN
+    expect(financial.PV(null, 24, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, null, 1000, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, null, 10000, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, null, 1)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, 10000, null)).not.to.be.NaN
+    expect(financial.PV(0, 24, 1000, 10000, 1, 2)).to.equal(error.na)
+    expect(financial.PV(0, 24)).to.equal(error.na)
+    expect(financial.PV(0)).to.equal(error.na)
+    expect(financial.PV()).to.equal(error.na)
+    expect(financial.PV([[1], [2]], 24, 1000, 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, [[1], [2]], 1000, 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, [[1], [2]], 10000, 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, 1000, [[1], [2]], 1)).to.equal(error.value)
+    expect(financial.PV(0, 24, 1000, 10000, [[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(financial.PV(err, 24, 1000, 10000, 1)).to.equal(err)
+      expect(financial.PV(0, err, 1000, 10000, 1)).to.equal(err)
+      expect(financial.PV(0, 24, err, 10000, 1)).to.equal(err)
+      expect(financial.PV(0, 24, 1000, err, 1)).to.equal(err)
+      expect(financial.PV(0, 24, 1000, 10000, err)).to.equal(err)
+    })
   })
 
   it('RATE', () => {

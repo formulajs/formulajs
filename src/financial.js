@@ -1745,9 +1745,16 @@ export function PRICEMAT() {
  * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
-export function PV(rate, per, pmt, fv, type) {
-  fv = fv || 0
-  type = type || 0
+export function PV(rate, per, pmt, fv = 0, type = 0) {
+  if (arguments.length < 3 || arguments.length > 5) {
+    return error.na
+  }
+
+  const anyError = utils.anyError(...arguments)
+
+  if (anyError) {
+    return anyError
+  }
 
   rate = utils.parseNumber(rate)
   per = utils.parseNumber(per)
