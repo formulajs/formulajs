@@ -2195,10 +2195,31 @@ export function VDB() {
  * @param {*} guess Optional. A number that you guess is close to the result of XIRR.
  * @returns
  */
-export function XIRR(values, dates, guess) {
+export function XIRR(values, dates, guess = 0.1) {
   // Credits: algorithm inspired by Apache OpenOffice
-  values = utils.parseNumberArray(utils.flatten(values))
-  dates = utils.parseDateArray(utils.flatten(dates))
+  if (arguments.length < 2 || arguments.length > 3) {
+    return error.na
+  }
+
+  values = utils.flatten(values)
+  dates = utils.flatten(dates)
+
+  if (utils.anyIsBoolean(...values, ...dates, guess)) {
+    return error.value
+  }
+
+  if (utils.anyIsNull(...dates)) {
+    return error.num
+  }
+
+  const anyError = utils.anyError(...values, ...dates, guess)
+
+  if (anyError) {
+    return anyError
+  }
+
+  values = utils.parseNumberArray(values)
+  dates = utils.parseDateArray(dates)
   guess = utils.parseNumber(guess)
 
   if (utils.anyIsError(values, dates, guess)) {
@@ -2252,7 +2273,6 @@ export function XIRR(values, dates, guess) {
   }
 
   // Initialize guess and resultRate
-  guess = guess || 0.1
   let resultRate = guess
 
   // Set maximum epsilon for end of iteration
