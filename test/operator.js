@@ -216,40 +216,181 @@ describe('Operator', () => {
     expect(operator.ISBETWEEN(1, 1, 10, false, false)).to.equal(false)
     expect(operator.ISBETWEEN(5, 1, 10, false, false)).to.equal(true)
     expect(operator.ISBETWEEN(1, 1, 10, false, true)).to.equal(false)
+    expect(operator.ISBETWEEN(1, 1, 10, null, true)).to.equal(false)
+    expect(operator.ISBETWEEN(1, 1, 10, 4, true)).to.equal(true)
     expect(operator.ISBETWEEN()).to.equal(error.na)
     expect(operator.ISBETWEEN(error.error, 1, 10)).to.equal(error.error)
+    expect(operator.ISBETWEEN(error.na, 1, 10)).to.equal(error.na)
+    expect(operator.ISBETWEEN(error.num, 1, 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN(error.value, 1, 10)).to.equal(error.value)
+    expect(operator.ISBETWEEN(error.calc, 1, 10)).to.equal(error.calc)
     expect(operator.ISBETWEEN(error.error, undefined, undefined)).to.equal(error.error)
     expect(operator.ISBETWEEN(1, error.error, 10)).to.equal(error.error)
     expect(operator.ISBETWEEN(1, 1, error.error)).to.equal(error.error)
+    expect(operator.ISBETWEEN(null, 1, 10)).to.equal(false)
+    expect(operator.ISBETWEEN(1, null, 10)).to.equal(true)
+    expect(operator.ISBETWEEN(1, 4, null)).to.equal(true)
     expect(operator.ISBETWEEN(undefined, 1, 10)).to.equal(false)
     expect(operator.ISBETWEEN(1, undefined, 10)).to.equal(true)
     expect(operator.ISBETWEEN(1, 10, undefined)).to.equal(true)
     expect(operator.ISBETWEEN(1, undefined, undefined)).to.equal(false)
-    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(error.num)
+    expect(operator.ISBETWEEN('string', 1, 10)).to.equal(false)
     expect(operator.ISBETWEEN(1, 'string', 10)).to.equal(error.num)
     expect(operator.ISBETWEEN(1, 10, 'string')).to.equal(error.num)
     expect(operator.ISBETWEEN(5, 1, 10, 'string')).to.equal(error.value)
     expect(operator.ISBETWEEN(5, 1, 10, true, 'string')).to.equal(error.value)
+    expect(operator.ISBETWEEN('5', 1, 10)).to.equal(true)
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [1, 2],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [true, true],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          ['string', '1'],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [true, false],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        1,
+        10
+      )
+    ).to.eql([
+      [false, false],
+      [false, false],
+      [false, true]
+    ])
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        [[1, 2]],
+        10
+      )
+    ).to.equal(error.value)
+    expect(
+      operator.ISBETWEEN(
+        [
+          [-1, -2],
+          [
+            [4, 5],
+            [2, 3]
+          ],
+          [-1, 1]
+        ],
+        1,
+        10,
+        [[1, 2]]
+      )
+    ).to.equal(error.value)
+    expect(operator.ISBETWEEN(10, 1, 10, true, false, 1)).to.equal(error.na)
   })
 
   it('UMINUS', () => {
     expect(operator.UMINUS(10)).to.equal(-10)
     expect(operator.UMINUS(-5)).to.equal(5)
     expect(operator.UMINUS(0)).to.equal(0)
+    expect(operator.UMINUS(true)).to.equal(-1)
+    expect(operator.UMINUS(false)).to.equal(0)
+    expect(operator.UMINUS('-1')).to.equal(1)
+    expect(operator.UMINUS('1')).to.equal(-1)
+    expect(operator.UMINUS(null)).to.equal(0)
 
     expect(operator.UMINUS()).to.equal(error.na)
-    expect(operator.UMINUS('string')).to.equal(error.num)
-    expect(operator.UMINUS(error.error)).to.equal(error.error)
+    expect(operator.UMINUS(1, 2)).to.equal(error.na)
+    expect(operator.UMINUS(1, 2, 3)).to.equal(error.na)
+    expect(operator.UMINUS('string')).to.equal(error.value)
+
+    expect(operator.UMINUS([[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UMINUS(err)).to.equal(err)
+    })
   })
 
   it('UNARY_PERCENT', () => {
     expect(operator.UNARY_PERCENT(10)).to.equal(0.1)
+    expect(operator.UNARY_PERCENT(1)).to.equal(0.01)
+    expect(operator.UNARY_PERCENT(0.01)).to.equal(0.0001)
+    expect(operator.UNARY_PERCENT(-10)).to.equal(-0.1)
     expect(operator.UNARY_PERCENT(100)).to.equal(1)
+    expect(operator.UNARY_PERCENT(200)).to.equal(2)
     expect(operator.UNARY_PERCENT(50)).to.equal(0.5)
 
+    expect(operator.UNARY_PERCENT(10, 10)).to.equal(error.na)
     expect(operator.UNARY_PERCENT()).to.equal(error.na)
-    expect(operator.UNARY_PERCENT('string')).to.equal(error.num)
+    expect(operator.UNARY_PERCENT('50')).to.equal(0.5)
+    expect(operator.UNARY_PERCENT(true)).to.equal(0.01)
+    expect(operator.UNARY_PERCENT(false)).to.equal(0)
+    expect(operator.UNARY_PERCENT(null)).to.equal(0)
+    expect(operator.UNARY_PERCENT('true')).to.equal(error.value)
+    expect(operator.UNARY_PERCENT('false')).to.equal(error.value)
+    expect(operator.UNARY_PERCENT('string')).to.equal(error.value)
     expect(operator.UNARY_PERCENT(error.error)).to.equal(error.error)
+    expect(operator.UNARY_PERCENT(error.value)).to.equal(error.value)
+    expect(operator.UNARY_PERCENT(error.calc)).to.equal(error.calc)
+    expect(operator.UNARY_PERCENT(error.num)).to.equal(error.num)
+    expect(operator.UNARY_PERCENT(error.na)).to.equal(error.na)
+    expect(operator.UNARY_PERCENT([[1], [1]])).to.equal(error.value)
+    expect(
+      operator.UNARY_PERCENT([
+        [1, 10],
+        [5, 30]
+      ])
+    ).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UNARY_PERCENT(err)).to.equal(err)
+    })
   })
 
   it('UPLUS', () => {
@@ -261,7 +402,18 @@ describe('Operator', () => {
     expect(operator.UPLUS('')).to.equal('')
     expect(operator.UPLUS('string')).to.equal('string')
     expect(operator.UPLUS('1a')).to.equal('1a')
+    expect(operator.UPLUS(null)).to.equal(null)
+    expect(operator.UPLUS(true)).to.equal(true)
+    expect(operator.UPLUS(false)).to.equal(false)
 
     expect(operator.UPLUS()).to.equal(error.na)
+    expect(operator.UPLUS([[1]])).to.equal(error.value)
+    expect(operator.UPLUS([['1']])).to.equal(error.value)
+
+    expect(operator.UPLUS([[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UPLUS(err)).to.equal(err)
+    })
   })
 })

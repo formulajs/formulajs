@@ -570,24 +570,146 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup =
  * @param {*} conditions The criteria that the sample will be filtered on. Array of array of booleans.
  * @returns
  */
-export function FILTER(sample, ...conditions) {
-  if (
-    arguments.length < 2 ||
-    !Array.isArray(sample) ||
-    !Array.isArray(conditions) ||
-    !Array.isArray(sample[0]) ||
-    sample.length !== conditions[0].length
-  ) {
+export function FILTER(array, include, if_empty) {
+  if (arguments.length < 2 || arguments.length > 3) {
     return error.na
   }
 
-  let result = [...sample]
+  if (typeof array === 'undefined' || typeof include === 'undefined') {
+    return error.value
+  }
 
-  conditions.forEach((condition) => {
-    result = result.map((row, i) => (condition[i] ? row : false))
-  })
+  const validationArrayType = utils.getVariableType(include)
 
-  return result.filter((row) => row)
+  if (validationArrayType === 'matrix') {
+    return error.value
+  }
+
+  const sourceArrayType = utils.getVariableType(array)
+
+  if (validationArrayType === 'single') {
+    if (sourceArrayType === 'matrix') {
+      return error.value
+    }
+
+    const parsedValidation = utils.parseBool(include)
+
+    if (typeof parsedValidation !== 'boolean') {
+      return parsedValidation
+    }
+
+    if (parsedValidation) {
+      if (array === null) {
+        return 0
+      }
+
+      return array
+    }
+
+    if (typeof if_empty === 'undefined') {
+      return error.calc
+    }
+
+    if (if_empty === null) {
+      return 0
+    }
+
+    return if_empty
+  }
+
+  if (sourceArrayType === 'single') {
+    return error.value
+  }
+
+  if (validationArrayType === 'line') {
+    const validations = include[0]
+
+    const numberOfCols = validations.length
+
+    if (array[0].length !== numberOfCols) {
+      return error.value
+    }
+
+    const numberOfRows = array.length
+
+    const result = []
+    for (let y = 0; y < numberOfRows; y++) {
+      result.push([])
+    }
+
+    for (let x = 0; x < numberOfCols; x++) {
+      const parsedValidation = utils.parseBool(validations[x])
+
+      if (typeof parsedValidation !== 'boolean') {
+        return parsedValidation
+      } else if (parsedValidation) {
+        for (let y = 0; y < numberOfRows; y++) {
+          const item = array[y][x]
+
+          result[y].push(item !== null ? item : 0)
+        }
+      }
+    }
+
+    if (result[0].length !== 0) {
+      return result
+    }
+
+    if (typeof if_empty === 'undefined') {
+      return error.calc
+    }
+
+    if (if_empty === null) {
+      return 0
+    }
+
+    return if_empty
+  }
+
+  // validationArrayType === 'column'
+
+  const numberOfRows = include.length
+
+  if (array.length !== numberOfRows) {
+    return error.value
+  }
+
+  const numberOfCols = array[0].length
+
+  const result = []
+
+  for (let y = 0; y < numberOfRows; y++) {
+    const parsedValidation = utils.parseBool(include[y][0])
+
+    if (typeof parsedValidation !== 'boolean') {
+      return parsedValidation
+    } else if (parsedValidation) {
+      const row = array[y]
+
+      const parsedRow = []
+      for (let x = 0; x < numberOfCols; x++) {
+        const item = row[x]
+
+        parsedRow.push(item !== null ? item : 0)
+      }
+
+      result.push(parsedRow)
+    }
+  }
+
+  if (result.length !== 0) {
+    return result
+  }
+
+  if (typeof if_empty === 'undefined') {
+    return error.calc
+  }
+
+  if (if_empty === null) {
+    return 0
+  }
+
+  return if_empty
 }
 
 const startsWithNumber = /^-*\d/

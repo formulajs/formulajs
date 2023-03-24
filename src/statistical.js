@@ -1856,35 +1856,58 @@ export function MAXA() {
 }
 
 export function MAXIFS(range, ...criteria) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || (arguments.length > 3 && arguments.length % 2 === 0)) {
     return error.na
   }
 
+  if (utils.getVariableType(range) === 'single') {
+    return error.value
+  }
+
   let max = -Infinity
+  let rows = range.length
+  let columns = range[0].length
+  let criteriaLength = criteria.length
 
-  for (let i = 0; i < range.length; i++) {
-    let match = true
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      let match = true
 
-    for (let j = 0; j < criteria.length; j += 2) {
-      let criteriaRange = criteria[j]
-      let criteriaValue = criteria[j + 1]
+      for (let c = 0; c < criteriaLength; c += 2) {
+        let criteriaRange = criteria[c]
+        let comparative =
+          typeof criteriaRange[i][j] === 'string' ? criteriaRange[i][j].toLowerCase() : criteriaRange[i][j]
+        let criteriaValue = typeof criteria[c + 1] === 'string' ? criteria[c + 1].toLowerCase() : criteria[c + 1]
+        let tokenizedCriteria = evalExpression.parse(criteriaValue + '')
+        let tokens = [evalExpression.createToken(comparative, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
 
-      if ((criteriaRange && criteriaRange.length !== range.length) || criteriaRange instanceof Error) {
-        return error.value
+        if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
+          return error.na
+        }
+
+        if (
+          (criteriaRange && criteriaRange.length !== rows) ||
+          criteriaRange[0].length !== columns ||
+          criteriaRange.formulaError ||
+          utils.getVariableType(criteriaValue) !== 'single'
+        ) {
+          return error.value
+        }
+
+        if (typeof comparative === 'boolean' && typeof criteriaValue === 'boolean') {
+          if (criteriaValue !== comparative) {
+            match = false
+          }
+        } else if (!evalExpression.countIfComputeExpression(tokens)) {
+          match = false
+        }
       }
 
-      if (criteriaValue === undefined) {
-        return error.na
+      if (match && range[i][j] > max) {
+        max = range[i][j]
       }
-
-      if (criteriaRange[i] !== criteriaValue) {
-        match = false
-        break
-      }
-    }
-
-    if (match && range[i] > max) {
-      max = range[i]
     }
   }
 
@@ -1892,35 +1915,58 @@ export function MAXIFS(range, ...criteria) {
 }
 
 export function MINIFS(range, ...criteria) {
-  if (arguments.length < 3) {
+  if (arguments.length < 3 || (arguments.length > 3 && arguments.length % 2 === 0)) {
     return error.na
   }
 
+  if (utils.getVariableType(range) === 'single') {
+    return error.value
+  }
+
   let min = +Infinity
+  let rows = range.length
+  let columns = range[0].length
+  let criteriaLength = criteria.length
 
-  for (let i = 0; i < range.length; i++) {
-    let match = true
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      let match = true
 
-    for (let j = 0; j < criteria.length; j += 2) {
-      let criteriaRange = criteria[j]
-      let criteriaValue = criteria[j + 1]
+      for (let c = 0; c < criteriaLength; c += 2) {
+        let criteriaRange = criteria[c]
+        let comparative =
+          typeof criteriaRange[i][j] === 'string' ? criteriaRange[i][j].toLowerCase() : criteriaRange[i][j]
+        let criteriaValue = typeof criteria[c + 1] === 'string' ? criteria[c + 1].toLowerCase() : criteria[c + 1]
+        let tokenizedCriteria = evalExpression.parse(criteriaValue + '')
+        let tokens = [evalExpression.createToken(comparative, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
 
-      if ((criteriaRange && criteriaRange.length !== range.length) || criteriaRange instanceof Error) {
-        return error.value
+        if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
+          return error.na
+        }
+
+        if (
+          (criteriaRange && criteriaRange.length !== rows) ||
+          criteriaRange[0].length !== columns ||
+          criteriaRange.formulaError ||
+          utils.getVariableType(criteriaValue) !== 'single'
+        ) {
+          return error.value
+        }
+
+        if (typeof comparative === 'boolean' && typeof criteriaValue === 'boolean') {
+          if (criteriaValue !== comparative) {
+            match = false
+          }
+        } else if (!evalExpression.countIfComputeExpression(tokens)) {
+          match = false
+        }
       }
 
-      if (criteriaValue === undefined) {
-        return error.na
+      if (match && range[i][j] < min) {
+        min = range[i][j]
       }
-
-      if (criteriaRange[i] !== criteriaValue) {
-        match = false
-        break
-      }
-    }
-
-    if (match && range[i] < min) {
-      min = range[i]
     }
   }
 

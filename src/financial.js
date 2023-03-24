@@ -2,14 +2,6 @@ import * as error from './utils/error.js'
 import * as dateTime from './date-time.js'
 import * as utils from './utils/common.js'
 
-function validDate(d) {
-  return d && d.getTime && !isNaN(d.getTime())
-}
-
-function ensureDate(d) {
-  return d instanceof Date ? d : new Date(d)
-}
-
 /**
  * Returns the accrued interest for a security that pays periodic interest.
  *
@@ -27,11 +19,11 @@ function ensureDate(d) {
  */
 export function ACCRINT(issue, first_interest, settlement, rate, par, frequency, basis) {
   // Return error if either date is invalid
-  issue = ensureDate(issue)
-  first_interest = ensureDate(first_interest)
-  settlement = ensureDate(settlement)
+  issue = utils.parseDate(issue)
+  first_interest = utils.parseDate(first_interest)
+  settlement = utils.parseDate(settlement)
 
-  if (!validDate(issue) || !validDate(first_interest) || !validDate(settlement)) {
+  if (utils.anyIsError(issue, first_interest, settlement)) {
     return error.value
   }
 
@@ -54,6 +46,9 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
   if (settlement <= issue) {
     return error.num
   }
+
+  issue = utils.dateToSerialNumber(issue)
+  settlement = utils.dateToSerialNumber(settlement)
 
   // Set default values
   par = par || 0
@@ -507,6 +502,9 @@ export function DISC(settlement, maturity, pr, redemption, basis) {
   if (settlement >= maturity) {
     return error.value
   }
+
+  settlement = utils.dateToSerialNumber(settlement)
+  maturity = utils.dateToSerialNumber(maturity)
 
   let basisVal, diff
   switch (basis) {
@@ -1342,6 +1340,9 @@ export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
     return error.value
   }
 
+  settlement = utils.dateToSerialNumber(settlement)
+  maturity = utils.dateToSerialNumber(maturity)
+
   let basisVal, diff
   switch (basis) {
     case 0:
@@ -1637,8 +1638,11 @@ export function TBILLEQ(settlement, maturity, discount) {
     return error.num
   }
 
+  settlement = utils.dateToSerialNumber(settlement)
+  maturity = utils.dateToSerialNumber(maturity)
+
   // Return error if maturity is more than one year after settlement
-  if (maturity - settlement > 365 * 24 * 60 * 60 * 1000) {
+  if (maturity - settlement > 365) {
     return error.num
   }
 
@@ -1675,8 +1679,11 @@ export function TBILLPRICE(settlement, maturity, discount) {
     return error.num
   }
 
+  settlement = utils.dateToSerialNumber(settlement)
+  maturity = utils.dateToSerialNumber(maturity)
+
   // Return error if maturity is more than one year after settlement
-  if (maturity - settlement > 365 * 24 * 60 * 60 * 1000) {
+  if (maturity - settlement > 365) {
     return error.num
   }
 
@@ -1713,8 +1720,11 @@ export function TBILLYIELD(settlement, maturity, pr) {
     return error.num
   }
 
+  settlement = utils.dateToSerialNumber(settlement)
+  maturity = utils.dateToSerialNumber(maturity)
+
   // Return error if maturity is more than one year after settlement
-  if (maturity - settlement > 365 * 24 * 60 * 60 * 1000) {
+  if (maturity - settlement > 365) {
     return error.num
   }
 
@@ -1764,6 +1774,8 @@ export function XIRR(values, dates, guess) {
   if (utils.anyIsError(values, dates, guess)) {
     return error.value
   }
+
+  dates = dates.map((date) => utils.dateToSerialNumber(date))
 
   // Calculates the resulting amount
   const irrResult = (values, dates, rate) => {
@@ -1850,6 +1862,8 @@ export function XNPV(rate, values, dates) {
   if (utils.anyIsError(rate, values, dates)) {
     return error.value
   }
+
+  dates = dates.map((date) => utils.dateToSerialNumber(date))
 
   let result = 0
 

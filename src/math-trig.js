@@ -997,11 +997,21 @@ export function LOG10(number) {
  * @returns
  */
 export function MDETERM(matrix) {
-  if (!isNaN(matrix)) {
+  if (arguments.length !== 1) {
+    return error.na
+  }
+
+  if (matrix && matrix.formulaError) {
     return matrix
   }
 
-  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0])) {
+  let variableType = typeof matrix
+
+  if (variableType === 'number') {
+    return matrix
+  }
+
+  if (!Array.isArray(matrix) || matrix.length == 0 || variableType === 'string') {
     return error.value
   }
 
@@ -1021,7 +1031,8 @@ export function MDETERM(matrix) {
       utils.anyIsError(...matrix[i]) ||
       utils.anyIsString(...matrix[i]) ||
       utils.anyIsNull(...matrix[i]) ||
-      utils.anyIsUndefined(...matrix[i])
+      utils.anyIsUndefined(...matrix[i]) ||
+      utils.anyIsBoolean(...matrix[i])
     ) {
       return error.value
     }
@@ -1054,8 +1065,18 @@ export function MDETERM(matrix) {
  * @returns
  */
 export function MINVERSE(matrix) {
-  if (matrix == undefined || matrix == null) {
+  if (arguments.length !== 1) {
     return error.na
+  }
+
+  const variableType = typeof matrix
+
+  if (variableType === 'undefined') {
+    return error.na
+  }
+
+  if (!matrix || variableType === 'boolean') {
+    return error.value
   }
 
   const anyError = utils.anyError(matrix)
@@ -1094,7 +1115,11 @@ export function MINVERSE(matrix) {
     }
   }
 
-  const augmented = matrix.map((row, i) => row.concat(identity[i]))
+  const augmented = []
+  for (let i = 0; i < matrix.length; i++) {
+    augmented[i] = matrix[i].concat(identity[i])
+  }
+
   for (let i = 0; i < rows; i++) {
     let pivot = augmented[i][i]
     if (pivot === 0) {
@@ -1115,7 +1140,10 @@ export function MINVERSE(matrix) {
     }
   }
 
-  const inverse = augmented.map((row) => row.slice(rows))
+  const inverse = []
+  for (let i = 0; i < rows; i++) {
+    inverse[i] = augmented[i].slice(rows)
+  }
 
   return inverse
 }
@@ -1437,38 +1465,56 @@ export function RAND() {
  *
  * @param {*} rows Number of quantity of rows generated.
  * @param {*} columns Number of quantity of columns generated.
+ * @param {*} min The minimum number returned.
+ * @param {*} max The maximum number returned.
+ * @param {*} integer Return integer or a decimal value, true for integer, false for decimal
  * @returns
  */
-export function RANDARRAY(rows = 1, columns = 1) {
-  if (arguments.length > 2) {
+export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = false) {
+  if (arguments.length > 5) {
     return error.na
   }
 
+  if (utils.anyIsNull(rows, columns, min, max) || rows == 0 || columns == 0) {
+    return error.calc
+  }
+
+  let result = []
+
   rows = utils.parseNumber(rows)
   columns = utils.parseNumber(columns)
+  min = utils.parseNumber(min)
+  max = utils.parseNumber(max)
+  integer = utils.parseBool(integer)
 
-  const anyError = utils.anyError(rows, columns)
+  const anyError = utils.anyError(rows, columns, min, max, integer)
 
   if (anyError) {
     return anyError
   }
 
-  if (utils.anyIsString(rows, columns)) {
+  if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
     return error.value
   }
 
-  if (rows <= 0 || columns <= 0) {
-    return error.num
+  if (integer) {
+    for (let i = 0; i < rows; i++) {
+      result[i] = []
+      for (let j = 0; j < columns; j++) {
+        result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
+      }
+    }
+  } else {
+    for (let i = 0; i < rows; i++) {
+      result[i] = []
+      for (let j = 0; j < columns; j++) {
+        result[i][j] = Math.random() * (max - min) + min
+      }
+    }
   }
 
-  let result = []
-
-  for (let i = 0; i < rows; i++) {
-    let row = []
-    for (let j = 0; j < columns; j++) {
-      row.push(Math.random())
-    }
-    result.push(row)
+  if (result.length === 1 && result[0].length === 1) {
+    return result[0][0]
   }
 
   return result
@@ -1746,6 +1792,10 @@ export function SERIESSUM(x, n, m, coefficients) {
  * @returns
  */
 export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
+  if (arguments.length < 1 || arguments.length > 4) {
+    return error.na
+  }
+
   rows = utils.parseNumber(rows)
   columns = utils.parseNumber(columns)
   start = utils.parseNumber(start)
@@ -1770,6 +1820,10 @@ export function SEQUENCE(rows = 1, columns = 1, start = 1, step = 1) {
       value += step
     }
     result.push(row)
+  }
+
+  if (result.length === 1 && result[0].length === 1) {
+    return result[0][0]
   }
 
   return result

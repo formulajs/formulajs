@@ -486,12 +486,31 @@ describe('Math & Trig', () => {
   })
 
   it('MDETERM', () => {
+    expect(mathTrig.MDETERM(4)).to.equal(4)
     expect(
       mathTrig.MDETERM([
         [1, 2],
         [3, 4]
       ])
     ).to.equal(-2)
+    expect(
+      mathTrig.MDETERM([
+        [1, -2],
+        [3, -4]
+      ])
+    ).to.equal(2)
+    expect(
+      mathTrig.MDETERM([
+        [4, 4],
+        [4, 4]
+      ])
+    ).to.equal(0)
+    expect(
+      mathTrig.MDETERM([
+        [1, 0.5],
+        [4.4, 1.5]
+      ])
+    ).to.be.approximately(-0.7, 0.00001)
     expect(
       mathTrig.MDETERM([
         [1, 2, 3],
@@ -561,6 +580,44 @@ describe('Math & Trig', () => {
         [3, undefined]
       ])
     ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, false]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM([
+        [1, 2],
+        [3, true]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.MDETERM(
+        [
+          [1, 2],
+          [3, 4]
+        ],
+        [
+          [1, 2],
+          [3, 4]
+        ]
+      )
+    ).to.equal(error.na)
+    expect(mathTrig.MDETERM(1, 2)).to.equal(error.na)
+    expect(mathTrig.MDETERM('4')).to.equal(error.value)
+    expect(mathTrig.MDETERM('string')).to.equal(error.value)
+    expect(mathTrig.MDETERM(true)).to.equal(error.value)
+    expect(mathTrig.MDETERM(false)).to.equal(error.value)
+    expect(mathTrig.MDETERM('true')).to.equal(error.value)
+    expect(mathTrig.MDETERM('false')).to.equal(error.value)
+    expect(mathTrig.MDETERM(undefined, undefined)).to.equal(error.na)
+    expect(mathTrig.MDETERM()).to.equal(error.na)
+    expect(mathTrig.MDETERM(error.na)).to.equal(error.na)
+    expect(mathTrig.MDETERM(error.calc)).to.equal(error.calc)
+    expect(mathTrig.MDETERM(error.num)).to.equal(error.num)
+    expect(mathTrig.MDETERM(error.value)).to.equal(error.value)
+    expect(mathTrig.MDETERM(error.error)).to.equal(error.error)
   })
 
   it('MINVERSE', () => {
@@ -594,12 +651,48 @@ describe('Math & Trig', () => {
       [0, 0, 1]
     ])
 
-    expect(mathTrig.MINVERSE(error.value)).to.eql(error.value)
-    expect(mathTrig.MINVERSE(error.num)).to.eql(error.num)
     expect(mathTrig.MINVERSE(4)).to.eql(0.25)
     expect(mathTrig.MINVERSE('a')).to.eql(error.value)
+    expect(mathTrig.MINVERSE(false)).to.eql(error.value)
+    expect(mathTrig.MINVERSE(true)).to.eql(error.value)
+    expect(mathTrig.MINVERSE('false')).to.eql(error.value)
+    expect(mathTrig.MINVERSE('true')).to.eql(error.value)
     expect(mathTrig.MINVERSE(-2)).to.eql(-0.5)
     expect(mathTrig.MINVERSE()).to.eql(error.na)
+    expect(mathTrig.MINVERSE(null)).to.eql(error.value)
+    expect(mathTrig.MINVERSE(undefined, undefined)).to.eql(error.na)
+    expect(mathTrig.MINVERSE(error.value)).to.eql(error.value)
+    expect(mathTrig.MINVERSE(error.num)).to.eql(error.num)
+    expect(mathTrig.MINVERSE(error.name)).to.eql(error.name)
+    expect(mathTrig.MINVERSE(error.ref)).to.eql(error.ref)
+    expect(
+      mathTrig.MINVERSE(
+        [
+          [2, 3],
+          [1, 2]
+        ],
+        1
+      )
+    ).to.eql(error.na)
+    expect(
+      mathTrig.MINVERSE(
+        [
+          [2, 3],
+          [1, 2]
+        ],
+        'string'
+      )
+    ).to.eql(error.na)
+    expect(
+      mathTrig.MINVERSE(
+        [
+          [2, 3],
+          [1, 2]
+        ],
+        1,
+        1
+      )
+    ).to.eql(error.na)
     expect(
       mathTrig.MINVERSE([
         [2, 1],
@@ -945,19 +1038,52 @@ describe('Math & Trig', () => {
   })
 
   it('RANDARRAY', () => {
-    expect(mathTrig.RANDARRAY(1)[0][0]).to.be.within(0, 1)
-    expect(mathTrig.RANDARRAY(1).length).to.equal(1)
+    expect(mathTrig.RANDARRAY()).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(1)).to.be.within(0, 1)
+    expect(Number.isInteger(mathTrig.RANDARRAY(1, 1, 0, 1, true))).to.be.true
     expect(mathTrig.RANDARRAY(2).length).to.equal(2)
-    expect(mathTrig.RANDARRAY(1)[0].length).to.equal(1)
     expect(mathTrig.RANDARRAY(1, 2)[0].length).to.equal(2)
+    expect(mathTrig.RANDARRAY(2, 2, 5, 6)[0][0]).to.be.within(5, 6)
+    expect(mathTrig.RANDARRAY('4', 1).length).to.equal(4)
+    expect(mathTrig.RANDARRAY(1, '4')[0].length).to.equal(4)
+    expect(mathTrig.RANDARRAY(2, 2, '0', '1')[0][0]).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(2, 2, '-10', '-2')[0][0]).to.be.within(-10, -2)
+    expect(mathTrig.RANDARRAY(2, 2, -5, 0)[0][0]).to.be.within(-5, 0)
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, true)[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, false)[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 'true')[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 'false')[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, null)[0][0])).to.be.false
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 1)[0][0])).to.be.true
+    expect(Number.isInteger(mathTrig.RANDARRAY(2, 2, 1, 10, 0)[0][0])).to.be.false
 
+    expect(mathTrig.RANDARRAY(undefined, undefined)).to.be.within(0, 1)
+    expect(mathTrig.RANDARRAY(null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 1, 1, null)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(-1)).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, -1)).to.equal(error.value)
     expect(mathTrig.RANDARRAY('a')).to.equal(error.value)
     expect(mathTrig.RANDARRAY(1, 'a')).to.equal(error.value)
-    expect(mathTrig.RANDARRAY().length).to.equal(1)
-    expect(mathTrig.RANDARRAY(0)).to.equal(error.num)
-    expect(mathTrig.RANDARRAY(-1)).to.equal(error.num)
-    expect(mathTrig.RANDARRAY(error.value)).to.equal(error.value)
-    expect(mathTrig.RANDARRAY(error.num)).to.equal(error.num)
+    expect(mathTrig.RANDARRAY(1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, 1, 'string')).to.equal(error.value)
+    expect(mathTrig.RANDARRAY([[1], [1]])).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, [[1], [1]])).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, [[1], [1]])).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, [[1], [1]])).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(1, 1, 1, 1, [[1], [1]])).to.equal(error.value)
+    expect(mathTrig.RANDARRAY(0)).to.equal(error.calc)
+    expect(mathTrig.RANDARRAY(1, 0)).to.equal(error.calc)
+
+    Object.values(error).forEach((err) => {
+      expect(mathTrig.RANDARRAY(err)).to.equal(err)
+      expect(mathTrig.RANDARRAY(1, err)).to.equal(err)
+      expect(mathTrig.RANDARRAY(1, 1, err)).to.equal(err)
+      expect(mathTrig.RANDARRAY(1, 1, 1, err)).to.equal(err)
+      expect(mathTrig.RANDARRAY(1, 1, 1, 1, err)).to.equal(err)
+    })
   })
 
   it('RANDBETWEEN', () => {
@@ -1138,7 +1264,7 @@ describe('Math & Trig', () => {
   })
 
   it('SEQUENCE', () => {
-    expect(mathTrig.SEQUENCE(1)).to.eql([[1]])
+    expect(mathTrig.SEQUENCE(1)).to.eql(1)
     expect(mathTrig.SEQUENCE(2)).to.eql([[1], [2]])
     expect(mathTrig.SEQUENCE(2, 2)).to.eql([
       [1, 2],
@@ -1156,6 +1282,8 @@ describe('Math & Trig', () => {
       [2, 4],
       [6, 8]
     ])
+    expect(mathTrig.SEQUENCE(1, 2, 2, 2)).to.eql([[2, 4]])
+    expect(mathTrig.SEQUENCE(2, 1, 2, 2)).to.eql([[2], [4]])
     expect(mathTrig.SEQUENCE(2, 2, 2, -2)).to.eql([
       [2, 0],
       [-2, -4]
@@ -1164,13 +1292,81 @@ describe('Math & Trig', () => {
       [2, 2],
       [2, 2]
     ])
+    expect(mathTrig.SEQUENCE(3, 3, 2, 0)).to.eql([
+      [2, 2, 2],
+      [2, 2, 2],
+      [2, 2, 2]
+    ])
+    expect(mathTrig.SEQUENCE(3, 3, 2, 1)).to.eql([
+      [2, 3, 4],
+      [5, 6, 7],
+      [8, 9, 10]
+    ])
+    expect(mathTrig.SEQUENCE('1')).to.eql(1)
+    expect(mathTrig.SEQUENCE(true)).to.eql(1)
 
-    expect(mathTrig.SEQUENCE()).to.eql([[1]])
+    expect(mathTrig.SEQUENCE()).to.eql(error.na)
+    expect(mathTrig.SEQUENCE(undefined, undefined)).to.eql(1)
     expect(mathTrig.SEQUENCE('string')).to.equal(error.value)
     expect(mathTrig.SEQUENCE(error.value)).to.equal(error.value)
     expect(mathTrig.SEQUENCE(error.num)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(error.error)).to.equal(error.error)
+    expect(mathTrig.SEQUENCE(error.ref)).to.equal(error.ref)
     expect(mathTrig.SEQUENCE(-1)).to.equal(error.num)
     expect(mathTrig.SEQUENCE(0)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(false)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE('true')).to.equal(error.value)
+    expect(mathTrig.SEQUENCE('false')).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(null)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(1, null)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE(1, null)).to.equal(error.num)
+    expect(mathTrig.SEQUENCE([[1, 2]])).to.equal(error.value)
+    expect(mathTrig.SEQUENCE([[1, 'string']])).to.equal(error.value)
+    expect(mathTrig.SEQUENCE([[1], [2]])).to.equal(error.value)
+    expect(mathTrig.SEQUENCE([[1, 2]], [[3, 4]])).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE(1, [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE(1, [
+        ['string', 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE(1, 1, [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE(1, 1, 1, [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE('string', [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE('string', 'string', [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(
+      mathTrig.SEQUENCE('string', 'string', 'string', [
+        [3, 4],
+        [3, 4]
+      ])
+    ).to.equal(error.value)
+    expect(mathTrig.SEQUENCE(1, 1, 1, 1, 1)).to.equal(error.na)
   })
 
   it('SIGN', () => {
