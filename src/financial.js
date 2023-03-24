@@ -2197,8 +2197,12 @@ export function VDB() {
  */
 export function XIRR(values, dates, guess = 0.1) {
   // Credits: algorithm inspired by Apache OpenOffice
-  if (arguments.length < 2 || arguments.length > 3) {
+  if (arguments.length < 2 || arguments.length > 3 || utils.anyIsUndefined(values, dates)) {
     return error.na
+  }
+
+  if (utils.anyIsNull(values, dates)) {
+    return error.num
   }
 
   values = utils.flatten(values)

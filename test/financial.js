@@ -1771,6 +1771,21 @@ describe('Financial', () => {
       )
     ).to.equal(error.value)
     expect(
+      financial.XIRR('invalid', ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'], 0.1)
+    ).to.equal(error.value)
+    expect(
+      financial.XIRR(undefined, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'], 0.1)
+    ).to.equal(error.na)
+    expect(financial.XIRR(null, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'], 0.1)).to.equal(
+      error.num
+    )
+    expect(financial.XIRR(true, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'], 0.1)).to.equal(
+      error.value
+    )
+    expect(
+      financial.XIRR('true', ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'], 0.1)
+    ).to.equal(error.value)
+    expect(
       financial.XIRR(
         [-10000, 'invalid', 4250, 3250, 2750],
         ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'],
@@ -1840,6 +1855,11 @@ describe('Financial', () => {
         0.1
       )
     ).to.equal(error.num)
+    expect(financial.XIRR([-10000, 2750, 4250, 3250, 2750], 'invalid')).to.equal(error.value)
+    expect(financial.XIRR([-10000, 2750, 4250, 3250, 2750], true)).to.equal(error.value)
+    expect(financial.XIRR([-10000, 2750, 4250, 3250, 2750], false)).to.equal(error.value)
+    expect(financial.XIRR([-10000, 2750, 4250, 3250, 2750], null)).to.equal(error.num)
+    expect(financial.XIRR([-10000, 2750, 4250, 3250, 2750], undefined)).to.equal(error.na)
     expect(
       typeof financial.XIRR(
         [-10000, undefined, 4250, 3250, 2750],
