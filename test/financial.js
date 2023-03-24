@@ -1888,10 +1888,206 @@ describe('Financial', () => {
   })
 
   it('XNPV', () => {
-    const values = [-10000, 2750, 4250, 3250, 2750]
-    const dates = ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
-    expect(financial.XNPV(0.09, values, dates)).to.approximately(2086.6718943024616, 1e-1)
-    expect(financial.XNPV('invalid', values, dates)).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.09,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.approximately(2086.647602031535, 1e-1)
+    expect(
+      financial.XNPV(
+        '0.09',
+        ['-10000', '2750', '4250', '3250', '2750'],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.approximately(2086.647602031535, 1e-1)
+    expect(
+      financial.XNPV(
+        'invalid',
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        undefined,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.na)
+    expect(
+      financial.XNPV(
+        null,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.num)
+    expect(
+      financial.XNPV(
+        true,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        'true',
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        false,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        [[1], [2]],
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 'invalid'],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(0.1, 'invalid', ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])
+    ).to.equal(error.value)
+    expect(financial.XNPV(0.1, true, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])).to.equal(
+      error.value
+    )
+    expect(financial.XNPV(0.1, false, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])).to.equal(
+      error.value
+    )
+    expect(financial.XNPV(0.1, null, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])).to.equal(
+      error.num
+    )
+    expect(
+      financial.XNPV(0.1, undefined, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])
+    ).to.equal(error.na)
+    expect(
+      typeof financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, undefined],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal('number')
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, null],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.num)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, true],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, false],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 'true'],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+      )
+    ).to.equal(error.value)
+
+    expect(financial.XNPV(0.1, [-10000, 2750, 4250, 3250, 2750], 'invalid')).to.equal(error.value)
+    expect(financial.XNPV(0.1, [-10000, 2750, 4250, 3250, 2750], true)).to.equal(error.value)
+    expect(financial.XNPV(0.1, [-10000, 2750, 4250, 3250, 2750], false)).to.equal(error.value)
+    expect(financial.XNPV(0.1, [-10000, 2750, 4250, 3250, 2750], null)).to.equal(error.num)
+    expect(financial.XNPV(0.1, [-10000, 2750, 4250, 3250, 2750], undefined)).to.equal(error.na)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', undefined]
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', null]
+      )
+    ).to.equal(error.num)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', true]
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', false]
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.1,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', 'true']
+      )
+    ).to.equal(error.value)
+    expect(
+      financial.XNPV(
+        0.09,
+        [-10000, 2750, 4250, 3250, 2750],
+        ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'],
+        1
+      )
+    ).to.equal(error.na)
+    expect(financial.XNPV(0.09, [-10000, 2750, 4250, 3250, 2750])).to.equal(error.na)
+    expect(financial.XNPV(0.09)).to.equal(error.na)
+    expect(financial.XNPV()).to.equal(error.na)
+
+    Object.values(error).forEach((err) => {
+      expect(
+        financial.XNPV(
+          err,
+          [-10000, 2750, 4250, 3250, 2750],
+          ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+        )
+      ).to.equal(err)
+      expect(
+        financial.XNPV(0.09, err, ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009'])
+      ).to.equal(err)
+      expect(financial.XNPV(0.09, [-10000, 2750, 4250, 3250, 2750], err)).to.equal(err)
+      expect(
+        financial.XNPV(
+          0.09,
+          [-10000, 2750, 4250, 3250, err],
+          ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
+        )
+      ).to.equal(err)
+      expect(
+        financial.XNPV(
+          0.09,
+          [-10000, 2750, 4250, 3250, 2750],
+          ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', err]
+        )
+      ).to.equal(err)
+    })
   })
 
   // TODO: implement

@@ -2305,9 +2305,34 @@ export function XIRR(values, dates, guess = 0.1) {
  * @returns
  */
 export function XNPV(rate, values, dates) {
+  if (arguments.length !== 3 || utils.anyIsUndefined(rate, values, dates)) {
+    return error.na
+  }
+
+  if (utils.anyIsNull(dates, values)) {
+    return error.num
+  }
+
+  values = utils.flatten(values)
+  dates = utils.flatten(dates)
+
+  if (utils.anyIsBoolean(...values, ...dates, rate)) {
+    return error.value
+  }
+
+  if (utils.anyIsNull(...dates, ...values, rate)) {
+    return error.num
+  }
+
+  const anyError = utils.anyError(...values, ...dates, rate)
+
+  if (anyError) {
+    return anyError
+  }
+
   rate = utils.parseNumber(rate)
-  values = utils.parseNumberArray(utils.flatten(values))
-  dates = utils.parseDateArray(utils.flatten(dates))
+  values = utils.parseNumberArray(values)
+  dates = utils.parseDateArray(dates)
 
   if (utils.anyIsError(rate, values, dates)) {
     return error.value
