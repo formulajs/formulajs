@@ -1001,7 +1001,7 @@ export function MDETERM(matrix) {
     return error.na
   }
 
-  if (matrix instanceof Error) {
+  if (matrix && matrix.formulaError) {
     return matrix
   }
 
@@ -1011,7 +1011,7 @@ export function MDETERM(matrix) {
     return matrix
   }
 
-  if (!Array.isArray(matrix) || matrix.length == 0 || !Array.isArray(matrix[0]) || variableType === 'string') {
+  if (!Array.isArray(matrix) || matrix.length == 0 || variableType === 'string') {
     return error.value
   }
 
@@ -1471,9 +1471,7 @@ export function RAND() {
  * @returns
  */
 export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = false) {
-  let argumentsLength = arguments.length
-
-  if (argumentsLength > 5) {
+  if (arguments.length > 5) {
     return error.na
   }
 
@@ -1483,73 +1481,34 @@ export function RANDARRAY(rows = 1, columns = 1, min = 0, max = 1, integer = fal
 
   let result = []
 
-  if (
-    utils.getVariableType(rows) !== 'single' ||
-    utils.getVariableType(columns) !== 'single' ||
-    utils.getVariableType(min) !== 'single' ||
-    utils.getVariableType(max) !== 'single' ||
-    utils.getVariableType(integer) !== 'single'
-  ) {
-    let resultColumns = 0
-    let resultRows = 0
+  rows = utils.parseNumber(rows)
+  columns = utils.parseNumber(columns)
+  min = utils.parseNumber(min)
+  max = utils.parseNumber(max)
+  integer = utils.parseBool(integer)
 
-    for (let i = 0; i < argumentsLength; i++) {
-      if (utils.getVariableType(arguments[i]) !== 'single') {
-        resultRows = Math.max(arguments[i].length, resultRows)
-        resultColumns = Math.max(arguments[i].length, resultColumns)
-      }
-    }
+  const anyError = utils.anyError(rows, columns, min, max, integer)
 
-    for (let i = 0; i < resultRows; i++) {
+  if (anyError) {
+    return anyError
+  }
+
+  if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
+    return error.value
+  }
+
+  if (integer) {
+    for (let i = 0; i < rows; i++) {
       result[i] = []
-      for (let j = 0; j < resultColumns; j++) {
-        let tempMin = min
-        let tempMax = max
-
-        if (utils.getVariableType(min) !== 'single') {
-          tempMin = min[i][j]
-        }
-        if (utils.getVariableType(max) !== 'single') {
-          tempMax = max[i][j]
-        }
-
-        if (integer === true || (integer && integer[i] && integer[i][j] === true)) {
-          result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
-        } else {
-          result[i][j] = Math.random() * (tempMax - tempMin) + tempMin
-        }
+      for (let j = 0; j < columns; j++) {
+        result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
       }
     }
   } else {
-    rows = utils.parseNumber(rows)
-    columns = utils.parseNumber(columns)
-    min = utils.parseNumber(min)
-    max = utils.parseNumber(max)
-    integer = utils.parseBool(integer)
-
-    const anyError = utils.anyError(rows, columns, min, max, integer)
-
-    if (anyError) {
-      return anyError
-    }
-
-    if (utils.anyIsString(rows, columns, min, max) || rows < 0 || columns < 0) {
-      return error.value
-    }
-
-    if (integer) {
-      for (let i = 0; i < rows; i++) {
-        result[i] = []
-        for (let j = 0; j < columns; j++) {
-          result[i][j] = Math.floor(Math.random() * (max - min + 1)) + min
-        }
-      }
-    } else {
-      for (let i = 0; i < rows; i++) {
-        result[i] = []
-        for (let j = 0; j < columns; j++) {
-          result[i][j] = Math.random() * (max - min) + min
-        }
+    for (let i = 0; i < rows; i++) {
+      result[i] = []
+      for (let j = 0; j < columns; j++) {
+        result[i][j] = Math.random() * (max - min) + min
       }
     }
   }

@@ -400,16 +400,10 @@ export function UMINUS(value) {
     return error.na
   }
 
-  if (utils.getVariableType(value) !== 'single') {
-    return error.value
-  }
+  value = utils.parseNumber(value)
 
-  if (value.formulaError) {
+  if (value && value.formulaError) {
     return value
-  }
-
-  if (isNaN(+value)) {
-    return error.num
   }
 
   return -+value
@@ -427,14 +421,10 @@ export function UNARY_PERCENT(percentage) {
     return error.na
   }
 
-  const variableType = typeof percentage
+  percentage = utils.parseNumber(percentage)
 
-  if (percentage.formulaError) {
+  if (percentage && percentage.formulaError) {
     return percentage
-  }
-
-  if ((variableType !== 'number' && variableType !== 'string') || isNaN(percentage)) {
-    return error.value
   }
 
   return percentage / 100

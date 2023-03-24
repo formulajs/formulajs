@@ -1861,7 +1861,7 @@ export function MAXIFS(range, ...criteria) {
   }
 
   if (utils.getVariableType(range) === 'single') {
-    return error.na
+    return error.value
   }
 
   let max = -Infinity
@@ -1869,16 +1869,20 @@ export function MAXIFS(range, ...criteria) {
   let columns = range[0].length
   let criteriaLength = criteria.length
 
-  if (utils.getVariableType(criteria[1]) !== 'single') {
-    let result = []
-    for (let c = 0; c < criteriaLength; c += 2) {
-      let criteriaRange = criteria[c]
-      let criteriaValue = [...criteria[c + 1]]
-      let criteriaRows = criteriaValue.length
-      let criteriaColumns = criteriaValue[0].length
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      let match = true
 
-      for (let m = 0; m < criteriaRows; m++) {
-        result[m] = []
+      for (let c = 0; c < criteriaLength; c += 2) {
+        let criteriaRange = criteria[c]
+        let comparative =
+          typeof criteriaRange[i][j] === 'string' ? criteriaRange[i][j].toLowerCase() : criteriaRange[i][j]
+        let criteriaValue = typeof criteria[c + 1] === 'string' ? criteria[c + 1].toLowerCase() : criteria[c + 1]
+        let tokenizedCriteria = evalExpression.parse(criteriaValue + '')
+        let tokens = [evalExpression.createToken(comparative, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
+
         if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
           return error.na
         }
@@ -1886,61 +1890,23 @@ export function MAXIFS(range, ...criteria) {
         if (
           (criteriaRange && criteriaRange.length !== rows) ||
           criteriaRange[0].length !== columns ||
-          criteriaRange.formulaError
+          criteriaRange.formulaError ||
+          utils.getVariableType(criteriaValue) !== 'single'
         ) {
           return error.value
         }
 
-        for (let n = 0; n < criteriaColumns; n++) {
-          for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-              let match = true
-              if (criteriaRange[i][j] !== criteriaValue[m][n]) {
-                match = false
-                break
-              }
-              if (match && (range[i][j] > result[m][n] || isNaN(result[m][n]))) {
-                result[m][n] = range[i][j]
-              }
-            }
+        if (typeof comparative === 'boolean' && typeof criteriaValue === 'boolean') {
+          if (criteriaValue !== comparative) {
+            match = false
           }
-          if (!result[m][n]) {
-            result[m][n] = 0
-          }
+        } else if (!evalExpression.countIfComputeExpression(tokens)) {
+          match = false
         }
       }
-    }
-    return result
-  } else {
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < columns; j++) {
-        let match = true
 
-        for (let c = 0; c < criteriaLength; c += 2) {
-          let criteriaRange = criteria[c]
-          let criteriaValue = criteria[c + 1]
-
-          if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
-            return error.na
-          }
-
-          if (
-            (criteriaRange && criteriaRange.length !== rows) ||
-            criteriaRange[0].length !== columns ||
-            criteriaRange.formulaError
-          ) {
-            return error.value
-          }
-
-          if (criteriaRange[i][j] !== criteriaValue) {
-            match = false
-            break
-          }
-        }
-
-        if (match && range[i][j] > max) {
-          max = range[i][j]
-        }
+      if (match && range[i][j] > max) {
+        max = range[i][j]
       }
     }
   }
@@ -1954,7 +1920,7 @@ export function MINIFS(range, ...criteria) {
   }
 
   if (utils.getVariableType(range) === 'single') {
-    return error.na
+    return error.value
   }
 
   let min = +Infinity
@@ -1962,16 +1928,20 @@ export function MINIFS(range, ...criteria) {
   let columns = range[0].length
   let criteriaLength = criteria.length
 
-  if (utils.getVariableType(criteria[1]) !== 'single') {
-    let result = []
-    for (let c = 0; c < criteriaLength; c += 2) {
-      let criteriaRange = criteria[c]
-      let criteriaValue = [...criteria[c + 1]]
-      let criteriaRows = criteriaValue.length
-      let criteriaColumns = criteriaValue[0].length
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < columns; j++) {
+      let match = true
 
-      for (let m = 0; m < criteriaRows; m++) {
-        result[m] = []
+      for (let c = 0; c < criteriaLength; c += 2) {
+        let criteriaRange = criteria[c]
+        let comparative =
+          typeof criteriaRange[i][j] === 'string' ? criteriaRange[i][j].toLowerCase() : criteriaRange[i][j]
+        let criteriaValue = typeof criteria[c + 1] === 'string' ? criteria[c + 1].toLowerCase() : criteria[c + 1]
+        let tokenizedCriteria = evalExpression.parse(criteriaValue + '')
+        let tokens = [evalExpression.createToken(comparative, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
+
         if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
           return error.na
         }
@@ -1979,61 +1949,23 @@ export function MINIFS(range, ...criteria) {
         if (
           (criteriaRange && criteriaRange.length !== rows) ||
           criteriaRange[0].length !== columns ||
-          criteriaRange.formulaError
+          criteriaRange.formulaError ||
+          utils.getVariableType(criteriaValue) !== 'single'
         ) {
           return error.value
         }
 
-        for (let n = 0; n < criteriaColumns; n++) {
-          for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < columns; j++) {
-              let match = true
-              if (criteriaRange[i][j] !== criteriaValue[m][n]) {
-                match = false
-                break
-              }
-              if (match && (range[i][j] < result[m][n] || isNaN(result[m][n]))) {
-                result[m][n] = range[i][j]
-              }
-            }
+        if (typeof comparative === 'boolean' && typeof criteriaValue === 'boolean') {
+          if (criteriaValue !== comparative) {
+            match = false
           }
-          if (!result[m][n]) {
-            result[m][n] = 0
-          }
+        } else if (!evalExpression.countIfComputeExpression(tokens)) {
+          match = false
         }
       }
-    }
-    return result
-  } else {
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < columns; j++) {
-        let match = true
 
-        for (let c = 0; c < criteriaLength; c += 2) {
-          let criteriaRange = criteria[c]
-          let criteriaValue = criteria[c + 1]
-
-          if (criteriaValue === undefined || utils.getVariableType(criteriaRange) === 'single') {
-            return error.na
-          }
-
-          if (
-            (criteriaRange && criteriaRange.length !== rows) ||
-            criteriaRange[0].length !== columns ||
-            criteriaRange.formulaError
-          ) {
-            return error.value
-          }
-
-          if (criteriaRange[i][j] !== criteriaValue) {
-            match = false
-            break
-          }
-        }
-
-        if (match && range[i][j] < min) {
-          min = range[i][j]
-        }
+      if (match && range[i][j] < min) {
+        min = range[i][j]
       }
     }
   }
