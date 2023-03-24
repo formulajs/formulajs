@@ -343,13 +343,18 @@ describe('Operator', () => {
     expect(operator.UMINUS(false)).to.equal(0)
     expect(operator.UMINUS('-1')).to.equal(1)
     expect(operator.UMINUS('1')).to.equal(-1)
+    expect(operator.UMINUS(null)).to.equal(0)
 
     expect(operator.UMINUS()).to.equal(error.na)
     expect(operator.UMINUS(1, 2)).to.equal(error.na)
     expect(operator.UMINUS(1, 2, 3)).to.equal(error.na)
-    expect(operator.UMINUS('string')).to.equal(error.num)
-    expect(operator.UMINUS(error.error)).to.equal(error.error)
-    expect(operator.UMINUS([[1]])).to.equal(error.value)
+    expect(operator.UMINUS('string')).to.equal(error.value)
+
+    expect(operator.UMINUS([[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UMINUS(err)).to.equal(err)
+    })
   })
 
   it('UNARY_PERCENT', () => {
@@ -364,8 +369,9 @@ describe('Operator', () => {
     expect(operator.UNARY_PERCENT(10, 10)).to.equal(error.na)
     expect(operator.UNARY_PERCENT()).to.equal(error.na)
     expect(operator.UNARY_PERCENT('50')).to.equal(0.5)
-    expect(operator.UNARY_PERCENT(true)).to.equal(error.value)
-    expect(operator.UNARY_PERCENT(false)).to.equal(error.value)
+    expect(operator.UNARY_PERCENT(true)).to.equal(0.01)
+    expect(operator.UNARY_PERCENT(false)).to.equal(0)
+    expect(operator.UNARY_PERCENT(null)).to.equal(0)
     expect(operator.UNARY_PERCENT('true')).to.equal(error.value)
     expect(operator.UNARY_PERCENT('false')).to.equal(error.value)
     expect(operator.UNARY_PERCENT('string')).to.equal(error.value)
@@ -374,13 +380,17 @@ describe('Operator', () => {
     expect(operator.UNARY_PERCENT(error.calc)).to.equal(error.calc)
     expect(operator.UNARY_PERCENT(error.num)).to.equal(error.num)
     expect(operator.UNARY_PERCENT(error.na)).to.equal(error.na)
-    expect(operator.UNARY_PERCENT([[1]])).to.equal(error.value)
+    expect(operator.UNARY_PERCENT([[1], [1]])).to.equal(error.value)
     expect(
       operator.UNARY_PERCENT([
         [1, 10],
         [5, 30]
       ])
     ).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UNARY_PERCENT(err)).to.equal(err)
+    })
   })
 
   it('UPLUS', () => {
@@ -392,11 +402,18 @@ describe('Operator', () => {
     expect(operator.UPLUS('')).to.equal('')
     expect(operator.UPLUS('string')).to.equal('string')
     expect(operator.UPLUS('1a')).to.equal('1a')
+    expect(operator.UPLUS(null)).to.equal(null)
     expect(operator.UPLUS(true)).to.equal(true)
     expect(operator.UPLUS(false)).to.equal(false)
 
     expect(operator.UPLUS()).to.equal(error.na)
     expect(operator.UPLUS([[1]])).to.equal(error.value)
     expect(operator.UPLUS([['1']])).to.equal(error.value)
+
+    expect(operator.UPLUS([[1], [2]])).to.equal(error.value)
+
+    Object.values(error).forEach((err) => {
+      expect(operator.UPLUS(err)).to.equal(err)
+    })
   })
 })
