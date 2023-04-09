@@ -677,11 +677,11 @@ export function EFFECT(nominal_rate, npery) {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate per period.
- * @param {*} nper The total number of payment periods in an annuity.
- * @param {*} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes. If pmt is omitted, you must include the pv argument.
- * @param {*} pv Optional. The present value, or the lump-sum amount that a series of future payments is worth right now. If pv is omitted, it is assumed to be 0 (zero), and you must include the pmt argument.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
+ * @param {number | string} rate The interest rate per period.
+ * @param {number | string} nper The total number of payment periods in an annuity.
+ * @param {number | string} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes. If pmt is omitted, you must include the pv argument.
+ * @param {number | string | undefined} pv Optional. The present value, or the lump-sum amount that a series of future payments is worth right now. If pv is omitted, it is assumed to be 0 (zero), and you must include the pmt argument.
+ * @param {0 | 1 | undefined} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
 export function FV(rate, nper, payment, value, type) {
@@ -771,12 +771,12 @@ export function INTRATE() {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate per period.
- * @param {*} per The period for which you want to find the interest and must be in the range 1 to nper.
- * @param {*} nper The total number of payment periods in an annuity.
- * @param {*} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
+ * @param {number | string} rate The interest rate per period.
+ * @param {number | string} per The period for which you want to find the interest and must be in the range 1 to nper.
+ * @param {number | string} nper The total number of payment periods in an annuity.
+ * @param {number | string} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
+ * @param {number | string | undefined} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
+ * @param {0 | 1 | undefined} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
 export function IPMT(rate, per, nper, pv, fv, type) {
@@ -912,10 +912,10 @@ export function IRR(values, guess) {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate for the investment.
- * @param {*} per The period for which you want to find the interest, and must be between 1 and Nper.
- * @param {*} nper The total number of payment periods for the investment.
- * @param {*} pv The present value of the investment. For a loan, Pv is the loan amount.
+ * @param {number | string} rate The interest rate for the investment.
+ * @param {number | string} per The period for which you want to find the interest, and must be between 1 and Nper.
+ * @param {number | string} nper The total number of payment periods for the investment.
+ * @param {number | string} pv The present value of the investment. For a loan, Pv is the loan amount.
  *
  * @returns
  */
@@ -1001,8 +1001,8 @@ export function MIRR(values, finance_rate, reinvest_rate) {
  *
  * Category: Financial
  *
- * @param {*} effect_rate The effective interest rate.
- * @param {*} npery The number of compounding periods per year.
+ * @param {number | string} effect_rate The effective interest rate.
+ * @param {number | string} npery The number of compounding periods per year.
  * @returns
  */
 export function NOMINAL(effect_rate, npery) {
@@ -1030,11 +1030,11 @@ export function NOMINAL(effect_rate, npery) {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate per period.
- * @param {*} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes.
- * @param {*} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {number | string} rate The interest rate per period.
+ * @param {number | string} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes.
+ * @param {number | string} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
+ * @param {number | string | undefined} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
+ * @param {0 | 1 | undefined} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
 export function NPER(rate, pmt, pv, fv, type) {
@@ -1191,9 +1191,9 @@ export function ODDLYIELD() {
  *
  * Category: Financial
  *
- * @param {*} rate Rate is the interest rate per period.
- * @param {*} pv Pv is the present value of the investment.
- * @param {*} fv Fv is the desired future value of the investment.
+ * @param {number | string} rate Rate is the interest rate per period.
+ * @param {number | string} pv Pv is the present value of the investment.
+ * @param {number | string} fv Fv is the desired future value of the investment.
  * @returns
  */
 export function PDURATION(rate, pv, fv) {
@@ -1219,11 +1219,11 @@ export function PDURATION(rate, pv, fv) {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate for the loan.
- * @param {*} nper The total number of payments for the loan.
- * @param {*} pv The present value, or the total amount that a series of future payments is worth now; also known as the principal.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
- * @param {*} type Optional. The number 0 (zero) or 1 and indicates when payments are due.
+ * @param {number | string} rate The interest rate for the loan.
+ * @param {number | string} nper The total number of payments for the loan.
+ * @param {number | string} pv The present value, or the total amount that a series of future payments is worth now; also known as the principal.
+ * @param {number | string | undefined} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
+ * @param {0 | 1 | undefined} type Optional. The number 0 (zero) or 1 and indicates when payments are due.
  * @returns
  */
 export function PMT(rate, nper, pv, fv, type) {
@@ -1263,12 +1263,12 @@ export function PMT(rate, nper, pv, fv, type) {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate per period.
- * @param {*} per Specifies the period and must be in the range 1 to nper.
- * @param {*} nper The total number of payment periods in an annuity.
- * @param {*} pv The present value — the total amount that a series of future payments is worth now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {number | string} rate The interest rate per period.
+ * @param {number | string} per Specifies the period and must be in the range 1 to nper.
+ * @param {number | string} nper The total number of payment periods in an annuity.
+ * @param {number | string} pv The present value — the total amount that a series of future payments is worth now.
+ * @param {number | string | undefined} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
+ * @param {0 | 1 | undefined} type Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
 export function PPMT(rate, per, nper, pv, fv, type) {
@@ -1396,11 +1396,11 @@ export function PRICEMAT() {
  *
  * Category: Financial
  *
- * @param {*} rate The interest rate per period. For example, if you obtain an automobile loan at a 10 percent annual interest rate and make monthly payments, your interest rate per month is 10%/12, or 0.83%. You would enter 10%/12, or 0.83%, or 0.0083, into the formula as the rate.
- * @param {*} nper The total number of payment periods in an annuity. For example, if you get a four-year car loan and make monthly payments, your loan has 4*12 (or 48) periods. You would enter 48 into the formula for nper.
- * @param {*} pmt The payment made each period and cannot change over the life of the annuity. Typically, pmt includes principal and interest but no other fees or taxes. For example, the monthly payments on a $10,000, four-year car loan at 12 percent are $263.33. You would enter -263.33 into the formula as the pmt. If pmt is omitted, you must include the fv argument.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). For example, if you want to save $50,000 to pay for a special project in 18 years, then $50,000 is the future value. You could then make a conservative guess at an interest rate and determine how much you must save each month. If fv is omitted, you must include the pmt argument.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {number | string} rate The interest rate per period. For example, if you obtain an automobile loan at a 10 percent annual interest rate and make monthly payments, your interest rate per month is 10%/12, or 0.83%. You would enter 10%/12, or 0.83%, or 0.0083, into the formula as the rate.
+ * @param {number | string} nper The total number of payment periods in an annuity. For example, if you get a four-year car loan and make monthly payments, your loan has 4*12 (or 48) periods. You would enter 48 into the formula for nper.
+ * @param {number | string} pmt The payment made each period and cannot change over the life of the annuity. Typically, pmt includes principal and interest but no other fees or taxes. For example, the monthly payments on a $10,000, four-year car loan at 12 percent are $263.33. You would enter -263.33 into the formula as the pmt. If pmt is omitted, you must include the fv argument.
+ * @param {number | string | undefined} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). For example, if you want to save $50,000 to pay for a special project in 18 years, then $50,000 is the future value. You could then make a conservative guess at an interest rate and determine how much you must save each month. If fv is omitted, you must include the pmt argument.
+ * @param {0 | 1 | undefined} type Optional. The number 0 or 1 and indicates when payments are due. Assume 0 by default
  * @returns
  */
 export function PV(rate, per, pmt, fv, type) {
