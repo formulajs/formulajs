@@ -219,12 +219,16 @@ describe('Date & Time', () => {
 
   it('WORKDAY', () => {
     expect(dateTime.WORKDAY('1/1/1900', 1).getDate()).to.equal(2)
+    expect(dateTime.WORKDAY('2/28/1900', 1).getDate()).to.equal(1)
+    expect(dateTime.WORKDAY('2/28/1900', -1).getDate()).to.equal(27)
     expect(dateTime.WORKDAY('1/1/1900', 7).getDate()).to.equal(10)
+    expect(dateTime.WORKDAY('1/18/1900', -7).getDate()).to.equal(9)
     expect(dateTime.WORKDAY('1/1/1900', 2, '1/2/1900').getDate()).to.equal(4)
+    expect(dateTime.WORKDAY('3/5/1900', -1, '3/2/1900').getDate()).to.equal(1)
     expect(dateTime.WORKDAY('a', 1, '1/2/1900')).to.equal(error.value)
     expect(dateTime.WORKDAY('1/1/1900', 'a')).to.equal(error.value)
     expect(dateTime.WORKDAY('1/1/1900', 1, 'a')).to.equal(error.value)
-    expect(dateTime.WORKDAY('1/1/1900', -1)).to.equal(error.num)
+    expect(dateTime.WORKDAY('2023-05-05', -10, ['2023-04-29', '2023-04-30', '2023-05-01']).getDate()).to.equal(20)
   })
 
   it('WORKDAY.INTL', () => {
