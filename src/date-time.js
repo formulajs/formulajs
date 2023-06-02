@@ -718,10 +718,6 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
     return days
   }
 
-  if (days < 0) {
-    return error.num
-  }
-
   if (weekend === undefined) {
     weekend = WEEKEND_TYPES[1]
   } else {
@@ -750,28 +746,56 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
 
   let d = 0
 
-  while (d < days) {
-    start_date.setDate(start_date.getDate() + 1)
-    const day = start_date.getDay()
+  if (days < 0) {
+    while (d > days) {
+      start_date.setDate(start_date.getDate() - 1)
 
-    if (day === weekend[0] || day === weekend[1]) {
-      continue
-    }
+      const day = start_date.getDay()
 
-    for (let j = 0; j < holidays.length; j++) {
-      const holiday = holidays[j]
-
-      if (
-        holiday.getDate() === start_date.getDate() &&
-        holiday.getMonth() === start_date.getMonth() &&
-        holiday.getFullYear() === start_date.getFullYear()
-      ) {
-        d--
-        break
+      if (day === weekend[0] || day === weekend[1]) {
+        continue
       }
-    }
 
-    d++
+      for (let j = 0; j < holidays.length; j++) {
+        const holiday = holidays[j]
+
+        if (
+          holiday.getDate() === start_date.getDate() &&
+          holiday.getMonth() === start_date.getMonth() &&
+          holiday.getFullYear() === start_date.getFullYear()
+        ) {
+          d++
+          break
+        }
+      }
+
+      d--
+    }
+  } else {
+    while (d < days) {
+      start_date.setDate(start_date.getDate() + 1)
+
+      const day = start_date.getDay()
+
+      if (day === weekend[0] || day === weekend[1]) {
+        continue
+      }
+
+      for (let j = 0; j < holidays.length; j++) {
+        const holiday = holidays[j]
+
+        if (
+          holiday.getDate() === start_date.getDate() &&
+          holiday.getMonth() === start_date.getMonth() &&
+          holiday.getFullYear() === start_date.getFullYear()
+        ) {
+          d--
+          break
+        }
+      }
+
+      d++
+    }
   }
 
   return start_date
