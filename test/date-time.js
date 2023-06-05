@@ -229,7 +229,7 @@ describe('Date & Time', () => {
     expect(dateTime.WORKDAY('1/1/1900', 'a')).to.equal(error.value)
     expect(dateTime.WORKDAY('1/1/1900', 1, 'a')).to.equal(error.value)
     expect(dateTime.WORKDAY('2023-05-05', -10, ['2023-04-29', '2023-04-30', '2023-05-01']).getDate()).to.equal(20)
-    expect(dateTime.WORKDAY('1/1/1900', -1)).to.equal(error.date)
+    expect(dateTime.WORKDAY('1/1/1900', -1)).to.equal(error.value)
   })
 
   it('WORKDAY.INTL', () => {

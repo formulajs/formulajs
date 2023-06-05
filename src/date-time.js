@@ -775,7 +775,7 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
 
   // EXCEL does not recognize dates before 1900.
   if (start_date.getFullYear() < 1900) {
-    return error.date
+    return error.value
   }
 
   return start_date
