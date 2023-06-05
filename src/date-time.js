@@ -746,56 +746,36 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
 
   let d = 0
 
-  if (days < 0) {
-    while (d > days) {
-      start_date.setDate(start_date.getDate() - 1)
+  const sign = Math.sign(days)
 
-      const day = start_date.getDay()
+  while (d < days * sign) {
+    start_date.setDate(start_date.getDate() + sign)
 
-      if (day === weekend[0] || day === weekend[1]) {
-        continue
-      }
+    const day = start_date.getDay()
 
-      for (let j = 0; j < holidays.length; j++) {
-        const holiday = holidays[j]
-
-        if (
-          holiday.getDate() === start_date.getDate() &&
-          holiday.getMonth() === start_date.getMonth() &&
-          holiday.getFullYear() === start_date.getFullYear()
-        ) {
-          d++
-          break
-        }
-      }
-
-      d--
+    if (day === weekend[0] || day === weekend[1]) {
+      continue
     }
-  } else {
-    while (d < days) {
-      start_date.setDate(start_date.getDate() + 1)
 
-      const day = start_date.getDay()
+    for (let j = 0; j < holidays.length; j++) {
+      const holiday = holidays[j]
 
-      if (day === weekend[0] || day === weekend[1]) {
-        continue
+      if (
+        holiday.getDate() === start_date.getDate() &&
+        holiday.getMonth() === start_date.getMonth() &&
+        holiday.getFullYear() === start_date.getFullYear()
+      ) {
+        d--
+        break
       }
-
-      for (let j = 0; j < holidays.length; j++) {
-        const holiday = holidays[j]
-
-        if (
-          holiday.getDate() === start_date.getDate() &&
-          holiday.getMonth() === start_date.getMonth() &&
-          holiday.getFullYear() === start_date.getFullYear()
-        ) {
-          d--
-          break
-        }
-      }
-
-      d++
     }
+
+    d++
+  }
+
+  // EXCEL does not recognize dates before 1900.
+  if (start_date.getFullYear() < 1900) {
+    return error.date
   }
 
   return start_date
