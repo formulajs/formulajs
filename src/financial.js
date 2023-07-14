@@ -10,15 +10,37 @@ function ensureDate(d) {
   return d instanceof Date ? d : new Date(d)
 }
 
-function lastCoupDateBeforeSettlement(settlement, maturity) {
+function lastCoupDateBeforeSettlement(settlement, maturity, frequency) {
   let date = utils.parseDate(maturity)
   date.setFullYear(settlement.getFullYear())
 
   if (date < settlement) date.setFullYear(date.getFullYear() + 1)
 
-  while (date > settlement) date.setMonth(date.addMonth() + -12 / frequency)
+  while (date > settlement) date.setMonth(date.getMonth() + -12 / frequency)
 
   return date
+}
+
+function validateFrequency(frequency) {
+  frequency = utils.parseNumber(frequency)
+
+  // Return error if frequency is neither 1, 2, or 4
+  if ([1, 2, 4].indexOf(frequency) === -1) return error.num
+
+  return frequency
+}
+
+function validateBasis(basis) {
+  basis = utils.parseNumber(basis)
+
+  // Return error if basis is neither 0, 1, 2, 3, or 4
+  if ([0, 1, 2, 3, 4].indexOf(basis) === -1) return error.num
+
+  return basis
+}
+
+function isLeapYear(year) {
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 }
 
 /**
@@ -41,6 +63,10 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
   issue = ensureDate(issue)
   first_interest = ensureDate(first_interest)
   settlement = ensureDate(settlement)
+  frequency = validateFrequency(frequency)
+  basis = validateBasis(basis)
+
+  if (utils.anyError(frequency, basis)) return error.num
 
   if (!validDate(issue) || !validDate(first_interest) || !validDate(settlement)) {
     return error.value
@@ -48,16 +74,6 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
 
   // Return error if either rate or par are lower than or equal to zero
   if (rate <= 0 || par <= 0) {
-    return error.num
-  }
-
-  // Return error if frequency is neither 1, 2, or 4
-  if ([1, 2, 4].indexOf(frequency) === -1) {
-    return error.num
-  }
-
-  // Return error if basis is neither 0, 1, 2, 3, or 4
-  if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
     return error.num
   }
 
@@ -166,24 +182,42 @@ export function COUPDAYBS() {
  * @returns
  */
 export function COUPDAYS(settlement, maturity, frequency, basis) {
+  basis = validateBasis(basis)
+
   if (basis === 1) {
-    let date = lastCoupDateBeforeSettlement(settlement, maturity)
+    settlement = utils.parseDate(settlement)
+    maturity = utils.parseDate(maturity)
+    frequency = validateFrequency(frequency)
+
+    if (utils.anyError(settlement, maturity)) return error.value
+    if (utils.anyError(frequency, basis) || settlement >= maturity) return error.num
+
+    let date = lastCoupDateBeforeSettlement(settlement, maturity, frequency)
     let nextDate = utils.parseDate(date)
     nextDate.setMonth(nextDate.getMonth() + 12 / frequency)
 
     return dateTime.DATEDIF(date, nextDate, 'D')
   }
 
+  let numOfDays
+
   switch (basis) {
     case 0:
     case 2:
     case 4:
-      return 360
+      numOfDays = 360
+
+      break
+    case 1:
     case 3:
-      return 365
+      numOfDays = 365
+
+      break
     default:
       return error.num
   }
+
+  return numOfDays / frequency
 }
 
 // TODO
