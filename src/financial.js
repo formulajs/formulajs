@@ -10,6 +10,17 @@ function ensureDate(d) {
   return d instanceof Date ? d : new Date(d)
 }
 
+function lastCoupDateBeforeSettlement(settlement, maturity) {
+  let date = utils.parseDate(maturity)
+  date.setFullYear(settlement.getFullYear())
+
+  if (date < settlement) date.setFullYear(date.getFullYear() + 1)
+
+  while (date > settlement) date.setMonth(date.addMonth() + -12 / frequency)
+
+  return date
+}
+
 /**
  * Returns the accrued interest for a security that pays periodic interest.
  *
@@ -142,9 +153,7 @@ export function COUPDAYBS() {
   throw new Error('COUPDAYBS is not implemented')
 }
 
-// TODO
 /**
- * -- Not implemented --
  *
  * Returns the number of days in the coupon period that contains the settlement date.
  *
@@ -156,8 +165,25 @@ export function COUPDAYBS() {
  * @param {*} basis Optional. The type of day count basis to use.
  * @returns
  */
-export function COUPDAYS() {
-  throw new Error('COUPDAYS is not implemented')
+export function COUPDAYS(settlement, maturity, frequency, basis) {
+  if (basis === 1) {
+    let date = lastCoupDateBeforeSettlement(settlement, maturity)
+    let nextDate = utils.parseDate(date)
+    nextDate.setMonth(nextDate.getMonth() + 12 / frequency)
+
+    return dateTime.DATEDIF(date, nextDate, 'D')
+  }
+
+  switch (basis) {
+    case 0:
+    case 2:
+    case 4:
+      return 360
+    case 3:
+      return 365
+    default:
+      return error.num
+  }
 }
 
 // TODO
