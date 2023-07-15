@@ -10,6 +10,7 @@ function ensureDate(d) {
   return d instanceof Date ? d : new Date(d)
 }
 
+// Calculate last coupon date before settlement
 function lastCoupDateBeforeSettlement(settlement, maturity, frequency) {
   let date = utils.parseDate(maturity)
   date.setFullYear(settlement.getFullYear())
@@ -18,6 +19,7 @@ function lastCoupDateBeforeSettlement(settlement, maturity, frequency) {
     date.setFullYear(date.getFullYear() + 1)
   }
 
+  // Adjust the date based on the coupon frequency until date is later than settlement
   while (date > settlement) {
     date.setMonth(date.getMonth() + -12 / frequency)
   }
@@ -205,6 +207,7 @@ export function COUPDAYS(settlement, maturity, frequency, basis) {
 
     let date = lastCoupDateBeforeSettlement(settlement, maturity, frequency)
     let nextDate = utils.parseDate(date)
+    // Set month of the nextDate to the next coupon month
     nextDate.setMonth(nextDate.getMonth() + 12 / frequency)
 
     return dateTime.DATEDIF(date, nextDate, 'D')
