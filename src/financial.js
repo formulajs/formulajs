@@ -39,10 +39,6 @@ function validateBasis(basis) {
   return basis
 }
 
-function isLeapYear(year) {
-  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
-}
-
 /**
  * Returns the accrued interest for a security that pays periodic interest.
  *
