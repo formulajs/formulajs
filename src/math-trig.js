@@ -584,11 +584,11 @@ export function CSCH(number) {
  * @returns
  */
 export function DECIMAL(text, radix) {
-  if (arguments.length < 1) {
-    return error.value
+  if (arguments.length < 2) {
+    return error.na
   }
 
-  text = utils.parseNumber(text)
+  text = text || '0'
   radix = utils.parseNumber(radix)
   const anyError = utils.anyError(text, radix)
 
@@ -600,7 +600,13 @@ export function DECIMAL(text, radix) {
     return error.num
   }
 
-  return parseInt(text, radix)
+  const result = parseInt(text, radix)
+
+  if (isNaN(result)) {
+    return error.num
+  }
+
+  return result
 }
 
 /**
