@@ -221,7 +221,6 @@ export function COUPDAYS(settlement, maturity, frequency, basis) {
     case 4:
       numOfDays = 360
       break
-    case 1:
     case 3:
       numOfDays = 365
       break
