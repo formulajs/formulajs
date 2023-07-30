@@ -258,14 +258,15 @@ describe('Math & Trig', () => {
     expect(mathTrig.DECIMAL(undefined, undefined)).to.equal(error.num)
     expect(mathTrig.DECIMAL(undefined, 2)).to.equal(0)
     expect(mathTrig.DECIMAL(2, undefined)).to.equal(error.num)
-    expect(mathTrig.DECIMAL(error.na)).to.equal(error.na)
+    expect(mathTrig.DECIMAL(error.na, undefined)).to.equal(error.na)
     expect(mathTrig.DECIMAL('0', 2)).to.equal(0)
     expect(mathTrig.DECIMAL('1', 2)).to.equal(1)
     expect(mathTrig.DECIMAL('10', 2)).to.equal(2)
     expect(mathTrig.DECIMAL('10', 10)).to.equal(10)
-    expect(mathTrig.DECIMAL('FF', 16)).to.equal(error.value) // Excel: error.num
-    expect(mathTrig.DECIMAL('ZZ', 36)).to.equal(error.value) // Excel: error.num
-    expect(mathTrig.DECIMAL('invalid')).to.equal(error.value)
+    expect(mathTrig.DECIMAL('FF', 16)).to.equal(255)
+    expect(mathTrig.DECIMAL('ZZ', 36)).to.equal(1295)
+    expect(mathTrig.DECIMAL('invalid')).to.equal(error.na)
+    expect(mathTrig.DECIMAL('invalid', 2)).to.equal(error.num)
   })
 
   it('DEGREES', () => {
