@@ -191,22 +191,22 @@ export function COUPDAYBS() {
  */
 export function COUPDAYS(settlement, maturity, frequency, basis) {
   basis = validateBasis(basis)
+  frequency = validateFrequency(frequency)
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+
+  if (utils.anyError(settlement, maturity)) {
+    return error.value
+  }
+
+  if (utils.anyError(frequency, basis) || settlement >= maturity) {
+    return error.num
+  }
 
   if (basis === 1) {
-    settlement = utils.parseDate(settlement)
-    maturity = utils.parseDate(maturity)
-    frequency = validateFrequency(frequency)
-
-    if (utils.anyError(settlement, maturity)) {
-      return error.value
-    }
-
-    if (utils.anyError(frequency, basis) || settlement >= maturity) {
-      return error.num
-    }
-
     let date = lastCoupDateBeforeSettlement(settlement, maturity, frequency)
     let nextDate = utils.parseDate(date)
+
     // Set month of the nextDate to the next coupon month
     nextDate.setMonth(nextDate.getMonth() + 12 / frequency)
 
