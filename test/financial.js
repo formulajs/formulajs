@@ -282,9 +282,26 @@ describe('Financial', () => {
     expect(financial.COUPDAYBS).to.throw('COUPDAYBS is not implemented')
   })
 
-  // TODO: implement
   it('COUPDAYS', () => {
-    expect(financial.COUPDAYS).to.throw('COUPDAYS is not implemented')
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 1)).to.equal(181)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', '2', 1)).to.equal(181)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, '1')).to.equal(181)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', '2', '1')).to.equal(181)
+    expect(financial.COUPDAYS('01/32/2011', '11/15/2011', 2, 1)).to.equal(error.value)
+    expect(financial.COUPDAYS('01/25/2011', '11/33/2011', 2, 1)).to.equal(error.value)
+    expect(financial.COUPDAYS('01/32/2011', '11/33/2011', 2, 1)).to.equal(error.value)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 0, 1)).to.equal(error.num)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 1, 1)).to.equal(365)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 3, 1)).to.equal(error.num)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 4, 1)).to.equal(92)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 5, 1)).to.equal(error.num)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, -1)).to.equal(error.num)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 0)).to.equal(180)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 2)).to.equal(180)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 3)).to.equal(182.5)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 4)).to.equal(180)
+    expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 5)).to.equal(error.num)
+    expect(financial.COUPDAYS('12/25/2011', '11/15/2011', 2, 5)).to.equal(error.num)
   })
 
   // TODO: implement

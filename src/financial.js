@@ -10,6 +10,45 @@ function ensureDate(d) {
   return d instanceof Date ? d : new Date(d)
 }
 
+// Calculate last coupon date before settlement
+function lastCoupDateBeforeSettlement(settlement, maturity, frequency) {
+  let date = utils.parseDate(maturity)
+  date.setFullYear(settlement.getFullYear())
+
+  if (date < settlement) {
+    date.setFullYear(date.getFullYear() + 1)
+  }
+
+  // Adjust the date based on the coupon frequency until date is later than settlement
+  while (date > settlement) {
+    date.setMonth(date.getMonth() + -12 / frequency)
+  }
+
+  return date
+}
+
+function validateFrequency(frequency) {
+  frequency = utils.parseNumber(frequency)
+
+  // Return error if frequency is neither 1, 2, or 4
+  if ([1, 2, 4].indexOf(frequency) === -1) {
+    return error.num
+  }
+
+  return frequency
+}
+
+function validateBasis(basis) {
+  basis = utils.parseNumber(basis)
+
+  // Return error if basis is neither 0, 1, 2, 3, or 4
+  if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
+    return error.num
+  }
+
+  return basis
+}
+
 /**
  * Returns the accrued interest for a security that pays periodic interest.
  *
@@ -30,6 +69,12 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
   issue = ensureDate(issue)
   first_interest = ensureDate(first_interest)
   settlement = ensureDate(settlement)
+  frequency = validateFrequency(frequency)
+  basis = validateBasis(basis)
+
+  if (utils.anyError(frequency, basis)) {
+    return error.num
+  }
 
   if (!validDate(issue) || !validDate(first_interest) || !validDate(settlement)) {
     return error.value
@@ -37,16 +82,6 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
 
   // Return error if either rate or par are lower than or equal to zero
   if (rate <= 0 || par <= 0) {
-    return error.num
-  }
-
-  // Return error if frequency is neither 1, 2, or 4
-  if ([1, 2, 4].indexOf(frequency) === -1) {
-    return error.num
-  }
-
-  // Return error if basis is neither 0, 1, 2, 3, or 4
-  if ([0, 1, 2, 3, 4].indexOf(basis) === -1) {
     return error.num
   }
 
@@ -142,9 +177,7 @@ export function COUPDAYBS() {
   throw new Error('COUPDAYBS is not implemented')
 }
 
-// TODO
 /**
- * -- Not implemented --
  *
  * Returns the number of days in the coupon period that contains the settlement date.
  *
@@ -156,8 +189,46 @@ export function COUPDAYBS() {
  * @param {*} basis Optional. The type of day count basis to use.
  * @returns
  */
-export function COUPDAYS() {
-  throw new Error('COUPDAYS is not implemented')
+export function COUPDAYS(settlement, maturity, frequency, basis) {
+  basis = validateBasis(basis)
+  frequency = validateFrequency(frequency)
+  settlement = utils.parseDate(settlement)
+  maturity = utils.parseDate(maturity)
+
+  if (utils.anyError(settlement, maturity)) {
+    return error.value
+  }
+
+  if (utils.anyError(frequency, basis) || settlement >= maturity) {
+    return error.num
+  }
+
+  if (basis === 1) {
+    let date = lastCoupDateBeforeSettlement(settlement, maturity, frequency)
+    let nextDate = utils.parseDate(date)
+
+    // Set month of the nextDate to the next coupon month
+    nextDate.setMonth(nextDate.getMonth() + 12 / frequency)
+
+    return dateTime.DATEDIF(date, nextDate, 'D')
+  }
+
+  let numOfDays
+
+  switch (basis) {
+    case 0:
+    case 2:
+    case 4:
+      numOfDays = 360
+      break
+    case 3:
+      numOfDays = 365
+      break
+    default:
+      return error.num
+  }
+
+  return numOfDays / frequency
 }
 
 // TODO
