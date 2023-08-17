@@ -1350,7 +1350,28 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.VLOOKUP(
+        'Ji',
+        [
+          ['hector', 2],
+          ['jam', 4]
+        ],
+        2
+      )
+    ).to.equal(4)
+    expect(
+      lookup.VLOOKUP(
         'ji',
+        [
+          ['hector', 2],
+          ['jam', 4]
+        ],
+        2,
+        false
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.VLOOKUP(
+        'Ji',
         [
           ['hector', 2],
           ['jam', 4]
@@ -1372,7 +1393,29 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.VLOOKUP(
+        'JaM',
+        [
+          ['hector', 2],
+          ['jam', 4]
+        ],
+        2,
+        false
+      )
+    ).to.equal(4)
+    expect(
+      lookup.VLOOKUP(
         'jam',
+        [
+          ['hector', -1],
+          ['jam', 0]
+        ],
+        2,
+        false
+      )
+    ).to.equal(0)
+    expect(
+      lookup.VLOOKUP(
+        'jAm',
         [
           ['hector', -1],
           ['jam', 0]
@@ -1393,7 +1436,28 @@ describe('Lookup Reference', () => {
     ).to.equal(2)
     expect(
       lookup.VLOOKUP(
+        'jAMes',
+        [
+          ['jam', 2],
+          ['jim', 4]
+        ],
+        2
+      )
+    ).to.equal(2)
+    expect(
+      lookup.VLOOKUP(
         'jim',
+        [
+          ['jam', 2],
+          ['jim', 4]
+        ],
+        2,
+        false
+      )
+    ).to.equal(4)
+    expect(
+      lookup.VLOOKUP(
+        'jIm',
         [
           ['jam', 2],
           ['jim', 4]
@@ -1414,7 +1478,28 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.VLOOKUP(
+        'JOHN',
+        [
+          ['john', 4],
+          ['jam', 2]
+        ],
+        2
+      )
+    ).to.equal(4)
+    expect(
+      lookup.VLOOKUP(
         'ji',
+        [
+          ['jim', 2],
+          ['jam', 4]
+        ],
+        3,
+        true
+      )
+    ).to.equal(error.ref)
+    expect(
+      lookup.VLOOKUP(
+        'JI',
         [
           ['jim', 2],
           ['jam', 4]
@@ -1549,7 +1634,29 @@ describe('Lookup Reference', () => {
     ).to.equal(error.na)
     expect(
       lookup.HLOOKUP(
+        'JI',
+        [
+          ['jim', 'jam'],
+          [1, 4]
+        ],
+        2,
+        false
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.HLOOKUP(
         'jb',
+        [
+          ['jam', 'jim'],
+          [1, 4]
+        ],
+        2,
+        true
+      )
+    ).to.equal(1)
+    expect(
+      lookup.HLOOKUP(
+        'jB',
         [
           ['jam', 'jim'],
           [1, 4]
@@ -1571,6 +1678,17 @@ describe('Lookup Reference', () => {
     ).to.equal(4)
     expect(
       lookup.HLOOKUP(
+        'Li',
+        [
+          ['hector', 'jim'],
+          [1, 4]
+        ],
+        2,
+        true
+      )
+    ).to.equal(4)
+    expect(
+      lookup.HLOOKUP(
         'ji',
         [
           ['hector', 'jam'],
@@ -1582,7 +1700,29 @@ describe('Lookup Reference', () => {
     ).to.equal(error.ref)
     expect(
       lookup.HLOOKUP(
+        'jI',
+        [
+          ['hector', 'jam'],
+          [1, 4]
+        ],
+        3,
+        true
+      )
+    ).to.equal(error.ref)
+    expect(
+      lookup.HLOOKUP(
         'ji',
+        [
+          ['jim', 'jam'],
+          [1, 4]
+        ],
+        3,
+        false
+      )
+    ).to.equal(error.na)
+    expect(
+      lookup.HLOOKUP(
+        'jI',
         [
           ['jim', 'jam'],
           [1, 4]

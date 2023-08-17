@@ -412,25 +412,29 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
   }
 
   range_lookup = !(range_lookup === 0 || range_lookup === false)
+
   let result = error.na
-  const isNumberLookup = typeof lookup_value === 'number'
   let exactMatchOnly = false
+
+  const isNumberLookup = typeof lookup_value === 'number'
+  const lookupValue = typeof lookup_value === 'string' ? lookup_value.toLowerCase() : lookup_value
 
   for (let i = 0; i < table_array.length; i++) {
     const row = table_array[i]
+    const rowValue = typeof row[0] === 'string' ? row[0].toLowerCase() : row[0]
 
-    if (row[0] === lookup_value) {
+    if (rowValue === lookupValue) {
       result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
       break
     } else if (
       !exactMatchOnly &&
-      ((isNumberLookup && range_lookup && row[0] <= lookup_value) ||
-        (range_lookup && typeof row[0] === 'string' && row[0].localeCompare(lookup_value) < 0))
+      ((isNumberLookup && range_lookup && rowValue <= lookup_value) ||
+        (range_lookup && typeof rowValue === 'string' && rowValue.localeCompare(lookup_value) < 0))
     ) {
       result = col_index_num < row.length + 1 ? row[col_index_num - 1] : error.ref
     }
 
-    if (isNumberLookup && row[0] > lookup_value) {
+    if (isNumberLookup && rowValue > lookup_value) {
       exactMatchOnly = true
     }
   }
