@@ -107,6 +107,18 @@ describe('Date & Time', () => {
     expect(dateTime.EDATE('a', 0)).to.equal(error.value)
     expect(dateTime.EDATE('1/1/1900', 'a')).to.equal(error.value)
     expect(dateTime.EDATE(new Date(2011, 0, 23), 1)).to.deep.equal(new Date(2011, 1, 23))
+    expect(dateTime.EDATE(new Date(2023, 2, 27), 1)).to.deep.equal(new Date(2023, 3, 27))
+    expect(dateTime.EDATE(new Date(2023, 2, 28), 1)).to.deep.equal(new Date(2023, 3, 28))
+    expect(dateTime.EDATE(new Date(2023, 2, 29), 1)).to.deep.equal(new Date(2023, 3, 29))
+    expect(dateTime.EDATE(new Date(2023, 2, 30), 1)).to.deep.equal(new Date(2023, 3, 30))
+    expect(dateTime.EDATE(new Date(2023, 2, 31), 1)).to.deep.equal(new Date(2023, 3, 30))
+    expect(dateTime.EDATE(new Date(2023, 2, 27), -1)).to.deep.equal(new Date(2023, 1, 27))
+    expect(dateTime.EDATE(new Date(2023, 2, 28), -1)).to.deep.equal(new Date(2023, 1, 28))
+    expect(dateTime.EDATE(new Date(2023, 2, 29), -1)).to.deep.equal(new Date(2023, 1, 28))
+    expect(dateTime.EDATE(new Date(2023, 2, 30), -1)).to.deep.equal(new Date(2023, 1, 28))
+    expect(dateTime.EDATE(new Date(2023, 2, 31), -1)).to.deep.equal(new Date(2023, 1, 28))
+    expect(dateTime.EDATE(new Date(2008, 2, 31), -1)).to.deep.equal(new Date(2008, 1, 29))
+    expect(dateTime.EDATE(new Date(2100, 2, 31), -1)).to.deep.equal(new Date(2100, 1, 28))
   })
 
   it('EOMONTH', () => {
