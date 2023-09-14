@@ -324,27 +324,27 @@ export function EDATE(start_date, months) {
   }
 
   // store the day and temporarily set to 1, which is safe
-  let storedDay = start_date.getDate();
-  start_date.setDate(1);
+  let storedDay = start_date.getDate()
+  start_date.setDate(1)
 
   months = parseInt(months, 10)
   start_date.setMonth(start_date.getMonth() + months)
 
-  let targetMonth = start_date.getMonth();
-  
-  // if storedDay > 28 then we need to check end-of-month scenarios
-  if ( storedDay > 28 ) {
-  	let daysInTargetMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][targetMonth];
-    
-    // if target month is February, check for a leap year
-	  let targetYear = start_date.getFullYear();
-    if ( targetMonth === 1 && ( ((targetYear % 4 === 0) && (targetYear % 100 !== 0)) || (targetYear % 400 === 0) ) ) {
-    	daysInTargetMonth = 29;
-    }
-  	storedDay = Math.min( storedDay, daysInTargetMonth );
-  } 
+  let targetMonth = start_date.getMonth()
 
-	start_date.setDate(storedDay);
+  // if storedDay > 28 then we need to check end-of-month scenarios
+  if (storedDay > 28) {
+    let daysInTargetMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][targetMonth]
+
+    // if target month is February, check for a leap year
+    let targetYear = start_date.getFullYear()
+    if (targetMonth === 1 && ((targetYear % 4 === 0 && targetYear % 100 !== 0) || targetYear % 400 === 0)) {
+      daysInTargetMonth = 29
+    }
+    storedDay = Math.min(storedDay, daysInTargetMonth)
+  }
+
+  start_date.setDate(storedDay)
 
   return start_date
 }
