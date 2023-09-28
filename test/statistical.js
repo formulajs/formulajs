@@ -454,37 +454,67 @@ describe('Statistical', () => {
     expect(statistical.GEOMEAN([4, 5, 8, 7, 'invalid', 4, 3])).to.equal(error.value)
   })
 
-  it('GROWTH', () => {
+  describe('GROWTH', () => {
     const known_y = [33100, 47300, 69000, 102000, 150000, 220000]
     const known_x = [11, 12, 13, 14, 15, 16]
     const new_x = [11, 12, 13, 14, 15, 16, 17, 18, 19]
 
-    expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, new_x))).to.approximately(
-      mathTrig.SUM([
-        32618.203773538437, 47729.42261474665, 69841.30085621694, 102197.07337883314, 149542.4867400494,
-        218821.87621460424, 320196.7183634903, 468536.05418408214, 685597.3889812973
-      ]),
-      1e-6
-    )
+    it('should compute values along an exponential trend', () => {
+      expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, new_x))).to.approximately(
+        mathTrig.SUM([
+          32618.203773538437, 47729.42261474665, 69841.30085621694, 102197.07337883314, 149542.4867400494,
+          218821.87621460424, 320196.7183634903, 468536.05418408214, 685597.3889812973
+        ]),
+        1e-6
+      )
 
-    expect(mathTrig.SUM(statistical.GROWTH(known_y))).to.approximately(
-      mathTrig.SUM([
-        32618.203773539713, 47729.42261474775, 69841.30085621744, 102197.07337883241, 149542.4867400457,
-        218821.8762145953
-      ]),
-      1e-6
-    )
+      expect(mathTrig.SUM(statistical.GROWTH(known_y))).to.approximately(
+        mathTrig.SUM([
+          32618.203773539713, 47729.42261474775, 69841.30085621744, 102197.07337883241, 149542.4867400457,
+          218821.8762145953
+        ]),
+        1e-6
+      )
 
-    expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, new_x, false))).to.approximately(
-      mathTrig.SUM([
-        9546.01078362295, 21959.574129266384, 50515.645421859634, 116205.8251842928, 267319.0393588225,
-        614938.7837519756, 1414600.7282884493, 3254137.2789414385, 7485793.848705778
-      ]),
-      1e-6
-    )
+      expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, new_x, false))).to.approximately(
+        mathTrig.SUM([
+          9546.01078362295, 21959.574129266384, 50515.645421859634, 116205.8251842928, 267319.0393588225,
+          614938.7837519756, 1414600.7282884493, 3254137.2789414385, 7485793.848705778
+        ]),
+        1e-6
+      )
+    })
 
-    expect(statistical.GROWTH(known_y, known_x, 'invalid', false)).to.equal(error.value)
-    expect(statistical.GROWTH('invalid', known_x)).to.equal(error.value)
+    it('should work with array-like column notation', () => {
+      const vertical_known_y = known_y.map((y) => [y])
+      const vertical_known_x = known_x.map((x) => [x])
+      const vertical_new_x = new_x.map((x) => [x])
+
+      expect(mathTrig.SUM(statistical.GROWTH(vertical_known_y, vertical_known_x, vertical_new_x))).to.approximately(
+        mathTrig.SUM([
+          32618.203773538437, 47729.42261474665, 69841.30085621694, 102197.07337883314, 149542.4867400494,
+          218821.87621460424, 320196.7183634903, 468536.05418408214, 685597.3889812973
+        ]),
+        1e-6
+      )
+    })
+
+    it('should accept non-array value for new_x', () => {
+      expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, [11]))).to.approximately(
+        mathTrig.SUM([32618.203773538437]),
+        1e-6
+      )
+      expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, 11))).to.approximately(
+        mathTrig.SUM([32618.203773538437]),
+        1e-6
+      )
+    })
+
+    it('should throw an error with invalid parameters', () => {
+      expect(statistical.GROWTH(known_y, known_x, 'invalid', false)).to.equal(error.value)
+
+      expect(statistical.GROWTH('invalid', known_x)).to.equal(error.value)
+    })
   })
 
   it('HARMEAN', () => {

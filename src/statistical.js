@@ -1336,7 +1336,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
   }
 
   known_x = utils.parseNumberArray(known_x)
-  new_x = utils.parseNumberArray(new_x)
+  new_x = utils.parseNumberArray(utils.flatten(new_x))
 
   if (utils.anyIsError(known_x, new_x)) {
     return error.value
