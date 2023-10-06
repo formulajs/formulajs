@@ -499,6 +499,20 @@ describe('Statistical', () => {
       )
     })
 
+    it('should work with array-like row notation', () => {
+      const one_row_known_y = [known_y]
+      const one_row_known_x = [known_x]
+      const one_row_new_x = [new_x]
+
+      expect(mathTrig.SUM(statistical.GROWTH(one_row_known_y, one_row_known_x, one_row_new_x))).to.approximately(
+        mathTrig.SUM([
+          32618.203773538437, 47729.42261474665, 69841.30085621694, 102197.07337883314, 149542.4867400494,
+          218821.87621460424, 320196.7183634903, 468536.05418408214, 685597.3889812973
+        ]),
+        1e-6
+      )
+    })
+
     it('should accept non-array value for new_x', () => {
       expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, [11]))).to.approximately(
         mathTrig.SUM([32618.203773538437]),
