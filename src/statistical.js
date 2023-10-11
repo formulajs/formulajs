@@ -1310,7 +1310,7 @@ export function GEOMEAN() {
  */
 export function GROWTH(known_y, known_x, new_x, use_const) {
   // Credits: Ilmari Karonen (http://stackoverflow.com/questions/14161990/how-to-implement-growth-function-in-javascript)
-  known_y = utils.parseNumberArray(known_y)
+  known_y = utils.parseNumberArray(utils.flatten(known_y))
 
   if (known_y instanceof Error) {
     return known_y
@@ -1335,7 +1335,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
     }
   }
 
-  known_x = utils.parseNumberArray(known_x)
+  known_x = utils.parseNumberArray(utils.flatten(known_x))
   new_x = utils.parseNumberArray(utils.flatten(new_x))
 
   if (utils.anyIsError(known_x, new_x)) {
