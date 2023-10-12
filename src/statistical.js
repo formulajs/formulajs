@@ -1328,11 +1328,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
   }
 
   if (new_x === undefined) {
-    new_x = []
-
-    for (i = 1; i <= known_y.length; i++) {
-      new_x.push(i)
-    }
+    new_x = known_x
   }
 
   known_x = utils.parseNumberArray(known_x)

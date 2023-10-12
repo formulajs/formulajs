@@ -468,14 +468,6 @@ describe('Statistical', () => {
         1e-6
       )
 
-      expect(mathTrig.SUM(statistical.GROWTH(known_y))).to.approximately(
-        mathTrig.SUM([
-          32618.203773539713, 47729.42261474775, 69841.30085621744, 102197.07337883241, 149542.4867400457,
-          218821.8762145953
-        ]),
-        1e-6
-      )
-
       expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x, new_x, false))).to.approximately(
         mathTrig.SUM([
           9546.01078362295, 21959.574129266384, 50515.645421859634, 116205.8251842928, 267319.0393588225,
@@ -483,6 +475,30 @@ describe('Statistical', () => {
         ]),
         1e-6
       )
+    })
+
+    describe('if known_x is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y', () => {
+      it('should compute values along an exponential trend', () => {
+        expect(mathTrig.SUM(statistical.GROWTH(known_y))).to.approximately(
+          mathTrig.SUM([
+            32618.203773539713, 47729.42261474775, 69841.30085621744, 102197.07337883241, 149542.4867400457,
+            218821.8762145953
+          ]),
+          1e-6
+        )
+      })
+    })
+
+    describe('if new_x is omitted, it is assumed to be the same as known_x', () => {
+      it('should compute values along an exponential trend', () => {
+        expect(mathTrig.SUM(statistical.GROWTH(known_y, known_x))).to.approximately(
+          mathTrig.SUM([
+            32618.203773538437, 47729.42261474665, 69841.30085621694, 102197.07337883314, 149542.4867400494,
+            218821.87621460424
+          ]),
+          1e-6
+        )
+      })
     })
 
     it('should work with array-like column notation', () => {
