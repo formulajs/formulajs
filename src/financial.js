@@ -876,8 +876,8 @@ export function IPMT(rate, per, nper, pv, fv, type) {
         ? 0
         : -pv
       : type === 1
-      ? FV(rate, per - 2, payment, pv, 1) - payment
-      : FV(rate, per - 1, payment, pv, 0)
+        ? FV(rate, per - 2, payment, pv, 1) - payment
+        : FV(rate, per - 1, payment, pv, 0)
 
   // Return interest
   return interest * rate
