@@ -633,6 +633,14 @@ describe('Statistical', () => {
     ).to.equal(1)
   })
 
+  it('MAXIFS', () => {
+    expect(statistical.MAXIFS([2, 4, 8, 16], [1, 4, 4, 1], '>2')).to.equal(8)
+    expect(statistical.MAXIFS([2, 4, 8, 16], [1, 4, 4, 1], '*')).to.equal(16)
+    expect(statistical.MAXIFS([2, 4, 8, 16], [1, 4, 4, 1], '>2', [1, 4, 4, 4], '>2')).to.equal(8)
+    expect(statistical.MAXIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '>2')).to.equal(0)
+    expect(statistical.MAXIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '*')).to.equal(16)
+  })
+
   it('MEDIAN', () => {
     expect(statistical.MEDIAN()).to.equal(error.num)
     expect(statistical.MEDIAN(undefined)).to.equal(error.num)
@@ -686,6 +694,14 @@ describe('Statistical', () => {
         ]
       )
     ).to.equal(0)
+  })
+
+  it('MINIFS', () => {
+    expect(statistical.MINIFS([2, 4, 8, 16], [1, 4, 4, 1], '>2')).to.equal(4)
+    expect(statistical.MINIFS([2, 4, 8, 16], [1, 4, 4, 1], '*')).to.equal(2)
+    expect(statistical.MINIFS([2, 4, 8, 16], [1, 4, 4, 1], '>2', [4, 4, 4, 1], '>2')).to.equal(4)
+    expect(statistical.MINIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '>2')).to.equal(0)
+    expect(statistical.MINIFS([2, 4, 8, 16], [1, 2, 3, 4], '>2', [1, 1, 1, 1], '*')).to.equal(8)
   })
 
   it('MODE.MULT', () => {

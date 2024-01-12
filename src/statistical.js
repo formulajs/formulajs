@@ -1698,6 +1698,67 @@ export function MAXA() {
 }
 
 /**
+ * Returns the maximum of all values in a range that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @returns
+ */
+export function MAXIFS() {
+  const args = utils.argsToArray(arguments)
+  const range = utils.parseNumberArray(utils.flatten(args.shift()))
+
+  if (range instanceof Error) {
+    return range
+  }
+
+  const criterias = args
+  const criteriaLength = criterias.length / 2
+
+  for (let i = 0; i < criteriaLength; i++) {
+    criterias[i * 2] = utils.flatten(criterias[i * 2])
+  }
+
+  let values = []
+
+  for (let i = 0; i < range.length; i++) {
+    let isMeetCondition = false
+
+    for (let j = 0; j < criteriaLength; j++) {
+      const valueToTest = criterias[j * 2][i]
+      const criteria = criterias[j * 2 + 1]
+      const isWildcard = criteria === void 0 || criteria === '*'
+      let computedResult = false
+
+      if (isWildcard) {
+        computedResult = true
+      } else {
+        const tokenizedCriteria = evalExpression.parse(criteria + '')
+        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
+
+        computedResult = evalExpression.compute(tokens)
+      }
+
+      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
+      if (!computedResult) {
+        isMeetCondition = false
+        break
+      }
+
+      isMeetCondition = true
+    }
+
+    if (isMeetCondition) {
+      values.push(range[i])
+    }
+  }
+
+  return values.length === 0 ? 0 : Math.max.apply(Math, values)
+}
+
+/**
  * Returns the median of the given numbers.
  *
  * Category: Statistical
@@ -1764,6 +1825,67 @@ export function MINA() {
   range = range.map((value) => (value === undefined || value === null ? 0 : value))
 
   return range.length === 0 ? 0 : Math.min.apply(Math, range)
+}
+
+/**
+ * Returns the minimum of all values in a range that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @returns
+ */
+export function MINIFS() {
+  const args = utils.argsToArray(arguments)
+  const range = utils.parseNumberArray(utils.flatten(args.shift()))
+
+  if (range instanceof Error) {
+    return range
+  }
+
+  const criterias = args
+  const criteriaLength = criterias.length / 2
+
+  for (let i = 0; i < criteriaLength; i++) {
+    criterias[i * 2] = utils.flatten(criterias[i * 2])
+  }
+
+  let values = []
+
+  for (let i = 0; i < range.length; i++) {
+    let isMeetCondition = false
+
+    for (let j = 0; j < criteriaLength; j++) {
+      const valueToTest = criterias[j * 2][i]
+      const criteria = criterias[j * 2 + 1]
+      const isWildcard = criteria === void 0 || criteria === '*'
+      let computedResult = false
+
+      if (isWildcard) {
+        computedResult = true
+      } else {
+        const tokenizedCriteria = evalExpression.parse(criteria + '')
+        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
+
+        computedResult = evalExpression.compute(tokens)
+      }
+
+      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
+      if (!computedResult) {
+        isMeetCondition = false
+        break
+      }
+
+      isMeetCondition = true
+    }
+
+    if (isMeetCondition) {
+      values.push(range[i])
+    }
+  }
+
+  return values.length === 0 ? 0 : Math.min.apply(Math, values)
 }
 
 export const MODE = {}
