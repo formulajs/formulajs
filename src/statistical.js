@@ -8,6 +8,60 @@ import * as utils from './utils/common.js'
 
 const SQRT2PI = 2.5066282746310002
 
+//Filters values from a given range based on multiple criteria.
+//Returns an array containing the values that satisfy all the specified criteria.
+function applyCriteria() {
+  const args = utils.argsToArray(arguments)
+  const range = utils.parseNumberArray(utils.flatten(args.shift()))
+  if (range instanceof Error) {
+    return range
+  }
+
+  const criterias = args
+  const criteriaLength = criterias.length / 2
+
+  for (let i = 0; i < criteriaLength; i++) {
+    criterias[i * 2] = utils.flatten(criterias[i * 2])
+  }
+
+  let values = []
+
+  for (let i = 0; i < range.length; i++) {
+    let isMetCondition = false
+
+    for (let j = 0; j < criteriaLength; j++) {
+      const valueToTest = criterias[j * 2][i]
+      const criteria = criterias[j * 2 + 1]
+      const isWildcard = criteria === void 0 || criteria === '*'
+      let computedResult = false
+
+      if (isWildcard) {
+        computedResult = true
+      } else {
+        const tokenizedCriteria = evalExpression.parse(criteria + '')
+        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
+          tokenizedCriteria
+        )
+
+        computedResult = evalExpression.compute(tokens)
+      }
+
+      // Criterias are calculated as AND so any `false` breaks the loop as unmeet condition
+      if (!computedResult) {
+        isMetCondition = false
+        break
+      }
+
+      isMetCondition = true
+    }
+
+    if (isMetCondition) {
+      values.push(range[i])
+    }
+  }
+  return values
+}
+
 /**
  * Returns the average of the absolute deviations of data points from their mean.
  *
@@ -1705,56 +1759,7 @@ export function MAXA() {
  * @returns
  */
 export function MAXIFS() {
-  const args = utils.argsToArray(arguments)
-  const range = utils.parseNumberArray(utils.flatten(args.shift()))
-
-  if (range instanceof Error) {
-    return range
-  }
-
-  const criterias = args
-  const criteriaLength = criterias.length / 2
-
-  for (let i = 0; i < criteriaLength; i++) {
-    criterias[i * 2] = utils.flatten(criterias[i * 2])
-  }
-
-  let values = []
-
-  for (let i = 0; i < range.length; i++) {
-    let isMeetCondition = false
-
-    for (let j = 0; j < criteriaLength; j++) {
-      const valueToTest = criterias[j * 2][i]
-      const criteria = criterias[j * 2 + 1]
-      const isWildcard = criteria === void 0 || criteria === '*'
-      let computedResult = false
-
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
-          tokenizedCriteria
-        )
-
-        computedResult = evalExpression.compute(tokens)
-      }
-
-      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
-      if (!computedResult) {
-        isMeetCondition = false
-        break
-      }
-
-      isMeetCondition = true
-    }
-
-    if (isMeetCondition) {
-      values.push(range[i])
-    }
-  }
-
+  let values = applyCriteria(...arguments);
   return values.length === 0 ? 0 : Math.max.apply(Math, values)
 }
 
@@ -1835,56 +1840,7 @@ export function MINA() {
  * @returns
  */
 export function MINIFS() {
-  const args = utils.argsToArray(arguments)
-  const range = utils.parseNumberArray(utils.flatten(args.shift()))
-
-  if (range instanceof Error) {
-    return range
-  }
-
-  const criterias = args
-  const criteriaLength = criterias.length / 2
-
-  for (let i = 0; i < criteriaLength; i++) {
-    criterias[i * 2] = utils.flatten(criterias[i * 2])
-  }
-
-  let values = []
-
-  for (let i = 0; i < range.length; i++) {
-    let isMeetCondition = false
-
-    for (let j = 0; j < criteriaLength; j++) {
-      const valueToTest = criterias[j * 2][i]
-      const criteria = criterias[j * 2 + 1]
-      const isWildcard = criteria === void 0 || criteria === '*'
-      let computedResult = false
-
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
-          tokenizedCriteria
-        )
-
-        computedResult = evalExpression.compute(tokens)
-      }
-
-      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
-      if (!computedResult) {
-        isMeetCondition = false
-        break
-      }
-
-      isMeetCondition = true
-    }
-
-    if (isMeetCondition) {
-      values.push(range[i])
-    }
-  }
-
+  let values = applyCriteria(...arguments);
   return values.length === 0 ? 0 : Math.min.apply(Math, values)
 }
 
