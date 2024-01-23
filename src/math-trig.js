@@ -1741,57 +1741,8 @@ export function SUMIF(range, criteria, sum_range) {
  * @returns
  */
 export function SUMIFS() {
-  const args = utils.argsToArray(arguments)
-  const range = utils.parseNumberArray(utils.flatten(args.shift()))
-
-  if (range instanceof Error) {
-    return range
-  }
-
-  const criterias = args
-  const criteriaLength = criterias.length / 2
-
-  for (let i = 0; i < criteriaLength; i++) {
-    criterias[i * 2] = utils.flatten(criterias[i * 2])
-  }
-
-  let result = 0
-
-  for (let i = 0; i < range.length; i++) {
-    let isMeetCondition = false
-
-    for (let j = 0; j < criteriaLength; j++) {
-      const valueToTest = criterias[j * 2][i]
-      const criteria = criterias[j * 2 + 1]
-      const isWildcard = criteria === void 0 || criteria === '*'
-      let computedResult = false
-
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(valueToTest, evalExpression.TOKEN_TYPE_LITERAL)].concat(
-          tokenizedCriteria
-        )
-
-        computedResult = evalExpression.compute(tokens)
-      }
-
-      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
-      if (!computedResult) {
-        isMeetCondition = false
-        break
-      }
-
-      isMeetCondition = true
-    }
-
-    if (isMeetCondition) {
-      result += range[i]
-    }
-  }
-
-  return result
+  const values = utils.applyCriteria(...arguments)
+  return SUM(values)
 }
 
 /**
