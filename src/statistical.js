@@ -189,46 +189,9 @@ export function AVERAGEIF(range, criteria, average_range) {
 export function AVERAGEIFS() {
   // Does not work with multi dimensional ranges yet!
   // http://office.microsoft.com/en-001/excel-help/averageifs-function-HA010047493.aspx
-  const args = utils.argsToArray(arguments)
-  const criteriaLength = (args.length - 1) / 2
-  const range = utils.flatten(args[0])
-  let count = 0
-  let result = 0
-
-  for (let i = 0; i < range.length; i++) {
-    let isMeetCondition = false
-
-    for (let j = 0; j < criteriaLength; j++) {
-      const value = args[2 * j + 1][i]
-      const criteria = args[2 * j + 2]
-      const isWildcard = criteria === void 0 || criteria === '*'
-      let computedResult = false
-
-      if (isWildcard) {
-        computedResult = true
-      } else {
-        const tokenizedCriteria = evalExpression.parse(criteria + '')
-        const tokens = [evalExpression.createToken(value, evalExpression.TOKEN_TYPE_LITERAL)].concat(tokenizedCriteria)
-
-        computedResult = evalExpression.compute(tokens)
-      }
-
-      // Criterias are calculated as AND so any `false` breakes the loop as unmeet condition
-      if (!computedResult) {
-        isMeetCondition = false
-        break
-      }
-
-      isMeetCondition = true
-    }
-
-    if (isMeetCondition) {
-      result += range[i]
-      count++
-    }
-  }
-
-  const average = result / count
+  const values = utils.applyCriteria(...arguments)
+  const result = values.reduce((acc, value) => acc + value, 0)
+  const average = result / values.length
 
   return isNaN(average) ? 0 : average
 }
@@ -1698,6 +1661,18 @@ export function MAXA() {
 }
 
 /**
+ * Returns the maximum of all values in a range that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @returns
+ */
+export function MAXIFS() {
+  const values = utils.applyCriteria(...arguments)
+  return values.length === 0 ? 0 : Math.max.apply(Math, values)
+}
+
+/**
  * Returns the median of the given numbers.
  *
  * Category: Statistical
@@ -1764,6 +1739,18 @@ export function MINA() {
   range = range.map((value) => (value === undefined || value === null ? 0 : value))
 
   return range.length === 0 ? 0 : Math.min.apply(Math, range)
+}
+
+/**
+ * Returns the minimum of all values in a range that meet multiple criteria.
+ *
+ * Category: Statistical
+ *
+ * @returns
+ */
+export function MINIFS() {
+  const values = utils.applyCriteria(...arguments)
+  return values.length === 0 ? 0 : Math.min.apply(Math, values)
 }
 
 export const MODE = {}
