@@ -485,7 +485,7 @@ export function CONVERT(number, from_unit, to_unit) {
     ['cubic foot', 'ft3', ['ft^3'], 'volume', false, true, 0.028316846592],
     ['cubic inch', 'in3', ['in^3'], 'volume', false, true, 0.000016387064],
     ['cubic light-year', 'ly3', ['ly^3'], 'volume', false, true, 8.46786664623715e-47],
-    ['cubic metre', 'm?', null, 'volume', true, true, 1],
+    ['cubic metre', 'm3', ['m^3'], 'volume', true, true, 1],
     ['cubic mile', 'mi3', ['mi^3'], 'volume', false, true, 4168181825.44058],
     ['cubic nautical mile', 'Nmi3', ['Nmi^3'], 'volume', false, true, 6352182208],
     ['cubic Pica', 'Pica3', ['Picapt3', 'Pica^3', 'Picapt^3'], 'volume', false, true, 7.58660370370369e-8],
