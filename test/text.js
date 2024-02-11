@@ -1,4 +1,4 @@
-import {expect} from 'chai'
+import { expect } from 'chai'
 
 import * as error from '../src/utils/error.js'
 import * as text from '../src/text.js'
@@ -323,8 +323,7 @@ describe('Text', () => {
 
     describe('does not support date formatting but should not crash', () => {
       it('should return ISO formatted Date', () => {
-        expect(text.TEXT(new Date(2023, 3, 11, 12), "DD MMMM, YYYY"))
-          .to.equal('2023-04-11')
+        expect(text.TEXT(new Date(2023, 3, 11, 12), 'DD MMMM, YYYY')).to.equal('2023-04-11')
       })
     })
   })

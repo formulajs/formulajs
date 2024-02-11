@@ -1,6 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
-import {ROUND} from './math-trig.js'
+import { ROUND } from './math-trig.js'
 
 // TODO
 /**
