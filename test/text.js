@@ -289,6 +289,7 @@ describe('Text', () => {
   describe('TEXT', () => {
     it('should use fixed number of decimals and include commas if specified', () => {
       expect(text.TEXT(1234.59, '###0.0')).to.equal('1234.6')
+      expect(text.TEXT(1234.59, '0')).to.equal('1235')
       expect(text.TEXT(1234.52, '###0.0')).to.equal('1234.5')
       expect(text.TEXT(1234.56, '###0.00')).to.equal('1234.56')
       expect(text.TEXT(1234, '###0.0000')).to.equal('1234.0000')
@@ -318,6 +319,12 @@ describe('Text', () => {
       expect(text.TEXT(123, null)).to.equal('')
       expect(text.TEXT(123, 111)).to.equal('111')
       expect(text.TEXT(123, true)).to.equal(error.value)
+    })
+
+    describe('does not support date formatting but should not crash', () => {
+      it('should return ISO formatted Date', () => {
+        expect(text.TEXT(new Date(2023, 3, 11, 12), 'DD MMMM, YYYY')).to.equal('2023-04-11')
+      })
     })
   })
 
