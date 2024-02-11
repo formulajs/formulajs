@@ -1,6 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
-import { ROUND } from './math-trig.js'
+import {ROUND} from './math-trig.js'
 
 // TODO
 /**
@@ -600,6 +600,10 @@ export function TEXT(value, format_text) {
     return error.na
   }
 
+  if (value instanceof Date) {
+    return value.toISOString().slice(0, 10)
+  }
+
   if (format_text === undefined || format_text === null) {
     return ''
   }
@@ -617,7 +621,7 @@ export function TEXT(value, format_text) {
   format_text = format_text.replace(/%/g, '').replace(/\$/g, '')
 
   // count all 0s after the decimal point
-  const decimalPlaces = format_text.split('.')[1].match(/0/g).length
+  const decimalPlaces = format_text.includes('.') ? format_text.split('.')[1].match(/0/g).length : 0
 
   const noCommas = !format_text.includes(',')
 
