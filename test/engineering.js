@@ -151,6 +151,8 @@ describe('Engineering', () => {
     expect(engineering.CONVERT(64, 'kibyte', 'bit')).to.equal(524288)
     expect(engineering.CONVERT('Lots of', 'mi', 'yard')).to.equal(error.value)
     expect(engineering.CONVERT(1, 'mi', 'yard')).to.equal(error.na)
+    expect(engineering.CONVERT(2000, 'l', 'm3')).to.equal(2)
+    expect(engineering.CONVERT(2000, 'l', 'm^3')).to.equal(2)
   })
 
   it('DEC2BIN', () => {

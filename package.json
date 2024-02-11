@@ -53,20 +53,20 @@
     "jstat": "^1.9.6"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-env": "^7.23.9",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "c8": "^9.0.0",
-    "chai": "^5.0.0",
+    "c8": "^9.1.0",
+    "chai": "^5.0.3",
     "cli-table3": "^0.6.3",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
-    "mocha": "^10.2.0",
+    "mocha": "^10.3.0",
     "mochawesome": "^7.1.3",
-    "prettier": "^3.1.1",
-    "rollup": "^4.9.4",
+    "prettier": "^3.2.5",
+    "rollup": "^4.9.6",
     "typescript": "^5.3.3"
   }
 }
