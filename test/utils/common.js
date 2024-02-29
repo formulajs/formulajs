@@ -363,4 +363,11 @@ describe('Utils => Common', () => {
       expect(utils.anyIsString(1, 'text')).to.be.true
     })
   })
+
+  describe('numbers', () => {
+    it('should filter out number inputs', () => {
+      expect(utils.numbers([1, 'string', 2])).to.deep.equal([1, 2])
+      expect(utils.numbers([1, error.div0, 2])).to.deep.equal([1, 2])
+    })
+  })
 })

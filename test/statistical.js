@@ -570,12 +570,24 @@ describe('Statistical', () => {
     expect(statistical.KURT([3, 4, 5, 2, 'invalid', 4, 5, 6, 4, 7])).to.equal(error.value)
   })
 
-  it('LARGE', () => {
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 1)).to.equal(5)
-    expect(statistical.LARGE([1, 3, 2, 5, 4], 3)).to.equal(3)
-    expect(statistical.LARGE([3, 5, 3], -3)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3], 4)).to.equal(error.value)
-    expect(statistical.LARGE([3, 5, 3, 'invalid', 4], 3)).to.equal(error.value)
+  describe('LARGE', () => {
+    it('should return the k-th largest value in a data set', () => {
+      expect(statistical.LARGE([1, 3, 2, 5, 4], 1)).to.equal(5)
+      expect(statistical.LARGE([1, 3, 2, 5, 4], 3)).to.equal(3)
+    })
+
+    it('should throw an error in case of malformed parameters', () => {
+      expect(statistical.LARGE([3, 5, 3], -3)).to.equal(error.value)
+      expect(statistical.LARGE([3, 5, 3], 4)).to.equal(error.value)
+      expect(statistical.LARGE([1, 3, error.div0, 5, 4], 3)).to.equal(error.div0)
+    })
+
+    it('should ignore invalid values', () => {
+      expect(statistical.LARGE([1, 3, undefined, 5, 4], 1)).to.equal(5)
+      expect(statistical.LARGE([1, 3, null, 5, 4], 1)).to.equal(5)
+      expect(statistical.LARGE([1, 3, true, 5, 4], 1)).to.equal(5)
+      expect(statistical.LARGE([1, 3, 'string', 5, 4], 1)).to.equal(5)
+    })
   })
 
   it('LINEST', () => {
