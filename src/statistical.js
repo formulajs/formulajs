@@ -1478,12 +1478,18 @@ export function KURT() {
  * @returns
  */
 export function LARGE(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
-  k = utils.parseNumber(k)
+  const someError = utils.anyError.apply(undefined, array)
 
-  if (utils.anyIsError(array, k)) {
-    return array
+  if (someError) {
+    return someError
   }
+
+  if (utils.anyIsError(k)) {
+    return k
+  }
+
+  array = utils.numbers(utils.flatten(array))
+  k = utils.parseNumber(k)
 
   if (k < 0 || array.length < k) {
     return error.value
