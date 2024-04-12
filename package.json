@@ -22,8 +22,14 @@
   "jsdelivr": "./lib/browser/formula.min.js",
   "exports": {
     ".": {
-      "require": "./lib/cjs/index.cjs",
-      "import": "./lib/esm/index.mjs"
+      "import": {
+        "types": "./types/esm/index.d.mts",
+        "default": "./lib/esm/index.mjs"
+      },
+      "require": {
+        "types": "./types/cjs/index.d.cts",
+        "default": "./lib/cjs/index.cjs"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -32,10 +38,9 @@
     "lib",
     "types"
   ],
-  "types": "./types/index.d.ts",
   "scripts": {
-    "prebuild": "npm run prettier && npm run lint && npm run test:coverage && npm run types",
-    "build": "rollup -c",
+    "prebuild": "npm run prettier && npm run lint && npm run test:coverage",
+    "build": "rollup -c && npm run types",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -49,24 +54,25 @@
     "types": "tsc"
   },
   "dependencies": {
+    "@eslint/js": "^9.0.0",
     "bessel": "^1.0.2",
     "jstat": "^1.9.6"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-env": "^7.24.4",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "c8": "^9.1.0",
-    "chai": "^5.0.3",
-    "cli-table3": "^0.6.3",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "mocha": "^10.3.0",
+    "chai": "^5.1.0",
+    "cli-table3": "^0.6.4",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
+    "mocha": "^10.4.0",
     "mochawesome": "^7.1.3",
     "prettier": "^3.2.5",
-    "rollup": "^4.9.6",
-    "typescript": "^5.3.3"
+    "rollup": "^4.14.2",
+    "typescript": "^5.4.5"
   }
 }
