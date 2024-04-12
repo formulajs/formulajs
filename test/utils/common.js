@@ -6,7 +6,6 @@ import * as utils from '../../src/utils/common.js'
 describe('Utils => Common', () => {
   describe('Arrays', () => {
     it('argsToArray', () => {
-      // eslint-disable-next-line no-extra-semi
       ;(function () {
         expect(utils.argsToArray(arguments)).to.deep.equal([1, 2, 3])
       })(1, 2, 3)

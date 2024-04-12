@@ -336,9 +336,7 @@ describe('Financial', () => {
     expect(financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 13, 24, 2)).to.equal(error.num)
     expect(financial.CUMIPMT(0.1 / 12, 30 * 12, 100000, 1, 24, 0)).to.approximately(-19891.752778759568, 1e-9)
     expect(financial.CUMIPMT('invalid', 30 * 12, 100000, 13, 24, 0)).to.equal(error.value)
-    // eslint-disable-next-line no-loss-of-precision
     expect(financial.CUMIPMT(0.005333, 120, 737.17, 1, 120, 0)).to.approximately(-262.766924283291, 1e-9)
-    // eslint-disable-next-line no-loss-of-precision
     expect(financial.CUMIPMT(0.005333, 120, 737.17, 1, 120, 1)).to.approximately(-257.462548900007, 1e-9)
   })
 
