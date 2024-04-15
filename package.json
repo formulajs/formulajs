@@ -54,12 +54,12 @@
     "types": "tsc"
   },
   "dependencies": {
-    "@eslint/js": "^9.0.0",
     "bessel": "^1.0.2",
     "jstat": "^1.9.6"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.4",
+    "@eslint/js": "^9.0.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -72,7 +72,7 @@
     "mocha": "^10.4.0",
     "mochawesome": "^7.1.3",
     "prettier": "^3.2.5",
-    "rollup": "^4.14.2",
+    "rollup": "^4.14.3",
     "typescript": "^5.4.5"
   }
 }
