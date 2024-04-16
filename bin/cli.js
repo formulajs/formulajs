@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+/* global console, process*/
+
 // eslint-disable-next-line no-unused-vars
 import * as formulajs from '../lib/esm/index.mjs'
 import * as readline from 'readline'

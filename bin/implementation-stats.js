@@ -74,4 +74,5 @@ for (const c in categories) {
 
 table.push(['Totals', aggregateTotal, aggregateNotImplemented])
 
+/* global console */
 console.log(table.toString())
