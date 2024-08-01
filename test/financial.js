@@ -708,6 +708,7 @@ describe('Financial', () => {
     expect(financial.RATE('invalid', -1000, -10000, 100000, 1, 1e-11)).to.equal(error.value)
     expect(financial.RATE(4 * 12, -200, 8000)).to.approximately(0.007701472, 1e-9)
     expect(financial.RATE(37, -7200, -40000, 4477839, 0)).to.approximately(0.10646164, 1e-9)
+    expect(financial.RATE(348, -(157119 / 12), 790000)).to.approximately(0.01651835816, 1e-9)
   })
 
   // TODO: implement
