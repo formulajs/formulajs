@@ -1510,7 +1510,7 @@ export function PV(rate, per, pmt, fv, type) {
  * @returns
  */
 export function RATE(nper, pmt, pv, fv, type, guess) {
-  guess = guess === undefined ? 0.01 : guess
+  guess = guess === undefined ? 0.1 : guess
   fv = fv === undefined ? 0 : fv
   type = type === undefined ? 0 : type
 
@@ -1526,7 +1526,7 @@ export function RATE(nper, pmt, pv, fv, type, guess) {
   }
 
   const epsMax = 1e-10
-  const iterMax = 20
+  const iterMax = 100
   let rate = guess
 
   type = type ? 1 : 0
