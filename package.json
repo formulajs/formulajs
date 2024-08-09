@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.3",
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^9.9.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
@@ -70,10 +70,10 @@
     "cli-table3": "^0.6.5",
     "eslint": "^9.8.0",
     "globals": "^15.9.0",
-    "mocha": "^10.7.0",
+    "mocha": "^10.7.3",
     "mochawesome": "^7.1.3",
     "prettier": "^3.3.3",
-    "rollup": "^4.19.2",
+    "rollup": "^4.20.0",
     "typescript": "^5.5.4"
   }
 }
