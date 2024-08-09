@@ -6,6 +6,8 @@ import * as mathTrig from './math-trig.js'
 import * as lookup from './lookup-reference.js'
 import * as utils from './utils/common.js'
 
+import { T } from './text.js'
+
 const SQRT2PI = 2.5066282746310002
 
 /**
@@ -2630,6 +2632,7 @@ export function STEYX(known_y, known_x) {
   const xmean = jStat.mean(known_x)
   const ymean = jStat.mean(known_y)
   const n = known_x.length
+
   let lft = 0
   let num = 0
   let den = 0
@@ -2642,8 +2645,6 @@ export function STEYX(known_y, known_x) {
 
   return Math.sqrt((lft - (num * num) / den) / (n - 2))
 }
-
-export const T = {}
 
 /**
  * Returns the Percentage Points (probability) for the Student t-distribution.
@@ -2797,6 +2798,9 @@ T.TEST = (array1, array2) => {
 
   return T.DIST['2T'](t, array1.length + array2.length - 2)
 }
+
+// Re-export T with statistical methods
+export { T }
 
 /**
  * Returns values along a linear trend.
