@@ -6,6 +6,8 @@ import * as mathTrig from './math-trig.js'
 import * as lookup from './lookup-reference.js'
 import * as utils from './utils/common.js'
 
+import { T } from './text.js'
+
 const SQRT2PI = 2.5066282746310002
 
 /**
@@ -57,6 +59,7 @@ export function AVERAGE() {
 
   const range = utils.numbers(flatArgumentsDefined)
   const n = range.length
+
   let sum = 0
   let count = 0
   let result
@@ -99,6 +102,7 @@ export function AVERAGEA() {
 
   const range = flatArgumentsDefined
   const n = range.length
+
   let sum = 0
   let count = 0
   let result
@@ -144,10 +148,11 @@ export function AVERAGEIF(range, criteria, average_range) {
   }
 
   average_range = average_range || range
+
   const flatAverageRange = utils.flatten(average_range)
   const flatAverageRangeDefined = flatAverageRange.filter(utils.isDefined)
-  average_range = utils.parseNumberArray(flatAverageRangeDefined)
 
+  average_range = utils.parseNumberArray(flatAverageRangeDefined)
   range = utils.flatten(range)
 
   if (average_range instanceof Error) {
@@ -156,6 +161,7 @@ export function AVERAGEIF(range, criteria, average_range) {
 
   let average_count = 0
   let result = 0
+
   const isWildcard = criteria === void 0 || criteria === '*'
   const tokenizedCriteria = isWildcard ? null : evalExpression.parse(criteria + '')
 
@@ -472,6 +478,7 @@ CHISQ.TEST = function (actual_range, expected_range) {
   }
 
   const row = actual_range.length
+
   let tmp, i, j
 
   // Convert single-dimension array into two-dimension array
@@ -479,12 +486,14 @@ CHISQ.TEST = function (actual_range, expected_range) {
   for (i = 0; i < row; i++) {
     if (!(actual_range[i] instanceof Array)) {
       tmp = actual_range[i]
+
       actual_range[i] = []
       actual_range[i].push(tmp)
     }
 
     if (!(expected_range[i] instanceof Array)) {
       tmp = expected_range[i]
+
       expected_range[i] = []
       expected_range[i].push(tmp)
     }
@@ -492,7 +501,9 @@ CHISQ.TEST = function (actual_range, expected_range) {
 
   const col = actual_range[0].length
   const dof = col === 1 ? row - 1 : (row - 1) * (col - 1)
+
   let xsqr = 0
+
   const Pi = Math.PI
 
   for (i = 0; i < row; i++) {
@@ -635,6 +646,7 @@ export function COUNTA() {
  */
 export function COUNTBLANK() {
   const range = utils.flatten(arguments)
+
   let blanks = 0
   let element
 
@@ -666,6 +678,7 @@ export function COUNTIF(range, criteria) {
   }
 
   let matches = 0
+
   const tokenizedCriteria = evalExpression.parse(criteria + '')
 
   for (let i = 0; i < range.length; i++) {
@@ -745,7 +758,9 @@ COVARIANCE.P = (array1, array2) => {
 
   const mean1 = jStat.mean(array1)
   const mean2 = jStat.mean(array2)
+
   let result = 0
+
   const n = array1.length
 
   for (let i = 0; i < n; i++) {
@@ -791,6 +806,7 @@ export function DEVSQ() {
   }
 
   const mean = jStat.mean(range)
+
   let result = 0
 
   for (let i = 0; i < range.length; i++) {
@@ -1034,7 +1050,9 @@ export function FORECAST(x, known_ys, known_xs) {
 
   const xmean = jStat.mean(known_xs)
   const ymean = jStat.mean(known_ys)
+
   const n = known_xs.length
+
   let num = 0
   let den = 0
 
@@ -1307,6 +1325,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
 
   // Calculate sums over the data:
   const n = known_y.length
+
   let avg_x = 0
   let avg_y = 0
   let avg_xy = 0
@@ -1315,6 +1334,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
   for (i = 0; i < n; i++) {
     const x = known_x[i]
     const y = Math.log(known_y[i])
+
     avg_x += x
     avg_y += y
     avg_xy += x * y
@@ -1364,6 +1384,7 @@ export function HARMEAN() {
   }
 
   const n = range.length
+
   let den = 0
 
   for (let i = 0; i < n; i++) {
@@ -1457,6 +1478,7 @@ export function KURT() {
 
   const mean = jStat.mean(range)
   const n = range.length
+
   let sigma = 0
 
   for (let i = 0; i < n; i++) {
@@ -1522,6 +1544,7 @@ export function LINEST(known_y, known_x) {
   const ymean = jStat.mean(known_y)
   const xmean = jStat.mean(known_x)
   const n = known_x.length
+
   let num = 0
   let den = 0
 
@@ -1570,6 +1593,7 @@ export function LOGEST(known_y, known_x) {
   }
 
   const result = LINEST(known_y, known_x)
+
   result[0] = Math.round(Math.exp(result[0]) * 1000000) / 1000000
   result[1] = Math.round(Math.exp(result[1]) * 1000000) / 1000000
 
@@ -1661,6 +1685,7 @@ export function MAXA() {
   }
 
   let range = utils.arrayValuesToNumbers(flatArguments)
+
   range = range.map((value) => (value === undefined || value === null ? 0 : value))
 
   return range.length === 0 ? 0 : Math.max.apply(Math, range)
@@ -1675,6 +1700,7 @@ export function MAXA() {
  */
 export function MAXIFS() {
   const values = utils.applyCriteria(...arguments)
+
   return values.length === 0 ? 0 : Math.max.apply(Math, values)
 }
 
@@ -1695,6 +1721,7 @@ export function MEDIAN() {
   }
 
   const range = utils.arrayValuesToNumbers(flatArguments)
+
   let result = jStat.median(range)
 
   if (isNaN(result)) {
@@ -1742,6 +1769,7 @@ export function MINA() {
   }
 
   let range = utils.arrayValuesToNumbers(flatArguments)
+
   range = range.map((value) => (value === undefined || value === null ? 0 : value))
 
   return range.length === 0 ? 0 : Math.min.apply(Math, range)
@@ -1756,6 +1784,7 @@ export function MINA() {
  */
 export function MINIFS() {
   const values = utils.applyCriteria(...arguments)
+
   return values.length === 0 ? 0 : Math.min.apply(Math, values)
 }
 
@@ -1779,6 +1808,7 @@ MODE.MULT = function () {
 
   const n = range.length
   const count = {}
+
   let maxItems = []
   let max = 0
   let currentItem
@@ -1956,6 +1986,7 @@ export function PEARSON(array1, array2) {
   const xmean = jStat.mean(array1)
   const ymean = jStat.mean(array2)
   const n = array1.length
+
   let num = 0
   let den1 = 0
   let den2 = 0
@@ -1987,6 +2018,7 @@ PERCENTILE.EXC = (array, k) => {
   }
 
   array = array.sort((a, b) => a - b)
+
   const n = array.length
 
   if (k < 1 / (n + 1) || k > 1 - 1 / (n + 1)) {
@@ -2017,6 +2049,7 @@ PERCENTILE.INC = (array, k) => {
   }
 
   array = array.sort((a, b) => a - b)
+
   const n = array.length
   const l = k * (n - 1)
   const fl = Math.floor(l)
@@ -2047,10 +2080,12 @@ PERCENTRANK.EXC = (array, x, significance) => {
   }
 
   array = array.sort((a, b) => a - b)
+
   const uniques = lookup.UNIQUE.apply(null, array)
   const n = array.length
   const m = uniques.length
   const power = Math.pow(10, significance)
+
   let result = 0
   let match = false
   let i = 0
@@ -2091,10 +2126,12 @@ PERCENTRANK.INC = (array, x, significance) => {
   }
 
   array = array.sort((a, b) => a - b)
+
   const uniques = lookup.UNIQUE.apply(null, array)
   const n = array.length
   const m = uniques.length
   const power = Math.pow(10, significance)
+
   let result = 0
   let match = false
   let i = 0
@@ -2228,6 +2265,7 @@ export function PROB(x_range, prob_range, lower_limit, upper_limit) {
 
   const sorted = x_range.sort((a, b) => a - b)
   const n = sorted.length
+
   let result = 0
 
   for (let i = 0; i < n; i++) {
@@ -2321,10 +2359,13 @@ RANK.AVG = (number, ref, order) => {
 
   ref = utils.flatten(ref)
   order = order || false
+
   const sort = order ? (a, b) => a - b : (a, b) => b - a
+
   ref = ref.sort(sort)
 
   const length = ref.length
+
   let count = 0
 
   for (let i = 0; i < length; i++) {
@@ -2355,7 +2396,9 @@ RANK.EQ = (number, ref, order) => {
   }
 
   order = order || false
+
   const sort = order ? (a, b) => a - b : (a, b) => b - a
+
   ref = ref.sort(sort)
 
   return ref.indexOf(number) + 1
@@ -2428,6 +2471,7 @@ export function SKEW() {
 
   const mean = jStat.mean(range)
   const n = range.length
+
   let sigma = 0
 
   for (let i = 0; i < n; i++) {
@@ -2453,6 +2497,7 @@ SKEW.P = function () {
 
   const mean = jStat.mean(range)
   const n = range.length
+
   let m2 = 0
   let m3 = 0
 
@@ -2487,6 +2532,7 @@ export function SLOPE(known_y, known_x) {
   const xmean = jStat.mean(known_x)
   const ymean = jStat.mean(known_y)
   const n = known_x.length
+
   let num = 0
   let den = 0
 
@@ -2552,6 +2598,7 @@ export const STDEV = {}
  */
 STDEV.P = function () {
   const v = VAR.P.apply(this, arguments)
+
   let result = Math.sqrt(v)
 
   if (isNaN(result)) {
@@ -2601,6 +2648,7 @@ export function STDEVA() {
  */
 export function STDEVPA() {
   const v = VARPA.apply(this, arguments)
+
   let result = Math.sqrt(v)
 
   if (isNaN(result)) {
@@ -2630,6 +2678,7 @@ export function STEYX(known_y, known_x) {
   const xmean = jStat.mean(known_x)
   const ymean = jStat.mean(known_y)
   const n = known_x.length
+
   let lft = 0
   let num = 0
   let den = 0
@@ -2642,8 +2691,6 @@ export function STEYX(known_y, known_x) {
 
   return Math.sqrt((lft - (num * num) / den) / (n - 2))
 }
-
-export const T = {}
 
 /**
  * Returns the Percentage Points (probability) for the Student t-distribution.
@@ -2778,6 +2825,7 @@ T.TEST = (array1, array2) => {
 
   const mean_x = jStat.mean(array1)
   const mean_y = jStat.mean(array2)
+
   let s_x = 0
   let s_y = 0
   let i
@@ -2797,6 +2845,9 @@ T.TEST = (array1, array2) => {
 
   return T.DIST['2T'](t, array1.length + array2.length - 2)
 }
+
+// Re-export T with statistical methods
+export { T }
 
 /**
  * Returns values along a linear trend.
@@ -2872,8 +2923,11 @@ export const VAR = {}
 VAR.P = function () {
   const range = utils.numbers(utils.flatten(arguments))
   const n = range.length
+
   let sigma = 0
+
   const mean = AVERAGE(range)
+
   let result
 
   for (let i = 0; i < n; i++) {
@@ -2900,7 +2954,9 @@ VAR.P = function () {
 VAR.S = function () {
   const range = utils.numbers(utils.flatten(arguments))
   const n = range.length
+
   let sigma = 0
+
   const mean = AVERAGE(range)
 
   for (let i = 0; i < n; i++) {
@@ -2921,8 +2977,10 @@ VAR.S = function () {
 export function VARA() {
   const range = utils.flatten(arguments)
   const n = range.length
+
   let sigma = 0
   let count = 0
+
   const mean = AVERAGEA(range)
 
   for (let i = 0; i < n; i++) {
@@ -2955,9 +3013,12 @@ export function VARA() {
 export function VARPA() {
   const range = utils.flatten(arguments)
   const n = range.length
+
   let sigma = 0
   let count = 0
+
   const mean = AVERAGEA(range)
+
   let result
 
   for (let i = 0; i < n; i++) {
@@ -3033,6 +3094,7 @@ Z.TEST = (array, x, sigma) => {
   }
 
   sigma = sigma || STDEV.S(array)
+
   const n = array.length
 
   return 1 - NORM.S.DIST((AVERAGE(array) - x) / (sigma / Math.sqrt(n)), true)
