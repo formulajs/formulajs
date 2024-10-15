@@ -948,9 +948,13 @@ export function LN(number) {
  */
 export function LOG(number, base) {
   number = utils.parseNumber(number)
-  base = utils.parseNumber(base)
-  const anyError = utils.anyError(number, base)
+  if (base === undefined) {
+    base = 10
+  } else {
+    base = utils.parseNumber(base)
+  }
 
+  const anyError = utils.anyError(number, base)
   if (anyError) {
     return anyError
   }
