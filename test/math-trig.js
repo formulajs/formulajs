@@ -411,12 +411,14 @@ describe('Math & Trig', () => {
 
   it('LOG', () => {
     expect(mathTrig.LOG(undefined, undefined)).to.equal(error.num)
-    expect(mathTrig.LOG(1, undefined)).to.equal(error.num)
+    expect(mathTrig.LOG(1, undefined)).to.equal(0)
+    expect(mathTrig.LOG(10, null)).to.equal(1)
     expect(mathTrig.LOG(undefined, 1)).to.equal(error.num)
     expect(mathTrig.LOG(1, error.na)).to.equal(error.na)
     expect(mathTrig.LOG(error.na, 1)).to.equal(error.na)
 
     expect(mathTrig.LOG(10, 10)).to.equal(1)
+    expect(mathTrig.LOG(10)).to.equal(1)
     expect(mathTrig.LOG(10, 'invalid')).to.equal(error.value)
   })
 
