@@ -430,6 +430,26 @@ export function PROPER(text) {
 }
 
 /**
+ * Checks if the text matches the regular expression.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you want test. Text can be a reference or text string.
+ * @param {*} regex The regular expression.
+ * @returns
+ */
+export function REGEXMATCH(text, regex) {
+  text = utils.parseString(text)
+  regex = utils.parseRegex(regex)
+
+  if (text instanceof Error || regex instanceof Error) {
+    return false
+  }
+
+  return regex.test(text)
+}
+
+/**
  * Replaces characters within text
  *
  * Category: Text
