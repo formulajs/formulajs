@@ -2289,7 +2289,7 @@ export const QUARTILE = {}
  * @returns
  */
 QUARTILE.EXC = (range, quart) => {
-  range = utils.parseNumberArray(utils.flatten(range))
+  range = utils.parseNumberArray(utils.numbers(utils.flatten(range)))
   quart = utils.parseNumber(quart)
 
   if (utils.anyIsError(range, quart)) {
@@ -2318,7 +2318,7 @@ QUARTILE.EXC = (range, quart) => {
  * @returns
  */
 QUARTILE.INC = (range, quart) => {
-  range = utils.parseNumberArray(utils.flatten(range))
+  range = utils.parseNumberArray(utils.numbers(utils.flatten(range)))
   quart = utils.parseNumber(quart)
 
   if (utils.anyIsError(range, quart)) {
