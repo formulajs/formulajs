@@ -866,22 +866,36 @@ describe('Statistical', () => {
     expect(statistical.PROB(x, prob, 1, 3)).to.equal(error.value)
   })
 
-  it('QUARTILE.EXC', () => {
-    const data = [6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49]
-    expect(statistical.QUARTILE.EXC(data, 1)).to.equal(15)
-    expect(statistical.QUARTILE.EXC(data, 2)).to.equal(40)
-    expect(statistical.QUARTILE.EXC(data, 3)).to.equal(43)
-    expect(statistical.QUARTILE.EXC(data, 4)).to.equal(error.num)
-    expect(statistical.QUARTILE.EXC(data, 'invalid')).to.equal(error.value)
+  describe('QUARTILE.EXC', () => {
+    it('should compute QUARTILE.EXC', () => {
+      const data = [6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49]
+      expect(statistical.QUARTILE.EXC(data, 1)).to.equal(15)
+      expect(statistical.QUARTILE.EXC(data, 2)).to.equal(40)
+      expect(statistical.QUARTILE.EXC(data, 3)).to.equal(43)
+      expect(statistical.QUARTILE.EXC(data, 4)).to.equal(error.num)
+      expect(statistical.QUARTILE.EXC(data, 'invalid')).to.equal(error.value)
+    })
+
+    it('should ignore string in input data', () => {
+      const data = [6, 7, 15, 36, 39, 'ignore me', 40, 41, 42, 43, 47, 49]
+      expect(statistical.QUARTILE.EXC(data, 1)).to.equal(15)
+    })
   })
 
-  it('QUARTILE.INC', () => {
-    const data = [1, 2, 4, 7, 8, 9, 10, 12]
-    expect(statistical.QUARTILE.INC(data, 1)).to.approximately(3.5, 1e-9)
-    expect(statistical.QUARTILE.INC(data, 2)).to.approximately(7.5, 1e-9)
-    expect(statistical.QUARTILE.INC(data, 3)).to.approximately(9.25, 1e-9)
-    expect(statistical.QUARTILE.INC(data, 4)).to.equal(error.num)
-    expect(statistical.QUARTILE.INC(data, 'invalid')).to.equal(error.value)
+  describe('QUARTILE.INC', () => {
+    it('should compute QUARTILE.INC', () => {
+      const data = [1, 2, 4, 7, 8, 9, 10, 12]
+      expect(statistical.QUARTILE.INC(data, 1)).to.approximately(3.5, 1e-9)
+      expect(statistical.QUARTILE.INC(data, 2)).to.approximately(7.5, 1e-9)
+      expect(statistical.QUARTILE.INC(data, 3)).to.approximately(9.25, 1e-9)
+      expect(statistical.QUARTILE.INC(data, 4)).to.equal(error.num)
+      expect(statistical.QUARTILE.INC(data, 'invalid')).to.equal(error.value)
+    })
+
+    it('should ignore string in input data', () => {
+      const data = [1, 2, 4, 7, 8, 9, 10, 'ignore me', 12]
+      expect(statistical.QUARTILE.INC(data, 1)).to.approximately(3.5, 1e-9)
+    })
   })
 
   it('RANK.AVG', () => {
