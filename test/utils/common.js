@@ -344,6 +344,19 @@ describe('Utils => Common', () => {
       expect(utils.parseNumberArray([2, 'a', 1])).to.equal(error.value)
     })
 
+    describe('parseRegex', () => {
+      it('should return RegExp object for valid regex', () => {
+        expect(utils.parseRegex('')).to.be.instanceOf(RegExp)
+        expect(utils.parseRegex(1)).to.be.instanceOf(RegExp)
+        expect(utils.parseRegex(/^[a-z0-9]+$/i)).to.be.instanceOf(RegExp)
+        expect(utils.parseRegex('h.llo')).to.be.instanceOf(RegExp)
+      })
+
+      it('should return Error object for invalid regex', () => {
+        expect(utils.parseRegex('a[b')).to.be.instanceOf(Error)
+      })
+    })
+
     it('parseString', () => {
       expect(utils.parseString()).to.equal('')
       expect(utils.parseString(null)).to.equal('')

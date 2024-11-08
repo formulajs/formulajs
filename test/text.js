@@ -197,6 +197,25 @@ describe('Text', () => {
     expect(text.PROPER()).to.equal('')
   })
 
+  describe('REGEXMATCH', () => {
+    it('should return false for invalid regex', () => {
+      expect(text.REGEXMATCH('hello', 'a[b')).to.equal(false)
+      expect(text.REGEXMATCH('abc123', '/^[a-z0-9]+$/i')).to.equal(false)
+    })
+
+    it('should return false for a non-matching regex', () => {
+      expect(text.REGEXMATCH('hello', 'world')).to.equal(false)
+      expect(text.REGEXMATCH('hello', 1)).to.equal(false)
+      expect(text.REGEXMATCH('abc123!', /^[a-z0-9]+$/i)).to.equal(false)
+    })
+
+    it('should return true for a matching regex', () => {
+      expect(text.REGEXMATCH('hello world', 'hello')).to.equal(true)
+      expect(text.REGEXMATCH('hello', 'h.llo')).to.equal(true)
+      expect(text.REGEXMATCH('abc123', /^[a-z0-9]+$/i)).to.equal(true)
+    })
+  })
+
   it('REPLACE', () => {
     expect(text.REPLACE('abcdefghijk', 6, 5, '*')).to.equal('abcde*k')
     expect(text.REPLACE('2009', 3, 2, '10')).to.equal('2010')

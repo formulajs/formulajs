@@ -395,6 +395,14 @@ export function parseNumberArray(arr) {
   return arr
 }
 
+export function parseRegex(regex) {
+  try {
+    return new RegExp(regex)
+  } catch (error) {
+    return error
+  }
+}
+
 export function parseString(string) {
   if (string instanceof Error) {
     return string
