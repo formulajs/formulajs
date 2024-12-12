@@ -381,15 +381,14 @@ export function CEILING(number, significance, mode) {
   }
 
   significance = Math.abs(significance)
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
   if (number >= 0) {
-    return ROUND(Math.ceil(number / significance) * significance, precision)
+    return Math.ceil(number / significance) * significance
   } else {
     if (mode === 0) {
-      return -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
+      return -Math.floor(Math.abs(number) / significance) * significance
     } else {
-      return -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+      return -Math.ceil(Math.abs(number) / significance) * significance
     }
   }
 }
@@ -749,14 +748,9 @@ export function FLOOR(number, significance) {
   }
 
   significance = Math.abs(significance)
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
-  return number >= 0
-    ? ROUND(Math.floor(number / significance) * significance, precision)
-    : -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  return number >= 0 ? Math.floor(number / significance) * significance : -Math.ceil(Math.abs(number) / significance)
 }
-
-// TODO: Verify
 
 /**
  * Rounds a number down, to the nearest integer or to the nearest multiple of significance.
@@ -789,15 +783,14 @@ FLOOR.MATH = (number, significance, mode) => {
   }
 
   significance = significance ? Math.abs(significance) : 1
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
   if (number >= 0) {
-    return ROUND(Math.floor(number / significance) * significance, precision)
+    return Math.floor(number / significance) * significance
   } else if (mode === 0 || mode === undefined) {
-    return -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+    return -Math.ceil(Math.abs(number) / significance) * significance
   }
 
-  return -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
+  return -Math.floor(Math.abs(number) / significance) * significance
 }
 
 // Deprecated
