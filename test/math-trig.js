@@ -149,6 +149,9 @@ describe('Math & Trig', () => {
     expect(mathTrig.CEILING(-4.1, -2, 0)).to.equal(-4)
     expect(mathTrig.CEILING(-4.1, -2, -1)).to.equal(-6)
     expect(mathTrig.CEILING(-4.1, -2, 'invalid')).to.equal(error.value)
+    expect(mathTrig.CEILING(1000, 15)).to.equal(1005)
+    expect(mathTrig.CEILING(1000, 10.5)).to.equal(1008)
+    expect(mathTrig.CEILING(7.7, 0.24)).to.equal(7.92)
   })
 
   it('CEILING.MATH', () => {
@@ -160,6 +163,8 @@ describe('Math & Trig', () => {
     expect(mathTrig.CEILING.MATH(-8.1, 2)).to.equal(-8)
     expect(mathTrig.CEILING.MATH(-5.5, 2, -1)).to.equal(-6)
     expect(mathTrig.CEILING.MATH(-5.5, 2, 'invalid')).to.equal(error.value)
+    expect(mathTrig.CEILING.MATH(-5.5, 0.66, -1)).to.equal(-5.94)
+    expect(mathTrig.CEILING.MATH(-5.5, 0.33, 1)).to.equal(-5.61)
   })
 
   it('CEILING.PRECISE', () => {
@@ -320,6 +325,10 @@ describe('Math & Trig', () => {
     expect(mathTrig.FLOOR(0.234, 0.01)).to.approximately(0.23, 1e-9)
     expect(mathTrig.FLOOR(0.234, 0)).to.equal(0)
     expect(mathTrig.FLOOR('invalid', 0)).to.equal(error.value)
+    expect(mathTrig.FLOOR(1000, 15)).to.equal(990)
+    expect(mathTrig.FLOOR(1000, 10.5)).to.equal(997.5)
+    expect(mathTrig.FLOOR(7.7, 0.24)).to.equal(7.68)
+    expect(mathTrig.FLOOR(-2.5, -2)).to.equal(-2)
   })
 
   it('FLOOR.PRECISE', () => {
@@ -354,6 +363,8 @@ describe('Math & Trig', () => {
     expect(mathTrig.FLOOR.MATH(3.2)).to.equal(0)
     expect(mathTrig.FLOOR.MATH(3.2, 0)).to.equal(0)
     expect(mathTrig.FLOOR.MATH(3.2, 'invalid')).to.equal(error.value)
+    expect(mathTrig.FLOOR.MATH(-2.5, -2)).to.equal(-4)
+    expect(mathTrig.FLOOR.MATH(-2.5, -2, 1)).to.equal(-2)
   })
 
   it('GCD', () => {
