@@ -6,7 +6,7 @@ import * as utils from '../../src/utils/common.js'
 describe('Utils => Common', () => {
   describe('Arrays', () => {
     it('argsToArray', () => {
-      ;(function () {
+      (function () {
         expect(utils.argsToArray(arguments)).to.deep.equal([1, 2, 3])
       })(1, 2, 3)
     })
@@ -134,13 +134,13 @@ describe('Utils => Common', () => {
 
       describe('with Arguments as arguments', () => {
         it('should merge and flatten arguments', () => {
-          ;(function () {
+          (function () {
             expect(utils.flatten(arguments)).to.deep.equal([1, 2, 3, 4, 5, 6])
           })([[1]], 2, [3, 4], [[5, 6]])
         })
 
         it('should force array type return', () => {
-          ;(function () {
+          (function () {
             expect(utils.flatten(arguments)).to.deep.equal(['test'])
           })('test')
           ;(function () {
@@ -149,7 +149,7 @@ describe('Utils => Common', () => {
         })
 
         it('should return an empty array', () => {
-          ;(function () {
+          (function () {
             expect(utils.flatten(arguments)).to.deep.equal([])
           })()
         })

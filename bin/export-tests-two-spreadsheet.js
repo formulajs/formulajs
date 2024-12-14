@@ -6,58 +6,59 @@
  * Paste the output and split the data to columns using the pipe character as separator. The intention is to
  * facilitate pull request reviews and quickly test new assertions in spreadsheet applications.
  */
-import fs from "fs";
+import fs from 'fs'
 
-import path from "path";
+import path from 'path'
 
-// Function to extract assertions from a test file
+/* global console, process */
 function extractAssertions(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const content = fs.readFileSync(filePath, 'utf-8')
 
   // Regular expression to match common assertion patterns
-
   // const assertionRegex = /(expect|assert|should)\s*$([^)]+)$\s*(\.to|\.not\.to|\.toBe|\.toEqual|\.toBeTruthy|\.toBeFalsy|\.toThrow|\.toMatch)\s*$([^)]+)$/g;
   const assertionRegex = /(expect|assert|should)\((.+)\)(.to\.throw|.to\.equal)\((.+)\)/g
-  let match;
-  const assertions = [];
+  let match
+  const assertions = []
 
   while ((match = assertionRegex.exec(content)) !== null) {
     assertions.push({
       assertion: match[0],
       expected: match[4],
       actual: match[2]
-    });
+    })
   }
 
-  return assertions;
+  return assertions
 }
 
 // Main function to handle command line arguments
 function main() {
-  const args = process.argv.slice(2);
+  const args = process.argv.slice(2)
 
   if (args.length !== 1) {
-    console.error('Usage: node extractAssertions.js <path_to_test_file>');
-    process.exit(1);
+    console.error('Usage: node extractAssertions.js <path_to_test_file>')
+    process.exit(1)
   }
 
-  const filePath = path.resolve(args[0]);
+  const filePath = path.resolve(args[0])
 
   if (!fs.existsSync(filePath)) {
-    console.error(`File not found: ${filePath}`);
-    process.exit(1);
+    console.error(`File not found: ${filePath}`)
+    process.exit(1)
   }
 
-  const assertions = extractAssertions(filePath);
+  const assertions = extractAssertions(filePath)
 
   if (assertions.length === 0) {
-    console.log('No assertions found.');
+    console.log('No assertions found.')
   } else {
-    console.log('Extracted Assertions:');
-    assertions.forEach((assertion, index) => {
-      console.log(`${assertion.assertion}|${assertion.actual.replace(/\w+\./,'=').replaceAll("'",'"')}|${assertion.expected}`);
-    });
+    console.log('Extracted Assertions:')
+    assertions.forEach((assertion) => {
+      console.log(
+        `${assertion.assertion}|${assertion.actual.replace(/\w+\./, '=').replaceAll("'", '"')}|${assertion.expected}`
+      )
+    })
   }
 }
 
-main();
+main()
