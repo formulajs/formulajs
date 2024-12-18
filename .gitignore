@@ -1,6 +1,7 @@
 .devcontainer
 .DS_Store
 .idea
+.vscode
 
 coverage
 lib
