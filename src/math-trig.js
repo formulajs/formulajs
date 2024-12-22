@@ -366,10 +366,36 @@ export function BASE(number, radix, min_length) {
  * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
-export function CEILING(number, significance, mode) {
+export function CEILING(number, significance) {
+  number = utils.parseNumber(number)
+  significance = utils.parseNumber(significance)
+
+  const anyError = utils.anyError(number, significance)
+
+  if (anyError) {
+    return anyError
+  }
+
+  if (significance === 0) {
+    return 0
+  }
+
+  if (number > 0 && significance < 0) {
+    return error.num
+  }
+
+  return Math.ceil(number / significance) * significance
+}
+
+CEILING.MATH = (number, significance, mode = 0) => {
+  if (significance === undefined) {
+    significance = number > 0 ? 1 : -1
+  }
+
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
   mode = utils.parseNumber(mode)
+
   const anyError = utils.anyError(number, significance, mode)
 
   if (anyError) {
@@ -381,22 +407,17 @@ export function CEILING(number, significance, mode) {
   }
 
   significance = Math.abs(significance)
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
 
-  if (number >= 0) {
-    return ROUND(Math.ceil(number / significance) * significance, precision)
+  if (mode === 0) {
+    return Math.ceil(number / significance) * significance
   } else {
-    if (mode === 0) {
-      return -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
-    } else {
-      return -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
-    }
+    return number > 0
+      ? Math.ceil(number / significance) * significance
+      : Math.floor(number / significance) * significance
   }
 }
 
-CEILING.MATH = CEILING
-
-CEILING.PRECISE = CEILING
+CEILING.PRECISE = CEILING.MATH
 
 /**
  * Returns the number of combinations for a given number of objects.
@@ -642,7 +663,7 @@ export function EVEN(number) {
     return number
   }
 
-  return CEILING(number, -2, -1)
+  return CEILING.MATH(number, -2, -1)
 }
 
 /**
@@ -734,26 +755,22 @@ export function FACTDOUBLE(number) {
 export function FLOOR(number, significance) {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
+
   const anyError = utils.anyError(number, significance)
 
   if (anyError) {
     return anyError
   }
 
-  if (significance === 0) {
-    return 0
+  if (!significance) {
+    return error.div0
   }
 
-  if (!(number >= 0 && significance > 0) && !(number <= 0 && significance < 0)) {
+  if (number > 0 && significance < 0) {
     return error.num
   }
 
-  significance = Math.abs(significance)
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
-
-  return number >= 0
-    ? ROUND(Math.floor(number / significance) * significance, precision)
-    : -ROUND(Math.ceil(Math.abs(number) / significance), precision)
+  return Math.floor(number / significance) * significance
 }
 
 // TODO: Verify
@@ -768,16 +785,11 @@ export function FLOOR(number, significance) {
  * @param {*} mode Optional. The direction (toward or away from 0) to round negative numbers.
  * @returns
  */
-FLOOR.MATH = (number, significance, mode) => {
-  if (significance instanceof Error) {
-    return significance
-  }
-
-  significance = significance === undefined ? 0 : significance
-
+FLOOR.MATH = (number, significance = 1, mode = 0) => {
   number = utils.parseNumber(number)
   significance = utils.parseNumber(significance)
   mode = utils.parseNumber(mode)
+
   const anyError = utils.anyError(number, significance, mode)
 
   if (anyError) {
@@ -788,16 +800,15 @@ FLOOR.MATH = (number, significance, mode) => {
     return 0
   }
 
-  significance = significance ? Math.abs(significance) : 1
-  const precision = -Math.floor(Math.log(significance) / Math.log(10))
+  significance = Math.abs(significance)
 
-  if (number >= 0) {
-    return ROUND(Math.floor(number / significance) * significance, precision)
-  } else if (mode === 0 || mode === undefined) {
-    return -ROUND(Math.ceil(Math.abs(number) / significance) * significance, precision)
+  if (mode === 0) {
+    return Math.floor(number / significance) * significance
+  } else {
+    return number > 0
+      ? Math.floor(number / significance) * significance
+      : Math.ceil(number / significance) * significance
   }
-
-  return -ROUND(Math.floor(Math.abs(number) / significance) * significance, precision)
 }
 
 // Deprecated
@@ -811,7 +822,7 @@ FLOOR.MATH = (number, significance, mode) => {
  * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
  * @returns
  */
-FLOOR.PRECISE = FLOOR['MATH']
+FLOOR.PRECISE = FLOOR.MATH
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
 /**
