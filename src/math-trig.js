@@ -387,6 +387,16 @@ export function CEILING(number, significance) {
   return Math.ceil(number / significance) * significance
 }
 
+/**
+ * Rounds a number up, to the nearest integer or to the nearest multiple of significance.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value you want to round.
+ * @param {*} significance Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
+ * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
+ * @returns
+ */
 CEILING.MATH = (number, significance, mode = 0) => {
   if (significance === undefined) {
     significance = number > 0 ? 1 : -1
@@ -417,7 +427,18 @@ CEILING.MATH = (number, significance, mode = 0) => {
   }
 }
 
-CEILING.PRECISE = CEILING.MATH
+/**
+ * Rounds a number up, to the nearest integer or to the nearest multiple of significance.
+ *
+ * Category: Math and trigonometry
+ *
+ * @param {*} number The value you want to round.
+ * @param {*} significance Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
+ * @returns
+ */
+CEILING.PRECISE = (number, significance) => {
+  return CEILING.MATH(number, significance)
+}
 
 /**
  * Returns the number of combinations for a given number of objects.
@@ -822,7 +843,9 @@ FLOOR.MATH = (number, significance = 1, mode = 0) => {
  * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
  * @returns
  */
-FLOOR.PRECISE = FLOOR.MATH
+FLOOR.PRECISE = (number, significance) => {
+  return FLOOR.MATH(number, significance)
+}
 
 // adapted http://rosettacode.org/wiki/Greatest_common_divisor#JavaScript
 /**

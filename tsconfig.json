@@ -3,7 +3,8 @@
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "types"
+    "outDir": "types",
+    "target": "ES6"
   },
   "include": ["lib/cjs/index.cjs", "lib/esm/index.mjs"]
 }
