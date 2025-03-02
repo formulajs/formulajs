@@ -900,55 +900,25 @@ export function IPMT(rate, per, nper, pv, fv, type) {
  */
 export function IRR(values, guess) {
   // Credits: algorithm inspired by Apache OpenOffice
-  guess = guess || 0
+  guess = typeof guess === 'number' ? guess : typeof guess === 'undefined' ? 0.1 : utils.parseNumber(guess)
 
   values = utils.parseNumberArray(utils.flatten(values))
-  guess = utils.parseNumber(guess)
 
   if (utils.anyIsError(values, guess)) {
     return error.value
   }
 
-  // Calculates the resulting amount
-  const irrResult = (values, dates, rate) => {
-    const r = rate + 1
-    let result = values[0]
+  // Use Float64Array for better performance with numeric operations
+  const cashFlows = new Float64Array(values.length)
 
-    for (let i = 1; i < values.length; i++) {
-      result += values[i] / Math.pow(r, (dates[i] - dates[0]) / 365)
-    }
-
-    return result
-  }
-
-  // Calculates the first derivation
-  const irrResultDeriv = (values, dates, rate) => {
-    const r = rate + 1
-    let result = 0
-
-    for (let i = 1; i < values.length; i++) {
-      const frac = (dates[i] - dates[0]) / 365
-      result -= (frac * values[i]) / Math.pow(r, frac + 1)
-    }
-
-    return result
-  }
-
-  // Initialize dates and check that values contains at least one positive value and one negative value
-  const dates = []
   let positive = false
   let negative = false
-
+  // Single-pass processing of input values
   for (let i = 0; i < values.length; i++) {
-    dates[i] = i === 0 ? 0 : dates[i - 1] + 365
+    cashFlows[i] = values[i]
 
-    if (values[i] > 0) {
-      positive = true
-    }
-
-    if (values[i] < 0) {
-      negative = true
-    }
+    if (cashFlows[i] > 0) positive = true
+    if (cashFlows[i] < 0) negative = true
   }
 
   // Return error if values does not contain at least one positive value and one negative value
@@ -956,26 +926,143 @@ export function IRR(values, guess) {
     return error.num
   }
 
-  // Initialize guess and resultRate
-  guess = guess === undefined ? 0.1 : guess
-  let resultRate = guess
+  // Calculates the npv amount
+  const npv = (rate) => {
+    if (rate <= -1) rate = -0.999999999
 
-  // Set maximum epsilon for end of iteration
-  const epsMax = 1e-10
+    let result = cashFlows[0]
+    const r = 1 + rate
 
-  // Implement Newton's method
-  let newRate, epsRate, resultValue
-  let contLoop = true
-  do {
-    resultValue = irrResult(values, dates, resultRate)
-    newRate = resultRate - resultValue / irrResultDeriv(values, dates, resultRate)
-    epsRate = Math.abs(newRate - resultRate)
-    resultRate = newRate
-    contLoop = epsRate > epsMax && Math.abs(resultValue) > epsMax
-  } while (contLoop)
+    // Avoid repeated Math.pow calls by using manual exponentiation
+    let factor = 1
+    for (let i = 1; i < cashFlows.length; i++) {
+      factor *= r
+      result += cashFlows[i] / factor
+    }
 
-  // Return internal rate of return
-  return resultRate
+    return result
+  }
+
+  // Memoized NPV to avoid recalculating for the same rates
+  const npvCache = new Map()
+  const cachedNpv = function (rate) {
+    const roundedRate = Math.round(rate * 1e10) / 1e10 // Round to 10 decimal places for caching
+
+    if (npvCache.has(roundedRate)) {
+      return npvCache.get(roundedRate)
+    }
+
+    const result = npv(roundedRate)
+    npvCache.set(roundedRate, result)
+    return result
+  }
+  // Combined method: Start with Newton-Raphson for speed, then switch to bisection for reliability
+  const combinedMethod = function () {
+    // Set maximum epsilon for end of iteration
+    const epsMax = 1e-10
+    const maxIterations = 1000
+
+    // Phase 1: Newton-Raphson with adaptive step for faster convergence
+    let rate = guess
+    let prevRate = rate
+    let iteration = 0
+
+    // Try Newton-Raphson until it shows signs of instability
+    while (iteration < maxIterations) {
+      // Limit Newton-Raphson attempts
+      const currentNpv = cachedNpv(rate)
+
+      // Exit early if we're already close enough
+      if (Math.abs(currentNpv) < epsMax) {
+        return rate
+      }
+
+      // Check if we're stabilizing
+      if (iteration > 0 && Math.abs(rate - prevRate) < epsMax * 10) {
+        break
+      }
+
+      // Calculate approximate derivative using secant method (faster than calculating exact derivative)
+      const delta = Math.max(0.0001, Math.abs(rate * 0.0001))
+      const derivNpv = (cachedNpv(rate + delta) - currentNpv) / delta
+
+      // Exit if derivative is too small (to avoid division by near-zero)
+      if (Math.abs(derivNpv) < epsMax) {
+        break
+      }
+
+      // Calculate next rate using Newton step
+      prevRate = rate
+      const newtonStep = currentNpv / derivNpv
+
+      // Limit step size for stability
+      const maxStep = Math.max(0.1, Math.abs(rate) * 0.5)
+      if (Math.abs(newtonStep) > maxStep) {
+        rate -= Math.sign(newtonStep) * maxStep
+      } else {
+        rate -= newtonStep
+      }
+
+      // Constrain rate to reasonable values
+      if (rate <= -1) rate = -0.99999999
+      if (rate > 1000) rate = 1000
+
+      iteration++
+    }
+
+    // Phase 2: Bisection method for reliability
+    // Use current Newton result as a starting point
+    let npvAtRate = cachedNpv(rate)
+
+    // If Newton's method gave a good answer, return it
+    if (Math.abs(npvAtRate) < epsMax) {
+      return rate
+    }
+
+    // Otherwise, set up bisection
+    let a, b
+
+    // Find boundaries where NPV changes sign
+    if (npvAtRate > 0) {
+      a = rate
+      // Find b where npv(b) < 0
+      b = rate + 0.1
+      while (cachedNpv(b) > 0 && b < 1000) {
+        b = b * 2 + 0.1
+      }
+      if (b >= 1000) return rate // Couldn't find sign change
+    } else {
+      b = rate
+      // Find a where npv(a) > 0
+      a = Math.max(-0.99999999, rate - 0.1)
+      while (cachedNpv(a) < 0 && a > -0.99999999) {
+        a = Math.max(-0.99999999, a - 0.1)
+      }
+      if (a <= -0.99999999) return rate // Couldn't find sign change
+    }
+
+    // Perform bisection
+    let c
+    for (let i = 0; i < maxIterations; i++) {
+      c = (a + b) / 2
+      const npvC = cachedNpv(c)
+
+      if (Math.abs(npvC) < epsMax || Math.abs(b - a) < epsMax) {
+        return c
+      }
+
+      if (npvC * cachedNpv(a) < 0) {
+        b = c
+      } else {
+        a = c
+      }
+    }
+
+    return c
+  }
+
+  // Execute optimized combined method
+  return combinedMethod()
 }
 
 /**
