@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import globals from 'globals'
 
 export default [
   { ignores: ['coverage', 'lib', 'mochawesome-report'] },
@@ -9,7 +10,8 @@ export default [
         describe: 'readonly',
         it: 'readonly',
         should: 'readonly',
-        xit: 'readonly'
+        xit: 'readonly',
+        ...globals.node
       },
       sourceType: 'module'
     }
