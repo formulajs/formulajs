@@ -262,26 +262,6 @@ describe('Financial', () => {
     expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 2, 5)).to.equal(error.num)
   })
 
-  // TODO: implement
-  it('ACCRINTM', () => {
-    expect(financial.ACCRINTM).to.throw('ACCRINTM is not implemented')
-  })
-
-  // TODO: implement
-  it('AMORDEGRC', () => {
-    expect(financial.AMORDEGRC).to.throw('AMORDEGRC is not implemented')
-  })
-
-  // TODO: implement
-  it('AMORLINC', () => {
-    expect(financial.AMORLINC).to.throw('AMORLINC is not implemented')
-  })
-
-  // TODO: implement
-  it('COUPDAYBS', () => {
-    expect(financial.COUPDAYBS).to.throw('COUPDAYBS is not implemented')
-  })
-
   it('COUPDAYS', () => {
     expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 1)).to.equal(181)
     expect(financial.COUPDAYS('01/25/2011', '11/15/2011', '2', 1)).to.equal(181)
@@ -302,26 +282,6 @@ describe('Financial', () => {
     expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 4)).to.equal(180)
     expect(financial.COUPDAYS('01/25/2011', '11/15/2011', 2, 5)).to.equal(error.num)
     expect(financial.COUPDAYS('12/25/2011', '11/15/2011', 2, 5)).to.equal(error.num)
-  })
-
-  // TODO: implement
-  it('COUPDAYSNC', () => {
-    expect(financial.COUPDAYSNC).to.throw('COUPDAYSNC is not implemented')
-  })
-
-  // TODO: implement
-  it('COUPNCD', () => {
-    expect(financial.COUPNCD).to.throw('COUPNCD is not implemented')
-  })
-
-  // TODO: implement
-  it('COUPNUM', () => {
-    expect(financial.COUPNUM).to.throw('COUPNUM is not implemented')
-  })
-
-  // TODO: implement
-  it('COUPPCD', () => {
-    expect(financial.COUPPCD).to.throw('COUPPCD is not implemented')
   })
 
   it('CUMIPMT', () => {
@@ -493,11 +453,6 @@ describe('Financial', () => {
     expect(financial.DOLLARFR(1.5, 0.5)).to.equal(error.div0)
   })
 
-  // TODO: implement
-  it('DURATION', () => {
-    expect(financial.DURATION).to.throw('DURATION is not implemented')
-  })
-
   it('EFFECT', () => {
     expect(financial.EFFECT(0.1, 4)).to.approximately(0.10381289062499977, 1e-9)
     expect(financial.EFFECT(0.1, 4.5)).to.approximately(0.10381289062499977, 1e-9)
@@ -519,11 +474,6 @@ describe('Financial', () => {
   it('FVSCHEDULE', () => {
     expect(financial.FVSCHEDULE(100, [0.09, 0.1, 0.11])).to.approximately(133.08900000000003, 1e-9)
     expect(financial.FVSCHEDULE(100, ['Hello World!', 0.1, 0.11])).to.equal(error.value)
-  })
-
-  // TODO: implement
-  it('INTRATE', () => {
-    expect(financial.INTRATE).to.throw('INTRATE is not implemented')
   })
 
   it('IPMT', () => {
@@ -562,11 +512,6 @@ describe('Financial', () => {
     expect(financial.ISPMT('invalid', 6, 2 * 12, 100000)).to.equal(error.value)
   })
 
-  // TODO: implement
-  it('MDURATION', () => {
-    expect(financial.MDURATION).to.throw('MDURATION is not implemented')
-  })
-
   it('MIRR', () => {
     expect(financial.MIRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1, 0.12)).to.approximately(
       0.07971710360838036,
@@ -601,26 +546,6 @@ describe('Financial', () => {
     expect(financial.NPV('invalid', [12000, 15000, 18000, 21000, 24000])).to.equal(error.value)
   })
 
-  // TODO: implement
-  it('ODDFPRICE', () => {
-    expect(financial.ODDFPRICE).to.throw('ODDFPRICE is not implemented')
-  })
-
-  // TODO: implement
-  it('ODDFYIELD', () => {
-    expect(financial.ODDFYIELD).to.throw('ODDFYIELD is not implemented')
-  })
-
-  // TODO: implement
-  it('ODDLPRICE', () => {
-    expect(financial.ODDLPRICE).to.throw('ODDLPRICE is not implemented')
-  })
-
-  // TODO: implement
-  it('ODDLYIELD', () => {
-    expect(financial.ODDLYIELD).to.throw('ODDLYIELD is not implemented')
-  })
-
   it('PDURATION', () => {
     expect(financial.PDURATION(0.1, 1000, 2000)).to.approximately(7.272540897341714, 1e-9)
     expect(financial.PDURATION('Hello World!', 1000, 2000)).to.equal(error.value)
@@ -649,11 +574,6 @@ describe('Financial', () => {
     expect(financial.PPMT(0.1 / 12, 6, 2 * 12, 0, 1000000)).to.approximately(-39413.55382706825, 1e-9)
     expect(financial.PPMT(0.1 / 12, 6, 2 * 12, 100000)).to.approximately(-3941.355382706826, 1e-9)
     expect(financial.PPMT('invalid', 6, 2 * 12, 100000)).to.equal(error.value)
-  })
-
-  // TODO: implement
-  it('PRICE', () => {
-    expect(financial.PRICE).to.throw('PRICE is not implemented')
   })
 
   describe('PRICEDISC', () => {
@@ -690,11 +610,6 @@ describe('Financial', () => {
     })
   })
 
-  // TODO: implement
-  it('PRICEMAT', () => {
-    expect(financial.PRICEMAT).to.throw('PRICEMAT is not implemented')
-  })
-
   it('PV', () => {
     expect(financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 0)).to.approximately(-29864.950264779152, 1e-9)
     expect(financial.PV(0.1 / 12, 2 * 12, 1000, 10000, 1)).to.approximately(-30045.54072173169, 1e-9)
@@ -712,11 +627,6 @@ describe('Financial', () => {
     expect(financial.RATE(4 * 12, -200, 8000)).to.approximately(0.007701472, 1e-9)
     expect(financial.RATE(37, -7200, -40000, 4477839, 0)).to.approximately(0.10646164, 1e-9)
     expect(financial.RATE(348, -(157119 / 12), 790000)).to.approximately(0.01651835816, 1e-9)
-  })
-
-  // TODO: implement
-  it('RECEIVED', () => {
-    expect(financial.RECEIVED).to.throw('RECEIVED is not implemented')
   })
 
   it('RRI', () => {
@@ -765,11 +675,6 @@ describe('Financial', () => {
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2009', 0.0914)).to.equal(error.num)
   })
 
-  // TODO: implement
-  it('VDB', () => {
-    expect(financial.VDB).to.throw('VDB is not implemented')
-  })
-
   // TODO: support for all browsers
   it('XIRR', () => {
     const values = [-10000, 2750, 4250, 3250, 2750]
@@ -786,20 +691,5 @@ describe('Financial', () => {
     const dates = ['01/01/2008', '03/01/2008', '10/30/2008', '02/15/2009', '04/01/2009']
     expect(financial.XNPV(0.09, values, dates)).to.approximately(2086.6718943024616, 1e-1)
     expect(financial.XNPV('invalid', values, dates)).to.equal(error.value)
-  })
-
-  // TODO: implement
-  it('YIELD', () => {
-    expect(financial.YIELD).to.throw('YIELD is not implemented')
-  })
-
-  // TODO: implement
-  it('YIELDDISC', () => {
-    expect(financial.YIELDDISC).to.throw('YIELDDISC is not implemented')
-  })
-
-  // TODO: implement
-  it('YIELDMAT', () => {
-    expect(financial.YIELDMAT).to.throw('YIELDMAT is not implemented')
   })
 })

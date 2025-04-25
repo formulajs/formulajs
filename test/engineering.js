@@ -200,19 +200,9 @@ describe('Engineering', () => {
     expect(engineering.ERF('a')).to.equal(error.value)
   })
 
-  // TODO
-  it('ERF.PRECISE', () => {
-    expect(engineering.ERF.PRECISE).to.throw('ERF.PRECISE is not implemented')
-  })
-
   it('ERFC', () => {
     expect(engineering.ERFC(1)).to.approximately(0.1572992070502851, 1e-9)
     expect(engineering.ERFC('a')).to.equal(error.value)
-  })
-
-  // TODO
-  it('ERFC.PRECISE', () => {
-    expect(engineering.ERFC.PRECISE).to.throw('ERFC.PRECISE is not implemented')
   })
 
   it('GESTEP', () => {

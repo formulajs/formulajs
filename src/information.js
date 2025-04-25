@@ -1,19 +1,5 @@
 import * as error from './utils/error.js'
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns information about the formatting, location, or contents of a value.
- *
- * Category: Information
- *
- * @returns
- */
-export function CELL() {
-  throw new Error('CELL is not implemented')
-}
-
 export const ERROR = {}
 
 ERROR.TYPE = (error_val) => {
@@ -37,20 +23,6 @@ ERROR.TYPE = (error_val) => {
   }
 
   return error.na
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns information about the current operating environment.
- *
- * Category: Information
- *
- * @returns
- */
-export function INFO() {
-  throw new Error('INFO is not implemented')
 }
 
 /**
@@ -102,21 +74,6 @@ export function ISERROR(value) {
  */
 export function ISEVEN(number) {
   return !(Math.floor(Math.abs(number)) & 1)
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns TRUE if there is a reference to a value that contains a formula.
- *
- * Category: Information
- *
- * @param {*} reference Reference is a reference to the value you want to test. Reference can be a value reference, a formula, or a name that refers to a value.
- * @returns
- */
-export function ISFORMULA() {
-  throw new Error('ISFORMULA is not implemented')
 }
 
 /**
@@ -179,21 +136,6 @@ export function ISODD(value) {
   return !!(Math.floor(Math.abs(value)) & 1)
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns TRUE if the value is a reference.
- *
- * Category: Information
- *
- * @param {*} value The value that you want tested. The value argument can be a blank (empty value), error, logical value, text, number, or reference value, or a name referring to any of these.
- * @returns
- */
-export function ISREF() {
-  throw new Error('ISREF is not implemented')
-}
-
 /**
  * Returns TRUE if the value is text.
  *
@@ -247,36 +189,6 @@ export function N(value) {
  */
 export function NA() {
   return error.na
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the sheet number of the referenced sheet.
- *
- * Category: Information
- *
- * @param {*} value Optional. Value is the name of a sheet or a reference for which you want the sheet number. If value is omitted, SHEET returns the number of the sheet that contains the function.
- * @returns
- */
-export function SHEET() {
-  throw new Error('SHEET is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the number of sheets in a reference.
- *
- * Category: Information
- *
- * @param {*} reference Optional. Reference is a reference for which you want to know the number of sheets it contains. If Reference is omitted, SHEETS returns the number of sheets in the workbook that contains the function.
- * @returns
- */
-export function SHEETS() {
-  throw new Error('SHEETS is not implemented')
 }
 
 /**

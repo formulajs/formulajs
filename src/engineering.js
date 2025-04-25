@@ -940,22 +940,6 @@ export function ERF(lower_limit, upper_limit) {
   return jStat.erf(lower_limit)
 }
 
-// TODO
-
-/**
- * -- Not implemented --
- *
- * Returns the error function.
- *
- * Category: Engineering
- *
- * @param {*} x The lower bound for integrating ERF.PRECISE.
- * @returns
- */
-ERF.PRECISE = () => {
-  throw new Error('ERF.PRECISE is not implemented')
-}
-
 /**
  * Returns the complementary error function.
  *
@@ -971,22 +955,6 @@ export function ERFC(x) {
   }
 
   return jStat.erfc(x)
-}
-
-// TODO
-
-/**
- * -- Not implemented --
- *
- * Returns the complementary ERF function integrated between x and infinity.
- *
- * Category: Engineering
- *
- * @param {*} x The lower bound for integrating ERFC.PRECISE.
- * @returns
- */
-ERFC.PRECISE = () => {
-  throw new Error('ERFC.PRECISE is not implemented')
 }
 
 /**
