@@ -1,24 +1,24 @@
-import {expect} from "chai";
-import * as dateTime from "../../src/date-time.js";
-import * as dateUtils from "../../src/utils/date.js";
-import {useDate} from "../../src/utils/date.js";
+import { expect } from 'chai'
+import * as dateTime from '../../src/date-time.js'
+import * as dateUtils from '../../src/utils/date.js'
+import { useDate } from '../../src/utils/date.js'
 
 describe('Date & Time utils', () => {
   beforeEach(() => {
-    useDate();
+    useDate()
   })
 
   describe('FormulaJs default behavior', () => {
     it('should return plain JS Date Object', () => {
       expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
-    });
+    })
 
     it('should return serial number using a useSerial util switch', () => {
-      dateUtils.useSerial();
+      dateUtils.useSerial()
 
       expect(dateTime.DATE(1900, 1, 1)).to.equal(1)
       expect(dateTime.DATEVALUE('1/1/1900')).to.equal(1)
-    });
+    })
   })
 
   describe('dateToSerial ', () => {
@@ -32,4 +32,4 @@ describe('Date & Time utils', () => {
       expect(dateUtils.serialToDate(1)).to.deep.equal(new Date(1900, 0, 1))
     })
   })
-});
+})

@@ -1,6 +1,6 @@
 import * as error from './error.js'
 import * as evalExpression from './criteria-eval.js'
-import {serialToDate} from "./date.js";
+import { serialToDate } from './date.js'
 
 // Arrays
 export function argsToArray(args) {

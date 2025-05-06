@@ -1,13 +1,13 @@
-export let returnSerial = false;
+export let returnSerial = false
 
 const d1900 = new Date(Date.UTC(1900, 0, 1))
 
 export function useSerial() {
-  returnSerial = true;
+  returnSerial = true
 }
 
 export function useDate() {
-  returnSerial = false;
+  returnSerial = false
 }
 
 export function serialToDate(serial) {
@@ -38,7 +38,6 @@ export function serialToDate(serial) {
 
   return new Date(date_info.getUTCFullYear(), month, days, hours, minutes, seconds)
 }
-
 
 export function dateToSerial(date) {
   const addOn = date > -2203891200000 ? 2 : 1

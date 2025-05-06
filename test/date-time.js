@@ -1,12 +1,12 @@
-import {expect} from 'chai'
+import { expect } from 'chai'
 
 import * as dateTime from '../src/date-time.js'
 import * as error from '../src/utils/error.js'
-import {useDate, useSerial} from "../src/utils/date.js";
+import { useDate, useSerial } from '../src/utils/date.js'
 
 describe('Date & Time', () => {
   beforeEach(() => {
-    useDate();
+    useDate()
   })
 
   describe('DATE', () => {
@@ -235,7 +235,7 @@ describe('Date & Time', () => {
   })
 
   describe('TODAY', () => {
-    it('should return today\'s date at the start of the day', () => {
+    it("should return today's date at the start of the day", () => {
       expect(dateTime.TODAY()).to.instanceof(Date)
       expect(dateTime.TODAY().getHours()).to.equal(0)
       expect(dateTime.TODAY().getMinutes()).to.equal(0)
@@ -243,7 +243,7 @@ describe('Date & Time', () => {
     })
 
     it('should return Serial', () => {
-      useSerial();
+      useSerial()
       expect(dateTime.TODAY()).to.be.a('number')
     })
   })

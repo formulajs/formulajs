@@ -1,6 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
-import {dateToSerial, returnSerial} from "./utils/date.js";
+import { dateToSerial, returnSerial } from './utils/date.js'
 
 const WEEK_STARTS = [
   undefined,
@@ -197,9 +197,9 @@ export function DATEVALUE(date_text) {
     return error.value
   }
 
-  const dateValue = new Date(date_text);
+  const dateValue = new Date(date_text)
 
-  return returnSerial ? dateToSerial(dateValue) : dateValue;
+  return returnSerial ? dateToSerial(dateValue) : dateValue
 }
 
 /**
@@ -644,8 +644,8 @@ export function TIMEVALUE(time_text) {
  * @returns
  */
 export function TODAY() {
-  const today = startOfDay(new Date());
-  return returnSerial ? dateToSerial(today) : today;
+  const today = startOfDay(new Date())
+  return returnSerial ? dateToSerial(today) : today
 }
 
 /**
