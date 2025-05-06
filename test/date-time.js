@@ -37,6 +37,11 @@ describe('Date & Time', () => {
       expect(date.getDate()).to.equal(1)
     })
 
+    it('should return a Serial number', () => {
+      useSerial()
+      expect(dateTime.DATE(2008, 2, 29)).to.equal(39507)
+    })
+
     xit('should be Excel behaviour, but we do not want to recreate it', () => {
       expect(dateTime.DATE(1899, 1, 1).getFullYear()).to.equal(3799)
     })
@@ -64,11 +69,18 @@ describe('Date & Time', () => {
     expect(dateTime.DATEDIF('1959-07-20', '2020-05-04', 'md')).to.equal(14)
   })
 
-  it('DATEVALUE', () => {
-    expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
-    expect(dateTime.DATEVALUE('12/31/9999')).to.deep.equal(new Date(9999, 11, 31))
-    expect(dateTime.DATEVALUE('foo bar')).to.equal(error.value)
-    expect(dateTime.DATEVALUE(1)).to.equal(error.value)
+  describe('DATEVALUE', () => {
+    it('should parse a date string', () => {
+      expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
+      expect(dateTime.DATEVALUE('12/31/9999')).to.deep.equal(new Date(9999, 11, 31))
+      expect(dateTime.DATEVALUE('foo bar')).to.equal(error.value)
+      expect(dateTime.DATEVALUE(1)).to.equal(error.value)
+    })
+
+    it('should return a Serial number', () => {
+      useSerial()
+      expect(dateTime.DATEVALUE('02/29/2008')).to.equal(39507)
+    })
   })
 
   it('DAY', () => {
@@ -108,8 +120,8 @@ describe('Date & Time', () => {
     expect(dateTime.DAYS360('1/1/1901', '1/2/1901', 'a')).to.equal(error.value)
   })
 
-  describe('', () => {
-    it('EDATE', () => {
+  describe('EDATE', () => {
+    it('should compute EDATE', () => {
       expect(dateTime.EDATE('a', 0)).to.equal(error.value)
       expect(dateTime.EDATE('1/1/1900', 'a')).to.equal(error.value)
       expect(dateTime.EDATE(new Date(2011, 0, 23), 1)).to.deep.equal(new Date(2011, 1, 23))
