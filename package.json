@@ -1,8 +1,11 @@
 {
-  "name": "@formulajs/formulajs",
-  "version": "4.4.11",
+  "name": "@mritunjaygoutam12/formulajs",
+  "version": "4.4.11-mri-7",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/formulajs/formulajs#readme",
   "repository": {
     "type": "git",
@@ -40,7 +43,6 @@
     "types"
   ],
   "scripts": {
-    "prebuild": "npm run prettier && npm run lint && npm run test:coverage",
     "build": "rollup -c && npm run types",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
