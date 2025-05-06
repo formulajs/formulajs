@@ -1,0 +1,35 @@
+name: Generate Formula.js Implementation Stats
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Generate stats
+        run: node bin/implementation-stats.js
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "${{ secrets.EMAIL }}"
+          git config --global user.name "${{ secrets.NAME }}"
+
+          git add IMPLEMENTATION_STATS.md
+          git commit -m "Updated implementation stats"
+          git push origin HEAD:master
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
