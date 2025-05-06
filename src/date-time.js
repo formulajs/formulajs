@@ -1,7 +1,7 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
+import {dateToSerial, returnSerial} from "./utils/date.js";
 
-const d1900 = new Date(Date.UTC(1900, 0, 1))
 const WEEK_STARTS = [
   undefined,
   0,
@@ -91,7 +91,7 @@ export function DATE(year, month, day) {
     }
   }
 
-  return result
+  return returnSerial ? dateToSerial(result) : result
 }
 
 /**
@@ -197,7 +197,9 @@ export function DATEVALUE(date_text) {
     return error.value
   }
 
-  return new Date(date_text)
+  const dateValue = new Date(date_text);
+
+  return returnSerial ? dateToSerial(dateValue) : dateValue;
 }
 
 /**
@@ -246,7 +248,7 @@ export function DAYS(end_date, start_date) {
     return start_date
   }
 
-  return serial(startOfDay(end_date)) - serial(startOfDay(start_date))
+  return dateToSerial(startOfDay(end_date)) - dateToSerial(startOfDay(start_date))
 }
 
 /**
@@ -346,7 +348,7 @@ export function EDATE(start_date, months) {
 
   start_date.setDate(storedDay)
 
-  return start_date
+  return returnSerial ? dateToSerial(start_date) : start_date
 }
 
 /**
@@ -371,7 +373,9 @@ export function EOMONTH(start_date, months) {
 
   months = parseInt(months, 10)
 
-  return new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0)
+  const eoMonth = new Date(start_date.getFullYear(), start_date.getMonth() + months + 1, 0)
+
+  return returnSerial ? dateToSerial(eoMonth) : eoMonth
 }
 
 /**
@@ -567,7 +571,7 @@ NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
  * @returns
  */
 export function NOW() {
-  return new Date()
+  return returnSerial ? dateToSerial(new Date()) : new Date()
 }
 
 /**
@@ -640,7 +644,8 @@ export function TIMEVALUE(time_text) {
  * @returns
  */
 export function TODAY() {
-  return startOfDay(new Date())
+  const today = startOfDay(new Date());
+  return returnSerial ? dateToSerial(today) : today;
 }
 
 /**
@@ -918,10 +923,4 @@ export function YEARFRAC(start_date, end_date, basis) {
 
       return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
   }
-}
-
-function serial(date) {
-  const addOn = date > -2203891200000 ? 2 : 1
-
-  return Math.ceil((date - d1900) / 86400000) + addOn
 }
