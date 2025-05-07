@@ -1,6 +1,6 @@
 {
-  "name": "@mritunjaygoutam12/formulajs",
-  "version": "4.4.11-mri-8",
+  "name": "@fileverse-dev/formulajs",
+  "version": "4.4.11-mod-0",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "publishConfig": {
