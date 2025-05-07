@@ -1743,7 +1743,7 @@ export async function INTERNALTX(tx) {
 }
 
 export async function GETTXLIST(address, page, offset) {
-  console.log('called internal tx', tx)
+  console.log('called internal tx', address)
   const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=J9JHHA7TBTKXGTZGPJV2PHV7S2RTJI2BYN`
 
   try {
