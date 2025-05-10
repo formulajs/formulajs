@@ -1,11 +1,10 @@
 import { expect } from 'chai'
 import * as dateTime from '../../src/date-time.js'
 import * as dateUtils from '../../src/utils/date.js'
-import { useDate } from '../../src/utils/date.js'
 
 describe('Date & Time utils', () => {
   beforeEach(() => {
-    useDate()
+    dateUtils.useDate()
   })
 
   describe('FormulaJs default behavior', () => {
