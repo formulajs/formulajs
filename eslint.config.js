@@ -8,6 +8,7 @@ export default [
       ecmaVersion: 'latest',
       globals: {
         describe: 'readonly',
+        beforeEach: 'readonly',
         it: 'readonly',
         should: 'readonly',
         xit: 'readonly',
