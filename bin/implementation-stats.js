@@ -7,30 +7,6 @@ const URL =
   'https://support.microsoft.com/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188'
 
 /**
- * Recursively flattens the methods of an object into a list of method names.
- */
-function flattenFormulas(obj, prefix = '', visited = new WeakSet()) {
-  if (!obj || (typeof obj !== 'object' && typeof obj !== 'function')) return []
-  if (visited.has(obj)) return []
-  visited.add(obj)
-
-  return Object.keys(obj).reduce((methodNames, key) => {
-    const value = obj[key]
-    const path = prefix ? `${prefix}.${key}` : key
-
-    if (typeof value === 'function') {
-      methodNames.push(key.toUpperCase())
-    }
-
-    if (value && (typeof value === 'object' || typeof value === 'function')) {
-      methodNames.push(...flattenFormulas(value, path, visited))
-    }
-
-    return methodNames
-  }, [])
-}
-
-/**
  * Generates a Markdown table from the stats array.
  */
 function generateMarkdownTable(stats) {
@@ -83,8 +59,6 @@ async function fetchAndProcessData() {
       throw new Error('No rows found in the table. The webpage structure might have changed.')
     }
 
-    const implementedNames = new Set(flattenFormulas(formulajs))
-
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td')
 
@@ -100,7 +74,8 @@ async function fetchAndProcessData() {
       desc.shift()
       let description = desc.join(':').replace(/\n+/, '. ').replace(/\s+/g, ' ').replace(/#/g, '').trim()
       description = description.endsWith('.') ? description : description + '.'
-      const implemented = implementedNames.has(name)
+
+      const implemented = typeof name.split('.').reduce((o, k) => o?.[k], formulajs) === 'function'
 
       stats.push({ name, category, description, implemented })
     })
