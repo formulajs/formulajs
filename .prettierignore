@@ -2,3 +2,5 @@ coverage
 lib
 mochawesome-report
 types
+
+IMPLEMENTATION_STATS.md
