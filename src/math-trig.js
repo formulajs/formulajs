@@ -1723,43 +1723,6 @@ export function SUM() {
   return result
 }
 
-
-export async function INTERNALTX(tx) {
-  console.log('called internal tx', tx)
-  const url = `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${tx}&apikey=J9JHHA7TBTKXGTZGPJV2PHV7S2RTJI2BYN`
-
-  try {
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-    const json = await response.json()
-    console.log(json.result)
-    return json.result // Assuming you want just the "result" field
-  } catch (error) {
-    console.error('API call failed:', error)
-    return [] // Return empty array on error to match original return type
-  }
-}
-
-export async function GETTXLIST(address, page, offset) {
-  console.log('called internal tx', address)
-  const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=J9JHHA7TBTKXGTZGPJV2PHV7S2RTJI2BYN`
-
-  try {
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
-    }
-    const json = await response.json()
-    console.log(json.result)
-    return json.result // Assuming you want just the "result" field
-  } catch (error) {
-    console.error('API call failed:', error)
-    return [] // Return empty array on error to match original return type
-  }
-}
-
 /**
  * Adds the values specified by a given criteria.
  *
