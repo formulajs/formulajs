@@ -1,6 +1,6 @@
 {
   "name": "@fileverse-dev/formulajs",
-  "version": "4.4.11-mod-4",
+  "version": "4.4.11-mod-5",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "publishConfig": {
@@ -24,6 +24,7 @@
   "unpkg": "./lib/browser/formula.min.js",
   "jsdelivr": "./lib/browser/formula.min.js",
   "exports": {
+    "./crypto-constants": "./lib/esm/crypto-constants.mjs",
     ".": {
       "import": {
         "types": "./types/esm/index.d.mts",
@@ -43,7 +44,8 @@
     "types"
   ],
   "scripts": {
-    "build": "rollup -c && npm run types",
+    "build:crypto-constants": "esbuild src/crypto-constants.js --bundle --outfile=lib/esm/crypto-constants.mjs --format=esm",
+    "build": "rollup -c && npm run types && npm run build:crypto-constants",
     "format": "npm run prettier:fix && npm run lint:fix",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -70,6 +72,7 @@
     "c8": "^10.1.3",
     "chai": "^5.2.0",
     "cli-table3": "^0.6.5",
+    "esbuild": "^0.25.4",
     "eslint": "^9.20.1",
     "globals": "^15.15.0",
     "mocha": "^11.1.0",
