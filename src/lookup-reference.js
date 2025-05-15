@@ -1,5 +1,4 @@
-import jStat from 'jstat'
-
+import * as jStat from 'jstat';
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 

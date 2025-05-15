@@ -1,6 +1,5 @@
-import bessel from 'bessel'
-import jStat from 'jstat'
-
+import * as bessel from 'bessel';
+import * as jStat from 'jstat';
 import * as error from './utils/error.js'
 import * as text from './text.js'
 import * as utils from './utils/common.js'
