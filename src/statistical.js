@@ -1,4 +1,5 @@
 import jStat from 'jstat'
+
 import * as error from './utils/error.js'
 import * as evalExpression from './utils/criteria-eval.js'
 import * as mathTrig from './math-trig.js'
