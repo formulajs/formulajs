@@ -13,5 +13,6 @@ export * from './lookup-reference.js'
 export * from './math-trig.js'
 export * from './statistical.js'
 export * from './text.js'
+export * from "./crypto.js"
 
 export const utils = { errors, symbols, date }
