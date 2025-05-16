@@ -2,36 +2,6 @@ import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 import { ROUND } from './math-trig.js'
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Changes full-width (double-byte) English letters or katakana within a character string to half-width (single-byte) characters.
- *
- * Category: Text
- *
- * @param {*} text The text or a reference to a value that contains the text you want to change. If text does not contain any full-width letters, text is not changed.
- * @returns
- */
-export function ASC() {
-  throw new Error('ASC is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Converts a number to text, using the ß (baht) currency format.
- *
- * Category: Text
- *
- * @param {*} number A number you want to convert to text, or a reference to a value containing a number, or a formula that evaluates to a number.
- * @returns
- */
-export function BAHTTEXT() {
-  throw new Error('BAHTTEXT is not implemented')
-}
-
 /**
  * Returns the character specified by the code number.
  *
@@ -127,21 +97,6 @@ export function CONCATENATE() {
 }
 
 export const CONCAT = CONCATENATE
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Changes half-width (single-byte) English letters or katakana within a character string to full-width (double-byte) characters.
- *
- * Category: Text
- *
- * @param {*} text The text or a reference to a value that contains the text you want to change. If text does not contain any half-width English letters or katakana, text is not changed.
- * @returns
- */
-export function DBCS() {
-  throw new Error('DBCS is not implemented')
-}
 
 /**
  * Converts a number to text, using the $ (dollar) currency format.
@@ -397,14 +352,6 @@ export function NUMBERVALUE(text, decimal_separator, group_separator) {
   group_separator = typeof group_separator === 'undefined' ? ',' : group_separator
 
   return Number(text.replace(decimal_separator, '.').replace(group_separator, ''))
-}
-
-// TODO
-/**
- * -- Not implemented --
- */
-export function PRONETIC() {
-  throw new Error('PRONETIC is not implemented')
 }
 
 /**

@@ -98,85 +98,6 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
   return par * rate * dateTime.YEARFRAC(issue, settlement, basis)
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the accrued interest for a security that pays interest at maturity.
- *
- * Category: Financial
- *
- * @param {*} issue The security's issue date.
- * @param {*} settlement The security's maturity date.
- * @param {*} rate The security's annual coupon rate.
- * @param {*} par The security's par value. If you omit par, ACCRINTM uses $1,000.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function ACCRINTM() {
-  throw new Error('ACCRINTM is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the depreciation for each accounting period by using a depreciation coefficient.
- *
- * Category: Financial
- *
- * @param {*} cost The cost of the asset.
- * @param {*} date_purchased The date of the purchase of the asset.
- * @param {*} first_period The date of the end of the first period.
- * @param {*} salvage The salvage value at the end of the life of the asset.
- * @param {*} period The period.
- * @param {*} rate The rate of depreciation.
- * @param {*} basis Optional. The year basis to be used.
- * @returns
- */
-export function AMORDEGRC() {
-  throw new Error('AMORDEGRC is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the depreciation for each accounting period.
- *
- * Category: Financial
- *
- * @param {*} cost The cost of the asset.
- * @param {*} date_purchased The date of the purchase of the asset.
- * @param {*} first_period The date of the end of the first period.
- * @param {*} salvage The salvage value at the end of the life of the asset.
- * @param {*} period The period.
- * @param {*} rate The rate of depreciation.
- * @param {*} basis Optional. The year basis to be used.
- * @returns
- */
-export function AMORLINC() {
-  throw new Error('AMORLINC is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the number of days from the beginning of the coupon period to the settlement date.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function COUPDAYBS() {
-  throw new Error('COUPDAYBS is not implemented')
-}
-
 /**
  *
  * Returns the number of days in the coupon period that contains the settlement date.
@@ -229,78 +150,6 @@ export function COUPDAYS(settlement, maturity, frequency, basis) {
   }
 
   return numOfDays / frequency
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the number of days from the settlement date to the next coupon date.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function COUPDAYSNC() {
-  throw new Error('COUPDAYSNC is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the next coupon date after the settlement date.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function COUPNCD() {
-  throw new Error('COUPNCD is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the number of coupons payable between the settlement date and maturity date.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function COUPNUM() {
-  throw new Error('COUPNUM is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the previous coupon date before the settlement date.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function COUPPCD() {
-  throw new Error('COUPPCD is not implemented')
 }
 
 /**
@@ -694,26 +543,6 @@ export function DOLLARFR(decimal_dollar, fraction) {
   return result
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the annual duration of a security with periodic interest payments.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} coupon The security's annual coupon rate.
- * @param {*} yld The security's annual yield.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function DURATION() {
-  throw new Error('DURATION is not implemented')
-}
-
 /**
  * Returns the effective annual interest rate.
  *
@@ -816,25 +645,6 @@ export function FVSCHEDULE(principal, schedule) {
 
   // Return future value
   return future
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the interest rate for a fully invested security.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} investment The amount invested in the security.
- * @param {*} redemption The amount to be received at maturity.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function INTRATE() {
-  throw new Error('INTRATE is not implemented')
 }
 
 /**
@@ -1091,26 +901,6 @@ export function ISPMT(rate, per, nper, pv) {
   return pv * rate * (per / nper - 1)
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the Macauley modified duration for a security with an assumed par value of $100.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} coupon The security's annual coupon rate.
- * @param {*} yld The security's annual yield.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function MDURATION() {
-  throw new Error('MDURATION is not implemented')
-}
-
 /**
  * Returns the internal rate of return where positive and negative cash flows are financed at different rates.
  *
@@ -1254,96 +1044,6 @@ export function NPV() {
   return value
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the price per $100 face value of a security with an odd first period.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} issue The security's issue date.
- * @param {*} first_coupon The security's first coupon date.
- * @param {*} rate The security's interest rate.
- * @param {*} yld The security's annual yield.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function ODDFPRICE() {
-  throw new Error('ODDFPRICE is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the yield of a security with an odd first period.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} issue The security's issue date.
- * @param {*} first_coupon The security's first coupon date.
- * @param {*} rate The security's interest rate.
- * @param {*} pr The security's price.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function ODDFYIELD() {
-  throw new Error('ODDFYIELD is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the price per $100 face value of a security with an odd last period.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} last_interest The security's last coupon date.
- * @param {*} rate The security's interest rate.
- * @param {*} yld The security's annual yield.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function ODDLPRICE() {
-  throw new Error('ODDLPRICE is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the yield of a security with an odd last period.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} last_interest The security's last coupon date.
- * @param {*} rate The security's interest rate
- * @param {*} pr The security's price.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function ODDLYIELD() {
-  throw new Error('ODDLYIELD is not implemented')
-}
-
 /**
  * Returns the number of periods required by an investment to reach a specified value.
  *
@@ -1446,27 +1146,6 @@ export function PPMT(rate, per, nper, pv, fv, type) {
   return PMT(rate, nper, pv, fv, type) - IPMT(rate, per, nper, pv, fv, type)
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the price per $100 face value of a security that pays periodic interest.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} rate The security's annual coupon rate.
- * @param {*} yld The security's annual yield.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function PRICE() {
-  throw new Error('PRICE is not implemented')
-}
-
 /**
  * Returns the price per $100 face value of a discounted security.
  *
@@ -1527,26 +1206,6 @@ export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
   }
 
   return redemption - (discount * redemption * diff) / basisVal
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the price per $100 face value of a security that pays interest at maturity.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} issue The security's issue date, expressed as a serial date number.
- * @param {*} rate The security's interest rate at date of issue.
- * @param {*} yld The security's annual yield.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function PRICEMAT() {
-  throw new Error('PRICEMAT is not implemented')
 }
 
 /**
@@ -1650,25 +1309,6 @@ export function RATE(nper, pmt, pv, fv, type, guess) {
   }
 
   return rate
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the amount received at maturity for a fully invested security.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} investment The amount invested in the security.
- * @param {*} discount The security's discount rate.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function RECEIVED() {
-  throw new Error('RECEIVED is not implemented')
 }
 
 /**
@@ -1880,29 +1520,6 @@ export function TBILLYIELD(settlement, maturity, pr) {
   return ((100 - pr) * 360) / (pr * dateTime.DAYS360(settlement, maturity, false))
 }
 
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the depreciation of an asset for a specified or partial period by using a declining balance method.
- *
- * Category: Financial
- *
- * @param {*} cost The initial cost of the asset.
- * @param {*} salvage The value at the end of the depreciation (sometimes called the salvage value of the asset). This value can be 0.
- * @param {*} life The number of periods over which the asset is depreciated (sometimes called the useful life of the asset).
- * @param {*} start_period The starting period for which you want to calculate the depreciation. Start_period must use the same units as life.
- * @param {*} end_period The ending period for which you want to calculate the depreciation. End_period must use the same units as life.
- * @param {*} factor Optional. The rate at which the balance declines. If factor is omitted, it is assumed to be 2 (the double-declining balance method). Change factor if you do not want to use the double-declining balance method. For a description of the double-declining balance method, see DDB.
- * @param {*} no_switch Optional. A logical value specifying whether to switch to straight-line depreciation when depreciation is greater than the declining balance calculation.
- - If no_switch is TRUE, Microsoft Excel does not switch to straight-line depreciation even when the depreciation is greater than the declining balance calculation.
- - If no_switch is FALSE or omitted, Excel switches to straight-line depreciation when depreciation is greater than the declining balance calculation.
- * @returns
- */
-export function VDB() {
-  throw new Error('VDB is not implemented')
-}
-
 /**
  * Returns the internal rate of return for a schedule of cash flows that is not necessarily periodic.
  *
@@ -2016,64 +1633,4 @@ export function XNPV(rate, values, dates) {
   }
 
   return result
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the yield on a security that pays periodic interest.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} rate The security's annual coupon rate.
- * @param {*} pr The security's price per $100 face value.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function YIELD() {
-  throw new Error('YIELD is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the annual yield for a discounted security; for example, a Treasury bill.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} pr The security's price per $100 face value.
- * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function YIELDDISC() {
-  throw new Error('YIELDDISC is not implemented')
-}
-
-// TODO
-/**
- * -- Not implemented --
- *
- * Returns the annual yield of a security that pays interest at maturity.
- *
- * Category: Financial
- *
- * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
- * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
- * @param {*} issue The security's issue date, expressed as a serial date number.
- * @param {*} rate The security's interest rate at date of issue.
- * @param {*} pr The security's price per $100 face value.
- * @param {*} basis Optional. The type of day count basis to use.
- * @returns
- */
-export function YIELDMAT() {
-  throw new Error('YIELDMAT is not implemented')
 }

@@ -1,78 +1,93 @@
-import Table from 'cli-table3'
+import { writeFileSync } from 'fs'
+import { JSDOM } from 'jsdom'
+import * as formulajs from './../src/index.js'
 
-import * as database from '../src/database.js'
-import * as dateTime from '../src/date-time.js'
-import * as engineering from '../src/engineering.js'
-import * as financial from '../src/financial.js'
-import * as information from '../src/information.js'
-import * as logical from '../src/logical.js'
-import * as lookupReference from '../src/lookup-reference.js'
-import * as mathTrig from '../src/math-trig.js'
-import * as statistical from '../src/statistical.js'
-import * as text from '../src/text.js'
+const FILE_NAME = 'IMPLEMENTATION_STATS'
+const URL =
+  'https://support.microsoft.com/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188'
 
-const categories = {
-  Database: database,
-  'Date Time': dateTime,
-  Eningeering: engineering,
-  Financial: financial,
-  Information: information,
-  Logical: logical,
-  'Loookup Reference': lookupReference,
-  'Math Trig': mathTrig,
-  Statistical: statistical,
-  Text: text
+/**
+ * Generates a Markdown table from the stats array.
+ */
+function generateMarkdownTable(stats) {
+  const total = stats.length
+  const implemented = stats.filter((stat) => stat.implemented).length
+  const notImplemented = total - implemented
+  const pageTitle = `## Excel functions implemented in Formula.js\nAs of ${new Date().toUTCString()} \n\n`
+  const tableStats = `Total: ${total} functions | Implemented: ${implemented} | Not Implemented: ${notImplemented}\n\n`
+  const tableHeader = `| Function Name | Category | Description | Implemented |\n| :--- | :--- | :--- | :--- |\n`
+  const tableRows = stats
+    .map((stat) => `| ${stat.name} | ${stat.category} | ${stat.description} | ${stat.implemented ? '✅' : '❌'} |`)
+    .join('\n')
+
+  return pageTitle + tableStats + tableHeader + tableRows
 }
 
-const table = new Table({
-  head: ['Category', 'Total', 'Not Implemented'],
-  style: { head: [], border: [] }
-})
+/**
+ * Generates a YML table from the stats array.
+ */
+function generateYMLTable(stats) {
+  const groupedStats = stats.reduce((acc, stat) => {
+    acc[stat.category] = acc[stat.category] || []
+    acc[stat.category].push(stat)
+    return acc
+  }, {})
 
-let aggregateTotal = 0
-let aggregateNotImplemented = 0
-
-for (const c in categories) {
-  const categoryName = c
-  const category = categories[c]
-  let total = 0
-  let notImplemented = 0
-
-  const inc = (err) => {
-    if (err.message.includes('not implemented')) {
-      notImplemented++
-    }
-  }
-
-  for (const f in category) {
-    if (typeof category[f] === 'function') {
-      total++
-      try {
-        category[f]()
-      } catch (err) {
-        inc(err)
-      }
-    }
-
-    if (typeof category[f] === 'object') {
-      for (const s in category[f]) {
-        total++
-        try {
-          category[s]()
-        } catch (err) {
-          inc(err)
-        }
-      }
-    }
-  }
-
-  aggregateTotal += total
-  aggregateNotImplemented += notImplemented
-
-  table.push([categoryName, total, notImplemented])
+  return Object.entries(groupedStats)
+    .sort()
+    .map(([category, funcs]) => {
+      return `- category: ${category}\n  functions:\n${funcs
+        .map((f) => `    - title: ${f.name}\n      description: ${f.description}\n      implemented: ${f.implemented}`)
+        .join('\n')}`
+    })
+    .join('\n')
 }
 
-table.push(['Totals', aggregateTotal, aggregateNotImplemented])
+/**
+ * Fetches data from the specified URL, processes it, and generates Markdown and YML files with implementation stats.
+ */
+async function fetchAndProcessData() {
+  const stats = []
 
-/* global console */
-console.log(table.toString())
+  try {
+    const response = await fetch(URL)
+    const data = await response.text()
+    const dom = new JSDOM(data)
+    const rows = dom.window.document.querySelectorAll('.ocpIntroduction table tbody tr')
+
+    if (!rows.length) {
+      throw new Error('No rows found in the table. The webpage structure might have changed.')
+    }
+
+    rows.forEach((row) => {
+      const cells = row.querySelectorAll('td')
+
+      if (cells.length < 2) return
+
+      const name = cells[0].textContent
+        .trim()
+        .split(' ')[0]
+        .replace(/[a-z]|,|\n+/g, '')
+        .toUpperCase()
+      const category = cells[1].textContent.trim().split(/:/)[0]
+      const desc = cells[1].textContent.trim().split(/:/)
+      desc.shift()
+      let description = desc.join(':').replace(/\n+/, '. ').replace(/\s+/g, ' ').replace(/#/g, '').trim()
+      description = description.endsWith('.') ? description : description + '.'
+
+      const implemented = typeof name.split('.').reduce((o, k) => o?.[k], formulajs) === 'function'
+
+      stats.push({ name, category, description, implemented })
+    })
+
+    writeFileSync(FILE_NAME + '.md', generateMarkdownTable(stats))
+    console.log(`${FILE_NAME}.md has been successfully generated.`)
+
+    writeFileSync(FILE_NAME + '.yml', generateYMLTable(stats))
+    console.log(`${FILE_NAME}.yml has been successfully generated.`)
+  } catch (err) {
+    console.error(`Failed to fetch or process data: ${err.message}`)
+  }
+}
+
+fetchAndProcessData()

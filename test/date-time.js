@@ -2,8 +2,13 @@ import { expect } from 'chai'
 
 import * as dateTime from '../src/date-time.js'
 import * as error from '../src/utils/error.js'
+import { useDate, useSerial } from '../src/utils/date.js'
 
 describe('Date & Time', () => {
+  beforeEach(() => {
+    useDate()
+  })
+
   describe('DATE', () => {
     it('should thrown an error in case of malformed input', () => {
       expect(dateTime.DATE(10, 1, 1).getFullYear()).to.equal(1910)
@@ -30,6 +35,11 @@ describe('Date & Time', () => {
       expect(date.getFullYear()).to.equal(1996)
       expect(date.getMonth()).to.equal(12 - 1)
       expect(date.getDate()).to.equal(1)
+    })
+
+    it('should return a Serial number', () => {
+      useSerial()
+      expect(dateTime.DATE(2008, 2, 29)).to.equal(39507)
     })
 
     xit('should be Excel behaviour, but we do not want to recreate it', () => {
@@ -59,11 +69,18 @@ describe('Date & Time', () => {
     expect(dateTime.DATEDIF('1959-07-20', '2020-05-04', 'md')).to.equal(14)
   })
 
-  it('DATEVALUE', () => {
-    expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
-    expect(dateTime.DATEVALUE('12/31/9999')).to.deep.equal(new Date(9999, 11, 31))
-    expect(dateTime.DATEVALUE('foo bar')).to.equal(error.value)
-    expect(dateTime.DATEVALUE(1)).to.equal(error.value)
+  describe('DATEVALUE', () => {
+    it('should parse a date string', () => {
+      expect(dateTime.DATEVALUE('1/1/1900')).to.deep.equal(new Date(1900, 0, 1))
+      expect(dateTime.DATEVALUE('12/31/9999')).to.deep.equal(new Date(9999, 11, 31))
+      expect(dateTime.DATEVALUE('foo bar')).to.equal(error.value)
+      expect(dateTime.DATEVALUE(1)).to.equal(error.value)
+    })
+
+    it('should return a Serial number', () => {
+      useSerial()
+      expect(dateTime.DATEVALUE('02/29/2008')).to.equal(39507)
+    })
   })
 
   it('DAY', () => {
@@ -103,29 +120,43 @@ describe('Date & Time', () => {
     expect(dateTime.DAYS360('1/1/1901', '1/2/1901', 'a')).to.equal(error.value)
   })
 
-  it('EDATE', () => {
-    expect(dateTime.EDATE('a', 0)).to.equal(error.value)
-    expect(dateTime.EDATE('1/1/1900', 'a')).to.equal(error.value)
-    expect(dateTime.EDATE(new Date(2011, 0, 23), 1)).to.deep.equal(new Date(2011, 1, 23))
-    expect(dateTime.EDATE(new Date(2023, 2, 27), 1)).to.deep.equal(new Date(2023, 3, 27))
-    expect(dateTime.EDATE(new Date(2023, 2, 28), 1)).to.deep.equal(new Date(2023, 3, 28))
-    expect(dateTime.EDATE(new Date(2023, 2, 29), 1)).to.deep.equal(new Date(2023, 3, 29))
-    expect(dateTime.EDATE(new Date(2023, 2, 30), 1)).to.deep.equal(new Date(2023, 3, 30))
-    expect(dateTime.EDATE(new Date(2023, 2, 31), 1)).to.deep.equal(new Date(2023, 3, 30))
-    expect(dateTime.EDATE(new Date(2023, 2, 27), -1)).to.deep.equal(new Date(2023, 1, 27))
-    expect(dateTime.EDATE(new Date(2023, 2, 28), -1)).to.deep.equal(new Date(2023, 1, 28))
-    expect(dateTime.EDATE(new Date(2023, 2, 29), -1)).to.deep.equal(new Date(2023, 1, 28))
-    expect(dateTime.EDATE(new Date(2023, 2, 30), -1)).to.deep.equal(new Date(2023, 1, 28))
-    expect(dateTime.EDATE(new Date(2023, 2, 31), -1)).to.deep.equal(new Date(2023, 1, 28))
-    expect(dateTime.EDATE(new Date(2008, 2, 31), -1)).to.deep.equal(new Date(2008, 1, 29))
-    expect(dateTime.EDATE(new Date(2100, 2, 31), -1)).to.deep.equal(new Date(2100, 1, 28))
+  describe('EDATE', () => {
+    it('should compute EDATE', () => {
+      expect(dateTime.EDATE('a', 0)).to.equal(error.value)
+      expect(dateTime.EDATE('1/1/1900', 'a')).to.equal(error.value)
+      expect(dateTime.EDATE(new Date(2011, 0, 23), 1)).to.deep.equal(new Date(2011, 1, 23))
+      expect(dateTime.EDATE(new Date(2023, 2, 27), 1)).to.deep.equal(new Date(2023, 3, 27))
+      expect(dateTime.EDATE(new Date(2023, 2, 28), 1)).to.deep.equal(new Date(2023, 3, 28))
+      expect(dateTime.EDATE(new Date(2023, 2, 29), 1)).to.deep.equal(new Date(2023, 3, 29))
+      expect(dateTime.EDATE(new Date(2023, 2, 30), 1)).to.deep.equal(new Date(2023, 3, 30))
+      expect(dateTime.EDATE(new Date(2023, 2, 31), 1)).to.deep.equal(new Date(2023, 3, 30))
+      expect(dateTime.EDATE(new Date(2023, 2, 27), -1)).to.deep.equal(new Date(2023, 1, 27))
+      expect(dateTime.EDATE(new Date(2023, 2, 28), -1)).to.deep.equal(new Date(2023, 1, 28))
+      expect(dateTime.EDATE(new Date(2023, 2, 29), -1)).to.deep.equal(new Date(2023, 1, 28))
+      expect(dateTime.EDATE(new Date(2023, 2, 30), -1)).to.deep.equal(new Date(2023, 1, 28))
+      expect(dateTime.EDATE(new Date(2023, 2, 31), -1)).to.deep.equal(new Date(2023, 1, 28))
+      expect(dateTime.EDATE(new Date(2008, 2, 31), -1)).to.deep.equal(new Date(2008, 1, 29))
+      expect(dateTime.EDATE(new Date(2100, 2, 31), -1)).to.deep.equal(new Date(2100, 1, 28))
+    })
+
+    it('should return Serial', () => {
+      useSerial()
+      expect(dateTime.EDATE(new Date(2008, 2, 31), -1)).to.equal(39507)
+    })
   })
 
-  it('EOMONTH', () => {
-    expect(dateTime.EOMONTH('a', 0)).to.equal(error.value)
-    expect(dateTime.EOMONTH('1/1/1900', 'a')).to.equal(error.value)
-    expect(dateTime.EOMONTH('1/1/2005', 12)).to.deep.equal(new Date(2006, 0, 31))
-    expect(dateTime.EOMONTH(new Date(2011, 0, 2), 1)).to.deep.equal(new Date(2011, 1, 28))
+  describe('EOMONTH', () => {
+    it('EOMONTH', () => {
+      expect(dateTime.EOMONTH('a', 0)).to.equal(error.value)
+      expect(dateTime.EOMONTH('1/1/1900', 'a')).to.equal(error.value)
+      expect(dateTime.EOMONTH('1/1/2005', 12)).to.deep.equal(new Date(2006, 0, 31))
+      expect(dateTime.EOMONTH(new Date(2011, 0, 2), 1)).to.deep.equal(new Date(2011, 1, 28))
+    })
+
+    it('should return Serial', () => {
+      useSerial()
+      expect(dateTime.EOMONTH('1/1/2005', 12)).to.equal(38748)
+    })
   })
 
   it('HOUR', () => {
@@ -185,8 +216,15 @@ describe('Date & Time', () => {
     expect(dateTime.NETWORKDAYS.INTL('11/01/2021', '11/30/2021', '1110111')).to.equal(4)
   })
 
-  it('NOW', () => {
-    expect(dateTime.NOW()).to.instanceof(Date)
+  describe('NOW', () => {
+    it('NOW', () => {
+      expect(dateTime.NOW()).to.instanceof(Date)
+    })
+
+    it('should be able to return Serial', () => {
+      useSerial()
+      expect(dateTime.NOW()).to.be.a('number')
+    })
   })
 
   it('SECOND', () => {
@@ -208,11 +246,18 @@ describe('Date & Time', () => {
     expect(dateTime.TIMEVALUE('a')).to.equal(error.value)
   })
 
-  it('TODAY', () => {
-    expect(dateTime.TODAY()).to.instanceof(Date)
-    expect(dateTime.TODAY().getHours()).to.equal(0)
-    expect(dateTime.TODAY().getMinutes()).to.equal(0)
-    expect(dateTime.TODAY().getSeconds()).to.equal(0)
+  describe('TODAY', () => {
+    it("should return today's date at the start of the day", () => {
+      expect(dateTime.TODAY()).to.instanceof(Date)
+      expect(dateTime.TODAY().getHours()).to.equal(0)
+      expect(dateTime.TODAY().getMinutes()).to.equal(0)
+      expect(dateTime.TODAY().getSeconds()).to.equal(0)
+    })
+
+    it('should return Serial', () => {
+      useSerial()
+      expect(dateTime.TODAY()).to.be.a('number')
+    })
   })
 
   it('WEEKDAY', () => {

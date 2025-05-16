@@ -4,14 +4,6 @@ import * as error from '../src/utils/error.js'
 import * as text from '../src/text.js'
 
 describe('Text', () => {
-  it('ASC', () => {
-    expect(text.ASC).to.throw('ASC is not implemented')
-  })
-
-  it('BAHTTEXT', () => {
-    expect(text.BAHTTEXT).to.throw('BAHTTEXT is not implemented')
-  })
-
   it('CHAR', () => {
     expect(text.CHAR(65)).to.equal('A')
     expect(text.CHAR(255)).to.equal('ÿ')
@@ -53,10 +45,6 @@ describe('Text', () => {
     expect(text.CONCAT(1, 'one')).to.equal('1one')
     expect(text.CONCAT(true, 'yes')).to.equal('TRUEyes')
     expect(text.CONCAT(false, 'no')).to.equal('FALSEno')
-  })
-
-  it('DBCS', () => {
-    expect(text.DBCS).to.throw('DBCS is not implemented')
   })
 
   it('DOLLAR', () => {
@@ -179,10 +167,6 @@ describe('Text', () => {
     it('should throw an error in case of text input different from string', () => {
       expect(text.NUMBERVALUE(true)).to.equal(error.na)
     })
-  })
-
-  it('PRONETIC', () => {
-    expect(text.PRONETIC).to.throw('PRONETIC is not implemented')
   })
 
   it('PROPER', () => {

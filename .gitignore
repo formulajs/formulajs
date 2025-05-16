@@ -9,4 +9,6 @@ mochawesome-report
 node_modules
 types
 
+IMPLEMENTATION_STATS.yml
+
 *.swp
