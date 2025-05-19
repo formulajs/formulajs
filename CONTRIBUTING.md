@@ -2,7 +2,7 @@
 
 ## Welcome! 👋
 
-Thank you for your interest in contributing to our crypto extensions for FormulaJS! This repository is a fork of the original [FormulaJS](https://github.com/formulajs/formulajs) library, enhanced with crypto-specific formulas for [dSheets.new](https://dsheet.new).
+Thank you for your interest in contributing to our crypto extensions for FormulaJS! This repository is a fork of the original [FormulaJS](https://github.com/formulajs/formulajs) library, enhanced with crypto-specific formulas for [dSheets.new](https://dsheets.new).
 
 ## What is This Project?
 
