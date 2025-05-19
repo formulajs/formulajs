@@ -13,6 +13,9 @@ export async function GETTXLIST(address, page, offset) {
     if (json.result.includes("Invalid API Key")) {
       return `${SERVICE_API_KEY.Etherscan}_MISSING`
     }
+    /*
+    [{blockNumber: '0x1d3d1', timeStamp: '0x5f7e4f', hash: '0x3c3c3c3c', nonce: '0x1',}]
+    */
     return json.result;
   } catch (error) {
     return "ERROR IN FETCHING"
@@ -31,22 +34,12 @@ export async function GETPRICE(token, vs_currencies) {
   try {
     const response = await fetch(url, options)
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+      const json = await response.json()
+      if (json.status.error_message.includes("API Key Missing")) {
+        return `${SERVICE_API_KEY.Coingecko}_MISSING`
+      }
     }
     const jsonResponse = await response.json()
-    /*
-    JSON RESPONSE EXAMPLE
-      {
-        "bitcoin": {
-            "usd": 103457,
-            "inr": 8854165
-        },
-        "solana": {
-            "usd": 167.56,
-            "inr": 14340.55
-        }
-    }
-    */
 
     // Free Coingecko API does not require API key, not need to handle API key error
 
@@ -57,6 +50,9 @@ export async function GETPRICE(token, vs_currencies) {
         output[key] = value;
       }
     }
+    /*
+    [{Bitcon_usd: 1, Bitcoin_eur: 1},{Ethereum_usd: 1, Ethereum_eur: 1}}]
+    */
     return [output];
   } catch (error) {
     return "ERROR IN FETCHING"
