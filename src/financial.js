@@ -1,6 +1,7 @@
 import * as error from './utils/error.js'
 import * as dateTime from './date-time.js'
 import * as utils from './utils/common.js'
+import { isDefined } from './utils/common.js'
 
 function validDate(d) {
   return d && d.getTime && !isNaN(d.getTime())
@@ -712,7 +713,9 @@ export function IRR(values, guess) {
   // Credits: algorithm inspired by Apache OpenOffice
   guess = typeof guess === 'number' ? guess : typeof guess === 'undefined' ? 0.1 : utils.parseNumber(guess)
 
-  values = utils.parseNumberArray(utils.flatten(values))
+  values = utils.flatten(values).filter(isDefined)
+
+  values = utils.parseNumberArray(values)
 
   if (utils.anyIsError(values, guess)) {
     return error.value
