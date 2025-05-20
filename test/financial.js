@@ -483,28 +483,41 @@ describe('Financial', () => {
     expect(financial.IPMT(0.1 / 12, 1, 2 * 12, 100000, 1000000, 0)).to.approximately(-833.3333333333334, 1e-9)
     expect(financial.IPMT('invalid', 1, 2 * 12, 100000, 1000000, 1)).to.equal(error.value)
   })
-  it('IRR', () => {
-    expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000])).to.approximately(0.05715142887178467, 1e-9)
-    expect(
-      financial.IRR([
-        [-75000, 12000],
-        [15000, 18000],
-        [21000, 24000]
-      ])
-    ).to.approximately(0.05715142887178467, 1e-9)
-    expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1)).to.approximately(0.05715142887178467, 1e-9)
-    expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.075)).to.approximately(
-      0.05715142887178447,
-      1e-9
-    )
-    expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.05)).to.approximately(0.05715142887178453, 1e-9)
-    expect(financial.IRR([12000, 15000, 18000, 21000, 24000])).to.equal(error.num)
-    expect(financial.IRR([-12000, -15000, -18000, -21000, -24000])).to.equal(error.num)
-    expect(financial.IRR([-12000, -15000, -18000, -21000, -24000], 'invalid')).to.equal(error.value)
-    expect(financial.IRR([-9765000, -24338874, -3354506, 814300, 1595562, 1975118, 1688159, 391944])).to.approximately(
-      -0.33923419058193316,
-      1e-9
-    )
+  describe('IRR', () => {
+    it('IRR', () => {
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000])).to.approximately(0.05715142887178467, 1e-9)
+      expect(
+        financial.IRR([
+          [-75000, 12000],
+          [15000, 18000],
+          [21000, 24000]
+        ])
+      ).to.approximately(0.05715142887178467, 1e-9)
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.1)).to.approximately(
+        0.05715142887178467,
+        1e-9
+      )
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.075)).to.approximately(
+        0.05715142887178447,
+        1e-9
+      )
+      expect(financial.IRR([-75000, 12000, 15000, 18000, 21000, 24000], 0.05)).to.approximately(
+        0.05715142887178453,
+        1e-9
+      )
+      expect(financial.IRR([12000, 15000, 18000, 21000, 24000])).to.equal(error.num)
+      expect(financial.IRR([-12000, -15000, -18000, -21000, -24000])).to.equal(error.num)
+      expect(financial.IRR([-12000, -15000, -18000, -21000, -24000], 'invalid')).to.equal(error.value)
+      expect(
+        financial.IRR([-9765000, -24338874, -3354506, 814300, 1595562, 1975118, 1688159, 391944])
+      ).to.approximately(-0.33923419058193316, 1e-9)
+    })
+
+    it('should escape undefined value', () => {
+      expect(financial.IRR([-4500, 3045, 2371])).to.approximately(0.13918184162670671, 1e-9)
+      expect(financial.IRR([-4500, null, 3045, null, 2371])).to.approximately(0.13918184162670671, 1e-9)
+      expect(financial.IRR([[-4500], [null], [3045], [null], [2371]])).to.approximately(0.13918184162670671, 1e-9)
+    })
   })
 
   it('ISPMT', () => {
