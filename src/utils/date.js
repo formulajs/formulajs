@@ -1,7 +1,5 @@
 export let returnSerial = false
 
-const d1900 = new Date(Date.UTC(1900, 0, 1))
-
 export function useSerial() {
   returnSerial = true
 }
@@ -40,6 +38,8 @@ export function serialToDate(serial) {
 }
 
 export function dateToSerial(date) {
+  const d1900 = new Date(1900, 0, 1)
+
   const addOn = date > -2203891200000 ? 2 : 1
 
   return Math.ceil((date - d1900) / 86400000) + addOn
