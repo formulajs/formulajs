@@ -427,6 +427,8 @@ describe('Engineering', () => {
   it('IMSUM', () => {
     expect(engineering.IMSUM('3+4i', '5-3i')).to.equal('8+i')
     expect(engineering.IMSUM('a', '5+3i')).to.equal(error.value)
+    expect(engineering.IMSUM(1, 2, 3)).to.equal('6')
+    expect(engineering.IMSUM(1, '2i', 3)).to.equal('4+2i')
     expect(engineering.IMSUM()).to.equal(error.value)
   })
 
