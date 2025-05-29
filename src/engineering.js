@@ -122,7 +122,7 @@ export function BIN2DEC(number) {
  * Category: Engineering
  *
  * @param {*} number The binary number you want to convert. Number cannot contain more than 10 characters (10 bits). The most significant bit of number is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, BIN2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, BIN2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function BIN2HEX(number, places) {
@@ -169,7 +169,7 @@ export function BIN2HEX(number, places) {
  * Category: Engineering
  *
  * @param {*} number The binary number you want to convert. Number cannot contain more than 10 characters (10 bits). The most significant bit of number is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, BIN2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, BIN2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function BIN2OCT(number, places) {
@@ -408,7 +408,7 @@ export function BITXOR(number1, number2) {
  *
  * @param {*} real_num The real coefficient of the complex number.
  * @param {*} i_num The imaginary coefficient of the complex number.
- * @param {*} suffix Optional. The suffix for the imaginary component of the complex number. If omitted, suffix is assumed to be "i".
+ * @param {*} [suffix] Optional. The suffix for the imaginary component of the complex number. If omitted, suffix is assumed to be "i".
  * @returns
  */
 export function COMPLEX(real_num, i_num, suffix) {
@@ -746,7 +746,7 @@ export function CONVERT(number, from_unit, to_unit) {
  * Category: Engineering
  *
  * @param {*} number The decimal integer you want to convert. If number is negative, valid place values are ignored and DEC2BIN returns a 10-character (10-bit) binary number in which the most significant bit is the sign bit. The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, DEC2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function DEC2BIN(number, places) {
@@ -797,7 +797,7 @@ export function DEC2BIN(number, places) {
  * Category: Engineering
  *
  * @param {*} number The decimal integer you want to convert. If number is negative, places is ignored and DEC2HEX returns a 10-character (40-bit) hexadecimal number in which the most significant bit is the sign bit. The remaining 39 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, DEC2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function DEC2HEX(number, places) {
@@ -848,7 +848,7 @@ export function DEC2HEX(number, places) {
  * Category: Engineering
  *
  * @param {*} number The decimal integer you want to convert. If number is negative, places is ignored and DEC2OCT returns a 10-character (30-bit) octal number in which the most significant bit is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, DEC2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, DEC2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function DEC2OCT(number, places) {
@@ -899,7 +899,7 @@ export function DEC2OCT(number, places) {
  * Category: Engineering
  *
  * @param {*} number1 The first number.
- * @param {*} number2 Optional. The second number. If omitted, number2 is assumed to be zero.
+ * @param {*} [number2] Optional. The second number. If omitted, number2 is assumed to be zero.
  * @returns
  */
 export function DELTA(number1, number2) {
@@ -923,7 +923,7 @@ export function DELTA(number1, number2) {
  * Category: Engineering
  *
  * @param {*} lower_limit The lower bound for integrating ERF.
- * @param {*} upper_limit Optional. The upper bound for integrating ERF. If omitted, ERF integrates between zero and lower_limit.
+ * @param {*} [upper_limit] Optional. The upper bound for integrating ERF. If omitted, ERF integrates between zero and lower_limit.
  * @returns
  */
 export function ERF(lower_limit, upper_limit) {
@@ -963,7 +963,7 @@ export function ERFC(x) {
  * Category: Engineering
  *
  * @param {*} number The value to test against step.
- * @param {*} step Optional. The threshold value. If you omit a value for step, GESTEP uses zero.
+ * @param {*} [step] Optional. The threshold value. If you omit a value for step, GESTEP uses zero.
  * @returns
  */
 export function GESTEP(number, step) {
@@ -984,7 +984,7 @@ export function GESTEP(number, step) {
  * Category: Engineering
  *
  * @param {*} number The hexadecimal number you want to convert. Number cannot contain more than 10 characters. The most significant bit of number is the sign bit (40th bit from the right). The remaining 9 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, HEX2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, HEX2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function HEX2BIN(number, places) {
@@ -1061,7 +1061,7 @@ export function HEX2DEC(number) {
  * Category: Engineering
  *
  * @param {*} number The hexadecimal number you want to convert. Number cannot contain more than 10 characters. The most significant bit of number is the sign bit. The remaining 39 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, HEX2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, HEX2OCT uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function HEX2OCT(number, places) {
@@ -1921,7 +1921,7 @@ export function IMTAN(inumber) {
  * Category: Engineering
  *
  * @param {*} number The octal number you want to convert. Number may not contain more than 10 characters. The most significant bit of number is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, OCT2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, OCT2BIN uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function OCT2BIN(number, places) {
@@ -1998,7 +1998,7 @@ export function OCT2DEC(number) {
  * Category: Engineering
  *
  * @param {*} number The octal number you want to convert. Number may not contain more than 10 octal characters (30 bits). The most significant bit of number is the sign bit. The remaining 29 bits are magnitude bits. Negative numbers are represented using two's-complement notation.
- * @param {*} places Optional. The number of characters to use. If places is omitted, OCT2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
+ * @param {*} [places] Optional. The number of characters to use. If places is omitted, OCT2HEX uses the minimum number of characters necessary. Places is useful for padding the return value with leading 0s (zeros).
  * @returns
  */
 export function OCT2HEX(number, places) {

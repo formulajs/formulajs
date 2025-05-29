@@ -125,7 +125,7 @@ export function ACOTH(number) {
  * @param {*} function_num A number 1 to 19 that specifies which function to use.
  * @param {*} options A numerical value that determines which values to ignore in the evaluation range for the function. Note: The function will not ignore hidden rows, nested subtotals or nested aggregates if the array argument includes a calculation, for example: =AGGREGATE(14,3,A1:A100*(A1:A100>0),1)
  * @param {*} ref1 The first numeric argument for functions that take multiple numeric arguments for which you want the aggregate value.
- * @param {*} ref2 Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of values for which you want the aggregate value. Ref2 is a second argument that is required for certain functions.
+ * @param {*} [ref2] Optional. Numeric arguments 2 to 253 for which you want the aggregate value. For functions that take an array, ref1 is an array, an array formula, or a reference to a range of values for which you want the aggregate value. Ref2 is a second argument that is required for certain functions.
  * @returns
  */
 export function AGGREGATE(function_num, options, ref1, ref2) {
@@ -334,7 +334,7 @@ export function ATANH(number) {
  *
  * @param {*} number The number that you want to convert. Must be an integer greater than or equal to 0 and less than 2^53.
  * @param {*} radix The base radix that you want to convert the number into. Must be an integer greater than or equal to 2 and less than or equal to 36.
- * @param {*} min_length Optional. The minimum length of the returned string. Must be an integer greater than or equal to 0.
+ * @param {*} [min_length] Optional. The minimum length of the returned string. Must be an integer greater than or equal to 0.
  * @returns
  */
 export function BASE(number, radix, min_length) {
@@ -363,7 +363,7 @@ export function BASE(number, radix, min_length) {
  *
  * @param {*} number The value you want to round.
  * @param {*} significance The multiple to which you want to round.
- * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
+ * @param {*} [mode] Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
 export function CEILING(number, significance) {
@@ -393,8 +393,8 @@ export function CEILING(number, significance) {
  * Category: Math and trigonometry
  *
  * @param {*} number The value you want to round.
- * @param {*} significance Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
- * @param {*} mode Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
+ * @param {*} [significance] Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
+ * @param {*} [mode] Optional. For negative numbers, controls whether Number is rounded toward or away from zero.
  * @returns
  */
 CEILING.MATH = (number, significance, mode = 0) => {
@@ -433,7 +433,7 @@ CEILING.MATH = (number, significance, mode = 0) => {
  * Category: Math and trigonometry
  *
  * @param {*} number The value you want to round.
- * @param {*} significance Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
+ * @param {*} [significance] Optional. This is the number of significant digits after the decimal point to which number is to be rounded.
  * @returns
  */
 CEILING.PRECISE = (number, significance) => {
@@ -802,8 +802,8 @@ export function FLOOR(number, significance) {
  * Category: Math and trigonometry
  *
  * @param {*} number The number to be rounded down.
- * @param {*} significance Optional. The multiple to which you want to round.
- * @param {*} mode Optional. The direction (toward or away from 0) to round negative numbers.
+ * @param {*} [significance] Optional. The multiple to which you want to round.
+ * @param {*} [mode] Optional. The direction (toward or away from 0) to round negative numbers.
  * @returns
  */
 FLOOR.MATH = (number, significance = 1, mode = 0) => {
@@ -840,7 +840,7 @@ FLOOR.MATH = (number, significance = 1, mode = 0) => {
  * Category: Math and trigonometry
  *
  * @param {*} number The value to be rounded.
- * @param {*} significance Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
+ * @param {*} [significance] Optional. The multiple to which number is to be rounded. If significance is omitted, its default value is 1.
  * @returns
  */
 FLOOR.PRECISE = (number, significance) => {
@@ -977,7 +977,7 @@ export function LN(number) {
  * Category: Math and trigonometry
  *
  * @param {*} number The positive real number for which you want the logarithm.
- * @param {*} base Optional. The base of the logarithm. If base is omitted, it is assumed to be 10.
+ * @param {*} [base] Optional. The base of the logarithm. If base is omitted, it is assumed to be 10.
  * @returns
  */
 export function LOG(number, base) {
@@ -1730,7 +1730,7 @@ export function SUM() {
  *
  * @param {*} range The range of values that you want evaluated by criteria. Cells in each range must be numbers or names, arrays, or references that contain numbers. Blank and text values are ignored.
  * @param {*} criteria The criteria in the form of a number, expression, a value reference, text, or a function that defines which values will be added.
- * @param {*} sum_range Optional. The actual values to add, if you want to add values other than those specified in the range argument. If the sum_range argument is omitted, Excel adds the values that are specified in the range argument (the same values to which the criteria is applied). Sum_range should be the same size and shape as range. If it isn't, performance may suffer, and the formula will sum a range of values that starts with the first value in sum_range but has the same dimensions as range.
+ * @param {*} [sum_range] Optional. The actual values to add, if you want to add values other than those specified in the range argument. If the sum_range argument is omitted, Excel adds the values that are specified in the range argument (the same values to which the criteria is applied). Sum_range should be the same size and shape as range. If it isn't, performance may suffer, and the formula will sum a range of values that starts with the first value in sum_range but has the same dimensions as range.
  * @returns
  */
 export function SUMIF(range, criteria, sum_range) {
@@ -1997,7 +1997,7 @@ export function TANH(number) {
  * Category: Math and trigonometry
  *
  * @param {*} number The number you want to truncate.
- * @param {*} num_digits Optional. A number specifying the precision of the truncation. The default value for num_digits is 0 (zero).
+ * @param {*} [num_digits] Optional. A number specifying the precision of the truncation. The default value for num_digits is 0 (zero).
  * @returns
  */
 export function TRUNC(number, num_digits) {

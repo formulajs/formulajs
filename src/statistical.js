@@ -139,7 +139,7 @@ export function AVERAGEA() {
  *
  * @param {*} range One or more values to average, including numbers or names, arrays, or references that contain numbers.
  * @param {*} criteria The criteria in the form of a number, expression, value reference, or text that defines which values are averaged.
- * @param {*} average_range Optional. The actual set of values to average. If omitted, range is used.
+ * @param {*} [average_range] Optional. The actual set of values to average. If omitted, range is used.
  * @returns
  */
 export function AVERAGEIF(range, criteria, average_range) {
@@ -213,8 +213,8 @@ export const BETA = {}
  * @param {*} alpha A parameter of the distribution.
  * @param {*} beta A parameter of the distribution.
  * @param {*} cumulative A logical value that determines the form of the function. If cumulative is TRUE, BETA.DIST returns the cumulative distribution function; if FALSE, it returns the probability density function.
- * @param {*} a Optional. A lower bound to the interval of x.
- * @param {*} b Optional. An upper bound to the interval of x.
+ * @param {*} [a] Optional. A lower bound to the interval of x.
+ * @param {*} [b] Optional. An upper bound to the interval of x.
  * @returns
  */
 BETA.DIST = function (x, alpha, beta, cumulative, a, b) {
@@ -248,8 +248,8 @@ BETA.DIST = function (x, alpha, beta, cumulative, a, b) {
  * @param {*} probability A probability associated with the beta distribution.
  * @param {*} alpha A parameter of the distribution.
  * @param {*} beta A parameter the distribution.
- * @param {*} a Optional. A lower bound to the interval of x.
- * @param {*} b Optional. An upper bound to the interval of x.
+ * @param {*} [a] Optional. A lower bound to the interval of x.
+ * @param {*} [b] Optional. An upper bound to the interval of x.
  * @returns
  */
 BETA.INV = (probability, alpha, beta, a, b) => {
@@ -304,7 +304,7 @@ BINOM.DIST = (number_s, trials, probability_s, cumulative) => {
  * @param {*} trials The number of independent trials. Must be greater than or equal to 0.
  * @param {*} probability_s The probability of success in each trial. Must be greater than or equal to 0 and less than or equal to 1.
  * @param {*} number_s The number of successes in trials. Must be greater than or equal to 0 and less than or equal to Trials.
- * @param {*} number_s2 Optional. If provided, returns the probability that the number of successful trials will fall between Number_s and number_s2. Must be greater than or equal to Number_s and less than or equal to Trials.
+ * @param {*} [number_s2] Optional. If provided, returns the probability that the number of successful trials will fall between Number_s and number_s2. Must be greater than or equal to Number_s and less than or equal to Trials.
  * @returns
  */
 BINOM.DIST.RANGE = (trials, probability_s, number_s, number_s2) => {
@@ -1277,14 +1277,14 @@ export function GEOMEAN() {
  - If the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable.
  - If the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
  - If any of the numbers in known_y's is 0 or negative, GROWTH returns the #NUM! error value.
- * @param {*} known_x Optional. An optional set of x-values that you may already know in the relationship y = b*m^x.
+ * @param {*} [known_x] Optional. An optional set of x-values that you may already know in the relationship y = b*m^x.
  - The array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column).
  - If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
- * @param {*} new_x Optional. Are new x-values for which you want GROWTH to return corresponding y-values.
+ * @param {*} [new_x] Optional. Are new x-values for which you want GROWTH to return corresponding y-values.
  - new_x's must include a column (or row) for each independent variable, just as known_x's does. So, if known_y's is in a single column, known_x's and new_x's must have the same number of columns. If known_y's is in a single row, known_x's and new_x's must have the same number of rows.
  - If new_x's is omitted, it is assumed to be the same as known_x's.
  - If both known_x's and new_x's are omitted, they are assumed to be the array {1,2,3,...} that is the same size as known_y's.
- * @param {*} use_const Optional. A logical value specifying whether to force the constant b to equal 1. If const is TRUE or omitted, b is calculated normally. If const is FALSE, b is set equal to 1 and the m-values are adjusted so that y = m^x.
+ * @param {*} [use_const] Optional. A logical value specifying whether to force the constant b to equal 1. If const is TRUE or omitted, b is calculated normally. If const is FALSE, b is set equal to 1 and the m-values are adjusted so that y = m^x.
  - If const is TRUE or omitted, b is calculated normally.
  - If const is FALSE, b is set equal to 1 and the m-values are adjusted so that y = m^x.
  * @returns
@@ -1528,7 +1528,7 @@ export function LARGE(array, k) {
  * @param {*} known_y The set of y-values that you already know in the relationship y = mx + b.
  - If the range of known_y's is in a single column, each column of known_x's is interpreted as a separate variable.
  - If the range of known_y's is contained in a single row, each row of known_x's is interpreted as a separate variable.
- * @param {*} known_x Optional. A set of x-values that you may already know in the relationship y = mx + b.
+ * @param {*} [known_x] Optional. A set of x-values that you may already know in the relationship y = mx + b.
  - The range of known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a vector (that is, a range with a height of one row or a width of one column).
  - If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
  * @returns
@@ -1571,7 +1571,7 @@ export function LINEST(known_y, known_x) {
  * @param {*} known_y The set of y-values you already know in the relationship y = b*m^x.
  - If the array known_y's is in a single column, then each column of known_x's is interpreted as a separate variable.
  - If the array known_y's is in a single row, then each row of known_x's is interpreted as a separate variable.
- * @param {*} known_x Optional. An optional set of x-values that you may already know in the relationship y = b*m^x.
+ * @param {*} [known_x] Optional. An optional set of x-values that you may already know in the relationship y = b*m^x.
  - The array known_x's can include one or more sets of variables. If only one variable is used, known_y's and known_x's can be ranges of any shape, as long as they have equal dimensions. If more than one variable is used, known_y's must be a range of values with a height of one row or a width of one column (which is also known as a vector).
  - If known_x's is omitted, it is assumed to be the array {1,2,3,...} that is the same size as known_y's.
  * @returns
@@ -2066,7 +2066,7 @@ export const PERCENTRANK = {}
  *
  * @param {*} array The array or range of data with numeric values that defines relative standing
  * @param {*} x The value for which you want to know the rank.
- * @param {*} significance Optional. A value that identifies the number of significant digits for the returned percentage value. If omitted, PERCENTRANK.EXC uses three digits (0.xxx).
+ * @param {*} [significance] Optional. A value that identifies the number of significant digits for the returned percentage value. If omitted, PERCENTRANK.EXC uses three digits (0.xxx).
  * @returns
  */
 PERCENTRANK.EXC = (array, x, significance) => {
@@ -2112,7 +2112,7 @@ PERCENTRANK.EXC = (array, x, significance) => {
  *
  * @param {*} array The array or range of data with numeric values that defines relative standing.
  * @param {*} x The value for which you want to know the rank.
- * @param {*} significance Optional. A value that identifies the number of significant digits for the returned percentage value. If omitted, PERCENTRANK.INC uses three digits (0.xxx).
+ * @param {*} [significance] Optional. A value that identifies the number of significant digits for the returned percentage value. If omitted, PERCENTRANK.INC uses three digits (0.xxx).
  * @returns
  */
 PERCENTRANK.INC = (array, x, significance) => {
@@ -2239,8 +2239,8 @@ POISSON.DIST = (x, mean, cumulative) => {
  *
  * @param {*} x_range The range of numeric values of x with which there are associated probabilities.
  * @param {*} prob_range A set of probabilities associated with values in x_range.
- * @param {*} lower_limit Optional. The lower bound on the value for which you want a probability.
- * @param {*} upper_limit Optional. The optional upper bound on the value for which you want a probability.
+ * @param {*} [lower_limit] Optional. The lower bound on the value for which you want a probability.
+ * @param {*} [upper_limit] Optional. The optional upper bound on the value for which you want a probability.
  * @returns
  */
 export function PROB(x_range, prob_range, lower_limit, upper_limit) {
@@ -2346,7 +2346,7 @@ export const RANK = {}
  *
  * @param {*} number The number whose rank you want to find.
  * @param {*} ref An array of, or a reference to, a list of numbers. Nonnumeric values in Ref are ignored.
- * @param {*} order Optional. A number specifying how to rank number.
+ * @param {*} [order] Optional. A number specifying how to rank number.
  * @returns
  */
 RANK.AVG = (number, ref, order) => {
@@ -2384,7 +2384,7 @@ RANK.AVG = (number, ref, order) => {
  *
  * @param {*} number The number whose rank you want to find.
  * @param {*} ref An array of, or a reference to, a list of numbers. Non-numeric values in Ref are ignored.
- * @param {*} order Optional. A number specifying how to rank number.
+ * @param {*} [order] Optional. A number specifying how to rank number.
  * @returns
  */
 RANK.EQ = (number, ref, order) => {
@@ -2856,7 +2856,7 @@ export { T }
  *
  * @param {*} known_ys The set of y-values you already know in the relationship y = mx + b
  * @param {*} known_xs An optional set of x-values that you may already know in the relationship y = mx + b
- * @param {*} new_xs Optional. New x-values for which you want TREND to return corresponding y-values.
+ * @param {*} [new_xs] Optional. New x-values for which you want TREND to return corresponding y-values.
  * @returns
  */
 export function TREND(known_ys, known_xs, new_xs) {
@@ -3082,7 +3082,7 @@ export const Z = {}
  *
  * @param {*} array The array or range of data against which to test x.
  * @param {*} x The value to test.
- * @param {*} sigma Optional. The population (known) standard deviation. If omitted, the sample standard deviation is used.
+ * @param {*} [sigma] Optional. The population (known) standard deviation. If omitted, the sample standard deviation is used.
  * @returns
  */
 Z.TEST = (array, x, sigma) => {

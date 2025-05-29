@@ -104,7 +104,7 @@ export const CONCAT = CONCATENATE
  * Category: Text
  *
  * @param {*} number A number, a reference to a value containing a number, or a formula that evaluates to a number.
- * @param {*} decimals Optional. The number of digits to the right of the decimal point. If this is negative, the number is rounded to the left of the decimal point. If you omit decimals, it is assumed to be 2.
+ * @param {*} [decimals] Optional. The number of digits to the right of the decimal point. If this is negative, the number is rounded to the left of the decimal point. If you omit decimals, it is assumed to be 2.
  * @returns
  */
 export function DOLLAR(number, decimals = 2) {
@@ -164,7 +164,7 @@ export function EXACT(text1, text2) {
  *
  * @param {*} find_text The text you want to find.
  * @param {*} within_text The text containing the text you want to find.
- * @param {*} start_num Optional. Specifies the character at which to start the search. The first character in within_text is character number 1. If you omit start_num, it is assumed to be 1.
+ * @param {*} [start_num] Optional. Specifies the character at which to start the search. The first character in within_text is character number 1. If you omit start_num, it is assumed to be 1.
  * @returns
  */
 export function FIND(find_text, within_text, start_num) {
@@ -190,8 +190,8 @@ export function FIND(find_text, within_text, start_num) {
  * Category: Text
  *
  * @param {*} number The number you want to round and convert to text.
- * @param {*} decimals Optional. The number of digits to the right of the decimal point.
- * @param {*} no_commas Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
+ * @param {*} [decimals] Optional. The number of digits to the right of the decimal point.
+ * @param {*} [no_commas] Optional. A logical value that, if TRUE, prevents FIXED from including commas in the returned text.
  * @returns
  */
 export function FIXED(number, decimals = 2, no_commas = false) {
@@ -229,7 +229,7 @@ export function FIXED(number, decimals = 2, no_commas = false) {
  * Category: Text
  *
  * @param {*} text The text string that contains the characters you want to extract.
- * @param {*} num_chars Optional. Specifies the number of characters you want LEFT to extract.
+ * @param {*} [num_chars] Optional. Specifies the number of characters you want LEFT to extract.
  * @returns
  */
 export function LEFT(text, num_chars) {
@@ -333,8 +333,8 @@ export function MID(text, start_num, num_chars) {
  * Category: Text
  *
  * @param {*} text The text to convert to a number.
- * @param {*} decimal_separator Optional. The character used to separate the integer and fractional part of the result.
- * @param {*} group_separator Optional. The character used to separate groupings of numbers, such as thousands from hundreds and millions from thousands.
+ * @param {*} [decimal_separator] Optional. The character used to separate the integer and fractional part of the result.
+ * @param {*} [group_separator] Optional. The character used to separate groupings of numbers, such as thousands from hundreds and millions from thousands.
  * @returns
  */
 export function NUMBERVALUE(text, decimal_separator, group_separator) {
@@ -430,7 +430,7 @@ export function REPT(text, number_times) {
  * Category: Text
  *
  * @param {*} text The text string containing the characters you want to extract.
- * @param {*} num_chars Optional. Specifies the number of characters you want RIGHT to extract.
+ * @param {*} [num_chars] Optional. Specifies the number of characters you want RIGHT to extract.
  * @returns
  */
 export function RIGHT(text, num_chars) {
@@ -458,7 +458,7 @@ export function RIGHT(text, num_chars) {
  *
  * @param {*} find_text The text that you want to find.
  * @param {*} within_text The text in which you want to search for the value of the find_text argument.
- * @param {*} start_num Optional. The character number in the within_text argument at which you want to start searching.
+ * @param {*} [start_num] Optional. The character number in the within_text argument at which you want to start searching.
  * @returns
  */
 export function SEARCH(find_text, within_text, start_num) {
@@ -482,7 +482,7 @@ export function SEARCH(find_text, within_text, start_num) {
  * @param {*} text The text or the reference to a value containing text for which you want to substitute characters.
  * @param {*} old_text The text you want to replace.
  * @param {*} new_text The text you want to replace old_text with.
- * @param {*} instance_num Optional. Specifies which occurrence of old_text you want to replace with new_text. If you specify instance_num, only that instance of old_text is replaced. Otherwise, every occurrence of old_text in text is changed to new_text.
+ * @param {*} [instance_num] Optional. Specifies which occurrence of old_text you want to replace with new_text. If you specify instance_num, only that instance of old_text is replaced. Otherwise, every occurrence of old_text in text is changed to new_text.
  * @returns
  */
 export function SUBSTITUTE(text, old_text, new_text, instance_num) {

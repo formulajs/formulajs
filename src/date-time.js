@@ -258,7 +258,7 @@ export function DAYS(end_date, start_date) {
  *
  * @param {*} start_date A date that represents the start date. If start_date occurs after end_date, the DAYS360 function returns a negative number.
  * @param {*} end_date A date that represents the end date.
- * @param {*} method Optional. A logical value that specifies whether to use the U.S. or European method in the calculation.
+ * @param {*} [method] Optional. A logical value that specifies whether to use the U.S. or European method in the calculation.
  * @returns
  */
 export function DAYS360(start_date, end_date, method) {
@@ -461,7 +461,7 @@ export function MONTH(serial_number) {
  *
  * @param {*} start_date A date that represents the start date.
  * @param {*} end_date A date that represents the end date.
- * @param {*} holidays Optional. An optional range of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contains the dates or an array constant of the serial numbers that represent the dates.
+ * @param {*} [holidays] Optional. An optional range of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contains the dates or an array constant of the serial numbers that represent the dates.
  * @returns
  */
 export function NETWORKDAYS(start_date, end_date, holidays) {
@@ -475,8 +475,8 @@ export function NETWORKDAYS(start_date, end_date, holidays) {
  *
  * @param {*} start_date The date for from which the difference is to be computed. The start_date can be earlier than, the same as, or later than the end_date.
  * @param {*} end_date The date for to which the difference is to be computed.
- * @param {*} weekend Optional. Indicates the days of the week that are weekend days and are not included in the number of whole working days between start_date and end_date. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
- * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
+ * @param {*} [weekend] Optional. Indicates the days of the week that are weekend days and are not included in the number of whole working days between start_date and end_date. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
+ * @param {*} [holidays] Optional. An optional set of one or more dates that are to be excluded from the working day calendar. holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
  * @returns
  */
 NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
@@ -654,7 +654,7 @@ export function TODAY() {
  * Category: Date and time
  *
  * @param {*} serial_number A sequential number that represents the date of the day you are trying to find.
- * @param {*} return_type Optional. A number that determines the type of return value.
+ * @param {*} [return_type] Optional. A number that determines the type of return value.
  * @returns
  */
 export function WEEKDAY(serial_number, return_type) {
@@ -679,7 +679,7 @@ export function WEEKDAY(serial_number, return_type) {
  * Category: Date and time
  *
  * @param {*} serial_number A date within the week.
- * @param {*} return_type Optional. A number that determines on which day the week begins. The default is 1.
+ * @param {*} [return_type] Optional. A number that determines on which day the week begins. The default is 1.
  * @returns
  */
 export function WEEKNUM(serial_number, return_type) {
@@ -712,7 +712,7 @@ export function WEEKNUM(serial_number, return_type) {
  *
  * @param {*} start_date A date that represents the start date.
  * @param {*} days The number of nonweekend and nonholiday days before or after start_date. A positive value for days yields a future date; a negative value yields a past date.
- * @param {*} holidays Optional. An optional list of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contain the dates or an array constant of the serial numbers that represent the dates.
+ * @param {*} [holidays] Optional. An optional list of one or more dates to exclude from the working calendar, such as state and federal holidays and floating holidays. The list can be either a range of values that contain the dates or an array constant of the serial numbers that represent the dates.
  * @returns
  */
 export function WORKDAY(start_date, days, holidays) {
@@ -726,8 +726,8 @@ export function WORKDAY(start_date, days, holidays) {
  *
  * @param {*} start_date The start date, truncated to integer.
  * @param {*} days The number of workdays before or after the start_date. A positive value yields a future date; a negative value yields a past date; a zero value yields the start_date. Day-offset is truncated to an integer.
- * @param {*} weekend Optional. Indicates the days of the week that are weekend days and are not considered working days. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
- * @param {*} holidays Optional. An optional set of one or more dates that are to be excluded from the working day calendar. Holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
+ * @param {*} [weekend] Optional. Indicates the days of the week that are weekend days and are not considered working days. Weekend is a weekend number or string that specifies when weekends occur. Weekend number values indicate the following weekend days:
+ * @param {*} [holidays] Optional. An optional set of one or more dates that are to be excluded from the working day calendar. Holidays shall be a range of values that contain the dates, or an array constant of the serial values that represent those dates. The ordering of dates or serial values in holidays can be arbitrary.
  * @returns
  */
 WORKDAY.INTL = (start_date, days, weekend, holidays) => {
@@ -840,7 +840,7 @@ function daysBetween(start_date, end_date) {
  *
  * @param {*} start_date A date that represents the start date.
  * @param {*} end_date A date that represents the end date.
- * @param {*} basis Optional. The type of day count basis to use.
+ * @param {*} [basis] Optional. The type of day count basis to use.
  * @returns
  */
 export function YEARFRAC(start_date, end_date, basis) {

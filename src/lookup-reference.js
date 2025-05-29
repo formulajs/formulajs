@@ -94,7 +94,7 @@ export function COLUMNS(array) {
  * @param {*} lookup_value The value to be found in the first row of the table. Lookup_value can be a value, a reference, or a text string.
  * @param {*} table_array A table of information in which data is looked up. Use a reference to a range or a range name.
  * @param {*} row_index_num The row number in table_array from which the matching value will be returned. A row_index_num of 1 returns the first row value in table_array, a row_index_num of 2 returns the second row value in table_array, and so on. If row_index_num is less than 1, HLOOKUP returns the #VALUE! error value; if row_index_num is greater than the number of rows on table_array, HLOOKUP returns the #REF! error value.
- * @param {*} range_lookup Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
+ * @param {*} [range_lookup] Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
  * @returns
  */
 export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) {
@@ -110,7 +110,7 @@ export function HLOOKUP(lookup_value, table_array, row_index_num, range_lookup) 
  - If array contains only one row or column, the corresponding row_num or column_num argument is optional.
  - If array has more than one row and more than one column, and only row_num or column_num is used, INDEX returns an array of the entire row or column in array.
  * @param {*} row_num Required, unless column_num is present. Selects the row in array from which to return a value. If row_num is omitted, column_num is required.
- * @param {*} column_num Optional. Selects the column in array from which to return a value. If column_num is omitted, row_num is required.
+ * @param {*} [column_num] Optional. Selects the column in array from which to return a value. If column_num is omitted, row_num is required.
  * @returns
  */
 export function INDEX(array, row_num, column_num) {
@@ -156,7 +156,7 @@ export function INDEX(array, row_num, column_num) {
  - If LOOKUP can't find the value of lookup_value, it uses the largest value in the array that is less than or equal to lookup_value.
  - If the value of lookup_value is smaller than the smallest value in the first row or column (depending on the array dimensions), LOOKUP returns the #N/A error value.
  * @param {*} array A range of values that contains text, numbers, or logical values that you want to compare with lookup_value. The array form of LOOKUP is very similar to the HLOOKUP and VLOOKUP functions. The difference is that HLOOKUP searches for the value of lookup_value in the first row, VLOOKUP searches in the first column, and LOOKUP searches according to the dimensions of array.
-* @param {*} result_array Optional. A range that contains only one row or column. The result_array argument must be the same size as lookup_value. It has to be the same size.
+* @param {*} [result_array] Optional. A range that contains only one row or column. The result_array argument must be the same size as lookup_value. It has to be the same size.
  * @returns
  */
 export function LOOKUP(lookup_value, array, result_array) {
@@ -189,7 +189,7 @@ export function LOOKUP(lookup_value, array, result_array) {
  *
  * @param {*} lookup_value The value that you want to match in lookup_array. For example, when you look up someone's number in a telephone book, you are using the person's name as the lookup value, but the telephone number is the value you want.The lookup_value argument can be a value (number, text, or logical value) or a value reference to a number, text, or logical value.
  * @param {*} lookup_array The range of values being searched.
- * @param {*} match_type Optional. The number -1, 0, or 1. The match_type argument specifies how Excel matches lookup_value with values in lookup_array. The default value for this argument is 1.
+ * @param {*} [match_type] Optional. The number -1, 0, or 1. The match_type argument specifies how Excel matches lookup_value with values in lookup_array. The default value for this argument is 1.
  * @returns
  */
 export function MATCH(lookup_value, lookup_array, match_type) {
@@ -297,9 +297,9 @@ export function ROWS(array) {
  * Category: Lookup and reference
  *
  * @param {*} array Array to sort
- * @param {*} sort_index Optional. A number indicating the row or column to sort by
- * @param {*} sort_order Optional. A number indicating the desired sort order; 1 for ascending order (default), -1 for descending order
- * @param {*} by_col Optional. A logical value indicating the desired sort direction; FALSE to sort by row (default), TRUE to sort by column
+ * @param {*} [sort_index] Optional. A number indicating the row or column to sort by
+ * @param {*} [sort_order] Optional. A number indicating the desired sort order; 1 for ascending order (default), -1 for descending order
+ * @param {*} [by_col] Optional. A logical value indicating the desired sort direction; FALSE to sort by row (default), TRUE to sort by column
  * @returns
  */
 export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
@@ -403,7 +403,7 @@ export function UNIQUE() {
  * @param {*} lookup_value The value to be found in the first row of the table. Lookup_value can be a value, a reference, or a text string.
  * @param {*} table_array A table of information in which data is looked up. Use a reference to a range or a range name.
  * @param {*} col_index_num The row number in table_array from which the matching value will be returned. A row_index_num of 1 returns the first row value in table_array, a row_index_num of 2 returns the second row value in table_array, and so on. If row_index_num is less than 1, HLOOKUP returns the #VALUE! error value; if row_index_num is greater than the number of rows on table_array, HLOOKUP returns the #REF! error value.
- * @param {*} range_lookup Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
+ * @param {*} [range_lookup] Optional. A logical value that specifies whether you want HLOOKUP to find an exact match or an approximate match. If TRUE or omitted, an approximate match is returned. In other words, if an exact match is not found, the next largest value that is less than lookup_value is returned. If FALSE, HLOOKUP will find an exact match. If one is not found, the error value #N/A is returned.
  * @returns
  */
 export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) {

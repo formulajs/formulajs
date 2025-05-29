@@ -61,8 +61,8 @@ function validateBasis(basis) {
  * @param {*} rate The security's annual coupon rate.
  * @param {*} par The security's par value. If you omit par, ACCRINT uses $1,000.
  * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
- * @param {*} calc_method Optional. Not implemented in formulajs. A logical value that specifies the way to calculate the total accrued interest when the date of settlement is later than the date of first_interest. A value of TRUE (1) returns the total accrued interest from issue to settlement. A value of FALSE (0) returns the accrued interest from first_interest to settlement. If you do not enter the argument, it defaults to TRUE.
+ * @param {*} [basis] Optional. The type of day count basis to use.
+ * @param {*} [calc_method] Optional. Not implemented in formulajs. A logical value that specifies the way to calculate the total accrued interest when the date of settlement is later than the date of first_interest. A value of TRUE (1) returns the total accrued interest from issue to settlement. A value of FALSE (0) returns the accrued interest from first_interest to settlement. If you do not enter the argument, it defaults to TRUE.
  * @returns
  */
 export function ACCRINT(issue, first_interest, settlement, rate, par, frequency, basis) {
@@ -108,7 +108,7 @@ export function ACCRINT(issue, first_interest, settlement, rate, par, frequency,
  * @param {*} settlement The security's settlement date. The security settlement date is the date after the issue date when the security is traded to the buyer.
  * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
  * @param {*} frequency The number of coupon payments per year. For annual payments, frequency = 1; for semiannual, frequency = 2; for quarterly, frequency = 4.
- * @param {*} basis Optional. The type of day count basis to use.
+ * @param {*} [basis] Optional. The type of day count basis to use.
  * @returns
  */
 export function COUPDAYS(settlement, maturity, frequency, basis) {
@@ -276,7 +276,7 @@ export function CUMPRINC(rate, nper, pv, start_period, end, type) {
  * @param {*} salvage The value at the end of the depreciation (sometimes called the salvage value of the asset).
  * @param {*} life The number of periods over which the asset is being depreciated (sometimes called the useful life of the asset).
  * @param {*} period The period for which you want to calculate the depreciation. Period must use the same units as life.
- * @param {*} month Optional. The number of months in the first year. If month is omitted, it is assumed to be 12.
+ * @param {*} [month] Optional. The number of months in the first year. If month is omitted, it is assumed to be 12.
  * @returns
  */
 export function DB(cost, salvage, life, period, month) {
@@ -351,7 +351,7 @@ export function DB(cost, salvage, life, period, month) {
  * @param {*} salvage The value at the end of the depreciation (sometimes called the salvage value of the asset). This value can be 0.
  * @param {*} life The number of periods over which the asset is being depreciated (sometimes called the useful life of the asset).
  * @param {*} period The period for which you want to calculate the depreciation. Period must use the same units as life.
- * @param {*} factor Optional. The rate at which the balance declines. If factor is omitted, it is assumed to be 2 (the double-declining balance method).
+ * @param {*} [factor] Optional. The rate at which the balance declines. If factor is omitted, it is assumed to be 2 (the double-declining balance method).
  * @returns
  */
 export function DDB(cost, salvage, life, period, factor) {
@@ -405,7 +405,7 @@ export function DDB(cost, salvage, life, period, factor) {
  * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
  * @param {*} pr The security's price per $100 face value.
  * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} basis Optional. The type of day count basis to use.
+ * @param {*} [basis] Optional. The type of day count basis to use.
  * @returns
  */
 export function DISC(settlement, maturity, pr, redemption, basis) {
@@ -581,8 +581,8 @@ export function EFFECT(nominal_rate, npery) {
  * @param {*} rate The interest rate per period.
  * @param {*} nper The total number of payment periods in an annuity.
  * @param {*} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes. If pmt is omitted, you must include the pv argument.
- * @param {*} pv Optional. The present value, or the lump-sum amount that a series of future payments is worth right now. If pv is omitted, it is assumed to be 0 (zero), and you must include the pmt argument.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
+ * @param {*} [pv] Optional. The present value, or the lump-sum amount that a series of future payments is worth right now. If pv is omitted, it is assumed to be 0 (zero), and you must include the pmt argument.
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
 export function FV(rate, nper, payment, value, type) {
@@ -657,8 +657,8 @@ export function FVSCHEDULE(principal, schedule) {
  * @param {*} per The period for which you want to find the interest and must be in the range 1 to nper.
  * @param {*} nper The total number of payment periods in an annuity.
  * @param {*} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due. If type is omitted, it is assumed to be 0.
  * @returns
  */
 export function IPMT(rate, per, nper, pv, fv, type) {
@@ -703,7 +703,7 @@ export function IPMT(rate, per, nper, pv, fv, type) {
  - Values must contain at least one positive value and one negative value to calculate the internal rate of return.
  - IRR uses the order of values to interpret the order of cash flows. Be sure to enter your payment and income values in the sequence you want.
  - If an array or reference argument contains text, logical values, or empty values, those values are ignored.
- * @param {*} guess Optional. A number that you guess is close to the result of IRR.
+ * @param {*} [guess] Optional. A number that you guess is close to the result of IRR.
  - Microsoft Excel uses an iterative technique for calculating IRR. Starting with guess, IRR cycles through the calculation until the result is accurate within 0.00001 percent. If IRR can't find a result that works after 20 tries, the #NUM! error value is returned.
  - In most cases you do not need to provide guess for the IRR calculation. If guess is omitted, it is assumed to be 0.1 (10 percent).
  - If IRR gives the #NUM! error value, or if the result is not close to what you expected, try again with a different value for guess.
@@ -984,8 +984,8 @@ export function NOMINAL(effect_rate, npery) {
  * @param {*} rate The interest rate per period.
  * @param {*} pmt The payment made each period; it cannot change over the life of the annuity. Typically, pmt contains principal and interest but no other fees or taxes.
  * @param {*} pv The present value, or the lump-sum amount that a series of future payments is worth right now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0).
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
 export function NPER(rate, pmt, pv, fv, type) {
@@ -1083,8 +1083,8 @@ export function PDURATION(rate, pv, fv) {
  * @param {*} rate The interest rate for the loan.
  * @param {*} nper The total number of payments for the loan.
  * @param {*} pv The present value, or the total amount that a series of future payments is worth now; also known as the principal.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
- * @param {*} type Optional. The number 0 (zero) or 1 and indicates when payments are due.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
+ * @param {*} [type] Optional. The number 0 (zero) or 1 and indicates when payments are due.
  * @returns
  */
 export function PMT(rate, nper, pv, fv, type) {
@@ -1128,8 +1128,8 @@ export function PMT(rate, nper, pv, fv, type) {
  * @param {*} per Specifies the period and must be in the range 1 to nper.
  * @param {*} nper The total number of payment periods in an annuity.
  * @param {*} pv The present value — the total amount that a series of future payments is worth now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (zero), that is, the future value of a loan is 0.
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
 export function PPMT(rate, per, nper, pv, fv, type) {
@@ -1158,7 +1158,7 @@ export function PPMT(rate, per, nper, pv, fv, type) {
  * @param {*} maturity The security's maturity date. The maturity date is the date when the security expires.
  * @param {*} discount The security's discount rate.
  * @param {*} redemption The security's redemption value per $100 face value.
- * @param {*} basis Optional. The type of day count basis to use.
+ * @param {*} [basis] Optional. The type of day count basis to use.
  * @returns
  */
 export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
@@ -1219,8 +1219,8 @@ export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
  * @param {*} rate The interest rate per period. For example, if you obtain an automobile loan at a 10 percent annual interest rate and make monthly payments, your interest rate per month is 10%/12, or 0.83%. You would enter 10%/12, or 0.83%, or 0.0083, into the formula as the rate.
  * @param {*} nper The total number of payment periods in an annuity. For example, if you get a four-year car loan and make monthly payments, your loan has 4*12 (or 48) periods. You would enter 48 into the formula for nper.
  * @param {*} pmt The payment made each period and cannot change over the life of the annuity. Typically, pmt includes principal and interest but no other fees or taxes. For example, the monthly payments on a $10,000, four-year car loan at 12 percent are $263.33. You would enter -263.33 into the formula as the pmt. If pmt is omitted, you must include the fv argument.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). For example, if you want to save $50,000 to pay for a special project in 18 years, then $50,000 is the future value. You could then make a conservative guess at an interest rate and determine how much you must save each month. If fv is omitted, you must include the pmt argument.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). For example, if you want to save $50,000 to pay for a special project in 18 years, then $50,000 is the future value. You could then make a conservative guess at an interest rate and determine how much you must save each month. If fv is omitted, you must include the pmt argument.
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due.
  * @returns
  */
 export function PV(rate, per, pmt, fv, type) {
@@ -1251,9 +1251,9 @@ export function PV(rate, per, pmt, fv, type) {
  * @param {*} nper The total number of payment periods in an annuity.
  * @param {*} pmt The payment made each period and cannot change over the life of the annuity. Typically, pmt includes principal and interest but no other fees or taxes. If pmt is omitted, you must include the fv argument.
  * @param {*} pv The present value — the total amount that a series of future payments is worth now.
- * @param {*} fv Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). If fv is omitted, you must include the pmt argument.
- * @param {*} type Optional. The number 0 or 1 and indicates when payments are due.
- * @param {*} guess Optional. Your guess for what the rate will be. If you omit guess, it is assumed to be 10 percent. If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
+ * @param {*} [fv] Optional. The future value, or a cash balance you want to attain after the last payment is made. If fv is omitted, it is assumed to be 0 (the future value of a loan, for example, is 0). If fv is omitted, you must include the pmt argument.
+ * @param {*} [type] Optional. The number 0 or 1 and indicates when payments are due.
+ * @param {*} [guess] Optional. Your guess for what the rate will be. If you omit guess, it is assumed to be 10 percent. If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
  - If you omit guess, it is assumed to be 10 percent.
  - If RATE does not converge, try different values for guess. RATE usually converges if guess is between 0 and 1.
  * @returns
@@ -1530,7 +1530,7 @@ export function TBILLYIELD(settlement, maturity, pr) {
  *
  * @param {*} values A series of cash flows that corresponds to a schedule of payments in dates. The first payment is optional and corresponds to a cost or payment that occurs at the beginning of the investment. If the first value is a cost or payment, it must be a negative value. All succeeding payments are discounted based on a 365-day year. The series of values must contain at least one positive and one negative value.
  * @param {*} dates A schedule of payment dates that corresponds to the cash flow payments. Dates may occur in any order. Dates should be entered by using the DATE function, or as results of other formulas or functions. For example, use DATE(2008,5,23) for the 23rd day of May, 2008. Problems can occur if dates are entered as text. .
- * @param {*} guess Optional. A number that you guess is close to the result of XIRR.
+ * @param {*} [guess] Optional. A number that you guess is close to the result of XIRR.
  * @returns
  */
 export function XIRR(values, dates, guess) {
