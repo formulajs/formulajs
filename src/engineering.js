@@ -1874,27 +1874,19 @@ export function IMSUM() {
 
   const args = utils.flatten(arguments)
 
-  // Initialize result
-  let result = args[0]
-
-  // Loop on all numbers
-  for (let i = 1; i < args.length; i++) {
-    // Lookup coefficients of two complex numbers
-    const a = IMREAL(result)
-    const b = IMAGINARY(result)
-    const c = IMREAL(args[i])
-    const d = IMAGINARY(args[i])
-
-    if (utils.anyIsError(a, b, c, d)) {
+  let numberSum = 0
+  let imaginarySum = 0
+  for (const arg of args) {
+    const realPart = +IMREAL(arg)
+    const imaginaryPart = +IMAGINARY(arg)
+    if (utils.anyIsError(realPart, imaginaryPart)) {
       return error.value
     }
-
-    // Complute product of two complex numbers
-    result = COMPLEX(a + c, b + d)
+    numberSum += realPart
+    imaginarySum += imaginaryPart
   }
 
-  // Return sum of complex numbers
-  return result
+  return COMPLEX(numberSum, imaginarySum, 'i')
 }
 
 /**
