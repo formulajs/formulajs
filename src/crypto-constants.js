@@ -55,5 +55,26 @@ export const FUNCTION_LOCALE = [
         require: "m",
       },
     ],
+  },
+  {
+    n: "FLVURL",
+    t: 20,
+    d: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
+    a: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
+    p: [
+      {
+        name: "token",
+        detail:
+          "coins' IDs, comma-separated if querying more than 1 coin.",
+        example: `"bitcoin"`,
+        require: "m",
+      },
+      {
+        name: "vs_currency",
+        detail: "target currency of coins, comma-separated if querying more than 1 currency",
+        example: `"usd"`,
+        require: "m",
+      },
+    ],
   }
 ]

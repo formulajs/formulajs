@@ -58,3 +58,11 @@ export async function GETPRICE(token, vs_currencies) {
     return "ERROR IN FETCHING"
   }
 }
+
+export async function FLVURL(token, vs_currencies) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([{"Yoo": "gotcha"}]);
+    }, 10000);
+  });
+}
