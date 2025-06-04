@@ -103,7 +103,7 @@ Add detailed metadata to enable better search suggestions. Add your function's m
     logo: string, // logo url e.g 'https//....'
     brandColor: string, // hexcode of the function brand color e.g #000
     n: string // function name e.g GETTXLIST
-    d: string // description aboout the function
+    d: string // description about the function
     p: Parameters[] // array that describes the argument your function should take in. 
 }
 
