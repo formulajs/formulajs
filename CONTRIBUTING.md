@@ -30,7 +30,7 @@ dSheets.new is:
 
 ### 1. File Structure
 - All crypto-related formulas must be added to `src/crypto.js`
-- API key constants should be defined in `src/crypto-constants.js`
+- Function metadata for suggestion box and API key constants should be defined in `src/crypto-constants.js`
 
 ### 2. Function Implementation
 
@@ -62,12 +62,17 @@ export async function GETTXLIST(address, page, offset) {
 Your formula can return data in two formats:
 
 #### Array of Objects
-When returning an array of objects, follow this structure:
+When returning an array, follow this structure:
 ```javascript
+// Example 1
 [
-    {
-        // Your data fields here
-    }
+    { data-1 : "data-abcd", data-2: "data-rtyu", data-3: "data-xcvb"},
+    { data-1 : "data-qwer", data-2: "data-sdfg", data-3: "data-asdf"}
+]
+// Example 2
+[
+    ["data-abcd", "data-qwer", "data-asdf"],
+    ["data-xcvb", "data-bnml", "data-dfgh"]
 ]
 ```
 
@@ -95,6 +100,11 @@ Add detailed metadata to enable better search suggestions. Add your function's m
     // Required fields
     t: 20,
     // Add other metadata fields
+    logo: "url",
+    brandColor: "#0000FF",
+    n: "GETTXLIST" // this is data block name
+    d: "About the data block"
+    p: [] // Array of parameters with name, details, example value and required status. 
 }
 ```
 
