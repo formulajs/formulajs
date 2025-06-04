@@ -98,7 +98,7 @@ Add detailed metadata to enable better search suggestions. Add your function's m
 ```javascript
 {
     // Required fields
-    t: number, // id of your function
+    t: number, // id of your function category ( for crypto functions id should be 20 )
     API_KEY: SERVICE_API_KEY, // type of api key e.g SERVICE_API_KEY.etherscan
     logo: string, // logo url e.g 'https//....'
     brandColor: string, // hexcode of the function brand color e.g #000
@@ -108,9 +108,9 @@ Add detailed metadata to enable better search suggestions. Add your function's m
 }
 
 type Parameter {
-  name: string // parameteer name e.g page
+  name: string // parameter name e.g page
   details: string // parameter description e.g Page number
-  example: string // argument example e.g "X
+  example: string // argument example e.g "X"
 }
 ```
 
