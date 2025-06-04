@@ -98,14 +98,19 @@ Add detailed metadata to enable better search suggestions. Add your function's m
 ```javascript
 {
     // Required fields
-    t: 20,
-    // Add other metadata fields
-    API_KEY: "ETHERSCAN_API_KEY"
-    LOGO: "url",
-    BRAND_COLOR: "#0000FF",
-    n: "GETTXLIST" // this is data block name
-    d: "About the data block"
-    p: [] // Array of parameters with name, details, example value and required status. 
+    t: number, // id of your function
+    API_KEY: SERVICE_API_KEY, // type of api key e.g SERVICE_API_KEY.etherscan
+    logo: string, // logo url e.g 'https//....'
+    brandColor: string, // hexcode of the function brand color e.g #000
+    n: string // function name e.g GETTXLIST
+    d: string // description aboout the function
+    p: Parameters[] // array that describes the argument your function should take in. 
+}
+
+type Parameter {
+  name: string // parameteer name e.g page
+  details: string // parameter description e.g Page number
+  example: string // argument example e.g "X
 }
 ```
 
