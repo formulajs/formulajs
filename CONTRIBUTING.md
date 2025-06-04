@@ -111,6 +111,8 @@ type Parameter {
   name: string // parameter name e.g page
   details: string // parameter description e.g Page number
   example: string // argument example e.g "X"
+  required: "o" | "m" // indicate if parameter is required ( "o" for optional and "m" for required parameters )
+  type: string
 }
 ```
 
