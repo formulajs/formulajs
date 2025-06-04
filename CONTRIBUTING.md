@@ -100,6 +100,7 @@ Add detailed metadata to enable better search suggestions. Add your function's m
     // Required fields
     t: 20,
     // Add other metadata fields
+    API_KEY: "ETHERSCAN_API_KEY"
     logo: "url",
     brandColor: "#0000FF",
     n: "GETTXLIST" // this is data block name
