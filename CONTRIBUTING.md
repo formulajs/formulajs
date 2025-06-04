@@ -100,8 +100,8 @@ Add detailed metadata to enable better search suggestions. Add your function's m
     // Required fields
     t: number, // id of your function category ( for crypto functions id should be 20 )
     API_KEY: SERVICE_API_KEY, // type of api key e.g SERVICE_API_KEY.etherscan
-    logo: string, // logo url e.g 'https//....'
-    brandColor: string, // hexcode of the function brand color e.g #000
+    LOGO: string, // logo url e.g 'https//....'
+    BRAND_COLOR: string, // hexcode of the function brand color e.g #000
     n: string // function name e.g GETTXLIST
     d: string // description about the function
     p: Parameters[] // array that describes the argument your function should take in. 
