@@ -7,7 +7,8 @@ export const FUNCTION_LOCALE = [
   {
     API_KEY: SERVICE_API_KEY.Etherscan,
     LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
-    BRAND_COLOR: "#21325b",
+    BRAND_COLOR: "#F6F7F8",
+    BRAND_SECONDARY_COLOR: "#21325B",
     n: "GETTXLIST",
     t: 20,
     d: "Returns the list of transactions performed by an address, with optional pagination.",
