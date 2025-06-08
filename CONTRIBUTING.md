@@ -117,6 +117,12 @@ type Parameter {
 }
 ```
 
+### 6. Testing Data Block
+
+- You can change ```Data-Block-Test.html``` with your added function, with hard code arguments.
+- Add you API in localstorage manualy.
+- Click Test Button, now you can see you return value in UI.
+
 ## Code Style Guidelines
 
 - Use async/await for asynchronous operations

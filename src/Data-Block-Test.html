@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GETTXLIST Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            text-align: left;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>GETTXLIST Function Test</h1>
+        <button onclick="testFunction()">Test GETTXLIST</button>
+        <div id="output" class="output" style="display: none;"></div>
+    </div>
+
+    <script>
+        // Copy your constants and function here
+        const SERVICE_API_KEY = {
+            Etherscan: 'ETHERSCAN_API_KEY'
+        };
+
+        async function GETTXLIST(address, page, offset) {
+            const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
+            const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`
+
+            try {
+                const response = await fetch(url)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`)
+                }
+                const json = await response.json()
+                if (json.result.includes && json.result.includes("Invalid API Key")) {
+                    return `${SERVICE_API_KEY.Etherscan}_MISSING`
+                }
+                return json.result;
+            } catch (error) {
+                return "ERROR IN FETCHING"
+            }
+        }
+
+        async function testFunction() {
+            const output = document.getElementById('output');
+            output.style.display = 'block';
+            output.textContent = 'Loading...';
+
+            try {
+                // Hard-coded arguments
+                const address = '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae';
+                const page = 1;
+                const offset = 10;
+
+                const result = await GETTXLIST(address, page, offset);
+                output.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                output.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+
+</html>
