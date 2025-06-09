@@ -1,6 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 
-export async function GETTXLIST(address, page, offset) {
+export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
   const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`
 

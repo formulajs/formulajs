@@ -9,7 +9,7 @@ export const FUNCTION_LOCALE = [
     LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
     BRAND_COLOR: "#F6F7F8",
     BRAND_SECONDARY_COLOR: "#21325B",
-    n: "GETTXLIST",
+    n: "ETHERSCAN",
     t: 20,
     d: "Returns the list of transactions performed by an address, with optional pagination.",
     a: "Returns the list of transactions performed by an address, with optional pagination.",
@@ -42,6 +42,7 @@ export const FUNCTION_LOCALE = [
   {
     n: "GETPRICE",
     t: 20,
+    API_KEY: SERVICE_API_KEY.Coingecko,
     d: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
     a: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
     p: [
