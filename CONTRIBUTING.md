@@ -37,7 +37,7 @@ dSheets.new is:
 Here's an example of a well-structured crypto formula:
 
 ```javascript
-export async function GETTXLIST(address, page, offset) {
+export async function ETHERSCAN(address, page, offset) {
     const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
     const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`;
 
@@ -103,7 +103,7 @@ Add detailed metadata to enable better search suggestions. Add your function's m
     API_KEY: SERVICE_API_KEY, // type of api key e.g SERVICE_API_KEY.etherscan
     LOGO: string, // logo url e.g 'https//....'
     BRAND_COLOR: string, // hexcode of the function brand color e.g #000
-    n: string // function name e.g GETTXLIST
+    n: string // function name e.g ETHERSCAN
     d: string // description about the function
     p: Parameters[] // array that describes the argument your function should take in. 
 }
