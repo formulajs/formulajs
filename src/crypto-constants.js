@@ -1,6 +1,8 @@
 export const SERVICE_API_KEY = {
   Etherscan: "ETHERSCAN_API_KEY",
-  Coingecko: "COINGECKO_API_KEY"
+  Coingecko: "COINGECKO_API_KEY",
+  Gnosisscan: 'GNOSISSSCAN',
+  BASESCAN: 'Basescan'
 }
 
 export const FUNCTION_LOCALE = [
@@ -39,6 +41,50 @@ export const FUNCTION_LOCALE = [
       },
     ],
   },
+  {
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  BRAND_COLOR: "#F6F7F8",
+  BRAND_SECONDARY_COLOR: "#21325B",
+  n: "Ox",
+  t: 20,
+  d: "Fetches address data like transactions, balances, or portfolio info from multiple supported chains.",
+  a: "Dynamically queries blockchain data such as transactions, balances, or token portfolio by resolving time ranges to block ranges.",
+  p: [
+    {
+      name: "address",
+      detail: "The address to query, in hexadecimal format.",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "m",
+    },
+    {
+      name: "categories",
+      detail: `Type of data to fetch. Supported values: "txns", "balances", "portfolio".`,
+      example: `"txns"`,
+      require: "m",
+    },
+    {
+      name: "chain",
+      detail: `Blockchain network to query. Supported values: "ethereum", "gnosis", "base".`,
+      example: `"ethereum"`,
+      require: "m",
+    },
+    {
+      name: "startTime",
+      detail: "Start time in UNIX timestamp (seconds). Will be converted to a starting block.",
+      example: "1680300000",
+      require: "m",
+      type: "rangenumber",
+    },
+    {
+      name: "endTime",
+      detail: "End time in UNIX timestamp (seconds). Will be converted to an ending block.",
+      example: "1680900000",
+      require: "m",
+      type: "rangenumber",
+    },
+  ],
+},
   {
     n: "GETPRICE",
     t: 20,
@@ -81,5 +127,5 @@ export const FUNCTION_LOCALE = [
         require: "m",
       },
     ],
-  }
+  },
 ]

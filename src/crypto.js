@@ -1,4 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
+import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
+import {CHAIN_API_BASE} from './utils/constants'
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
@@ -58,6 +60,43 @@ export async function GETPRICE(token, vs_currencies) {
     return "ERROR IN FETCHING"
   }
 }
+
+export async function OX(address, categories, chain, startTime, endTime) {
+  // eslint-disable-next-line no-debugger
+  debugger;
+  const API_KEYS = {
+    ethereum: window.localStorage.getItem(SERVICE_API_KEY.Etherscan),
+    gnosis: window.localStorage.getItem(SERVICE_API_KEY.Gnosisscan),
+    base: window.localStorage.getItem(SERVICE_API_KEY.Basescan),
+  };
+
+  const apiKey = API_KEYS[chain];
+  const baseUrl = CHAIN_API_BASE[chain];
+
+  const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
+  const endBlock = await fromTimeStampToBlock(endTime,  chain, apiKey);
+
+  let action = '';
+  if (categories === 'txns') action = 'txlist';
+  else if (categories === 'balances') action = 'balance';
+  else if (categories === 'portfolio') action = 'tokentx';
+
+  let url = `${baseUrl}?module=account&action=${action}&address=${address}&startblock=${startBlock}&endblock=${endBlock}&sort=asc&apikey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const json = await response.json();
+    if (json.result?.includes?.("Invalid API Key")) {
+      return `${SERVICE_API_KEY[chain.charAt(0).toUpperCase() + chain.slice(1)]}_MISSING`;
+    }
+    return json.result;
+  } catch (e) {
+    console.log(e)
+    return "ERROR IN FETCHING";
+  }
+}
+
 
 export async function FLVURL(token, vs_currencies) {
   return new Promise((resolve) => {

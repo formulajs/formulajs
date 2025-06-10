@@ -4,6 +4,51 @@ import * as information from './information.js'
 import * as statistical from './statistical.js'
 import * as utils from './utils/common.js'
 
+
+
+export function PNL(){
+    const [A, B] = utils.argsToArray(arguments);
+
+  // Handle single numbers
+  if (typeof A === "number" && typeof B === "number") {
+    return A - B;
+  }
+
+  // Handle 1D arrays
+  if (Array.isArray(A) && Array.isArray(B) && typeof A[0] === "number") {
+    if (A.length !== B.length) throw new Error("1D arrays must match in length");
+    return A.reduce((sum, val, i) => sum + (val - B[i]), 0);
+  }
+
+  // Handle 2D arrays
+  if (Array.isArray(A[0]) && typeof A[0][0] === "number") {
+    let total = 0;
+    for (let i = 0; i < A.length; i++) {
+      if (A[i].length !== B[i].length) throw new Error(`Row ${i} length mismatch`);
+      for (let j = 0; j < A[i].length; j++) {
+        total += A[i][j] - B[i][j];
+      }
+    }
+    return total;
+  }
+
+  // Handle 3D arrays
+  if (Array.isArray(A[0][0])) {
+    let total = 0;
+    for (let i = 0; i < A.length; i++) {
+      for (let j = 0; j < A[i].length; j++) {
+        for (let k = 0; k < A[i][j].length; k++) {
+          total += A[i][j][k] - B[i][j][k];
+        }
+      }
+    }
+    return total;
+  }
+
+  throw new Error("Unsupported or mismatched structure");
+
+}
+
 /**
  * Returns the absolute value of a number.
  *
@@ -1697,6 +1742,8 @@ export function SUBTOTAL(function_num, ref1) {
  */
 export function SUM() {
   let result = 0
+
+  console.log("LLLLO", utils.argsToArray(arguments), {arguments})
 
   utils.arrayEach(utils.argsToArray(arguments), (value) => {
     if (result instanceof Error) {
