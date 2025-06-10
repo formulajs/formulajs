@@ -44,7 +44,7 @@ export const FUNCTION_LOCALE = [
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
   BRAND_COLOR: "#F6F7F8",
   BRAND_SECONDARY_COLOR: "#21325B",
-  n: "0x",
+  n: "EOA",
   t: 20,
   d: "Fetches address data like transactions, balances, or portfolio info from multiple supported chains.",
   a: "Dynamically queries blockchain data such as transactions, balances by resolving time ranges to block ranges.",

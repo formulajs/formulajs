@@ -61,7 +61,7 @@ export async function GETPRICE(token, vs_currencies) {
   }
 }
 
-export async function OX(address, categories, chain, startTime, endTime) {
+export async function EOA(address, categories, chain, startTime, endTime) {
   const API_KEYS = {
     ethereum: window.localStorage.getItem(SERVICE_API_KEY.Etherscan),
     gnosis: window.localStorage.getItem(SERVICE_API_KEY.Gnosisscan),
