@@ -1,5 +1,5 @@
- export const CHAIN_API_BASE = {
-    ethereum: 'https://api.etherscan.io/api',
-    gnosis: 'https://api.gnosisscan.io/api',
-    base: 'https://api.basescan.org/api',
-};
+ export   const CHAIN_ID_MAP = {
+    ethereum: 1,
+    gnosis: 100,
+    base: 8453,
+  };

@@ -49,7 +49,7 @@ export const FUNCTION_LOCALE = [
   n: "Ox",
   t: 20,
   d: "Fetches address data like transactions, balances, or portfolio info from multiple supported chains.",
-  a: "Dynamically queries blockchain data such as transactions, balances, or token portfolio by resolving time ranges to block ranges.",
+  a: "Dynamically queries blockchain data such as transactions, balances by resolving time ranges to block ranges.",
   p: [
     {
       name: "address",
@@ -59,7 +59,7 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "categories",
-      detail: `Type of data to fetch. Supported values: "txns", "balances", "portfolio".`,
+      detail: `Type of data to fetch. Supported values: "txns", "balance".`,
       example: `"txns"`,
       require: "m",
     },
@@ -71,14 +71,14 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "startTime",
-      detail: "Start time in UNIX timestamp (seconds). Will be converted to a starting block.",
+      detail: "Start time in UNIX timestamp (seconds). Will be converted to a starting block. Required for txns category",
       example: "1680300000",
       require: "m",
       type: "rangenumber",
     },
     {
       name: "endTime",
-      detail: "End time in UNIX timestamp (seconds). Will be converted to an ending block.",
+      detail: "End time in UNIX timestamp (seconds). Will be converted to an ending block. Required for txns category",
       example: "1680900000",
       require: "m",
       type: "rangenumber",

@@ -1,6 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
-import {CHAIN_API_BASE} from './utils/constants'
+import {CHAIN_ID_MAP} from './utils/constants'
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
@@ -62,27 +62,29 @@ export async function GETPRICE(token, vs_currencies) {
 }
 
 export async function OX(address, categories, chain, startTime, endTime) {
-  // eslint-disable-next-line no-debugger
-  debugger;
   const API_KEYS = {
     ethereum: window.localStorage.getItem(SERVICE_API_KEY.Etherscan),
     gnosis: window.localStorage.getItem(SERVICE_API_KEY.Gnosisscan),
     base: window.localStorage.getItem(SERVICE_API_KEY.Basescan),
   };
-
   const apiKey = API_KEYS[chain];
-  const baseUrl = CHAIN_API_BASE[chain];
-
-  const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
-  const endBlock = await fromTimeStampToBlock(endTime,  chain, apiKey);
+  const chainId = CHAIN_ID_MAP[chain];
+  if (!apiKey || !chainId) return `${chain.toUpperCase()}_MISSING`;
 
   let action = '';
-  if (categories === 'txns') action = 'txlist';
-  else if (categories === 'balances') action = 'balance';
-  else if (categories === 'portfolio') action = 'tokentx';
-
-  let url = `${baseUrl}?module=account&action=${action}&address=${address}&startblock=${startBlock}&endblock=${endBlock}&sort=asc&apikey=${apiKey}`;
-
+  if (categories === 'txns') action = 'account.txlist';
+  else {action = 'account.balance'};
+  let timeQuery = ''
+  if(!isNaN(startTime) && !isNaN(endTime)){
+      const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
+      const endBlock = await fromTimeStampToBlock(endTime, chain, apiKey);
+    timeQuery = `&startblock=${startBlock}&endblock=${endBlock}`
+  } else if(categories === 'balance') {
+    timeQuery = `&tag=latest`
+  } else {
+    throw new Error('Start and End Time is required for querying transaction list ')
+  }
+  const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&sort=asc&chainid=${chainId}&apikey=${apiKey}${timeQuery}`;
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
@@ -92,7 +94,7 @@ export async function OX(address, categories, chain, startTime, endTime) {
     }
     return json.result;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return "ERROR IN FETCHING";
   }
 }

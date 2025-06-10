@@ -1,16 +1,11 @@
-  import {CHAIN_API_BASE} from './constants'
+import {CHAIN_ID_MAP} from './constants'
   
   export const fromTimeStampToBlock = async (timestamp, chain, apiKey) => {
-          const baseUrl = CHAIN_API_BASE[chain];
-          if(!baseUrl){
-            throw new Error('Unsupported Chain')
-          }
-    try {
-      const url = `${baseUrl}?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${apiKey}`;
+if(!timestamp || !chain || !apiKey) return 
+      const chainId = CHAIN_ID_MAP[chain];
+      const url = `https://api.etherscan.io/v2/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=${apiKey}&chainId=${chainId}`;
       const res = await fetch(url);
       const json = await res.json();
       return parseInt(json.result);
-    } catch {
-      return 0;
-    }
+
   };
