@@ -1,6 +1,7 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP} from './utils/constants'
+import * as utils from './utils/common.js'
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
@@ -97,6 +98,75 @@ export async function EOA(address, categories, chain, startTime, endTime) {
     console.log(e);
     return "ERROR IN FETCHING";
   }
+}
+
+
+export function PNL() {
+  const [A, B] = utils.argsToArray(arguments);
+
+  const toNumberOrThrow = (val) => {
+    const num = Number(val);
+    if (isNaN(num)) throw new Error(`Invalid number value: ${val}`);
+    return num;
+  };
+
+  // Single numbers
+  if (typeof A === "number" && typeof B === "number") {
+    return A - B;
+  }
+
+  // 1D arrays
+  if (Array.isArray(A) && Array.isArray(B) && typeof A[0] !== "object") {
+    const maxLen = Math.max(A.length, B.length);
+    let total = 0;
+    for (let i = 0; i < maxLen; i++) {
+      const aVal = i < A.length ? toNumberOrThrow(A[i]) : 0;
+      const bVal = i < B.length ? toNumberOrThrow(B[i]) : 0;
+      total += aVal - bVal;
+    }
+    return total;
+  }
+
+  // 2D arrays
+  if (Array.isArray(A[0]) && typeof A[0][0] !== "object") {
+    let total = 0;
+    const maxRows = Math.max(A.length, B.length);
+    for (let i = 0; i < maxRows; i++) {
+      const rowA = A[i] || [];
+      const rowB = B[i] || [];
+      const maxCols = Math.max(rowA.length, rowB.length);
+      for (let j = 0; j < maxCols; j++) {
+        const aVal = j < rowA.length ? toNumberOrThrow(rowA[j]) : 0;
+        const bVal = j < rowB.length ? toNumberOrThrow(rowB[j]) : 0;
+        total += aVal - bVal;
+      }
+    }
+    return total;
+  }
+
+  // 3D arrays
+  if (Array.isArray(A[0][0])) {
+    let total = 0;
+    const maxX = Math.max(A.length, B.length);
+    for (let i = 0; i < maxX; i++) {
+      const matA = A[i] || [];
+      const matB = B[i] || [];
+      const maxY = Math.max(matA.length, matB.length);
+      for (let j = 0; j < maxY; j++) {
+        const rowA = matA[j] || [];
+        const rowB = matB[j] || [];
+        const maxZ = Math.max(rowA.length, rowB.length);
+        for (let k = 0; k < maxZ; k++) {
+          const aVal = k < rowA.length ? toNumberOrThrow(rowA[k]) : 0;
+          const bVal = k < rowB.length ? toNumberOrThrow(rowB[k]) : 0;
+          total += aVal - bVal;
+        }
+      }
+    }
+    return total;
+  }
+
+  throw new Error("Unsupported or mismatched structure");
 }
 
 

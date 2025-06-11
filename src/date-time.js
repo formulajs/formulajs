@@ -618,8 +618,13 @@ export function TIME(hour, minute, second) {
     return error.num
   }
 
-  return (3600 * hour + 60 * minute + second) / 86400
+  const hh = String(hour).padStart(2, '0')
+  const mm = String(minute).padStart(2, '0')
+  const ss = String(second).padStart(2, '0')
+
+  return `${hh}:${mm}:${ss}`
 }
+
 
 /**
  * Converts a time in the form of text to a serial number.

@@ -290,7 +290,28 @@ export function parseDate(date) {
       }
     }
 
-    // Fallback for other string formats
+    // Handle time-only string (HH:MM[:SS])
+    if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(date)) {
+      const [h, m, s = '0'] = date.split(':').map(Number)
+      const now = new Date()
+      now.setHours(h, m, s, 0)
+      return now
+    }
+
+    // Handle AM/PM time format (e.g., "2:15 PM")
+    const ampmMatch = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(date)
+    if (ampmMatch) {
+      let [, hour, minute, meridian] = ampmMatch
+      hour = parseInt(hour)
+      minute = parseInt(minute)
+      if (meridian.toUpperCase() === 'PM' && hour !== 12) hour += 12
+      if (meridian.toUpperCase() === 'AM' && hour === 12) hour = 0
+      const now = new Date()
+      now.setHours(hour, minute, 0, 0)
+      return now
+    }
+
+    // Fallback for other date strings
     const parsed = new Date(date)
     if (!isNaN(parsed)) {
       return parsed
