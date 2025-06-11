@@ -275,10 +275,25 @@ export function parseDate(date) {
   }
 
   if (typeof date === 'string') {
-    date = /(\d{4})-(\d\d?)-(\d\d?)$/.test(date) ? new Date(date + 'T00:00:00.000') : new Date(date)
+    // Check for YYYY-MM-DD (ISO format)
+    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(date)) {
+      return new Date(date + 'T00:00:00.000')
+    }
 
-    if (!isNaN(date)) {
-      return date
+    // Check for DD/MM/YYYY
+    const match = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(date)
+    if (match) {
+      const [, day, month, year] = match.map(Number)
+      const d = new Date(year, month - 1, day)
+      if (!isNaN(d)) {
+        return d
+      }
+    }
+
+    // Fallback for other string formats
+    const parsed = new Date(date)
+    if (!isNaN(parsed)) {
+      return parsed
     }
   }
 

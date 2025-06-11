@@ -1,6 +1,6 @@
 import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
-import { dateToSerial, returnSerial } from './utils/date.js'
+import { dateToSerial, formatDate, returnSerial } from './utils/date.js'
 
 const WEEK_STARTS = [
   undefined,
@@ -247,8 +247,9 @@ export function DAYS(end_date, start_date) {
   if (start_date instanceof Error) {
     return start_date
   }
+  console.log({x:  formatDate(startOfDay(end_date)), y: formatDate(startOfDay(start_date)) })
 
-  return dateToSerial(startOfDay(end_date)) - dateToSerial(startOfDay(start_date))
+  return formatDate(startOfDay(end_date)) - formatDate(startOfDay(start_date))
 }
 
 /**
@@ -563,6 +564,8 @@ NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
   return total
 }
 
+export const NETWORKDAYS_INTL = NETWORKDAYS.INTL
+
 /**
  * Returns the serial number of the current date and time.
  *
@@ -645,7 +648,7 @@ export function TIMEVALUE(time_text) {
  */
 export function TODAY() {
   const today = startOfDay(new Date())
-  return returnSerial ? dateToSerial(today) : today
+  return formatDate(today)
 }
 
 /**
@@ -717,6 +720,11 @@ export function WEEKNUM(serial_number, return_type) {
  */
 export function WORKDAY(start_date, days, holidays) {
   return WORKDAY.INTL(start_date, days, 1, holidays)
+}
+
+export function ISDATE(value) {
+  const parsed = utils.parseDate(value)
+  return !(parsed instanceof Error)
 }
 
 /**
@@ -803,8 +811,10 @@ WORKDAY.INTL = (start_date, days, weekend, holidays) => {
     return error.value
   }
 
-  return start_date
+  return formatDate(start_date)
 }
+
+export const WORKDAY_INTL = WORKDAY.INTL
 
 /**
  * Converts a serial number to a year.
