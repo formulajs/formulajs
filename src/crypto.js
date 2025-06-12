@@ -1,6 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
-import {CHAIN_ID_MAP} from './utils/constants'
+import { CHAIN_ID_MAP, SAFE_CHAIN_MAP } from './utils/constants'
 import * as utils from './utils/common.js'
 
 export async function ETHERSCAN(address, page, offset) {
@@ -74,13 +74,13 @@ export async function EOA(address, categories, chain, startTime, endTime) {
 
   let action = '';
   if (categories === 'txns') action = 'account.txlist';
-  else {action = 'account.balance'};
+  else { action = 'account.balance' };
   let timeQuery = ''
-  if(!isNaN(startTime) && !isNaN(endTime)){
-      const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
-      const endBlock = await fromTimeStampToBlock(endTime, chain, apiKey);
+  if (!isNaN(startTime) && !isNaN(endTime)) {
+    const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
+    const endBlock = await fromTimeStampToBlock(endTime, chain, apiKey);
     timeQuery = `&startblock=${startBlock}&endblock=${endBlock}`
-  } else if(categories === 'balance') {
+  } else if (categories === 'balance') {
     timeQuery = `&tag=latest`
   } else {
     throw new Error('Start and End Time is required for querying transaction list ')
@@ -173,7 +173,41 @@ export function PNL() {
 export async function FLVURL(token, vs_currencies) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve([{"Yoo": "gotcha"}]);
+      resolve([{ "Yoo": "gotcha" }]);
     }, 10000);
   });
+}
+
+export async function SAFE(address, utility, chain, limit, offset) {
+
+  if (typeof limit !== 'number' || limit < 0) return 'INVALID_LIMIT';
+  if (typeof offset !== 'number' || offset < 0) return 'INVALID_OFFSET';
+  if (utility !== 'txns') return 'UTILITY IS NOT SUPPORTED';
+
+  const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Safe);
+  const chainIdentifier = SAFE_CHAIN_MAP[chain];
+
+  if (!apiKey) return `${SERVICE_API_KEY.Safe}_MISSING`;
+  if (!chainIdentifier) return 'CHAIN IS NOT SUPPORTED';
+
+  const url = `https://api.safe.global/tx-service/${chainIdentifier}/api/v2/safes/${address}/multisig-transactions?limit=${limit}&offset=${offset}`;
+  try {
+    const response = await fetch(url,
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+        },
+      }
+    );
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const json = await response.json();
+    if (!Array.isArray(json.results)) {
+      return "INVALID API RESPONSE";
+    }
+    // remove nested structure from the response
+    return json.results.map(({ confirmations, dataDecoded, ...rest }) => rest);
+  } catch (e) {
+    console.log(e);
+    return "ERROR IN FETCHING";
+  }
 }

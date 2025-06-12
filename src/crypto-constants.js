@@ -1,6 +1,7 @@
 export const SERVICE_API_KEY = {
   Etherscan: "ETHERSCAN_API_KEY",
   Coingecko: "COINGECKO_API_KEY",
+  Safe: "SAFE_API_KEY",
 }
 
 export const FUNCTION_LOCALE = [
@@ -123,6 +124,46 @@ export const FUNCTION_LOCALE = [
         detail: "target currency of coins, comma-separated if querying more than 1 currency",
         example: `"usd"`,
         require: "m",
+      },
+    ],
+  },
+  {
+    n: "SAFE",
+    t: 20,
+    d: "Query the list of transactions performed by a Safe address, with optional pagination.",
+    a: "Query the list of transactions performed by a Safe address, with optional pagination.",
+    p: [
+      {
+        name: "address",
+        detail: "The address to query, in hexadecimal format.",
+        example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+        require: "m",
+      },
+      {
+        name: "utility",
+        detail: "The utility to query, supported values: 'txns'.",
+        example: `"txns"`,
+        require: "m",
+      },
+      {
+        name: "chain",
+        detail: "The chain to query, supported values: 'ethereum', 'gnosis'.",
+        example: `"ethereum"`,
+        require: "m",
+      },
+      {
+        name: "limit",
+        detail: "The number of transactions to return, default is 100.",
+        example: `100`,
+        require: "o",
+        repeat: "n",
+      },
+      {
+        name: "offset",
+        detail: "The number of transactions to skip, default is 0.",
+        example: `0`,
+        require: "o",
+        repeat: "n",
       },
     ],
   },
