@@ -1699,8 +1699,6 @@ export function SUBTOTAL(function_num, ref1) {
 export function SUM() {
   let result = 0
 
-  console.log("LLLLO", utils.argsToArray(arguments), {arguments})
-
   utils.arrayEach(utils.argsToArray(arguments), (value) => {
     if (result instanceof Error) {
       return false

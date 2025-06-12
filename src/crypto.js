@@ -5,7 +5,7 @@ import * as utils from './utils/common.js'
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
-  const url = `https://api.etherscan.io/api?module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`
+  const url = `https://api.etherscan.io/v2/api?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page || 1}&offset=${offset || 10}&sort=asc&apikey=${API_KEY}`
 
   try {
     const response = await fetch(url)

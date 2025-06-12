@@ -247,9 +247,9 @@ export function DAYS(end_date, start_date) {
   if (start_date instanceof Error) {
     return start_date
   }
-  console.log({x:  formatDate(startOfDay(end_date)), y: formatDate(startOfDay(start_date)) })
 
-  return formatDate(startOfDay(end_date)) - formatDate(startOfDay(start_date))
+  const diffMs = startOfDay(end_date).getTime() - startOfDay(start_date).getTime();
+  return diffMs / (1000 * 60 * 60 * 24);
 }
 
 /**
