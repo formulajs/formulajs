@@ -276,7 +276,433 @@ export const FUNCTION_LOCALE = [
       },
     ],
   },
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://app.uniswap.org/favicon.png",
+  BRAND_COLOR: "#fef5fc",
+  BRAND_SECONDARY_COLOR: "#f50db4",
+  n: "UNISWAP",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+  
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
+  BRAND_COLOR: "#f7f7ff",
+  BRAND_SECONDARY_COLOR: "#9896ff",
+  n: "AAVE",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://www.pendle.finance/uploads/wp-content/uploads/2021/12/cropped-Pendle-Logo-quite-small.png",
+  BRAND_COLOR: "#eafffb",
+  BRAND_SECONDARY_COLOR: "#47e2c2",
+  n: "PENDLE",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
 
+
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://aerodrome.finance/images/AERO/favicon.ico",
+  BRAND_COLOR: "#edf3ff",
+  BRAND_SECONDARY_COLOR: "#2966f0",
+  n: "AERODROME",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://cdn.prod.website-files.com/6760e87b474d412dfa9a7a68/6760e8ebe8faad5fb985c89a_Frame%201321316795.png",
+  BRAND_COLOR: "#f6f4ff",
+  BRAND_SECONDARY_COLOR: "#684ff8",
+  n: "ARTEMIS",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://aerodrome.finance/images/AERO/favicon.ico",
+  BRAND_COLOR: "#effdfb",
+  BRAND_SECONDARY_COLOR: "#5eead4",
+  n: "KAITO",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://safe-transaction-mainnet.safe.global/static/safe/favicon.png",
+  BRAND_COLOR: "#f6f7f6",
+  BRAND_SECONDARY_COLOR: "#133629",
+  n: "GNOSIS",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://avatars.githubusercontent.com/u/129790008?s=48&v=4",
+  BRAND_COLOR: "#f1f7fc",
+  BRAND_SECONDARY_COLOR: "#5098d6",
+  n: "OTTERSCAN",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://avatars.githubusercontent.com/u/129790008?s=48&v=4",
+  BRAND_COLOR: "#f9f8ff",
+  BRAND_SECONDARY_COLOR: "#725bff",
+  n: "TALLY",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
     
 ]
 
