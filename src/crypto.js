@@ -1,7 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
-import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP} from './utils/constants'
-import * as utils from './utils/common.js'
+import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
 
 
 export async function BLOCKSCOUT(address, chain, type, page, offset, startTimestamp, endTimestamp) {
@@ -75,6 +74,13 @@ export async function BLOCKSCOUT(address, chain, type, page, offset, startTimest
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
+  if(!API_KEY){
+    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
+  }
+  // temporary added for testing rate limit flow
+  if(API_KEY === 'xxxx'){
+  return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
+  }
   const url = `https://api.etherscan.io/v2/api?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page || 1}&offset=${offset || 10}&sort=asc&apikey=${API_KEY}`
 
   try {
@@ -84,18 +90,21 @@ export async function ETHERSCAN(address, page, offset) {
     }
     const json = await response.json()
     if (json.result.includes("Invalid API Key")) {
-      return `${SERVICE_API_KEY.Etherscan}_MISSING`
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
+    }
+    if(json.result.includes('Max rate limit reached')){
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
     }
     /*
     [{blockNumber: '0x1d3d1', timeStamp: '0x5f7e4f', hash: '0x3c3c3c3c', nonce: '0x1',}]
     */
     return json.result;
   } catch (error) {
-    return "ERROR IN FETCHING"
+    return ERROR_MESSAGES_FLAG.DEFAULT
   }
 }
 
-export async function GETPRICE(token, vs_currencies) {
+export async function COINGECKO(token, vs_currencies) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Coingecko);
   const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vs_currencies}&ids=${token}`;
 
@@ -109,7 +118,10 @@ export async function GETPRICE(token, vs_currencies) {
     if (!response.ok) {
       const json = await response.json()
       if (json.status.error_message.includes("API Key Missing")) {
-        return `${SERVICE_API_KEY.Coingecko}_MISSING`
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
+      }
+      if(response.status === 429){
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
       }
     }
     const jsonResponse = await response.json()
@@ -128,7 +140,7 @@ export async function GETPRICE(token, vs_currencies) {
     */
     return [output];
   } catch (error) {
-    return "ERROR IN FETCHING"
+    return ERROR_MESSAGES_FLAG.DEFAULT
   }
 }
 
@@ -163,82 +175,15 @@ export async function EOA(address, categories, chain, startTime, endTime) {
     if (json.result?.includes?.("Invalid API Key")) {
       return `${SERVICE_API_KEY[chain.charAt(0).toUpperCase() + chain.slice(1)]}_MISSING`;
     }
+    if(json.result.includes('Max rate limit reached')){
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
+    }
     return json.result;
   } catch (e) {
     console.log(e);
-    return "ERROR IN FETCHING";
+    return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
-
-
-export function PNL() {
-  const [A, B] = utils.argsToArray(arguments);
-
-  const toNumberOrThrow = (val) => {
-    const num = Number(val);
-    if (isNaN(num)) throw new Error(`Invalid number value: ${val}`);
-    return num;
-  };
-
-  // Single numbers
-  if (typeof A === "number" && typeof B === "number") {
-    return A - B;
-  }
-
-  // 1D arrays
-  if (Array.isArray(A) && Array.isArray(B) && typeof A[0] !== "object") {
-    const maxLen = Math.max(A.length, B.length);
-    let total = 0;
-    for (let i = 0; i < maxLen; i++) {
-      const aVal = i < A.length ? toNumberOrThrow(A[i]) : 0;
-      const bVal = i < B.length ? toNumberOrThrow(B[i]) : 0;
-      total += aVal - bVal;
-    }
-    return total;
-  }
-
-  // 2D arrays
-  if (Array.isArray(A[0]) && typeof A[0][0] !== "object") {
-    let total = 0;
-    const maxRows = Math.max(A.length, B.length);
-    for (let i = 0; i < maxRows; i++) {
-      const rowA = A[i] || [];
-      const rowB = B[i] || [];
-      const maxCols = Math.max(rowA.length, rowB.length);
-      for (let j = 0; j < maxCols; j++) {
-        const aVal = j < rowA.length ? toNumberOrThrow(rowA[j]) : 0;
-        const bVal = j < rowB.length ? toNumberOrThrow(rowB[j]) : 0;
-        total += aVal - bVal;
-      }
-    }
-    return total;
-  }
-
-  // 3D arrays
-  if (Array.isArray(A[0][0])) {
-    let total = 0;
-    const maxX = Math.max(A.length, B.length);
-    for (let i = 0; i < maxX; i++) {
-      const matA = A[i] || [];
-      const matB = B[i] || [];
-      const maxY = Math.max(matA.length, matB.length);
-      for (let j = 0; j < maxY; j++) {
-        const rowA = matA[j] || [];
-        const rowB = matB[j] || [];
-        const maxZ = Math.max(rowA.length, rowB.length);
-        for (let k = 0; k < maxZ; k++) {
-          const aVal = k < rowA.length ? toNumberOrThrow(rowA[k]) : 0;
-          const bVal = k < rowB.length ? toNumberOrThrow(rowB[k]) : 0;
-          total += aVal - bVal;
-        }
-      }
-    }
-    return total;
-  }
-
-  throw new Error("Unsupported or mismatched structure");
-}
-
 
 export async function FLVURL(token, vs_currencies) {
   return new Promise((resolve) => {

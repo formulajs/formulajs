@@ -1,4 +1,3 @@
-<<<<<<< feat/blockscout-support
  export   const CHAIN_ID_MAP = {
     ethereum: 1,
     gnosis: 100,
@@ -13,15 +12,15 @@
   soneium: 'https://soneium.blockscout.com',
   unichain: 'https://unichain.blockscout.com'
 }
-=======
-export const CHAIN_ID_MAP = {
-  ethereum: 1,
-  gnosis: 100,
-  base: 8453,
-};
 
 export const SAFE_CHAIN_MAP = {
   ethereum: 'eth',
   gnosis: 'gno',
 };
->>>>>>> master
+
+export const ERROR_MESSAGES_FLAG = {
+  INVALID_API_KEY: '_INVALID_KEY',
+  RATE_LIMIT: '_RATE_LIMIT_REACHED',
+  DEFAULT: 'FETCH_ERROR',
+  MISSING_KEY: '_MISSING'
+}
