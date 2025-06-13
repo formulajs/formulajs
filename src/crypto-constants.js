@@ -7,8 +7,8 @@ export const SERVICE_API_KEY = {
 export const FUNCTION_LOCALE = [
   {
     LOGO: 'https://cdn.prod.website-files.com/65f94dfd53db8b337c808067/68485baa72714ae58f350ce2_bs-logo.png',
-    BRAND_COLOR: '#5353D3',
-    BRAND_SECONDARY_COLOR: '#2ABEFE',
+    BRAND_COLOR: '#f8f8fd',
+    BRAND_SECONDARY_COLOR: '#5353D3',
     n: 'BLOCKSCOUT',
     t: 20,
     d: 'Returns the onchain information about an address on a provided blockchain. By default on Ethereum mainnet.',
@@ -24,7 +24,7 @@ export const FUNCTION_LOCALE = [
       {
         name: 'type',
         detail: 'The type of data to query.',
-        example: `txns`,
+        example: `"txns"`,
         require: 'm',
         type: 'string'
       },
@@ -40,14 +40,14 @@ export const FUNCTION_LOCALE = [
         detail: 'The Unix timestamp marking the start of the transaction search range. Work with type === "txns"',
         example: '1680300000',
         require: 'o',
-        type: 'string'
+        type: 'rangenumber'
       },
       {
         name: 'endTimestamp',
         detail: 'The Unix timestamp marking the end of the transaction search range. Work with type === "txns"',
         example: '1680300000',
         require: 'o',
-        type: 'string'
+        type: 'rangenumber'
       },
       {
         name: 'page',
@@ -55,7 +55,7 @@ export const FUNCTION_LOCALE = [
         example: '1',
         require: 'o',
         repeat: 'n',
-        type: 'string'
+        type: 'rangenumber'
       },
       {
         name: 'offset',
@@ -63,7 +63,7 @@ export const FUNCTION_LOCALE = [
         example: '100',
         require: 'o',
         repeat: 'n',
-        type: 'string'
+        type: 'rangenumber'
       }
     ]
   },
@@ -190,7 +190,7 @@ export const FUNCTION_LOCALE = [
     ],
   },
   {
-    API_KEY: SERVICE_API_KEY.Etherscan,
+    API_KEY: SERVICE_API_KEY.Safe,
     LOGO: "https://safe-transaction-mainnet.safe.global/static/safe/favicon.png",
     BRAND_COLOR: "#ebf9f3",
     BRAND_SECONDARY_COLOR: "#00B460",

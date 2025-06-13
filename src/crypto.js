@@ -3,7 +3,7 @@ import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
 
 
-export async function BLOCKSCOUT(address, chain, type, page, offset, startTimestamp, endTimestamp) {
+export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimestamp, page, offset) {
   if (!chain) {
     chain = 'ethereum'
   }
