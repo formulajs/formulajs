@@ -1,10 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
-<<<<<<< feat/blockscout-support
-import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP} from './utils/constants'
-=======
-import { CHAIN_ID_MAP, SAFE_CHAIN_MAP } from './utils/constants'
->>>>>>> master
+import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP} from './utils/constants'
 import * as utils from './utils/common.js'
 
 
