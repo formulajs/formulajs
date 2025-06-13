@@ -1,7 +1,81 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
+<<<<<<< feat/blockscout-support
+import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP} from './utils/constants'
+=======
 import { CHAIN_ID_MAP, SAFE_CHAIN_MAP } from './utils/constants'
+>>>>>>> master
 import * as utils from './utils/common.js'
+
+
+export async function BLOCKSCOUT(address, chain, type, page, offset, startTimestamp, endTimestamp) {
+  if (!chain) {
+    chain = 'ethereum'
+  }
+
+  if (!type) {
+    return 'TYPE_MISSING'
+  }
+
+  if (!startTimestamp) {
+    const currentTimestamp = Date.now()
+    startTimestamp = currentTimestamp - 30 * 24 * 60 * 60 * 1000
+    startTimestamp = Math.floor(startTimestamp / 1000)
+  }
+
+  const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
+
+  let requestUrl
+
+  switch (type) {
+    case 'stat':
+      requestUrl = `${hostname}/api/v2/addresses/${address}/counters`
+      break
+    case 'txns':
+      requestUrl = `${hostname}/api?module=account&action=txlist&address=${address}&start_timestamp=${startTimestamp}&end_timestamp=${endTimestamp}&page=${page}&offset=${offset}&sort=asc`
+      break
+    case 'tokens':
+      requestUrl = `${hostname}/api?module=account&action=tokenlist&address=${address}`
+      break
+    default:
+      return 'INVALID_TYPE'
+  }
+  try {
+    const response = await fetch(requestUrl)
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+    const json = await response.json()
+
+    console.log(json)
+    if (json?.result?.includes('Invalid parameter(s)')) {
+      return `INVALID_REQUEST_PARAMS`
+    }
+    if (json?.result?.includes('Not found')) {
+      return `ADDRESS_NOT_FOUND`
+    }
+
+    if (type === 'stat') {
+      /*
+      For type === "stat"
+      [{transactions_count: "2940",token_transfers_count: "8346015",gas_usage_count: "91296738",validations_count: "0"}]
+      */
+      return [json]
+    }
+
+    /*
+    For type === "tokens"
+    [{balance: "287933140055877783279",contractAddress: "0x0000019226b5a2e87714daebde6a21e67fa88787",decimals: "18",name: "Doge King",symbol: "DOGEK",type: "ERC-20"}]
+
+    For type === "txns"
+    [{blockNumber: '65204', timeStamp: '1439232889', blockHash: '0x3c3c3c3c', nonce: '0',....}]
+    */
+    return json.result
+  } catch (error) {
+    return 'ERROR IN FETCHING'
+  }
+}
 
 export async function ETHERSCAN(address, page, offset) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);

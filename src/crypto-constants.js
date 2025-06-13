@@ -6,6 +6,68 @@ export const SERVICE_API_KEY = {
 
 export const FUNCTION_LOCALE = [
   {
+    LOGO: 'https://cdn.prod.website-files.com/65f94dfd53db8b337c808067/68485baa72714ae58f350ce2_bs-logo.png',
+    BRAND_COLOR: '#5353D3',
+    BRAND_SECONDARY_COLOR: '#2ABEFE',
+    n: 'BLOCKSCOUT',
+    t: 20,
+    d: 'Returns the onchain information about an address on a provided blockchain. By default on Ethereum mainnet.',
+    a: 'Returns the onchain information about an address on a provided blockchain. By default on Ethereum mainnet.',
+    p: [
+      {
+        name: 'address',
+        detail: 'The address string representing the addresses to check for balance',
+        example: `"0x813399e5b08Bb50b038AA7dF6347b6AF2D161828"`,
+        require: 'm',
+        type: 'string'
+      },
+      {
+        name: 'type',
+        detail: 'The type of data to query.',
+        example: `txns`,
+        require: 'm',
+        type: 'string'
+      },
+      {
+        name: 'chain',
+        detail: 'The blockchain to query. By default on Ethereum mainnet.',
+        example: `"ethereum"`,
+        require: 'o',
+        type: 'string'
+      },
+      {
+        name: 'startTimestamp',
+        detail: 'The Unix timestamp marking the start of the transaction search range. Work with type === "txns"',
+        example: '1680300000',
+        require: 'o',
+        type: 'string'
+      },
+      {
+        name: 'endTimestamp',
+        detail: 'The Unix timestamp marking the end of the transaction search range. Work with type === "txns"',
+        example: '1680300000',
+        require: 'o',
+        type: 'string'
+      },
+      {
+        name: 'page',
+        detail: 'The page number to return. Work with type === "txns"',
+        example: '1',
+        require: 'o',
+        repeat: 'n',
+        type: 'string'
+      },
+      {
+        name: 'offset',
+        detail: 'The number of transactions to return per page. Work with type === "txns"',
+        example: '100',
+        require: 'o',
+        repeat: 'n',
+        type: 'string'
+      }
+    ]
+  },
+  {
     API_KEY: SERVICE_API_KEY.Etherscan,
     LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
     BRAND_COLOR: "#F6F7F8",
