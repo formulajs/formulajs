@@ -72,37 +72,72 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
   }
 }
 
-export async function ETHERSCAN(address, page, offset) {
+export async function ETHERSCAN(...args) {
+  const [type, chain, address, startDate, endDate] = args;
+
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
-  if(!API_KEY){
-    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
+  if (!API_KEY) {
+    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   }
-  // temporary added for testing rate limit flow
-  if(API_KEY === 'xxxx'){
-  return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
+  // TO REMOVE - TEMORARY ADDED TO TEST RATE LIMIT FLOW
+  if (API_KEY === 'xxxx') {
+    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
   }
-  const url = `https://api.etherscan.io/v2/api?chainid=1&module=account&action=txlist&address=${address}&startblock=0&endblock=99999999&page=${page || 1}&offset=${offset || 10}&sort=asc&apikey=${API_KEY}`
+
+  const chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
+  if (!chainId) {
+    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;
+  }
+
+  let action;
+  switch (type) {
+    case 'all-txns':
+      action = 'txlist';
+      break;
+    case 'token-txns':
+      action = 'tokentx';
+      break;
+    case 'nft-txns':
+      action = 'tokennfttx';
+      break;
+    case 'gas':
+      action = 'gastracker';
+      break;
+    default:
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+  }
+
+  let url = `https://api.etherscan.io/v2/api?chainid=${chainId}&module=account&action=${action}&apikey=${API_KEY}`;
+
+  if (['all-txns', 'token-txns', 'nft-txns'].includes(type)) {
+    if (!address) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_ADDRESS}`;
+    url += `&address=${address}&startblock=0&endblock=99999999&sort=asc`;
+    if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
+      const startBlock = await fromTimeStampToBlock(startDate, chain, API_KEY);
+      const endBlock = await fromTimeStampToBlock(endDate, chain, API_KEY);
+      url += `&startblock=${startBlock}&endblock=${endBlock}`;
+    }
+  }
 
   try {
-    const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const json = await response.json();
+
+    if (typeof json.result === 'string' && json.result.includes('Invalid API Key')) {
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
     }
-    const json = await response.json()
-    if (json.result.includes("Invalid API Key")) {
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
+
+    if (typeof json.result === 'string' && json.result.includes('Max rate limit reached')) {
+      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
     }
-    if(json.result.includes('Max rate limit reached')){
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
-    }
-    /*
-    [{blockNumber: '0x1d3d1', timeStamp: '0x5f7e4f', hash: '0x3c3c3c3c', nonce: '0x1',}]
-    */
+
     return json.result;
   } catch (error) {
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
 
 export async function COINGECKO(token, vs_currencies) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Coingecko);
@@ -140,50 +175,75 @@ export async function COINGECKO(token, vs_currencies) {
     */
     return [output];
   } catch (error) {
+    console.log(error)
     return ERROR_MESSAGES_FLAG.DEFAULT
   }
 }
 
-export async function EOA(address, categories, chain, startTime, endTime) {
-  const API_KEYS = {
-    ethereum: window.localStorage.getItem(SERVICE_API_KEY.Etherscan),
-    gnosis: window.localStorage.getItem(SERVICE_API_KEY.Gnosisscan),
-    base: window.localStorage.getItem(SERVICE_API_KEY.Basescan),
-  };
-  const apiKey = API_KEYS[chain];
-  const chainId = CHAIN_ID_MAP[chain];
-  if (!apiKey || !chainId) return `${chain.toUpperCase()}_MISSING`;
-
-  let action = '';
-  if (categories === 'txns') action = 'account.txlist';
-  else { action = 'account.balance' };
-  let timeQuery = ''
-  if (!isNaN(startTime) && !isNaN(endTime)) {
-    const startBlock = await fromTimeStampToBlock(startTime, chain, apiKey);
-    const endBlock = await fromTimeStampToBlock(endTime, chain, apiKey);
-    timeQuery = `&startblock=${startBlock}&endblock=${endBlock}`
-  } else if (categories === 'balance') {
-    timeQuery = `&tag=latest`
-  } else {
-    throw new Error('Start and End Time is required for querying transaction list ')
-  }
-  const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&sort=asc&chainid=${chainId}&apikey=${apiKey}${timeQuery}`;
+export async function EOA(addresses, category, chains, startTime, endTime) {
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    const json = await response.json();
-    if (json.result?.includes?.("Invalid API Key")) {
-      return `${SERVICE_API_KEY[chain.charAt(0).toUpperCase() + chain.slice(1)]}_MISSING`;
+    const ADDRESSES = addresses.split(',').map(a => a.trim());
+    const CHAINS = typeof chains === 'string' ? chains.split(',').map(c => c.trim()) : chains;
+
+    const flatResults = [];
+    const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
+
+    if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+
+    for (const chain of CHAINS) {
+      const chainId = CHAIN_ID_MAP[chain];
+      if (!chainId) throw new Error('Unsupported chain');
+
+      for (const address of ADDRESSES) {
+        let action = category === 'txns' ? 'account.txlist' : 'account.balance';
+        let timeQuery = '';
+
+        if (category === 'txns') {
+          const startBlock = await fromTimeStampToBlock(startTime, chain, API_KEY);
+          const endBlock = await fromTimeStampToBlock(endTime, chain, API_KEY);
+          timeQuery = `&startblock=${startBlock}&endblock=${endBlock}`;
+        } else {
+          timeQuery = `&tag=latest`;
+        }
+
+        const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&sort=asc&chainid=${chainId}&apikey=${API_KEY}${timeQuery}`;
+
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            return `HTTP_${response.status}`;
+          }
+
+          const json = await response.json();
+
+          if (json.result?.includes?.('Invalid API Key')) {
+            return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
+          }
+
+          if (json.result?.includes?.('Max rate limit reached')) {
+            return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+          }
+
+          const entries = Array.isArray(json.result) ? json.result : [json.result];
+          for (const entry of entries) {
+            flatResults.push({ chain, address, ...entry });
+          }
+
+        } catch (e) {
+          return ERROR_MESSAGES_FLAG.DEFAULT;
+        }
+      }
     }
-    if(json.result.includes('Max rate limit reached')){
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
-    }
-    return json.result;
-  } catch (e) {
-    console.log(e);
+
+    return flatResults;
+  } catch (error) {
+    console.log(error);
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
+
+
 
 export async function FLVURL(token, vs_currencies) {
   return new Promise((resolve) => {

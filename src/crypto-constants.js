@@ -67,41 +67,54 @@ export const FUNCTION_LOCALE = [
       }
     ]
   },
-  {
-    API_KEY: SERVICE_API_KEY.Etherscan,
-    LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
-    BRAND_COLOR: "#F6F7F8",
-    BRAND_SECONDARY_COLOR: "#21325B",
-    n: "ETHERSCAN",
-    t: 20,
-    d: "Returns the list of transactions performed by an address, with optional pagination.",
-    a: "Returns the list of transactions performed by an address, with optional pagination.",
-    p: [
-      {
-        name: "value1",
-        detail:
-          "The address string representing the addresses to check for balance",
-        example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-        require: "m",
-      },
-      {
-        name: "page",
-        detail: "Page number.",
-        example: "1",
-        require: "o",
-        repeat: "n",
-        type: "rangenumber",
-      },
-      {
-        name: "size",
-        detail: "Page size(offset).",
-        example: "100",
-        require: "o",
-        repeat: "n",
-        type: "rangenumber",
-      },
-    ],
-  },
+{
+  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  BRAND_COLOR: "#F6F7F8",
+  BRAND_SECONDARY_COLOR: "#21325B",
+  n: "ETHERSCAN",
+  t: 20,
+  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  p: [
+    {
+      name: "type",
+      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"all-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "The wallet address to fetch data for (not required for 'gas').",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      example: `"1706659200"`,
+      require: "o",
+      type: "rangenumber"
+    }
+  ]
+},
+
   {
   API_KEY: SERVICE_API_KEY.Etherscan,
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
@@ -113,10 +126,11 @@ export const FUNCTION_LOCALE = [
   a: "Dynamically queries blockchain data such as transactions, balances by resolving time ranges to block ranges.",
   p: [
     {
-      name: "address",
-      detail: "The address to query, in hexadecimal format.",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      name: "addresses",
+      detail: "One or more Ethereum addresses (comma-separated) to query.",
+      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC,0x000000000000000000000000000000000000dead"`,
       require: "m",
+      type: "string"
     },
     {
       name: "categories",
@@ -147,6 +161,9 @@ export const FUNCTION_LOCALE = [
   ],
 },
   {
+        LOGO: 'https://files.readme.io/06394e687778e238a6cd43de6e1d7d339043aa50054703f64606369352ef1864-VariantCG-Symbol-Color.png',
+    BRAND_COLOR: '#f8fdf8',
+    BRAND_SECONDARY_COLOR: '#4bc63d',
     n: "COINGECKO",
     t: 20,
     API_KEY: SERVICE_API_KEY.Coingecko,
@@ -233,32 +250,34 @@ export const FUNCTION_LOCALE = [
       },
     ],
   },
+  {
+    n: "PNL",
+    t: 20,
+    d: "Subtract each element from A column from B column and return the total sum.",
+    a: "Returns the total of A - B element-wise subtraction across two ranges.",
+    p: [
       {
-      n: "PNL",
-      t: 20,
-      d: "Subtract each element from A column from B column and return the total sum.",
-      a: "Returns the total of A - B element-wise subtraction across two ranges.",
-      p: [
-        {
-          name: "A",
-          detail:
-            "The column or array of values to subtract from B (e.g. cost).",
-          example: "A1:A10",
-          require: "m",
-          repeat: "n",
-          type: "range",
-        },
-        {
-          name: "B",
-          detail:
-            "The column or array of values to subtract A from (e.g. revenue).",
-          example: "B1:B10",
-          require: "m",
-          repeat: "n",
-          type: "range",
-        },
-      ],
-    },
+        name: "A",
+        detail:
+          "The column or array of values to subtract from B (e.g. cost).",
+        example: "A1:A10",
+        require: "m",
+        repeat: "n",
+        type: "range",
+      },
+      {
+        name: "B",
+        detail:
+          "The column or array of values to subtract A from (e.g. revenue).",
+        example: "B1:B10",
+        require: "m",
+        repeat: "n",
+        type: "range",
+      },
+    ],
+  },
+
+    
 ]
 
 export * from './utils/constants'
