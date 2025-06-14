@@ -2,9 +2,127 @@ export const SERVICE_API_KEY = {
   Etherscan: "ETHERSCAN_API_KEY",
   Coingecko: "COINGECKO_API_KEY",
   Safe: "SAFE_API_KEY",
+  Basescan: "BASESCAN_API_KEY",
+  Gnosisscan: "GNOSIS_API_KEY",
+  Firefly: "FIRE_FLY_API_KEY"
 }
 
 export const FUNCTION_LOCALE = [
+  {
+  API_KEY: SERVICE_API_KEY.Firefly,
+  LOGO: "https://firefly.social/android-chrome-192x192.png",
+  BRAND_COLOR: "#f8f5fc",
+  BRAND_SECONDARY_COLOR: "#855dcd",
+  n: "FIREFLY",
+  t: 20,
+  d: "Fetches posts or replies from Farcaster or Lens using Firefly's OpenAPI and returns simplified text content.",
+  a: "Retrieves posts or replies from Firefly OpenAPI by username, user ID, or post ID/hash for Farcaster and Lens platforms. Returns a flattened array of content with id, author, text, createdAt, and platform.",
+  p: [
+    {
+      name: "platform",
+      detail: "The social platform to query. Supports 'farcaster' or 'lens'.",
+      example: `"farcaster"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "contentType",
+      detail: "The type of content to fetch. Can be 'posts' or 'replies'.",
+      example: `"posts"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "identifier",
+      detail: "The username, user ID, or post ID/hash depending on platform and contentType.",
+      example: `"toka" or "0xcb6cab2048..."`,
+      require: "m",
+      type: "string"
+    }
+  ]
+},
+
+  {
+  API_KEY: SERVICE_API_KEY.Neynar,
+  LOGO: "https://framerusercontent.com/images/OS5YeZ2Y7DmszAxL6Zf06pXtKzc.svg",
+  BRAND_COLOR: "##e8e6ff",
+  BRAND_SECONDARY_COLOR: "#28204A",
+  n: "NEYNAR",
+  t: 20,
+  d: "Fetches followers for a given Farcaster FID using Neynar's API.",
+  a: "Retrieves followers of a Farcaster user, with support for sorting, pagination, and optional viewer context.",
+  p: [
+    {
+      name: "fid",
+      detail: "The Farcaster FID of the user whose followers should be fetched.",
+      example: `123`,
+      require: "m",
+      type: "number"
+    },
+    {
+      name: "viewerFid",
+      detail: "FID of the viewer, to include contextual info like mutual follows (optional).",
+      example: `456`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "sortType",
+      detail: "Sorting type: either 'desc_chron' (default) or 'algorithmic'.",
+      example: `"desc_chron"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "limit",
+      detail: "Number of followers to return (max 100).",
+      example: `20`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "cursor",
+      detail: "Cursor string for paginating the result set.",
+      example: `"eyJvZmZzZXQiOjIwLCJsYXN0SWQiOjEyMzQ1Nn0="`,
+      require: "o",
+      type: "string"
+    }
+  ]
+},
+    {
+    API_KEY: SERVICE_API_KEY.Basescan,
+    LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",          // public Base logo
+    BRAND_COLOR: "#f1f5ff",                          
+    BRAND_SECONDARY_COLOR: "#2752ff",
+    n: "BASESCAN",
+    t: 20,
+    d: "Fetches Base network data via Basescan: native txns, ERC-20 transfers, ERC-721 transfers, and gas metrics.",
+    a: "Pulls on-chain activity for Base (chainid 8453) using Basescan’s API — supports full tx history, token/NFT transfers, and live gas info.",
+    p: [
+      { name: "type",     detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.", example: `"token-txns"`, require: "m", type: "string" },
+      { name: "chain",    detail: "Must be 'base'.",                                              example: `"base"`,        require: "m", type: "string" },
+      { name: "address",  detail: "Target wallet (omit for 'gas').",                              example: `"0x1234…abcd"`, require: "o", type: "string" },
+      { name: "startDate",detail: "Start UNIX timestamp (sec).",                                  example: `"1704067200"`,  require: "o", type: "rangenumber" },
+      { name: "endDate",  detail: "End UNIX timestamp (sec).",                                    example: `"1706659200"`,  require: "o", type: "rangenumber" }
+    ]
+  },
+    {
+    API_KEY: SERVICE_API_KEY.Gnosisscan,
+    LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  BRAND_COLOR: "#f6f7f6",
+  BRAND_SECONDARY_COLOR: "#133629",
+    n: "GNOSISSCAN",
+    t: 20,
+    d: "Fetches Gnosis Chain data via Gnosisscan: txns, token transfers, NFT transfers, and gas metrics.",
+    a: "Queries Gnosis Chain (chainid 100) through Gnosisscan’s API to return txns, token/NFT transfers, or gas info for a wallet.",
+    p: [
+      { name: "type",     detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.", example: `"nft-txns"`,   require: "m", type: "string" },
+      { name: "chain",    detail: "Must be 'gnosis'.",                                             example: `"gnosis"`,      require: "m", type: "string" },
+      { name: "address",  detail: "Target wallet (omit for 'gas').",                               example: `"0x6789…efab"`, require: "o", type: "string" },
+      { name: "startDate",detail: "Start UNIX timestamp (sec).",                                   example: `"1704067200"`,  require: "o", type: "rangenumber" },
+      { name: "endDate",  detail: "End UNIX timestamp (sec).",                                     example: `"1706659200"`,  require: "o", type: "rangenumber" }
+    ]
+  },
   {
     LOGO: 'https://cdn.prod.website-files.com/65f94dfd53db8b337c808067/68485baa72714ae58f350ce2_bs-logo.png',
     BRAND_COLOR: '#f8f8fd',
@@ -564,7 +682,7 @@ export const FUNCTION_LOCALE = [
 
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://safe-transaction-mainnet.safe.global/static/safe/favicon.png",
+  LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
   n: "GNOSIS",

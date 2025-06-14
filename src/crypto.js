@@ -1,6 +1,76 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
+import { handleScanRequest } from "./utils/handle-explorer-request";
+
+
+
+
+export async function FIREFLY(platform, contentType, identifier) {
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
+  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+
+  const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
+  const headers = {
+    "x-api-key": API_KEY,
+  };
+
+  let query = "";
+  let type = "";
+
+  // normalize input
+  const normalizedId = identifier.trim().replace(/.*\/([^\/]+)$/, "$1"); // extract last part of URL if needed
+
+  if (platform === "farcaster") {
+    if (contentType === "posts") {
+      type = "farcasterid";
+      query = normalizedId;
+    } else if (contentType === "replies") {
+      type = "farcasterpostid";
+      query = normalizedId.startsWith("0x") ? normalizedId : Number(normalizedId).toString();
+    } else {
+      return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+    }
+  } else if (platform === "lens") {
+    if (contentType === "posts") {
+      type = "lensid";
+      query = normalizedId;
+    } else if (contentType === "replies") {
+      type = "lenspostid";
+      query = normalizedId;
+    } else {
+      return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+    }
+  } else {
+    return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+  }
+
+  const url = new URL(baseUrl);
+  url.searchParams.set("query", query);
+  url.searchParams.set("type", type);
+  url.searchParams.set("size", "10");
+  url.searchParams.set("cursor", "0");
+
+  try {
+    const res = await fetch(url.toString(), { headers });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const flattened = Array.isArray(json?.data)
+      ? json.data.map(item => ({
+          id: item?.id || null,
+          author: item?.author?.username || item?.author?.handle || "",
+          text: item?.text || item?.metadata?.content?.content || "",
+          createdAt: item?.createdAt || "",
+          platform: platform,
+        }))
+      : [];
+
+    return flattened;
+  } catch (err) {
+    console.error("FIREFLY fetch error:", err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
 
 
 export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimestamp, page, offset) {
@@ -72,70 +142,143 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
   }
 }
 
-export async function ETHERSCAN(...args) {
+export async function BASESCAN(...args) {
   const [type, chain, address, startDate, endDate] = args;
+  return handleScanRequest({
+    scanKey: SERVICE_API_KEY.Basescan,
+    baseUrl: 'https://api.basescan.org/api',
+    type,
+    chain,
+    address,
+    startDate,
+    endDate,
+  });
+}
+export async function GNOSISSCAN(...args) {
+  const [type, chain, address, startDate, endDate] = args;
+  return handleScanRequest({
+    scanKey: SERVICE_API_KEY.Gnosisscan,
+    baseUrl: 'https://api.gnosisscan.io/api',
+    type,
+    chain,
+    address,
+    startDate,
+    endDate,
+  });
+}
 
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
-  if (!API_KEY) {
-    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+export async function NEYNAR( 
+  fid, 
+  viewerFid, 
+  sortType, 
+  limit, 
+  cursor 
+) {
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Neynar);
+  if (!API_KEY) return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+
+
+  const url = new URL('https://api.neynar.com/v2/farcaster/followers');
+  url.searchParams.set('fid', fid.toString());
+  url.searchParams.set('sort_type', sortType);
+  url.searchParams.set('limit', limit.toString());
+  if (viewerFid !== null) url.searchParams.set('viewer_fid', viewerFid.toString());
+  if (cursor) url.searchParams.set('cursor', cursor);
+
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        'x-api-key': API_KEY,
+        'x-neynar-experimental': 'false'
+      }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const json = await response.json();
+    if (!json?.users?.length) return [];
+
+    return json.users.map(({ user }) => ({
+      username: user.username,
+      custody_address: user.custody_address,
+      follower_count: user.follower_count,
+      country: user.profile?.location?.address?.country || '',
+      city: user.profile?.location?.address?.city || ''
+    }));
+  } catch (err) {
+    console.error('NEYNAR_FETCH_FOLLOWERS error:', err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
   }
-  // TO REMOVE - TEMORARY ADDED TO TEST RATE LIMIT FLOW
-  if (API_KEY === 'xxxx') {
-    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+}
+export async function GNOSIS({
+  cardId,
+  startDate,
+  endDate,
+  limit = 20,
+  offset = 0,
+}) {
+  const apiKeyKey = SERVICE_API_KEY.GnosisPay
+  const API_KEY = window.localStorage.getItem(apiKeyKey);
+  if (!API_KEY) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+  if (!cardId) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+
+  const url = new URL(`https://api.gnosispay.com/cards/${cardId}/transactions`);
+  url.searchParams.set('limit', limit.toString());
+  url.searchParams.set('offset', offset.toString());
+
+  if (!isNaN(startDate)) {
+    url.searchParams.set('startDate', new Date(startDate * 1000).toISOString());
   }
 
-  const chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
-  if (!chainId) {
-    return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;
-  }
-
-  let action;
-  switch (type) {
-    case 'all-txns':
-      action = 'txlist';
-      break;
-    case 'token-txns':
-      action = 'tokentx';
-      break;
-    case 'nft-txns':
-      action = 'tokennfttx';
-      break;
-    case 'gas':
-      action = 'gastracker';
-      break;
-    default:
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
-  }
-
-  let url = `https://api.etherscan.io/v2/api?chainid=${chainId}&module=account&action=${action}&apikey=${API_KEY}`;
-
-  if (['all-txns', 'token-txns', 'nft-txns'].includes(type)) {
-    if (!address) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_ADDRESS}`;
-    url += `&address=${address}&startblock=0&endblock=99999999&sort=asc`;
-    if (startDate && endDate && !isNaN(startDate) && !isNaN(endDate)) {
-      const startBlock = await fromTimeStampToBlock(startDate, chain, API_KEY);
-      const endBlock = await fromTimeStampToBlock(endDate, chain, API_KEY);
-      url += `&startblock=${startBlock}&endblock=${endBlock}`;
-    }
+  if (!isNaN(endDate)) {
+    url.searchParams.set('endDate', new Date(endDate * 1000).toISOString());
   }
 
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    const json = await response.json();
+    const res = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (typeof json.result === 'string' && json.result.includes('Invalid API Key')) {
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
-    }
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
 
-    if (typeof json.result === 'string' && json.result.includes('Max rate limit reached')) {
-      return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
-    }
+    const json = await res.json();
 
-    return json.result;
-  } catch (error) {
+    if (!Array.isArray(json)) return [];
+
+    return json.map(tx => ({
+      createdAt: tx.createdAt,
+      clearedAt: tx.clearedAt,
+      country: tx.country,
+      merchant: tx.merchant,
+      billingAmount: tx.billingAmount,
+      billingCurrency: tx.billingCurrency,
+      transactionAmount: tx.transactionAmount,
+      transactionCurrency: tx.transactionCurrency,
+      transactionType: tx.transactionType,
+      kind: tx.kind,
+      status: tx.status || null,
+      mcc: tx.mcc,
+    }));
+  } catch (err) {
+    console.error('GNOSISPAY_CARD_TXNS error:', err);
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
+}
+
+
+
+export async function ETHERSCAN(...args) {
+  const [type, chain, address, startDate, endDate] = args;
+  return handleScanRequest({
+    scanKey: SERVICE_API_KEY.Etherscan,
+    baseUrl: 'https://api.etherscan.io/v2/api',
+    type,
+    chain,
+    address,
+    startDate,
+    endDate,
+  });
 }
 
 

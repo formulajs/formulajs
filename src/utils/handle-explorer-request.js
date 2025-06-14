@@ -1,0 +1,63 @@
+import {fromTimeStampToBlock} from './from-timestamp-to-block'
+import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG} from './constants'
+
+
+
+export async function handleScanRequest({
+  scanKey,
+  baseUrl,
+  type,
+  chain,
+  address,
+  startDate,
+  endDate,
+}) {
+  const API_KEY = window.localStorage.getItem(scanKey);
+  if (!API_KEY) return `${scanKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+  if (API_KEY === 'xxxx') return `${scanKey}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+
+  const chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
+  if (!chainId) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;
+
+  const ACTION_MAP = {
+    'all-txns': 'txlist',
+    'token-txns': 'tokentx',
+    'nft-txns': 'tokennfttx',
+    'gas': 'gastracker',
+  };
+
+  const action = ACTION_MAP[type];
+  if (!action) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+
+  let url = `${baseUrl}?chainid=${chainId}&module=account&action=${action}&apikey=${API_KEY}`;
+
+  if (['all-txns', 'token-txns', 'nft-txns'].includes(type)) {
+    if (!address) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_ADDRESS}`;
+    url += `&address=${address}&startblock=0&endblock=99999999&sort=asc`;
+
+    if (!isNaN(startDate) && !isNaN(endDate)) {
+      const [startBlock, endBlock] = await Promise.all([
+        fromTimeStampToBlock(startDate, chain, API_KEY),
+        fromTimeStampToBlock(endDate, chain, API_KEY),
+      ]);
+      url += `&startblock=${startBlock}&endblock=${endBlock}`;
+    }
+  }
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+    const json = await res.json();
+
+    if (typeof json.result === 'string') {
+      if (json.result.includes('Invalid API Key')) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
+      if (json.result.includes('Max rate limit reached')) return `${scanKey}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+    }
+
+    return json.result;
+  } catch (err) {
+    console.error(`[${scanKey}]`, err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
+
