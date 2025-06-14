@@ -4,7 +4,8 @@ export const SERVICE_API_KEY = {
   Safe: "SAFE_API_KEY",
   Basescan: "BASESCAN_API_KEY",
   Gnosisscan: "GNOSIS_API_KEY",
-  Firefly: "FIRE_FLY_API_KEY"
+  Firefly: "FIRE_FLY_API_KEY",
+  GnosisPay: 'GNOSIS_API_KEY'
 }
 
 export const FUNCTION_LOCALE = [
@@ -153,7 +154,7 @@ export const FUNCTION_LOCALE = [
 ,
 {
   API_KEY: SERVICE_API_KEY.Gnosisscan,
-  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
   n: "GNOSISSCAN",
@@ -225,7 +226,7 @@ export const FUNCTION_LOCALE = [
       {
         name: 'address',
         detail: 'The address string representing the addresses to check for balance',
-        example: `"0xe9A6378d8FD4983C2999DB0735f258397E8C2253"`,
+        example: `"0x50Aa3435E310d5a2d15a989Bc353ce7f5682E1d4"`,
         require: 'm',
         type: 'string'
       },
@@ -239,21 +240,21 @@ export const FUNCTION_LOCALE = [
       {
         name: 'chain',
         detail: 'The blockchain to query. By default on Ethereum mainnet.',
-        example: `"gnosis"`,
+        example: `"ethereum"`,
         require: 'o',
         type: 'string'
       },
       {
         name: 'startTimestamp',
         detail: 'The Unix timestamp marking the start of the transaction search range. Work with type === "txns"',
-        example: '1721174400',
+        example: '1704067200',
         require: 'o',
         type: 'rangenumber'
       },
       {
         name: 'endTimestamp',
         detail: 'The Unix timestamp marking the end of the transaction search range. Work with type === "txns"',
-        example: '20250614',
+        example: '1719792000',
         require: 'o',
         type: 'rangenumber'
       },
@@ -268,7 +269,7 @@ export const FUNCTION_LOCALE = [
       {
         name: 'offset',
         detail: 'The number of transactions to return per page. Work with type === "txns"',
-        example: '100',
+        example: '2',
         require: 'o',
         repeat: 'n',
         type: 'rangenumber'
@@ -357,14 +358,14 @@ export const FUNCTION_LOCALE = [
     {
       name: "startTime",
       detail: "Start time in UNIX timestamp (seconds). Used to calculate starting block for transaction queries.",
-      example: "1721174400",
+      example: "1704067200",
       require: "m",
       type: "rangenumber"
     },
     {
       name: "endTime",
       detail: "End time in UNIX timestamp (seconds). Used to calculate ending block for transaction queries.",
-      example: "1722988800",
+      example: "1719792000",
       require: "m",
       type: "rangenumber"
     },
@@ -385,52 +386,71 @@ export const FUNCTION_LOCALE = [
   ],
 }
 ,
-  {
-        LOGO: 'https://files.readme.io/06394e687778e238a6cd43de6e1d7d339043aa50054703f64606369352ef1864-VariantCG-Symbol-Color.png',
-    BRAND_COLOR: '#f8fdf8',
-    BRAND_SECONDARY_COLOR: '#4bc63d',
-    n: "COINGECKO",
-    t: 20,
-    API_KEY: SERVICE_API_KEY.Coingecko,
-    d: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
-    a: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
-    p: [
-      {
-        name: "token",
-        detail:
-          "coins' IDs, comma-separated if querying more than 1 coin.",
-        example: `"bitcoin"`,
-        require: "m",
-      },
-      {
-        name: "vs_currency",
-        detail: "target currency of coins, comma-separated if querying more than 1 currency",
-        example: `"usd"`,
-        require: "m",
-      },
-    ],
-  },
-  {
-    n: "FLVURL",
-    t: 20,
-    d: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
-    a: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
-    p: [
-      {
-        name: "token",
-        detail:
-          "coins' IDs, comma-separated if querying more than 1 coin.",
-        example: `"bitcoin"`,
-        require: "m",
-      },
-      {
-        name: "vs_currency",
-        detail: "target currency of coins, comma-separated if querying more than 1 currency",
-        example: `"usd"`,
-        require: "m",
-      },
-    ],
-  },
+{
+  LOGO: 'https://files.readme.io/06394e687778e238a6cd43de6e1d7d339043aa50054703f64606369352ef1864-VariantCG-Symbol-Color.png',
+  BRAND_COLOR: '#f8fdf8',
+  BRAND_SECONDARY_COLOR: '#4bc63d',
+  n: 'COINGECKO',
+  t: 20,
+  API_KEY: SERVICE_API_KEY.Coingecko,
+  d: 'Query crypto prices, ecosystem market data, or derivatives from CoinGecko, with pagination support.',
+  a: 'Supports querying token prices, ecosystem market data (with optional trend filters), and derivatives (global or per exchange). Output is flat and spreadsheet-friendly. Pagination supported for market and derivatives.',
+  p: [
+    {
+      name: 'category',
+      detail: 'Query type: "price", "market", or "derivatives".',
+      example: `"price"`,
+      require: 'm'
+    },
+    {
+      name: 'param1',
+      detail: `For "price": coin ID(s). For "market": ecosystem key (e.g. eth, base). For "derivatives": exchange name.`,
+      example: `"bitcoin" | "eth" | "binance_futures"`,
+      require: 'o'
+    },
+    {
+      name: 'param2',
+      detail: `For "price": target currency(ies). For "market": comma-separated trend keys (e.g. 1h,24h,7d).`,
+      example: `"usd" | "1h,24h,7d"`,
+      require: 'o'
+    },
+    {
+      name: 'page',
+      detail: 'Pagination: page number (only for "market" and "derivatives").',
+      example: `1`,
+      require: 'o'
+    },
+    {
+      name: 'per_page',
+      detail: 'Pagination: items per page (only for "market" and "derivatives").',
+      example: `2`,
+      require: 'o'
+    }
+  ]
+}
+
+,
+  // {
+  //   n: "FLVURL",
+  //   t: 20,
+  //   d: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
+  //   a: "Query the prices of one or more coins by using their unique Coin API IDs, symbols, or names.",
+  //   p: [
+  //     {
+  //       name: "token",
+  //       detail:
+  //         "coins' IDs, comma-separated if querying more than 1 coin.",
+  //       example: `"bitcoin"`,
+  //       require: "m",
+  //     },
+  //     {
+  //       name: "vs_currency",
+  //       detail: "target currency of coins, comma-separated if querying more than 1 currency",
+  //       example: `"usd"`,
+  //       require: "m",
+  //     },
+  //   ],
+  // },
   {
     API_KEY: SERVICE_API_KEY.Safe,
     LOGO: "https://safe-transaction-mainnet.safe.global/static/safe/favicon.png",
@@ -884,7 +904,7 @@ export const FUNCTION_LOCALE = [
 },
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://avatars.githubusercontent.com/u/129790008?s=48&v=4",
+  LOGO: "https://www.tally.xyz/favicon.ico",
   BRAND_COLOR: "#f9f8ff",
   BRAND_SECONDARY_COLOR: "#725bff",
   n: "TALLY",

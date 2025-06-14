@@ -288,105 +288,195 @@ export async function ETHERSCAN(...args) {
 }
 
 
-export async function COINGECKO(token, vs_currencies) {
+export async function COINGECKO(category, param1, param2, page = 1, perPage = 2) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Coingecko);
-  const url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vs_currencies}&ids=${token}`;
+  if (!API_KEY) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
-  const options = {
-    method: 'GET',
-    headers: { accept: 'application/json', 'x-cg-demo-api-key': `${API_KEY}` },
+  const headers = {
+    accept: 'application/json',
+    'x-cg-demo-api-key': API_KEY,
   };
 
-  try {
-    const response = await fetch(url, options)
-    if (!response.ok) {
-      const json = await response.json()
-      if (json.status.error_message.includes("API Key Missing")) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
-      }
-      if(response.status === 429){
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
-      }
-    }
-    const jsonResponse = await response.json()
+  let url = '';
 
-    // Free Coingecko API does not require API key, not need to handle API key error
-
-    const output = {};
-    for (const [coin, prices] of Object.entries(jsonResponse)) {
-      for (const [currency, value] of Object.entries(prices)) {
-        const key = `${coin.charAt(0).toUpperCase() + coin.slice(1)}_${currency.toUpperCase()}`;
-        output[key] = value;
-      }
+  switch ((category || '').toLowerCase()) {
+    case 'price': {
+      const token = param1;
+      const vsCurrencies = param2;
+      if (!token || !vsCurrencies) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAMS}`;
+      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies}&ids=${token}`;
+      break;
     }
-    /*
-    [{Bitcon_usd: 1, Bitcoin_eur: 1},{Ethereum_usd: 1, Ethereum_eur: 1}}]
-    */
-    return [output];
-  } catch (error) {
-    console.log(error)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+
+    case 'market': {
+      const ecosystemMap = {
+        eth: 'ethereum-ecosystem',
+        base: 'base-ecosystem',
+        sol: 'solana-ecosystem',
+        gnosis: 'gnosis-chain',
+        hyperliquid: 'hyperliquid',
+        bitcoin: 'bitcoin-ecosystem',
+        pump: 'pump-ecosystem',
+      };
+
+      const ecosystemKey = param1 ? param1.toLowerCase() : '';
+      const ecosystemCategory = ecosystemMap[ecosystemKey] || '';
+      const priceTrend = param2 ? `&price_change_percentage=${param2}` : '';
+
+      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=${page}&per_page=${perPage}`;
+      if (ecosystemCategory) url += `&category=${ecosystemCategory}`;
+      if (priceTrend) url += priceTrend;
+      break;
+    }
+
+    case 'derivatives': {
+      const exchange = param1;
+      if (exchange) {
+        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all?page=${page}&per_page=${perPage}`;
+      } else {
+        url = `https://api.coingecko.com/api/v3/derivatives?page=${page}&per_page=${perPage}`;
+      }
+      break;
+    }
+
+    default:
+      return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAMS}`;
   }
-}
 
-export async function EOA(addresses, category, chains, startTime, endTime, page = 1, offset = 10) {
   try {
-    const ADDRESSES = addresses.split(',').map(a => a.trim());
-    const CHAINS = typeof chains === 'string' ? chains.split(',').map(c => c.trim()) : chains;
+    const response = await fetch(url, { method: 'GET', headers });
+    const json = await response.json();
 
-    const flatResults = [];
-    const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
-
-    if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
-
-    for (const chain of CHAINS) {
-      const chainId = CHAIN_ID_MAP[chain];
-      if (!chainId) throw new Error('Unsupported chain');
-
-      for (const address of ADDRESSES) {
-        let action = category === 'txns' ? 'account.txlist' : 'account.balance';
-        let timeQuery = '';
-
-        if (category === 'txns') {
-          const startBlock = await fromTimeStampToBlock(startTime, chain, API_KEY);
-          const endBlock = await fromTimeStampToBlock(endTime, chain, API_KEY);
-          timeQuery = `&startblock=${startBlock}&endblock=${endBlock}&page=${page}&offset=${offset}&sort=asc`;
-        } else {
-          timeQuery = `&tag=latest`;
-        }
-
-        const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&chainid=${chainId}&apikey=${API_KEY}${timeQuery}`;
-
-        try {
-          const response = await fetch(url);
-          if (!response.ok) return `HTTP_${response.status}`;
-
-          const json = await response.json();
-
-          if (json.result?.includes?.('Invalid API Key')) {
-            return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
-          }
-
-          if (json.result?.includes?.('Max rate limit reached')) {
-            return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
-          }
-
-          const entries = Array.isArray(json.result) ? json.result : [json.result];
-          for (const entry of entries) {
-            flatResults.push({ chain, address, ...entry });
-          }
-        } catch (e) {
-          return ERROR_MESSAGES_FLAG.DEFAULT;
-        }
+    if (!response.ok) {
+      const message = json?.status?.error_message || '';
+      if (message.includes('API Key Missing')) {
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
+      }
+      if (response.status === 429) {
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
       }
     }
 
-    return flatResults;
+    // Flat output for price
+    if (category.toLowerCase() === 'price') {
+      const output = {};
+      for (const [token, prices] of Object.entries(json)) {
+        for (const [currency, value] of Object.entries(prices)) {
+          const key = `${token.charAt(0).toUpperCase() + token.slice(1)}_${currency.toUpperCase()}`;
+          output[key] = value;
+        }
+      }
+      return [output];
+    }
+
+    // Flat objects only (skip nested) for market/derivatives
+    const flatArray = Array.isArray(json) ? json : [json];
+    return flatArray.map(item => {
+      const flat = {};
+      for (const [key, value] of Object.entries(item)) {
+        if (typeof value !== 'object' || value === null) {
+          flat[key] = value;
+        }
+      }
+      return flat;
+    });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
+
+
+export async function EOA(
+  addresses,
+  category,
+  chains,
+  startTime,
+  endTime,
+  page = 1,
+  offset = 10,
+) {
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
+  if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+
+  const ADDRS = addresses.split(",").map(a => a.trim()).filter(Boolean);
+  const CHAINS = chains.split(",").map(c => c.trim()).filter(Boolean);
+
+  const out = [];
+
+  for (const chain of CHAINS) {
+    const chainId = CHAIN_ID_MAP[chain];
+    if (!chainId) return ERROR_MESSAGES_FLAG.UNSUPPORTED_CHAIN;
+
+    if (category === "balance") {
+      for (let i = 0; i < ADDRS.length; i += 20) {
+        const slice = ADDRS.slice(i, i + 20).join(",");
+        const action = ADDRS.length > 1 ? "balancemulti" : "balance";
+
+        const url =
+          `https://api.etherscan.io/v2/api?chainid=${chainId}` +
+          `&module=account&action=${action}&address=${slice}` +
+          `&tag=latest&apikey=${API_KEY}`;
+
+        const data = await fetchJSON(url);
+        if (typeof data === "string") return data;
+
+        (Array.isArray(data) ? data : [data]).forEach(r =>
+          out.push({ chain, ...r }),
+        );
+      }
+      continue;
+    }
+
+    if (category === "txns") {
+      const startBlock = await fromTimeStampToBlock(startTime, chain, API_KEY);
+      const endBlock = await fromTimeStampToBlock(endTime, chain, API_KEY);
+
+      for (const addr of ADDRS) {
+        const url =
+          `https://api.etherscan.io/v2/api?chainid=${chainId}` +
+          `&module=account&action=txlist&address=${addr}` +
+          `&startblock=${startBlock}&endblock=${endBlock}` +
+          `&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`;
+
+        const data = await fetchJSON(url);
+        if (typeof data === "string") return data;
+
+        data.forEach((tx) => out.push({ chain, address: addr, ...tx }));
+      }
+      continue;
+    }
+
+    return ERROR_MESSAGES_FLAG.INVALID_CATEGORY;
+  }
+
+  return out;
+
+  // helper for uniform error handling
+  async function fetchJSON(url) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return `HTTP_${res.status}`;
+
+      const json = await res.json();
+
+      if (json.result?.includes?.("Invalid API Key"))
+        return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
+
+      if (json.result?.includes?.("Max rate limit reached"))
+        return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+
+      if (json.status === "0" && json.message !== "No transactions found")
+        return ERROR_MESSAGES_FLAG.DEFAULT;
+
+      return json.result;
+    } catch {
+      return ERROR_MESSAGES_FLAG.DEFAULT;
+    }
+  }
+}
+
 
 
 
