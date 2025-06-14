@@ -789,7 +789,7 @@ export const FUNCTION_LOCALE = [
 
 {
   API_KEY: SERVICE_API_KEY.GnosisPay,
-  LOGO: "https://gnosispay.com/favicon.ico",
+  LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
   n: "GNOSIS",
