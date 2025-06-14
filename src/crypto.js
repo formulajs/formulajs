@@ -143,7 +143,7 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
 }
 
 export async function BASESCAN(...args) {
-  const [type, chain, address, startDate, endDate] = args;
+  const [type, chain, address, startDate, endDate, page, limit] = args;
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Basescan,
     baseUrl: 'https://api.basescan.org/api',
@@ -152,10 +152,12 @@ export async function BASESCAN(...args) {
     address,
     startDate,
     endDate,
+    page,
+    offset:limit
   });
 }
 export async function GNOSISSCAN(...args) {
-  const [type, chain, address, startDate, endDate] = args;
+  const [type, chain, address, startDate, endDate, page, limit] = args;
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Gnosisscan,
     baseUrl: 'https://api.gnosisscan.io/api',
@@ -164,6 +166,8 @@ export async function GNOSISSCAN(...args) {
     address,
     startDate,
     endDate,
+    page, 
+    offset:limit
   });
 }
 
@@ -269,7 +273,7 @@ export async function GNOSIS({
 
 
 export async function ETHERSCAN(...args) {
-  const [type, chain, address, startDate, endDate] = args;
+  const [type, chain, address, startDate, endDate, page, limit] = args;
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Etherscan,
     baseUrl: 'https://api.etherscan.io/v2/api',
@@ -278,6 +282,8 @@ export async function ETHERSCAN(...args) {
     address,
     startDate,
     endDate,
+    page, 
+    offset:limit
   });
 }
 
@@ -323,7 +329,7 @@ export async function COINGECKO(token, vs_currencies) {
   }
 }
 
-export async function EOA(addresses, category, chains, startTime, endTime) {
+export async function EOA(addresses, category, chains, startTime, endTime, page = 1, offset = 10) {
   try {
     const ADDRESSES = addresses.split(',').map(a => a.trim());
     const CHAINS = typeof chains === 'string' ? chains.split(',').map(c => c.trim()) : chains;
@@ -344,18 +350,16 @@ export async function EOA(addresses, category, chains, startTime, endTime) {
         if (category === 'txns') {
           const startBlock = await fromTimeStampToBlock(startTime, chain, API_KEY);
           const endBlock = await fromTimeStampToBlock(endTime, chain, API_KEY);
-          timeQuery = `&startblock=${startBlock}&endblock=${endBlock}`;
+          timeQuery = `&startblock=${startBlock}&endblock=${endBlock}&page=${page}&offset=${offset}&sort=asc`;
         } else {
           timeQuery = `&tag=latest`;
         }
 
-        const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&sort=asc&chainid=${chainId}&apikey=${API_KEY}${timeQuery}`;
+        const url = `https://api.etherscan.io/v2/api?module=${action.split('.')[0]}&action=${action.split('.')[1]}&address=${address}&chainid=${chainId}&apikey=${API_KEY}${timeQuery}`;
 
         try {
           const response = await fetch(url);
-          if (!response.ok) {
-            return `HTTP_${response.status}`;
-          }
+          if (!response.ok) return `HTTP_${response.status}`;
 
           const json = await response.json();
 
@@ -371,7 +375,6 @@ export async function EOA(addresses, category, chains, startTime, endTime) {
           for (const entry of entries) {
             flatResults.push({ chain, address, ...entry });
           }
-
         } catch (e) {
           return ERROR_MESSAGES_FLAG.DEFAULT;
         }
@@ -384,6 +387,7 @@ export async function EOA(addresses, category, chains, startTime, endTime) {
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
 
 
 

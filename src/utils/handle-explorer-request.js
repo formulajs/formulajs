@@ -1,5 +1,6 @@
 import {fromTimeStampToBlock} from './from-timestamp-to-block'
 import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG} from './constants'
+import {SERVICE_API_KEY} from '../crypto-constants'
 
 
 
@@ -11,12 +12,14 @@ export async function handleScanRequest({
   address,
   startDate,
   endDate,
+  page = 1,
+  offset = 10,
 }) {
   const API_KEY = window.localStorage.getItem(scanKey);
   if (!API_KEY) return `${scanKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   if (API_KEY === 'xxxx') return `${scanKey}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
 
-  const chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
+  let chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
   if (!chainId) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;
 
   const ACTION_MAP = {
@@ -28,6 +31,10 @@ export async function handleScanRequest({
 
   const action = ACTION_MAP[type];
   if (!action) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+
+
+  if (scanKey === SERVICE_API_KEY.Basescan) chainId = 'base';
+if (scanKey === SERVICE_API_KEY.Gnosisscan) chainId = 'gnosis';
 
   let url = `${baseUrl}?chainid=${chainId}&module=account&action=${action}&apikey=${API_KEY}`;
 
@@ -42,6 +49,7 @@ export async function handleScanRequest({
       ]);
       url += `&startblock=${startBlock}&endblock=${endBlock}`;
     }
+    url += `&page=${page}&offset=${offset}`;
   }
 
   try {

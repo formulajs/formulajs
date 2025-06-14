@@ -89,40 +89,130 @@ export const FUNCTION_LOCALE = [
     }
   ]
 },
+{
+  API_KEY: SERVICE_API_KEY.Basescan,
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  BRAND_COLOR: "#f1f5ff",
+  BRAND_SECONDARY_COLOR: "#2752ff",
+  n: "BASESCAN",
+  t: 20,
+  d: "Fetches Base network data via Basescan: native txns, ERC-20 transfers, ERC-721 transfers, and gas metrics.",
+  a: "Pulls on-chain activity for Base (chainid 8453) using Basescan’s API — supports full tx history, token/NFT transfers, gas prices, and pagination.",
+  p: [
     {
-    API_KEY: SERVICE_API_KEY.Basescan,
-    LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",          // public Base logo
-    BRAND_COLOR: "#f1f5ff",                          
-    BRAND_SECONDARY_COLOR: "#2752ff",
-    n: "BASESCAN",
-    t: 20,
-    d: "Fetches Base network data via Basescan: native txns, ERC-20 transfers, ERC-721 transfers, and gas metrics.",
-    a: "Pulls on-chain activity for Base (chainid 8453) using Basescan’s API — supports full tx history, token/NFT transfers, and live gas info.",
-    p: [
-      { name: "type",     detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.", example: `"token-txns"`, require: "m", type: "string" },
-      { name: "chain",    detail: "Must be 'base'.",                                              example: `"base"`,        require: "m", type: "string" },
-      { name: "address",  detail: "Target wallet (omit for 'gas').",                              example: `"0x1234…abcd"`, require: "o", type: "string" },
-      { name: "startDate",detail: "Start UNIX timestamp (sec).",                                  example: `"1704067200"`,  require: "o", type: "rangenumber" },
-      { name: "endDate",  detail: "End UNIX timestamp (sec).",                                    example: `"1706659200"`,  require: "o", type: "rangenumber" }
-    ]
-  },
+      name: "type",
+      detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.",
+      example: `"token-txns"`,
+      require: "m",
+      type: "string"
+    },
     {
-    API_KEY: SERVICE_API_KEY.Gnosisscan,
-    LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+      name: "chain",
+      detail: "Must be 'base'.",
+      example: `"base"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "Target wallet address (only required for txns, token, and nft queries). Not needed for 'gas'.",
+      example: `"0x7FD624f3f97A7dd36195E8379F28dB6147C270ff"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start UNIX timestamp in seconds (used to resolve block range). Optional, only applies to txns.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End UNIX timestamp in seconds (used to resolve block range). Optional, only applies to txns.",
+      example: `"20250614"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "page",
+      detail: "Page number for paginated results. Only applies to txns/token/nft queries.",
+      example: `"1"`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "offset",
+      detail: "Number of items per page (limit). Only applies to txns/token/nft queries.",
+      example: `"25"`,
+      require: "o",
+      type: "number"
+    }
+  ]
+}
+,
+{
+  API_KEY: SERVICE_API_KEY.Gnosisscan,
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
-    n: "GNOSISSCAN",
-    t: 20,
-    d: "Fetches Gnosis Chain data via Gnosisscan: txns, token transfers, NFT transfers, and gas metrics.",
-    a: "Queries Gnosis Chain (chainid 100) through Gnosisscan’s API to return txns, token/NFT transfers, or gas info for a wallet.",
-    p: [
-      { name: "type",     detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.", example: `"nft-txns"`,   require: "m", type: "string" },
-      { name: "chain",    detail: "Must be 'gnosis'.",                                             example: `"gnosis"`,      require: "m", type: "string" },
-      { name: "address",  detail: "Target wallet (omit for 'gas').",                               example: `"0x6789…efab"`, require: "o", type: "string" },
-      { name: "startDate",detail: "Start UNIX timestamp (sec).",                                   example: `"1704067200"`,  require: "o", type: "rangenumber" },
-      { name: "endDate",  detail: "End UNIX timestamp (sec).",                                     example: `"1706659200"`,  require: "o", type: "rangenumber" }
-    ]
-  },
+  n: "GNOSISSCAN",
+  t: 20,
+  d: "Fetches Gnosis Chain data via Gnosisscan: native transactions, ERC-20 token transfers, ERC-721 NFT transfers, and gas metrics.",
+  a: "Queries Gnosis Chain (chainid 100) through Gnosisscan’s API to return transaction history, token/NFT transfers, or gas price information. Supports pagination and time-based filtering for transaction types.",
+  p: [
+    {
+      name: "type",
+      detail: "Data category to fetch. Options: 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+      example: `"nft-txns"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "chain",
+      detail: "Must be 'gnosis'.",
+      example: `"gnosis"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "address",
+      detail: "Wallet address to query. Required for all types except 'gas'.",
+      example: `"0x90830Ed558f12D826370DC52E9D87947A7F18De9"`,
+      require: "o",
+      type: "string"
+    },
+    {
+      name: "startDate",
+      detail: "Start timestamp in UNIX seconds. Used to resolve starting block for txns.",
+      example: `"1704067200"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "endDate",
+      detail: "End timestamp in UNIX seconds. Used to resolve ending block for txns.",
+      example: `"20250614"`,
+      require: "o",
+      type: "rangenumber"
+    },
+    {
+      name: "page",
+      detail: "Page number for paginated transaction results. Applies only to 'txns', 'token-txns', and 'nft-txns'.",
+      example: `"1"`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "offset",
+      detail: "Number of results per page (limit). Applies only to 'txns', 'token-txns', and 'nft-txns'.",
+      example: `"50"`,
+      require: "o",
+      type: "number"
+    }
+  ]
+}
+,
   {
     LOGO: 'https://cdn.prod.website-files.com/65f94dfd53db8b337c808067/68485baa72714ae58f350ce2_bs-logo.png',
     BRAND_COLOR: '#f8f8fd',
@@ -135,7 +225,7 @@ export const FUNCTION_LOCALE = [
       {
         name: 'address',
         detail: 'The address string representing the addresses to check for balance',
-        example: `"0x813399e5b08Bb50b038AA7dF6347b6AF2D161828"`,
+        example: `"0xe9A6378d8FD4983C2999DB0735f258397E8C2253"`,
         require: 'm',
         type: 'string'
       },
@@ -149,21 +239,21 @@ export const FUNCTION_LOCALE = [
       {
         name: 'chain',
         detail: 'The blockchain to query. By default on Ethereum mainnet.',
-        example: `"ethereum"`,
+        example: `"gnosis"`,
         require: 'o',
         type: 'string'
       },
       {
         name: 'startTimestamp',
         detail: 'The Unix timestamp marking the start of the transaction search range. Work with type === "txns"',
-        example: '1680300000',
+        example: '1721174400',
         require: 'o',
         type: 'rangenumber'
       },
       {
         name: 'endTimestamp',
         detail: 'The Unix timestamp marking the end of the transaction search range. Work with type === "txns"',
-        example: '1680300000',
+        example: '20250614',
         require: 'o',
         type: 'rangenumber'
       },
@@ -233,7 +323,7 @@ export const FUNCTION_LOCALE = [
   ]
 },
 
-  {
+{
   API_KEY: SERVICE_API_KEY.Etherscan,
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
   BRAND_COLOR: "#F6F7F8",
@@ -241,12 +331,12 @@ export const FUNCTION_LOCALE = [
   n: "EOA",
   t: 20,
   d: "Fetches address data like transactions, balances, or portfolio info from multiple supported chains.",
-  a: "Dynamically queries blockchain data such as transactions, balances by resolving time ranges to block ranges.",
+  a: "Dynamically queries blockchain data such as transactions and balances by resolving time ranges to block ranges and supporting pagination.",
   p: [
     {
       name: "addresses",
-      detail: "One or more Ethereum addresses (comma-separated) to query.",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC,0x000000000000000000000000000000000000dead"`,
+      detail: "One or more addresses (comma-separated) to query.",
+      example: `"0xe9A6378d8FD4983C2999DB0735f258397E8C2253, 0x50Aa3435E310d5a2d15a989Bc353ce7f5682E1d4"`,
       require: "m",
       type: "string"
     },
@@ -255,29 +345,46 @@ export const FUNCTION_LOCALE = [
       detail: `Type of data to fetch. Supported values: "txns", "balance".`,
       example: `"txns"`,
       require: "m",
+      type: "string"
     },
     {
       name: "chain",
-      detail: `Blockchain network to query. Supported values: "ethereum", "gnosis", "base".`,
-      example: `"ethereum"`,
+      detail: `Blockchain network(s) to query. Supported values: "ethereum", "gnosis", "base". Accepts comma-separated values.`,
+      example: `"ethereum, gnosis"`,
       require: "m",
+      type: "string"
     },
     {
       name: "startTime",
-      detail: "Start time in UNIX timestamp (seconds). Will be converted to a starting block. Required for txns category",
-      example: "1680300000",
+      detail: "Start time in UNIX timestamp (seconds). Used to calculate starting block for transaction queries.",
+      example: "1721174400",
       require: "m",
-      type: "rangenumber",
+      type: "rangenumber"
     },
     {
       name: "endTime",
-      detail: "End time in UNIX timestamp (seconds). Will be converted to an ending block. Required for txns category",
-      example: "1680900000",
+      detail: "End time in UNIX timestamp (seconds). Used to calculate ending block for transaction queries.",
+      example: "1722988800",
       require: "m",
-      type: "rangenumber",
+      type: "rangenumber"
     },
+    {
+      name: "page",
+      detail: "The page number for paginated transaction results. Only used when category is 'txns'.",
+      example: "1",
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "offset",
+      detail: "The number of results to return per page (limit). Only used when category is 'txns'.",
+      example: "25",
+      require: "o",
+      type: "number"
+    }
   ],
-},
+}
+,
   {
         LOGO: 'https://files.readme.io/06394e687778e238a6cd43de6e1d7d339043aa50054703f64606369352ef1864-VariantCG-Symbol-Color.png',
     BRAND_COLOR: '#f8fdf8',
@@ -337,7 +444,7 @@ export const FUNCTION_LOCALE = [
       {
         name: "address",
         detail: "The address to query, in hexadecimal format.",
-        example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+        example: `"0xe9A6378d8FD4983C2999DB0735f258397E8C2253"`,
         require: "m",
       },
       {
@@ -349,13 +456,13 @@ export const FUNCTION_LOCALE = [
       {
         name: "chain",
         detail: "The chain to query, supported values: 'ethereum', 'gnosis'.",
-        example: `"ethereum"`,
+        example: `"gnosis"`,
         require: "m",
       },
       {
         name: "limit",
         detail: "The number of transactions to return, default is 100.",
-        example: `100`,
+        example: `10`,
         require: "o",
         repeat: "n",
       },
@@ -681,52 +788,53 @@ export const FUNCTION_LOCALE = [
 },
 
 {
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
+  API_KEY: SERVICE_API_KEY.GnosisPay,
+  LOGO: "https://gnosispay.com/favicon.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
   n: "GNOSIS",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  d: "Fetches Gnosis Pay card transaction history, including merchant, amount, and currency info.",
+  a: "Retrieves card transactions from Gnosis Pay’s API for a specific card ID, filtered by date range and paginated via limit/offset.",
   p: [
     {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
+      name: "cardId",
+      detail: "The Gnosis Pay card ID to fetch transactions for.",
+      example: `"card_9f8f8b3a56"`,
       require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
       type: "string"
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
+      detail: "Start timestamp in seconds (UNIX). Filters transactions created after this date.",
       example: `"1704067200"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
+      detail: "End timestamp in seconds (UNIX). Filters transactions created before this date.",
       example: `"1706659200"`,
       require: "o",
       type: "rangenumber"
+    },
+    {
+      name: "limit",
+      detail: "Number of transactions to return per page.",
+      example: `"20"`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "offset",
+      detail: "Offset for pagination (i.e., how many records to skip).",
+      example: `"0"`,
+      require: "o",
+      type: "number"
     }
   ]
-},
+}
+,
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
   LOGO: "https://avatars.githubusercontent.com/u/129790008?s=48&v=4",
