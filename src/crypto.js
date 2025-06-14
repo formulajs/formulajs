@@ -8,71 +8,66 @@ import { toEnsName } from "./utils/toEnsName";
 
 
 
-export async function FIREFLY(platform, contentType, identifier) {
+export async function FIREFLY(platform, contentType, identifier, start = 0, end = 10) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
   if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
   const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
-  const headers = {
-    "x-api-key": API_KEY,
+  const headers = { "x-api-key": API_KEY };
+
+  const typeMap = {
+    farcaster: {
+      posts: "farcasterid",
+      replies: "farcasterpostid",
+      channels: "farcasterchannels",
+    },
+    lens: {
+      posts: "lensid",
+      replies: "lenspostid",
+    }
   };
 
-  let query = "";
-  let type = "";
+  const platformType = typeMap[platform]?.[contentType];
+  if (!platformType) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
 
-  // normalize input
-  const normalizedId = identifier.trim().replace(/.*\/([^\/]+)$/, "$1"); // extract last part of URL if needed
-
-  if (platform === "farcaster") {
-    if (contentType === "posts") {
-      type = "farcasterid";
-      query = normalizedId;
-    } else if (contentType === "replies") {
-      type = "farcasterpostid";
-      query = normalizedId.startsWith("0x") ? normalizedId : Number(normalizedId).toString();
-    } else {
-      return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
-    }
-  } else if (platform === "lens") {
-    if (contentType === "posts") {
-      type = "lensid";
-      query = normalizedId;
-    } else if (contentType === "replies") {
-      type = "lenspostid";
-      query = normalizedId;
-    } else {
-      return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
-    }
-  } else {
-    return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
-  }
+  const query = identifier
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .join(",");
 
   const url = new URL(baseUrl);
   url.searchParams.set("query", query);
-  url.searchParams.set("type", type);
-  url.searchParams.set("size", "10");
-  url.searchParams.set("cursor", "0");
+  url.searchParams.set("type", platformType);
+  url.searchParams.set("start", String(start));
+  url.searchParams.set("end", String(end));
 
   try {
     const res = await fetch(url.toString(), { headers });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    const flattened = Array.isArray(json?.data)
-      ? json.data.map(item => ({
-          id: item?.id || null,
-          author: item?.author?.username || item?.author?.handle || "",
-          text: item?.text || item?.metadata?.content?.content || "",
-          createdAt: item?.createdAt || "",
-          platform: platform,
-        }))
-      : [];
 
-    return flattened;
+    const json = await res.json();
+    if (!Array.isArray(json?.data)) return [];
+
+    return json.data.map(item => {
+      const flat = {};
+      for (const [key, value] of Object.entries(item)) {
+        if (typeof value !== "object" || value === null) {
+          flat[key] = value;
+        }
+      }
+      flat.platform = platform;
+      return flat;
+    });
+
   } catch (err) {
     console.error("FIREFLY fetch error:", err);
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
+
+
 
 
 export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimestamp, page, offset) {
@@ -89,6 +84,17 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
     startTimestamp = currentTimestamp - 30 * 24 * 60 * 60 * 1000
     startTimestamp = Math.floor(startTimestamp / 1000)
   }
+
+  if(isNaN(startTimestamp)){
+    startTimestamp = toTimestamp(startTimestamp)
+  }
+
+
+  if(isNaN(endTimestamp) && endTimestamp){
+    endTimestamp = toTimestamp(endTimestamp)
+  }
+
+
 
   const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
 
@@ -214,7 +220,7 @@ export async function NEYNAR(
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
-export async function GNOSIS({
+export async function GNOSISPAY({
   cardId,
   startDate,
   endDate,
@@ -230,11 +236,11 @@ export async function GNOSIS({
   url.searchParams.set('limit', limit.toString());
   url.searchParams.set('offset', offset.toString());
 
-  if (!isNaN(startDate)) {
+  if (!isNaN(toTimestamp(startDate))) {
     url.searchParams.set('startDate', new Date(startDate * 1000).toISOString());
   }
 
-  if (!isNaN(endDate)) {
+  if (!isNaN(toTimestamp(endDate))) {
     url.searchParams.set('endDate', new Date(endDate * 1000).toISOString());
   }
 

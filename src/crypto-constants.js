@@ -9,15 +9,15 @@ export const SERVICE_API_KEY = {
 }
 
 export const FUNCTION_LOCALE = [
-  {
+{
   API_KEY: SERVICE_API_KEY.Firefly,
   LOGO: "https://firefly.social/android-chrome-192x192.png",
   BRAND_COLOR: "#f8f5fc",
   BRAND_SECONDARY_COLOR: "#855dcd",
   n: "FIREFLY",
   t: 20,
-  d: "Fetches posts or replies from Farcaster or Lens using Firefly's OpenAPI and returns simplified text content.",
-  a: "Retrieves posts or replies from Firefly OpenAPI by username, user ID, or post ID/hash for Farcaster and Lens platforms. Returns a flattened array of content with id, author, text, createdAt, and platform.",
+  d: "Fetches content from Farcaster or Lens using Firefly's OpenAPI with pagination and cleaned output.",
+  a: "Retrieves posts, replies, or channels from Farcaster and Lens using Firefly's OpenAPI by usernames, IDs, or hashes. Removes nested values and returns flat spreadsheet-friendly data. Supports pagination.",
   p: [
     {
       name: "platform",
@@ -28,20 +28,35 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "contentType",
-      detail: "The type of content to fetch. Can be 'posts' or 'replies'.",
+      detail: "Type of content to fetch. Supports 'posts', 'replies', and 'channels' (channels only for 'farcaster').",
       example: `"posts"`,
       require: "m",
       type: "string"
     },
     {
       name: "identifier",
-      detail: "The username, user ID, or post ID/hash depending on platform and contentType.",
-      example: `"toka" or "0xcb6cab2048..."`,
+      detail: "Comma-separated usernames, IDs, or post hashes depending on platform and contentType.",
+      example: `"toka,ngmisl" or "0xcb6c...,0x98b8..."`,
       require: "m",
       type: "string"
+    },
+    {
+      name: "start",
+      detail: "Pagination start index (default is 0).",
+      example: `0`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "end",
+      detail: "Pagination end index (default is 10).",
+      example: `10`,
+      require: "o",
+      type: "number"
     }
   ]
-},
+}
+,
 
   {
   API_KEY: SERVICE_API_KEY.Neynar,
@@ -123,14 +138,14 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "startDate",
-      detail: "Start UNIX timestamp in seconds (used to resolve block range). Optional, only applies to txns.",
+      detail: "Start date (used to resolve block range). Optional, only applies to txns.",
       example: `"1704067200"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End UNIX timestamp in seconds (used to resolve block range). Optional, only applies to txns.",
+      detail: "End date (used to resolve block range). Optional, only applies to txns.",
       example: `"20250614"`,
       require: "o",
       type: "rangenumber"
@@ -185,15 +200,15 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "startDate",
-      detail: "Start timestamp in UNIX seconds. Used to resolve starting block for txns.",
-      example: `"1704067200"`,
+      detail: "Used to resolve starting block for txns.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in UNIX seconds. Used to resolve ending block for txns.",
-      example: `"20250614"`,
+      detail: "Used to resolve ending block for txns.",
+      example: `"14/06/2025"`,
       require: "o",
       type: "rangenumber"
     },
@@ -246,15 +261,15 @@ export const FUNCTION_LOCALE = [
       },
       {
         name: 'startTimestamp',
-        detail: 'The Unix timestamp marking the start of the transaction search range. Work with type === "txns"',
-        example: '1704067200',
+        detail: 'Start date marking the start of the transaction search range. Work with type === "txns"',
+        example: '01/01/2024',
         require: 'o',
         type: 'rangenumber'
       },
       {
         name: 'endTimestamp',
-        detail: 'The Unix timestamp marking the end of the transaction search range. Work with type === "txns"',
-        example: '1719792000',
+        detail: 'End date marking the end of the transaction search range. Work with type === "txns"',
+        example: '14/06/2025',
         require: 'o',
         type: 'rangenumber'
       },
@@ -309,15 +324,15 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -357,14 +372,14 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "startTime",
-      detail: "Start time in UNIX timestamp (seconds). Used to calculate starting block for transaction queries.",
+      detail: "Used to calculate starting block for transaction queries.",
       example: "01/01/2024",
       require: "m",
       type: "rangenumber"
     },
     {
       name: "endTime",
-      detail: "End time in UNIX timestamp (seconds). Used to calculate ending block for transaction queries.",
+      detail: "Used to calculate ending block for transaction queries.",
       example: "01/07/2024",
       require: "m",
       type: "rangenumber"
@@ -557,15 +572,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -605,15 +620,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -652,15 +667,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -701,15 +716,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -748,15 +763,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -795,15 +810,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -815,7 +830,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
-  n: "GNOSIS",
+  n: "GNOSISPAY",
   t: 20,
   d: "Fetches Gnosis Pay card transaction history, including merchant, amount, and currency info.",
   a: "Retrieves card transactions from Gnosis Pay’s API for a specific card ID, filtered by date range and paginated via limit/offset.",
@@ -829,15 +844,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (UNIX). Filters transactions created after this date.",
-      example: `"1704067200"`,
+      detail: "Filters transactions created after this date.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (UNIX). Filters transactions created before this date.",
-      example: `"1706659200"`,
+      detail: "Filters transactions created before this date.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     },
@@ -891,15 +906,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }
@@ -938,15 +953,15 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "startDate",
-      detail: "Start timestamp in seconds (optional). Used to filter block range.",
-      example: `"1704067200"`,
+      detail: "Used to filter block range.",
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
-      detail: "End timestamp in seconds (optional). Used to filter block range.",
-      example: `"1706659200"`,
+      detail: "Used to filter block range.",
+      example: `"01/07/2025"`,
       require: "o",
       type: "rangenumber"
     }

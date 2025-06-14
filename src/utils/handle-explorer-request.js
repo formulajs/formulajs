@@ -1,6 +1,7 @@
 import {fromTimeStampToBlock} from './from-timestamp-to-block'
 import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG} from './constants'
 import {SERVICE_API_KEY} from '../crypto-constants'
+import {toTimestamp} from './toTimestamp'
 
 
 
@@ -44,8 +45,8 @@ if (scanKey === SERVICE_API_KEY.Gnosisscan) chainId = 'gnosis';
 
     if (!isNaN(startDate) && !isNaN(endDate)) {
       const [startBlock, endBlock] = await Promise.all([
-        fromTimeStampToBlock(startDate, chain, API_KEY),
-        fromTimeStampToBlock(endDate, chain, API_KEY),
+        fromTimeStampToBlock(toTimestamp(startDate), chain, API_KEY),
+        fromTimeStampToBlock(toTimestamp(endDate), chain, API_KEY),
       ]);
       url += `&startblock=${startBlock}&endblock=${endBlock}`;
     }
