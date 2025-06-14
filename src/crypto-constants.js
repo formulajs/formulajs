@@ -358,14 +358,14 @@ export const FUNCTION_LOCALE = [
     {
       name: "startTime",
       detail: "Start time in UNIX timestamp (seconds). Used to calculate starting block for transaction queries.",
-      example: "1704067200",
+      example: "01/01/2024",
       require: "m",
       type: "rangenumber"
     },
     {
       name: "endTime",
       detail: "End time in UNIX timestamp (seconds). Used to calculate ending block for transaction queries.",
-      example: "1719792000",
+      example: "01/07/2024",
       require: "m",
       type: "rangenumber"
     },

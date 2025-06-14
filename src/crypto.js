@@ -2,6 +2,8 @@ import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
 import { handleScanRequest } from "./utils/handle-explorer-request";
+import {toTimestamp} from './utils/toTimestamp'
+import { toEnsName } from "./utils/toEnsName";
 
 
 
@@ -413,10 +415,27 @@ export async function EOA(
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
   if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
-  const ADDRS = addresses.split(",").map(a => a.trim()).filter(Boolean);
+  const INPUTS = addresses.split(",").map(a => a.trim()).filter(Boolean);
   const CHAINS = chains.split(",").map(c => c.trim()).filter(Boolean);
-
   const out = [];
+
+  // Map: finalAddress => ENS name (if applicable)
+  const ADDRESS_MAP = {};
+
+  for (const input of INPUTS) {
+    if (/^0x[a-fA-F0-9]{40}$/.test(input)) {
+      ADDRESS_MAP[input.toLowerCase()] = null; // it's a direct address
+    } else {
+      try {
+        const resolved = await toEnsName(input); // ENS -> address
+        if (resolved) ADDRESS_MAP[resolved.toLowerCase()] = input;
+      } catch {
+        return `${input}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+      }
+    }
+  }
+
+  const ADDRS = Object.keys(ADDRESS_MAP);
 
   for (const chain of CHAINS) {
     const chainId = CHAIN_ID_MAP[chain];
@@ -436,15 +455,19 @@ export async function EOA(
         if (typeof data === "string") return data;
 
         (Array.isArray(data) ? data : [data]).forEach(r =>
-          out.push({ chain, ...r }),
+          out.push({
+            chain,
+            ...r,
+            name: ADDRESS_MAP[(r.account || r.address || "").toLowerCase()] || null,
+          }),
         );
       }
       continue;
     }
 
     if (category === "txns") {
-      const startBlock = await fromTimeStampToBlock(startTime, chain, API_KEY);
-      const endBlock = await fromTimeStampToBlock(endTime, chain, API_KEY);
+      const startBlock = await fromTimeStampToBlock(toTimestamp(startTime), chain, API_KEY);
+      const endBlock = await fromTimeStampToBlock(toTimestamp(endTime), chain, API_KEY);
 
       for (const addr of ADDRS) {
         const url =
@@ -456,7 +479,14 @@ export async function EOA(
         const data = await fetchJSON(url);
         if (typeof data === "string") return data;
 
-        data.forEach((tx) => out.push({ chain, address: addr, ...tx }));
+        data.forEach(tx =>
+          out.push({
+            chain,
+            address: addr,
+            name: ADDRESS_MAP[addr],
+            ...tx,
+          }),
+        );
       }
       continue;
     }
@@ -466,7 +496,6 @@ export async function EOA(
 
   return out;
 
-  // helper for uniform error handling
   async function fetchJSON(url) {
     try {
       const res = await fetch(url);
@@ -489,6 +518,7 @@ export async function EOA(
     }
   }
 }
+
 
 
 
