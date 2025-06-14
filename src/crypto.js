@@ -319,20 +319,34 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
         pump: 'pump-ecosystem',
       };
 
-      const ecosystemKey = param1 ? param1.toLowerCase() : '';
-      const ecosystemCategory = ecosystemMap[ecosystemKey] || '';
-      const priceTrend = param2 ? `&price_change_percentage=${param2}` : '';
+      const key = param1?.toLowerCase();
+      const categoryVal = key ? ecosystemMap[key] : '';
 
+      if (param1 && !categoryVal) {
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+      }
+
+      const trend = param2 ? `&price_change_percentage=${param2}` : '';
       url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=${page}&per_page=${perPage}`;
-      if (ecosystemCategory) url += `&category=${ecosystemCategory}`;
-      if (priceTrend) url += priceTrend;
+      if (categoryVal) url += `&category=${categoryVal}`;
+      if (trend) url += trend;
+      break;
+    }
+
+    case 'stablecoins': {
+      const category = param1 === 'all' || !param1
+        ? 'stablecoins'
+        : param1?.toLowerCase();
+      const trend = param2 ? `&price_change_percentage=${param2}` : '';
+
+      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&category=${category}&page=${page}&per_page=${perPage}${trend}`;
       break;
     }
 
     case 'derivatives': {
       const exchange = param1;
       if (exchange) {
-        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all?page=${page}&per_page=${perPage}`;
+        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all`;
       } else {
         url = `https://api.coingecko.com/api/v3/derivatives?page=${page}&per_page=${perPage}`;
       }
@@ -357,7 +371,6 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
       }
     }
 
-    // Flat output for price
     if (category.toLowerCase() === 'price') {
       const output = {};
       for (const [token, prices] of Object.entries(json)) {
@@ -369,7 +382,6 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
       return [output];
     }
 
-    // Flat objects only (skip nested) for market/derivatives
     const flatArray = Array.isArray(json) ? json : [json];
     return flatArray.map(item => {
       const flat = {};
@@ -385,6 +397,7 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
+
 
 
 

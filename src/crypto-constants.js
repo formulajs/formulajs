@@ -393,43 +393,46 @@ export const FUNCTION_LOCALE = [
   n: 'COINGECKO',
   t: 20,
   API_KEY: SERVICE_API_KEY.Coingecko,
-  d: 'Query crypto prices, ecosystem market data, or derivatives from CoinGecko, with pagination support.',
-  a: 'Supports querying token prices, ecosystem market data (with optional trend filters), and derivatives (global or per exchange). Output is flat and spreadsheet-friendly. Pagination supported for market and derivatives.',
+  d: 'Query crypto prices, ecosystem market data, stablecoins, or derivatives from CoinGecko. Returns flat, spreadsheet-compatible output with pagination support.',
+  a: 'Supports querying: "price" for specific tokens "market" for ecosystem categories (ETH, BASE, SOL, GNOSIS, HYPERLIQUID, BITCOIN, PUMP)\n- "stablecoins" for stablecoin categories like "crypto-backed-stablecoin"\n- "derivatives" globally or per exchange.\nPagination is supported for all except single-exchange derivatives.',
   p: [
     {
       name: 'category',
-      detail: 'Query type: "price", "market", or "derivatives".',
+      detail: 'Query type: "price", "market", "stablecoins", or "derivatives".',
       example: `"price"`,
       require: 'm'
     },
     {
       name: 'param1',
-      detail: `For "price": coin ID(s). For "market": ecosystem key (e.g. eth, base). For "derivatives": exchange name.`,
-      example: `"bitcoin" | "eth" | "binance_futures"`,
+      detail: `For "price": coin ID(s). 
+For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump"]. 
+For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.]. 
+For "derivatives": exchange name (e.g., "binance_futures").`,
+      example: `"bitcoin" | "eth" | "crypto-backed-stablecoin" | "binance_futures"`,
       require: 'o'
     },
     {
       name: 'param2',
-      detail: `For "price": target currency(ies). For "market": comma-separated trend keys (e.g. 1h,24h,7d).`,
+      detail: `For "price": target currency(ies) (e.g. "usd"). 
+For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d).`,
       example: `"usd" | "1h,24h,7d"`,
       require: 'o'
     },
     {
       name: 'page',
-      detail: 'Pagination: page number (only for "market" and "derivatives").',
+      detail: 'Page number for pagination (applies to "market", "stablecoins", and global "derivatives").',
       example: `1`,
       require: 'o'
     },
     {
       name: 'per_page',
-      detail: 'Pagination: items per page (only for "market" and "derivatives").',
+      detail: 'Number of items per page (applies to "market", "stablecoins", and global "derivatives").',
       example: `2`,
       require: 'o'
     }
   ]
-}
+},
 
-,
   // {
   //   n: "FLVURL",
   //   t: 20,
