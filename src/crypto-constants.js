@@ -341,7 +341,7 @@ export const FUNCTION_LOCALE = [
 
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  LOGO: "https://etherscan.io/images/favicon3.ico",
   BRAND_COLOR: "#F6F7F8",
   BRAND_SECONDARY_COLOR: "#21325B",
   n: "EOA",
