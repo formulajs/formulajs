@@ -298,7 +298,7 @@ export const FUNCTION_LOCALE = [
   BRAND_SECONDARY_COLOR: "#21325B",
   n: "ETHERSCAN",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -317,7 +317,7 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -546,7 +546,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#f50db4",
   n: "UNISWAP",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -565,7 +565,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -594,7 +594,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#9896ff",
   n: "AAVE",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -613,7 +613,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -641,7 +641,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#47e2c2",
   n: "PENDLE",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -660,7 +660,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -690,7 +690,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#2966f0",
   n: "AERODROME",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -709,7 +709,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -737,7 +737,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#684ff8",
   n: "ARTEMIS",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -756,7 +756,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -784,7 +784,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#5eead4",
   n: "KAITO",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -803,7 +803,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -880,7 +880,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#5098d6",
   n: "OTTERSCAN",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -899,7 +899,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
@@ -927,7 +927,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   BRAND_SECONDARY_COLOR: "#725bff",
   n: "TALLY",
   t: 20,
-  d: "Fetches data from Etherscan including transactions, token transfers, NFT transfers, and gas tracker info.",
+  d: "Returns blockchain transaction history for the given address",
   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
   p: [
     {
@@ -946,7 +946,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     },
     {
       name: "address",
-      detail: "The wallet address to fetch data for (not required for 'gas').",
+      detail: "Wallet address to query",
       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
       require: "o",
       type: "string"
