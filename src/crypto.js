@@ -3,7 +3,7 @@ import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
 import { handleScanRequest } from "./utils/handle-explorer-request";
 import {toTimestamp} from './utils/toTimestamp'
-import { toEnsName } from "./utils/toEnsName";
+import { fromEnsNameToAddress } from "./utils/from-ens-name-to-address";
 
 
 
@@ -433,7 +433,7 @@ export async function EOA(
       ADDRESS_MAP[input.toLowerCase()] = null; // it's a direct address
     } else {
       try {
-        const resolved = await toEnsName(input); // ENS -> address
+        const resolved = await fromEnsNameToAddress(input); // ENS -> address
         if (resolved) ADDRESS_MAP[resolved.toLowerCase()] = input;
       } catch {
         return `${input}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;

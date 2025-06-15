@@ -36,7 +36,7 @@ export const FUNCTION_LOCALE = [
     {
       name: "identifier",
       detail: "Comma-separated usernames, IDs, or post hashes depending on platform and contentType.",
-      example: `"toka,ngmisl" or "0xcb6c...,0x98b8..."`,
+      example: `"toka,miroyato"`,
       require: "m",
       type: "string"
     },
@@ -139,28 +139,28 @@ export const FUNCTION_LOCALE = [
     {
       name: "startDate",
       detail: "Start date (used to resolve block range). Optional, only applies to txns.",
-      example: `"1704067200"`,
+      example: `"01/01/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "endDate",
       detail: "End date (used to resolve block range). Optional, only applies to txns.",
-      example: `"20250614"`,
+      example: `"07/07/2024"`,
       require: "o",
       type: "rangenumber"
     },
     {
       name: "page",
       detail: "Page number for paginated results. Only applies to txns/token/nft queries.",
-      example: `"1"`,
+      example: `1`,
       require: "o",
       type: "number"
     },
     {
       name: "offset",
       detail: "Number of items per page (limit). Only applies to txns/token/nft queries.",
-      example: `"25"`,
+      example: `2`,
       require: "o",
       type: "number"
     }
@@ -262,16 +262,16 @@ export const FUNCTION_LOCALE = [
       {
         name: 'startTimestamp',
         detail: 'Start date marking the start of the transaction search range. Work with type === "txns"',
-        example: '01/01/2024',
+        example: `"01/01/2024"`,
         require: 'o',
-        type: 'rangenumber'
+        type: 'string'
       },
       {
         name: 'endTimestamp',
         detail: 'End date marking the end of the transaction search range. Work with type === "txns"',
-        example: '14/06/2025',
+        example: `"14/06/2025"`,
         require: 'o',
-        type: 'rangenumber'
+        type: 'string'
       },
       {
         name: 'page',
@@ -352,7 +352,7 @@ export const FUNCTION_LOCALE = [
     {
       name: "addresses",
       detail: "One or more addresses (comma-separated) to query.",
-      example: `"0xe9A6378d8FD4983C2999DB0735f258397E8C2253, 0x50Aa3435E310d5a2d15a989Bc353ce7f5682E1d4"`,
+      example: `"vitalik.eth"`,
       require: "m",
       type: "string"
     },
@@ -366,7 +366,7 @@ export const FUNCTION_LOCALE = [
     {
       name: "chain",
       detail: `Blockchain network(s) to query. Supported values: "ethereum", "gnosis", "base". Accepts comma-separated values.`,
-      example: `"ethereum, gnosis"`,
+      example: `"ethereum"`,
       require: "m",
       type: "string"
     },
@@ -380,21 +380,21 @@ export const FUNCTION_LOCALE = [
     {
       name: "endTime",
       detail: "Used to calculate ending block for transaction queries.",
-      example: "01/07/2024",
+      example: "01/06/2024",
       require: "m",
       type: "rangenumber"
     },
     {
       name: "page",
-      detail: "The page number for paginated transaction results. Only used when category is 'txns'.",
+      detail: "The page number for paginated transaction results. Only used when category is 'txns'. Default is 1",
       example: "1",
       require: "o",
       type: "number"
     },
     {
       name: "offset",
-      detail: "The number of results to return per page (limit). Only used when category is 'txns'.",
-      example: "25",
+      detail: "The number of results to return per page (limit). Only used when category is 'txns'. Default is 10",
+      example: "10",
       require: "o",
       type: "number"
     }
@@ -414,7 +414,7 @@ export const FUNCTION_LOCALE = [
     {
       name: 'category',
       detail: 'Query type: "price", "market", "stablecoins", or "derivatives".',
-      example: `"price"`,
+      example: `"stablecoins"`,
       require: 'm'
     },
     {
@@ -423,14 +423,14 @@ export const FUNCTION_LOCALE = [
 For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump"]. 
 For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.]. 
 For "derivatives": exchange name (e.g., "binance_futures").`,
-      example: `"bitcoin" | "eth" | "crypto-backed-stablecoin" | "binance_futures"`,
+      example: `"yield-bearing-stablecoins"`,
       require: 'o'
     },
     {
       name: 'param2',
       detail: `For "price": target currency(ies) (e.g. "usd"). 
 For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d).`,
-      example: `"usd" | "1h,24h,7d"`,
+      example: `"1h,24h,7d"`,
       require: 'o'
     },
     {
