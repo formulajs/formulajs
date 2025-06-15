@@ -83,7 +83,7 @@ export async function BLOCKSCOUT() {
     return 'TYPE_MISSING'
   }
 
-const [address, type, chain, startTimestamp, endTimestamp, page, offset] = utils.argsToArray(arguments)
+let [address, type, chain, startTimestamp, endTimestamp, page, offset] = utils.argsToArray(arguments)
 
   if (!startTimestamp) {
     const currentTimestamp = Date.now()
@@ -581,7 +581,7 @@ export async function SAFE() {
 
 
 
-  const [address, utility, chain, limit, offset] = utils.argsToArray(arguments)
+  let [address, utility, chain, limit, offset] = utils.argsToArray(arguments)
 
   if (typeof limit !== 'number' || limit < 0) return 'INVALID_LIMIT';
   if (typeof offset !== 'number' || offset < 0) return 'INVALID_OFFSET';
