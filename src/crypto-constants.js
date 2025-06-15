@@ -16,8 +16,8 @@ export const FUNCTION_LOCALE = [
   BRAND_SECONDARY_COLOR: "#855dcd",
   n: "FIREFLY",
   t: 20,
-  d: "Fetches content from Farcaster or Lens using Firefly's OpenAPI with pagination and cleaned output.",
-  a: "Retrieves posts, replies, or channels from Farcaster and Lens using Firefly's OpenAPI by usernames, IDs, or hashes. Removes nested values and returns flat spreadsheet-friendly data. Supports pagination.",
+  d: "Fetches content from Farcaster or Lens.",
+  a: "Retrieves posts, replies, or channels from Farcaster and Lens by usernames, IDs, or hashes.",
   p: [
     {
       name: "platform",
@@ -107,7 +107,7 @@ export const FUNCTION_LOCALE = [
 },
 {
   API_KEY: SERVICE_API_KEY.Basescan,
-  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  LOGO: "https://2064089921-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FevP3L0cUvP9xmRefuzCm%2Fuploads%2F2K1pvFsE7JAfcI3LAxYl%2Fbase-logo-in-blue.webp?alt=media&token=32c80439-dbdc-432a-b199-220e012efc3c",
   BRAND_COLOR: "#f1f5ff",
   BRAND_SECONDARY_COLOR: "#2752ff",
   n: "BASESCAN",
@@ -293,7 +293,7 @@ export const FUNCTION_LOCALE = [
   },
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/1689874988430.jpeg",
+  LOGO: "https://etherscan.io/images/favicon3.ico",
   BRAND_COLOR: "#F6F7F8",
   BRAND_SECONDARY_COLOR: "#21325B",
   n: "ETHERSCAN",
@@ -408,7 +408,7 @@ export const FUNCTION_LOCALE = [
   n: 'COINGECKO',
   t: 20,
   API_KEY: SERVICE_API_KEY.Coingecko,
-  d: 'Query crypto prices, ecosystem market data, stablecoins, or derivatives from CoinGecko. Returns flat, spreadsheet-compatible output with pagination support.',
+  d: 'Query crypto prices, ecosystem market data, stablecoins, or derivatives from CoinGecko.',
   a: 'Supports querying: "price" for specific tokens "market" for ecosystem categories (ETH, BASE, SOL, GNOSIS, HYPERLIQUID, BITCOIN, PUMP)\n- "stablecoins" for stablecoin categories like "crypto-backed-stablecoin"\n- "derivatives" globally or per exchange.\nPagination is supported for all except single-exchange derivatives.',
   p: [
     {
