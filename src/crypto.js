@@ -3,6 +3,7 @@ import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
 import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
 import { handleScanRequest } from "./utils/handle-explorer-request";
 import {toTimestamp} from './utils/toTimestamp'
+import {isAddress} from './utils/is-address'
 import { fromEnsNameToAddress } from "./utils/from-ens-name-to-address";
 
 
@@ -94,7 +95,13 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
     endTimestamp = toTimestamp(endTimestamp)
   }
 
+  if(!isAddress(address)){
+    address = await fromEnsNameToAddress(address)
+  }
 
+  if(!address){
+    return `${address}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
+  }
 
   const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
 
@@ -431,7 +438,7 @@ export async function EOA(
   const ADDRESS_MAP = {};
 
   for (const input of INPUTS) {
-    if (/^0x[a-fA-F0-9]{40}$/.test(input)) {
+    if (isAddress(input)) {
       ADDRESS_MAP[input.toLowerCase()] = null; // it's a direct address
     } else {
       try {
@@ -526,12 +533,6 @@ export async function EOA(
     }
   }
 }
-
-
-
-
-
-
 
 export async function FLVURL(token, vs_currencies) {
   return new Promise((resolve) => {

@@ -241,7 +241,7 @@ export const FUNCTION_LOCALE = [
       {
         name: 'address',
         detail: 'The address string representing the addresses to check for balance',
-        example: `"0x50Aa3435E310d5a2d15a989Bc353ce7f5682E1d4"`,
+        example: `"vitalik.eth"`,
         require: 'm',
         type: 'string'
       },
@@ -262,14 +262,14 @@ export const FUNCTION_LOCALE = [
       {
         name: 'startTimestamp',
         detail: 'Start date marking the start of the transaction search range. Work with type === "txns"',
-        example: `"01/01/2024"`,
+        example: `"01/01/2023"`,
         require: 'o',
         type: 'string'
       },
       {
         name: 'endTimestamp',
         detail: 'End date marking the end of the transaction search range. Work with type === "txns"',
-        example: `"14/06/2025"`,
+        example: `"01/05/2024"`,
         require: 'o',
         type: 'string'
       },

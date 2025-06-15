@@ -2,6 +2,8 @@ import {fromTimeStampToBlock} from './from-timestamp-to-block'
 import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG} from './constants'
 import {SERVICE_API_KEY} from '../crypto-constants'
 import {toTimestamp} from './toTimestamp'
+import { isAddress } from './is-address';
+import { fromEnsNameToAddress } from './from-ens-name-to-address';
 
 
 
@@ -22,6 +24,14 @@ export async function handleScanRequest({
 
   let chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
   if (!chainId) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;
+
+  if(!isAddress(address)){
+    address = await fromEnsNameToAddress(address)
+  }
+
+  if(!address){
+    return `${address}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
+  }
 
   const ACTION_MAP = {
     'all-txns': 'txlist',
