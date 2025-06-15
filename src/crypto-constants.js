@@ -317,8 +317,8 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      detail: "Wallet address / Ens name to query",
+      example: `"vitalik.eth"`,
       require: "o",
       type: "string"
     },
