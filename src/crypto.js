@@ -554,6 +554,14 @@ export async function SAFE(address, utility, chain, limit, offset) {
   if (!apiKey) return `${SERVICE_API_KEY.Safe}_MISSING`;
   if (!chainIdentifier) return 'CHAIN IS NOT SUPPORTED';
 
+  if(!isAddress(address)){
+    address = await fromEnsNameToAddress(address)
+  }
+
+  if(!address){
+    return `${address}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
+  }
+
   const url = `https://api.safe.global/tx-service/${chainIdentifier}/api/v2/safes/${address}/multisig-transactions?limit=${limit}&offset=${offset}`;
   try {
     const response = await fetch(url,
