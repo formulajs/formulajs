@@ -141,14 +141,14 @@ export const FUNCTION_LOCALE = [
       detail: "Start date (used to resolve block range). Optional, only applies to txns.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "End date (used to resolve block range). Optional, only applies to txns.",
       example: `"07/07/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "page",
@@ -203,14 +203,14 @@ export const FUNCTION_LOCALE = [
       detail: "Used to resolve starting block for txns.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to resolve ending block for txns.",
       example: `"14/06/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "page",
@@ -327,14 +327,14 @@ export const FUNCTION_LOCALE = [
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -373,16 +373,16 @@ export const FUNCTION_LOCALE = [
     {
       name: "startTime",
       detail: "Used to calculate starting block for transaction queries.",
-      example: "01/01/2024",
+      example: `"01/01/2024"`,
       require: "m",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endTime",
       detail: "Used to calculate ending block for transaction queries.",
-      example: "01/06/2024",
+      example: `"01/06/2024"`,
       require: "m",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "page",
@@ -575,14 +575,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/01/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -623,14 +623,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -670,14 +670,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -719,14 +719,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -766,14 +766,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -813,14 +813,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -847,14 +847,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Filters transactions created after this date.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Filters transactions created before this date.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "limit",
@@ -909,14 +909,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
@@ -956,14 +956,14 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       detail: "Used to filter block range.",
       example: `"01/01/2024"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     },
     {
       name: "endDate",
       detail: "Used to filter block range.",
       example: `"01/07/2025"`,
       require: "o",
-      type: "rangenumber"
+      type: "string"
     }
   ]
 },
