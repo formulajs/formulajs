@@ -5,11 +5,11 @@ import { handleScanRequest } from "./utils/handle-explorer-request";
 import {toTimestamp} from './utils/toTimestamp'
 import {isAddress} from './utils/is-address'
 import { fromEnsNameToAddress } from "./utils/from-ens-name-to-address";
+import * as utils from './utils/common'
 
 
 
-
-export async function FIREFLY(platform, contentType, identifier, start = 0, end = 10) {
+export async function FIREFLY() {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
   if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
@@ -27,6 +27,9 @@ export async function FIREFLY(platform, contentType, identifier, start = 0, end 
       replies: "lenspostid",
     }
   };
+
+
+  const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
 
   const platformType = typeMap[platform]?.[contentType];
   if (!platformType) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
@@ -71,7 +74,7 @@ export async function FIREFLY(platform, contentType, identifier, start = 0, end 
 
 
 
-export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimestamp, page, offset) {
+export async function BLOCKSCOUT() {
   if (!chain) {
     chain = 'ethereum'
   }
@@ -79,6 +82,8 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
   if (!type) {
     return 'TYPE_MISSING'
   }
+
+const [address, type, chain, startTimestamp, endTimestamp, page, offset] = utils.argsToArray(arguments)
 
   if (!startTimestamp) {
     const currentTimestamp = Date.now()
@@ -157,8 +162,8 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
   }
 }
 
-export async function BASESCAN(...args) {
-  const [type, chain, address, startDate, endDate, page, limit] = args;
+export async function BASESCAN() {
+  const [type, chain, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Basescan,
     baseUrl: 'https://api.basescan.org/api',
@@ -171,8 +176,8 @@ export async function BASESCAN(...args) {
     offset:limit
   });
 }
-export async function GNOSISSCAN(...args) {
-  const [type, chain, address, startDate, endDate, page, limit] = args;
+export async function GNOSISSCAN() {
+  const [type, chain, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Gnosisscan,
     baseUrl: 'https://api.gnosisscan.io/api',
@@ -187,16 +192,18 @@ export async function GNOSISSCAN(...args) {
 }
 
 export async function NEYNAR( 
-  fid, 
-  viewerFid, 
-  sortType, 
-  limit, 
-  cursor 
+
 ) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Neynar);
   if (!API_KEY) return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
-
+const [
+    fid, 
+  viewerFid, 
+  sortType, 
+  limit, 
+  cursor 
+] = utils.argsToArray(arguments)
   const url = new URL('https://api.neynar.com/v2/farcaster/followers');
   url.searchParams.set('fid', fid.toString());
   url.searchParams.set('sort_type', sortType);
@@ -227,17 +234,21 @@ export async function NEYNAR(
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
-export async function GNOSISPAY({
-  cardId,
-  startDate,
-  endDate,
-  limit = 20,
-  offset = 0,
-}) {
+export async function GNOSISPAY(
+
+) {
   const apiKeyKey = SERVICE_API_KEY.GnosisPay
   const API_KEY = window.localStorage.getItem(apiKeyKey);
   if (!API_KEY) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   if (!cardId) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+
+
+
+  const [  cardId,
+  startDate,
+  endDate,
+  limit = 20,
+  offset = 0] = utils.argsToArray(arguments)
 
   const url = new URL(`https://api.gnosispay.com/cards/${cardId}/transactions`);
   url.searchParams.set('limit', limit.toString());
@@ -287,8 +298,8 @@ export async function GNOSISPAY({
 
 
 
-export async function ETHERSCAN(...args) {
-  const [type, chain, address, startDate, endDate, page, limit] = args;
+export async function ETHERSCAN() {
+  const [type, chain, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Etherscan,
     baseUrl: 'https://api.etherscan.io/v2/api',
@@ -303,7 +314,7 @@ export async function ETHERSCAN(...args) {
 }
 
 
-export async function COINGECKO(category, param1, param2, page = 1, perPage = 2) {
+export async function COINGECKO() {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Coingecko);
   if (!API_KEY) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
@@ -313,6 +324,7 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
   };
 
   let url = '';
+  const [category, param1, param2, page = 1, perPage = 2 ] = utils.argsToArray(arguments)
   const lowerCategory = (category || '').toLowerCase();
 
   switch (lowerCategory) {
@@ -418,7 +430,11 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
 
 
 
-export async function EOA(
+export async function EOA() {
+
+
+
+  const [
   addresses,
   category,
   chains,
@@ -426,11 +442,29 @@ export async function EOA(
   endTime,
   page = 1,
   offset = 10,
-) {
+  ] = utils.argsToArray(arguments)
+
+const someError = utils.anyError(addresses, category, chains, startTime, endTime, page, offset)
+  
+    if (someError) {
+      return someError
+    }
+
+  
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
   if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
-  const INPUTS = addresses.split(",").map(a => a.trim()).filter(Boolean);
+
+
+  let INPUTS
+
+  if(typeof addresses === 'string'){
+    INPUTS = addresses.split(",").map(a => a.trim()).filter(Boolean);
+  } else if (typeof addresses === 'object'){
+    INPUTS = addresses
+  }
+  
+
   const CHAINS = chains.split(",").map(c => c.trim()).filter(Boolean);
   const out = [];
 
@@ -542,7 +576,12 @@ export async function FLVURL(token, vs_currencies) {
   });
 }
 
-export async function SAFE(address, utility, chain, limit, offset) {
+export async function SAFE() {
+
+
+
+
+  const [address, utility, chain, limit, offset] = utils.argsToArray(arguments)
 
   if (typeof limit !== 'number' || limit < 0) return 'INVALID_LIMIT';
   if (typeof offset !== 'number' || offset < 0) return 'INVALID_OFFSET';
