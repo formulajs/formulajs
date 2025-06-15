@@ -420,7 +420,7 @@ export const FUNCTION_LOCALE = [
     {
       name: 'param1',
       detail: `For "price": coin ID(s). 
-For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump"]. 
+For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump", "aiagents", "meme"]. 
 For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.]. 
 For "derivatives": exchange name (e.g., "binance_futures").`,
       example: `"yield-bearing-stablecoins"`,

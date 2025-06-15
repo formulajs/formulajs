@@ -306,12 +306,15 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
   };
 
   let url = '';
+  const lowerCategory = (category || '').toLowerCase();
 
-  switch ((category || '').toLowerCase()) {
+  switch (lowerCategory) {
     case 'price': {
       const token = param1;
       const vsCurrencies = param2;
-      if (!token || !vsCurrencies) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAMS}`;
+      if (!token || !vsCurrencies) {
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+      }
       url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies}&ids=${token}`;
       break;
     }
@@ -325,29 +328,28 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
         hyperliquid: 'hyperliquid',
         bitcoin: 'bitcoin-ecosystem',
         pump: 'pump-ecosystem',
+        aiagents: 'ai-agents',
+        meme: 'meme-token',
       };
 
       const key = param1?.toLowerCase();
-      const categoryVal = key ? ecosystemMap[key] : '';
-
-      if (param1 && !categoryVal) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
-      }
-
+      const categoryVal = ecosystemMap[key] || '';
       const trend = param2 ? `&price_change_percentage=${param2}` : '';
+
       url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=${page}&per_page=${perPage}`;
+      if (key && !categoryVal) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
       if (categoryVal) url += `&category=${categoryVal}`;
       if (trend) url += trend;
       break;
     }
 
     case 'stablecoins': {
-      const category = param1 === 'all' || !param1
+      const category = !param1 || param1.toLowerCase() === 'all'
         ? 'stablecoins'
-        : param1?.toLowerCase();
-      const trend = param2 ? `&price_change_percentage=${param2}` : '';
+        : param1.toLowerCase();
 
-      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&category=${category}&page=${page}&per_page=${perPage}${trend}`;
+      const trend = param2 ? `&price_change_percentage=${param2}` : '';
+      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${category}&order=market_cap_desc&page=${page}&per_page=${perPage}${trend}`;
       break;
     }
 
@@ -379,7 +381,7 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
       }
     }
 
-    if (category.toLowerCase() === 'price') {
+    if (lowerCategory === 'price') {
       const output = {};
       for (const [token, prices] of Object.entries(json)) {
         for (const [currency, value] of Object.entries(prices)) {
