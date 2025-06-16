@@ -1,5 +1,8 @@
+import {SERVICE_API_KEY} from '../crypto-constants'
+
 export const fromUsernameToFid = async (username) => {
   if(!username) return null
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Neynar);
   const url = `https://api.neynar.com/v2/farcaster/user/search/`;
   const res = await fetch(url, {
     query: {

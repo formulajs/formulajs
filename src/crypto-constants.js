@@ -150,8 +150,8 @@ export const FUNCTION_LOCALE = [
   p: [
     {
       name: "username",
-      detail: "The Farcaster FID of the user whose followers should be fetched.",
-      example: `miroyato`,
+      detail: "The Farcaster username whose followers should be fetched.",
+      example: `"miroyato"`,
       require: "m",
       type: "number"
     },
