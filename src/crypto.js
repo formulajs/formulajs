@@ -322,9 +322,9 @@ export async function COINGECKO(category, param1, param2) {
 
   switch (lowerCategory) {
     case 'price': {
-      const vsCurrencies = param1;
-      const token = param2;
-      if (!token || !vsCurrencies) {
+      const token = param1;
+      const vsCurrencies = param2;
+      if (!token) {
         return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
       }
       url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies ? vsCurrencies : 'usd' }&symbols=${token}`;
@@ -405,11 +405,14 @@ export async function COINGECKO(category, param1, param2) {
       return [output];
     }
 
-    const data = json;
+    let data = json;
 
     if (lowerCategory === 'derivatives') {
+      if (json.length > 200) {
+        data = json.slice(0, 200)
+      }
       if (json && json.tickers && json.tickers.tickers) {
-        data = json.tickers.tickers
+        data = json.tickers.tickers.slice(0, 200)
       }
     }
 
@@ -428,9 +431,6 @@ export async function COINGECKO(category, param1, param2) {
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
-
-
-
 
 export async function EOA(
 ) {
