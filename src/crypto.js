@@ -317,20 +317,21 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
 
   switch (lowerCategory) {
     case 'price': {
-      const token = param1;
-      const vsCurrencies = param2;
+      const vsCurrencies = param1;
+      const token = param2;
       if (!token || !vsCurrencies) {
         return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
       }
-      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies}&ids=${token}`;
+      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies ? vsCurrencies : 'usd' }&symbols=${token}`;
       break;
     }
 
     case 'market': {
       const ecosystemMap = {
-        eth: 'ethereum-ecosystem',
+        all: '',
+        ethereum: 'ethereum-ecosystem',
         base: 'base-ecosystem',
-        sol: 'solana-ecosystem',
+        solana: 'solana-ecosystem',
         gnosis: 'gnosis-chain',
         hyperliquid: 'hyperliquid',
         bitcoin: 'bitcoin-ecosystem',
@@ -362,10 +363,10 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
 
     case 'derivatives': {
       const exchange = param1;
-      if (exchange) {
-        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all`;
+      if (!exchange || exchange === 'all') {
+        url = `https://api.coingecko.com/api/v3/derivatives`;
       } else {
-        url = `https://api.coingecko.com/api/v3/derivatives?page=${page}&per_page=${perPage}`;
+        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all`;
       }
       break;
     }
@@ -399,7 +400,15 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
       return [output];
     }
 
-    const flatArray = Array.isArray(json) ? json : [json];
+    const data = json;
+
+    if (lowerCategory === 'derivatives') {
+      if (json && json.tickers && json.tickers.tickers) {
+        data = json.tickers.tickers
+      }
+    }
+
+    const flatArray = Array.isArray(data) ? data : [data];
     return flatArray.map(item => {
       const flat = {};
       for (const [key, value] of Object.entries(item)) {
