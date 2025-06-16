@@ -317,12 +317,12 @@ export async function COINGECKO(category, param1, param2, page = 1, perPage = 2)
 
   switch (lowerCategory) {
     case 'price': {
-      const token = param1;
-      const vsCurrencies = param2;
+      const token = param2;
+      const vsCurrencies = param1;
       if (!token || !vsCurrencies) {
         return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
       }
-      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies}&ids=${token}`;
+      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies}&symbols=${token}`;
       break;
     }
 
