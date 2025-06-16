@@ -6,7 +6,8 @@ export const SERVICE_API_KEY = {
   Gnosisscan: "GNOSIS_API_KEY",
   Firefly: "FIRE_FLY_API_KEY",
   GnosisPay: 'GNOSIS_API_KEY',
-  Neynar: 'NEYNAR_API_KEY'
+  Neynar: 'NEYNAR_API_KEY',
+  Defillama: 'DEFILLAMA_API_KEY'
 }
 
 export const FUNCTION_LOCALE = [
@@ -56,10 +57,88 @@ export const FUNCTION_LOCALE = [
       type: "number"
     }
   ]
-}
-,
-
-  {
+},
+{
+  API_KEY: SERVICE_API_KEY.Firefly,
+  LOGO: "https://firefly.social/android-chrome-192x192.png",
+  BRAND_COLOR: "#f8f5fc",
+  BRAND_SECONDARY_COLOR: "#855dcd",
+  n: "LENS",
+  t: 20,
+  d: "Fetches content from Lens.",
+  a: "Retrieves posts or replies from Lens by usernames, IDs, or hashes.",
+  p: [
+    {
+      name: "contentType",
+      detail: "Type of content to fetch. Supports 'posts' or 'replies'.",
+      example: `"posts"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "identifier",
+      detail: "Comma-separated usernames, IDs, or post hashes depending on platform and contentType.",
+      example: `"toka,miroyato"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "start",
+      detail: "Pagination start index (default is 0).",
+      example: `0`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "end",
+      detail: "Pagination end index (default is 10).",
+      example: `10`,
+      require: "o",
+      type: "number"
+    }
+  ]
+},
+{
+  API_KEY: SERVICE_API_KEY.Firefly,
+  LOGO: "https://firefly.social/android-chrome-192x192.png",
+  BRAND_COLOR: "#f8f5fc",
+  BRAND_SECONDARY_COLOR: "#855dcd",
+  n: "FARCASTER",
+  t: 20,
+  d: "Fetches content from Farcaster.",
+  a: "Retrieves posts, replies, or channels from Farcaster by usernames, IDs, or hashes.",
+  p: [
+    {
+      name: "contentType",
+      detail: "Type of content to fetch. Supports 'posts', 'replies', and 'channels'.",
+      example: `"posts"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "identifier",
+      detail: "Comma-separated usernames, IDs, or post hashes depending on contentType.",
+      example: `"miroyato"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "start",
+      detail: "Pagination start index (default is 0).",
+      example: `0`,
+      require: "o",
+      type: "number"
+    },
+    {
+      name: "end",
+      detail: "Pagination end index (default is 10).",
+      example: `10`,
+      require: "o",
+      type: "number"
+    }
+  ]
+},
+{
   API_KEY: SERVICE_API_KEY.Neynar,
   LOGO: "https://framerusercontent.com/images/OS5YeZ2Y7DmszAxL6Zf06pXtKzc.svg",
   BRAND_COLOR: "#e8e6ff",
@@ -881,7 +960,32 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
   p: []
  },
  
-
+{
+  API_KEY: SERVICE_API_KEY.Defillama,
+  LOGO: "https://defillama.com/favicon-32x32.png",
+  BRAND_COLOR: "#f8f5fc",
+  BRAND_SECONDARY_COLOR: "#855dcd",
+  n: "DEFILLAMA",
+  t: 20,
+  d: "Fetches content from Defillama.",
+  a: "Retrieves data from Defillama.",
+  p: [
+    {
+      name: "category",
+      detail: "Type of content to fetch. Supports 'protocols', 'yields', or 'dex'.",
+      example: `"protocols"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param1",
+      detail: "For protocols, it's the protocol name. (optional)",
+      example: `"aave"`,
+      require: "m",
+      type: "string"
+    }
+  ]
+}
 ]
 
 export * from './utils/constants'

@@ -6,9 +6,8 @@ import {toTimestamp} from './utils/toTimestamp'
 import {isAddress} from './utils/is-address'
 import { fromEnsNameToAddress } from "./utils/from-ens-name-to-address";
 import { fromUsernameToFid } from "./utils/from-username-to-fid";
+import { removeNestedStructure } from "./utils/remove-nested-structure";
 import * as utils from './utils/common'
-
-
 
 
 export async function FIREFLY() {
@@ -70,9 +69,110 @@ export async function FIREFLY() {
   }
 }
 
+export async function LENS() {
+  const [contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
+  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
+  const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
+  const headers = { "x-api-key": API_KEY };
 
+  const typeMap = {
+    posts: "lensid",
+    replies: "lenspostid",
+  };
 
+  const platformType = typeMap[contentType];
+  if (!platformType) return `Lens: ${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+
+  const query = identifier
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .join(",");
+
+  const url = new URL(baseUrl);
+  url.searchParams.set("query", query);
+  url.searchParams.set("type", platformType);
+  url.searchParams.set("start", String(start));
+  url.searchParams.set("end", String(end));
+
+  try {
+    const res = await fetch(url.toString(), { headers });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const json = await res.json();
+    if (!Array.isArray(json?.data)) return [];
+
+    return json.data.map(item => {
+      const flat = {};
+      for (const [key, value] of Object.entries(item)) {
+        if (typeof value !== "object" || value === null) {
+          flat[key] = value;
+        }
+      }
+      flat.platform = platform;
+      return flat;
+    });
+
+  } catch (err) {
+    console.error("LENS fetch error:", err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
+
+export async function FARCASTER() {
+  const [contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
+  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
+  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+
+  const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
+  const headers = { "x-api-key": API_KEY };
+
+  const typeMap = {
+    posts: "farcasterid",
+    replies: "farcasterpostid",
+    channels: "farcasterchannels",
+  };
+
+  const platformType = typeMap[contentType];
+  if (!platformType) return `Farcaster: ${ERROR_MESSAGES_FLAG.INVALID_TYPE}`;
+
+  const query = identifier
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .join(",");
+
+  const url = new URL(baseUrl);
+  url.searchParams.set("query", query);
+  url.searchParams.set("type", platformType);
+  url.searchParams.set("start", String(start));
+  url.searchParams.set("end", String(end));
+
+  try {
+    const res = await fetch(url.toString(), { headers });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const json = await res.json();
+    if (!Array.isArray(json?.data)) return [];
+
+    return json.data.map(item => {
+      const flat = {};
+      for (const [key, value] of Object.entries(item)) {
+        if (typeof value !== "object" || value === null) {
+          flat[key] = value;
+        }
+      }
+      flat.platform = platform;
+      return flat;
+    });
+
+  } catch (err) {
+    console.error("Farcaster fetch error:", err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
 
 export async function BLOCKSCOUT() {
     let [address, type, chain, startTimestamp, endTimestamp, page, offset] = utils.argsToArray(arguments)
@@ -603,6 +703,34 @@ export async function SAFE() {
   }
 }
 
+export async function DEFILLAMA() {
+  let [category, param1] = utils.argsToArray(arguments)
+  const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Defillama);
+  if (!apiKey) return `${SERVICE_API_KEY.Defillama}_MISSING`;
+  const baseUrl = 'https://api.llama.fi/'
+  const categoryList = ['protocols', 'yields', 'dex'];
+  const categoryMap = {
+    [categoryList[0]]: 'protocols',
+    [categoryList[1]]: 'pools',
+    [categoryList[2]]: 'overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true'
+  }
+  let url = `${baseUrl}/${categoryMap[category]}`
+  if(categoryMap[category] === categoryList[0] && param1){
+    url += `/${param1}`
+  }
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    let json = await response.json();
+    if(json.length > 300){
+      json = json.slice(0, 300)
+    }
+    return removeNestedStructure(json);
+  } catch (e) {
+    console.log(e);
+    return "ERROR IN FETCHING";
+  }
+}
 export function POLYMARKET() {
   return "Coming Soon"
  }
