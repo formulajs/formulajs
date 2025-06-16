@@ -110,7 +110,7 @@ export const FUNCTION_LOCALE = [
   LOGO: "https://2064089921-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FevP3L0cUvP9xmRefuzCm%2Fuploads%2F2K1pvFsE7JAfcI3LAxYl%2Fbase-logo-in-blue.webp?alt=media&token=32c80439-dbdc-432a-b199-220e012efc3c",
   BRAND_COLOR: "#f1f5ff",
   BRAND_SECONDARY_COLOR: "#2752ff",
-  n: "BASESCAN",
+  n: "BASE",
   t: 20,
   d: "Fetches Base network data via Basescan: native txns, ERC-20 transfers, ERC-721 transfers, and gas metrics.",
   a: "Pulls on-chain activity for Base (chainid 8453) using Basescan’s API — supports full tx history, token/NFT transfers, gas prices, and pagination.",
@@ -172,7 +172,7 @@ export const FUNCTION_LOCALE = [
   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
   BRAND_SECONDARY_COLOR: "#133629",
-  n: "GNOSISSCAN",
+  n: "GNOSIS",
   t: 20,
   d: "Fetches Gnosis Chain data via Gnosisscan: native transactions, ERC-20 token transfers, ERC-721 NFT transfers, and gas metrics.",
   a: "Queries Gnosis Chain (chainid 100) through Gnosisscan’s API to return transaction history, token/NFT transfers, or gas price information. Supports pagination and time-based filtering for transaction types.",
@@ -419,16 +419,16 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: 'param1',
-      detail: `For "price": coin ID(s). 
-For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump", "aiagents", "meme"]. 
-For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.]. 
+      detail: `For "price": coin ID(s).
+For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump", "aiagents", "meme"].
+For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.].
 For "derivatives": exchange name (e.g., "binance_futures").`,
       example: `"yield-bearing-stablecoins"`,
       require: 'o'
     },
     {
       name: 'param2',
-      detail: `For "price": target currency(ies) (e.g. "usd"). 
+      detail: `For "price": target currency(ies) (e.g. "usd").
 For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d).`,
       example: `"1h,24h,7d"`,
       require: 'o'
@@ -586,7 +586,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     }
   ]
 },
-  
+
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
   LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
@@ -778,54 +778,6 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
   ]
 },
 {
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://aerodrome.finance/images/AERO/favicon.ico",
-  BRAND_COLOR: "#effdfb",
-  BRAND_SECONDARY_COLOR: "#5eead4",
-  n: "KAITO",
-  t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    }
-  ]
-},
-
-{
   API_KEY: SERVICE_API_KEY.GnosisPay,
   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   BRAND_COLOR: "#f6f7f6",
@@ -869,54 +821,6 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
       example: `"0"`,
       require: "o",
       type: "number"
-    }
-  ]
-}
-,
-{
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://avatars.githubusercontent.com/u/129790008?s=48&v=4",
-  BRAND_COLOR: "#f1f7fc",
-  BRAND_SECONDARY_COLOR: "#5098d6",
-  n: "OTTERSCAN",
-  t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
     }
   ]
 },
@@ -967,7 +871,7 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     }
   ]
 },
-    
+
 ]
 
 export * from './utils/constants'

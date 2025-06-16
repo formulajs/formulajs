@@ -157,7 +157,7 @@ export async function BLOCKSCOUT(address, type, chain, startTimestamp, endTimest
   }
 }
 
-export async function BASESCAN(...args) {
+export async function BASE(...args) {
   const [type, chain, address, startDate, endDate, page, limit] = args;
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Basescan,
@@ -171,7 +171,7 @@ export async function BASESCAN(...args) {
     offset:limit
   });
 }
-export async function GNOSISSCAN(...args) {
+export async function GNOSIS(...args) {
   const [type, chain, address, startDate, endDate, page, limit] = args;
   return handleScanRequest({
     scanKey: SERVICE_API_KEY.Gnosisscan,
@@ -181,17 +181,17 @@ export async function GNOSISSCAN(...args) {
     address,
     startDate,
     endDate,
-    page, 
+    page,
     offset:limit
   });
 }
 
-export async function NEYNAR( 
-  fid, 
-  viewerFid, 
-  sortType, 
-  limit, 
-  cursor 
+export async function NEYNAR(
+  fid,
+  viewerFid,
+  sortType,
+  limit,
+  cursor
 ) {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Neynar);
   if (!API_KEY) return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
@@ -297,7 +297,7 @@ export async function ETHERSCAN(...args) {
     address,
     startDate,
     endDate,
-    page, 
+    page,
     offset:limit
   });
 }

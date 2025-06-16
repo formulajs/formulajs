@@ -1,6 +1,6 @@
 {
   "name": "@fileverse-dev/formulajs",
-  "version": "4.4.11-mod-39",
+  "version": "4.4.11-mod-40",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "publishConfig": {
@@ -59,7 +59,6 @@
     "types": "tsc"
   },
   "dependencies": {
-    "@fileverse-dev/formulajs": "^4.4.11-mod-23",
     "bessel": "^1.0.2",
     "esbuild": "^0.25.4",
     "js-sha3": "^0.9.3",
