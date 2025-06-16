@@ -5,7 +5,8 @@ export const SERVICE_API_KEY = {
   Basescan: "BASESCAN_API_KEY",
   Gnosisscan: "GNOSIS_API_KEY",
   Firefly: "FIRE_FLY_API_KEY",
-  GnosisPay: 'GNOSIS_API_KEY'
+  GnosisPay: 'GNOSIS_API_KEY',
+  Neynar: 'NEYNAR_API_KEY'
 }
 
 export const FUNCTION_LOCALE = [
@@ -61,7 +62,7 @@ export const FUNCTION_LOCALE = [
   {
   API_KEY: SERVICE_API_KEY.Neynar,
   LOGO: "https://framerusercontent.com/images/OS5YeZ2Y7DmszAxL6Zf06pXtKzc.svg",
-  BRAND_COLOR: "##e8e6ff",
+  BRAND_COLOR: "#e8e6ff",
   BRAND_SECONDARY_COLOR: "#28204A",
   n: "NEYNAR",
   t: 20,
@@ -634,53 +635,53 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     }
   ]
 },
-{
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://www.pendle.finance/uploads/wp-content/uploads/2021/12/cropped-Pendle-Logo-quite-small.png",
-  BRAND_COLOR: "#eafffb",
-  BRAND_SECONDARY_COLOR: "#47e2c2",
-  n: "PENDLE",
-  t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    }
-  ]
-},
+// {
+//   API_KEY: SERVICE_API_KEY.Etherscan,
+//   LOGO: "https://www.pendle.finance/uploads/wp-content/uploads/2021/12/cropped-Pendle-Logo-quite-small.png",
+//   BRAND_COLOR: "#eafffb",
+//   BRAND_SECONDARY_COLOR: "#47e2c2",
+//   n: "PENDLE",
+//   t: 20,
+//   d: "Returns blockchain transaction history for the given address",
+//   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+//   p: [
+//     {
+//       name: "type",
+//       detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+//       example: `"all-txns"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "chain",
+//       detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+//       example: `"ethereum"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "address",
+//       detail: "Wallet address to query",
+//       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "startDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/01/2024"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "endDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/07/2025"`,
+//       require: "o",
+//       type: "string"
+//     }
+//   ]
+// },
 
 
 {
@@ -777,53 +778,53 @@ For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d
     }
   ]
 },
-{
-  API_KEY: SERVICE_API_KEY.GnosisPay,
-  LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
-  BRAND_COLOR: "#f6f7f6",
-  BRAND_SECONDARY_COLOR: "#133629",
-  n: "GNOSISPAY",
-  t: 20,
-  d: "Fetches Gnosis Pay card transaction history, including merchant, amount, and currency info.",
-  a: "Retrieves card transactions from Gnosis Pay’s API for a specific card ID, filtered by date range and paginated via limit/offset.",
-  p: [
-    {
-      name: "cardId",
-      detail: "The Gnosis Pay card ID to fetch transactions for.",
-      example: `"card_9f8f8b3a56"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Filters transactions created after this date.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Filters transactions created before this date.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "limit",
-      detail: "Number of transactions to return per page.",
-      example: `"20"`,
-      require: "o",
-      type: "number"
-    },
-    {
-      name: "offset",
-      detail: "Offset for pagination (i.e., how many records to skip).",
-      example: `"0"`,
-      require: "o",
-      type: "number"
-    }
-  ]
-},
+// {
+//   API_KEY: SERVICE_API_KEY.GnosisPay,
+//   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
+//   BRAND_COLOR: "#f6f7f6",
+//   BRAND_SECONDARY_COLOR: "#133629",
+//   n: "GNOSISPAY",
+//   t: 20,
+//   d: "Fetches Gnosis Pay card transaction history, including merchant, amount, and currency info.",
+//   a: "Retrieves card transactions from Gnosis Pay’s API for a specific card ID, filtered by date range and paginated via limit/offset.",
+//   p: [
+//     {
+//       name: "cardId",
+//       detail: "The Gnosis Pay card ID to fetch transactions for.",
+//       example: `"card_9f8f8b3a56"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "startDate",
+//       detail: "Filters transactions created after this date.",
+//       example: `"01/01/2024"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "endDate",
+//       detail: "Filters transactions created before this date.",
+//       example: `"01/07/2025"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "limit",
+//       detail: "Number of transactions to return per page.",
+//       example: `"20"`,
+//       require: "o",
+//       type: "number"
+//     },
+//     {
+//       name: "offset",
+//       detail: "Offset for pagination (i.e., how many records to skip).",
+//       example: `"0"`,
+//       require: "o",
+//       type: "number"
+//     }
+//   ]
+// },
 {
   API_KEY: SERVICE_API_KEY.Etherscan,
   LOGO: "https://www.tally.xyz/favicon.ico",
