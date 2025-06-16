@@ -406,11 +406,14 @@ export async function COINGECKO(category, param1, param2) {
       return [output];
     }
 
-    const data = json;
+    let data = json;
 
     if (lowerCategory === 'derivatives') {
+      if (json.length > 200) {
+        data = json.slice(0, 200)
+      }
       if (json && json.tickers && json.tickers.tickers) {
-        data = json.tickers.tickers
+        data = json.tickers.tickers.slice(0, 200)
       }
     }
 
@@ -429,9 +432,6 @@ export async function COINGECKO(category, param1, param2) {
     return ERROR_MESSAGES_FLAG.DEFAULT;
   }
 }
-
-
-
 
 export async function EOA(
 ) {
