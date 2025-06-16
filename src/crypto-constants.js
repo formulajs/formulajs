@@ -419,10 +419,10 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: 'param1',
-      detail: `For "price": coin ID(s).
-For "market": one of ["eth", "base", "sol", "gnosis", "hyperliquid", "bitcoin", "pump", "aiagents", "meme"].
-For "stablecoins": one of ["all", "crypto-backed-stablecoin", "yield-bearing-stablecoins", etc.].
-For "derivatives": exchange name (e.g., "binance_futures").`,
+      detail: `If "price" then - eg. "BTC", "ETH", OR any token on coingecko\n
+If "market": one of ["all", "base", "meme", "aiagents", "bitcoin", "ethereum", "hyperliquid", "pump", "solana"].\n
+If "stablecoins": one of ["all", "yield-bearing-stablecoins", "crypto-backed-stablecoin"].\n
+If "derivatives": exchange name (e.g., "binance_futures").`,
       example: `"yield-bearing-stablecoins"`,
       require: 'o'
     },
