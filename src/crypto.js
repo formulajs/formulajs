@@ -190,8 +190,7 @@ export async function GNOSIS() {
   });
 }
 
-export async function NEYNAR(
-) {
+export async function NEYNAR() {
   const [  
     username
   ] = utils.argsToArray(arguments)

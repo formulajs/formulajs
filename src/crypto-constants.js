@@ -66,44 +66,16 @@ export const FUNCTION_LOCALE = [
   BRAND_SECONDARY_COLOR: "#28204A",
   n: "NEYNAR",
   t: 20,
-  d: "Fetches followers for a given Farcaster FID using Neynar's API.",
+  d: "Fetches followers for a given Farcaster username using Neynar's API.",
   a: "Retrieves followers of a Farcaster user, with support for sorting, pagination, and optional viewer context.",
   p: [
     {
-      name: "fid",
+      name: "username",
       detail: "The Farcaster FID of the user whose followers should be fetched.",
-      example: `123`,
+      example: `miroyato`,
       require: "m",
       type: "number"
     },
-    {
-      name: "viewerFid",
-      detail: "FID of the viewer, to include contextual info like mutual follows (optional).",
-      example: `456`,
-      require: "o",
-      type: "number"
-    },
-    {
-      name: "sortType",
-      detail: "Sorting type: either 'desc_chron' (default) or 'algorithmic'.",
-      example: `"desc_chron"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "limit",
-      detail: "Number of followers to return (max 100).",
-      example: `20`,
-      require: "o",
-      type: "number"
-    },
-    {
-      name: "cursor",
-      detail: "Cursor string for paginating the result set.",
-      example: `"eyJvZmZzZXQiOjIwLCJsYXN0SWQiOjEyMzQ1Nn0="`,
-      require: "o",
-      type: "string"
-    }
   ]
 },
 {
