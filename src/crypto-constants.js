@@ -718,53 +718,53 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
     }
   ]
 },
-{
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://cdn.prod.website-files.com/6760e87b474d412dfa9a7a68/6760e8ebe8faad5fb985c89a_Frame%201321316795.png",
-  BRAND_COLOR: "#f6f4ff",
-  BRAND_SECONDARY_COLOR: "#684ff8",
-  n: "ARTEMIS",
-  t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    }
-  ]
-},
+// {
+//   API_KEY: SERVICE_API_KEY.Etherscan,
+//   LOGO: "https://cdn.prod.website-files.com/6760e87b474d412dfa9a7a68/6760e8ebe8faad5fb985c89a_Frame%201321316795.png",
+//   BRAND_COLOR: "#f6f4ff",
+//   BRAND_SECONDARY_COLOR: "#684ff8",
+//   n: "ARTEMIS",
+//   t: 20,
+//   d: "Returns blockchain transaction history for the given address",
+//   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+//   p: [
+//     {
+//       name: "type",
+//       detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+//       example: `"all-txns"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "chain",
+//       detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+//       example: `"ethereum"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "address",
+//       detail: "Wallet address to query",
+//       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "startDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/01/2024"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "endDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/07/2025"`,
+//       require: "o",
+//       type: "string"
+//     }
+//   ]
+// },
 // {
 //   API_KEY: SERVICE_API_KEY.GnosisPay,
 //   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
@@ -812,53 +812,103 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
 //     }
 //   ]
 // },
+// {
+//   API_KEY: SERVICE_API_KEY.Etherscan,
+//   LOGO: "https://www.tally.xyz/favicon.ico",
+//   BRAND_COLOR: "#f9f8ff",
+//   BRAND_SECONDARY_COLOR: "#725bff",
+//   n: "TALLY",
+//   t: 20,
+//   d: "Returns blockchain transaction history for the given address",
+//   a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+//   p: [
+//     {
+//       name: "type",
+//       detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
+//       example: `"all-txns"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "chain",
+//       detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+//       example: `"ethereum"`,
+//       require: "m",
+//       type: "string"
+//     },
+//     {
+//       name: "address",
+//       detail: "Wallet address to query",
+//       example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "startDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/01/2024"`,
+//       require: "o",
+//       type: "string"
+//     },
+//     {
+//       name: "endDate",
+//       detail: "Used to filter block range.",
+//       example: `"01/07/2025"`,
+//       require: "o",
+//       type: "string"
+//     }
+//   ]
+// },
+
 {
-  API_KEY: SERVICE_API_KEY.Etherscan,
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/ploymarket.png",
+  n: "POLYMARKET",
+  t: 20,
+  d: "Get Polymarket predictions information.(Comming soon)",
+  a: "Get Polymarket predictions information.(Comming soon)",
+  p: []
+ },
+ {
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/privacy.png",
+  n: "PRIVACYPOOL",
+  t: 20,
+  d: "Fetch data from Privacypool.(Comming soon)",
+  a: "Fetch data from Privacypool.(Comming soon)",
+  p: []
+ },
+ {
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/rotki.png",
+  n: "ROTKI",
+  t: 20,
+  d: "Fetch analytics data from Rotki.(Comming soon)",
+  a: "Fetch analytics data from Rotki.(Comming soon)",
+  p: []
+ },
+ {
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/meerkat.png",
+  n: "MEERKAT",
+  t: 20,
+  d: "Fetch data from Meerkat.(Comming soon)",
+  a: "Fetch data from Meerkat.(Comming soon)",
+  p: []
+ },
+ {
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/artemis.png",
+  n: "ARTEMIS",
+  t: 20,
+  d: "Fetch data from Artemis.(Comming soon)",
+  a: "Fetch data from Artemis.(Comming soon)",
+  p: []
+ },
+ {
   LOGO: "https://www.tally.xyz/favicon.ico",
-  BRAND_COLOR: "#f9f8ff",
-  BRAND_SECONDARY_COLOR: "#725bff",
   n: "TALLY",
   t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    }
-  ]
-},
+  d: "Fetch data from Tally.(Comming soon)",
+  a: "Fetch data from Tally.(Comming soon)",
+  p: []
+ },
+ 
 
 ]
 
