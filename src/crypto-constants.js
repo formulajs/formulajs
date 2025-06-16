@@ -429,21 +429,8 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
     },
     {
       name: 'param2',
-      detail: `For "price": target currency(ies) (e.g. "usd").
-For "market" and "stablecoins": comma-separated price trend keys (e.g. 1h,24h,7d).`,
+      detail: `If "market" and "stablecoins" then eg. "1h", "24h", "7d".`,
       example: `"1h,24h,7d"`,
-      require: 'o'
-    },
-    {
-      name: 'page',
-      detail: 'Page number for pagination (applies to "market", "stablecoins", and global "derivatives").',
-      example: `1`,
-      require: 'o'
-    },
-    {
-      name: 'per_page',
-      detail: 'Number of items per page (applies to "market", "stablecoins", and global "derivatives").',
-      example: `2`,
       require: 'o'
     }
   ]
