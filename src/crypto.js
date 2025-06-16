@@ -603,3 +603,33 @@ export async function SAFE() {
     return "ERROR IN FETCHING";
   }
 }
+
+export function POLYMARKET() {
+  return "Coming Soon"
+ }
+ 
+ 
+ export function PRIVACYPOOL() {
+  return "Coming Soon"
+ }
+ 
+ 
+ export function ROTKI() {
+  return "Coming Soon"
+ }
+ 
+ 
+ export function MEERKAT() {
+  return "Coming Soon"
+ }
+ 
+ 
+ export function ARTEMIS() {
+  return "Coming Soon"
+ }
+ 
+ 
+ export function TALLY() {
+  return "Coming Soon"
+ }
+ 
