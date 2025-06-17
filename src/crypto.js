@@ -804,4 +804,8 @@ export function POLYMARKET() {
  export function TALLY() {
   return "Coming Soon"
  }
+
+  export function MYANIMELIST() {
+  return "Coming Soon"
+ }
  

@@ -898,48 +898,56 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/ploymarket.png",
   n: "POLYMARKET",
   t: 20,
-  d: "Get Polymarket predictions information.(Comming soon)",
-  a: "Get Polymarket predictions information.(Comming soon)",
+  d: "Query prediction market positions, shares, and odds for future event outcomes on Polymarket. (Comming soon)",
+  a: "Query prediction market positions, shares, and odds for future event outcomes on Polymarket. (Comming soon)",
   p: []
  },
  {
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/privacy.png",
   n: "PRIVACYPOOL",
   t: 20,
-  d: "Fetch data from Privacypool.(Comming soon)",
-  a: "Fetch data from Privacypool.(Comming soon)",
+  d: "Access deposit/withdraw stats and compliance-safe anonymized transfers using zk-based Privacy Pools. (Comming soon)",
+  a: "Access deposit/withdraw stats and compliance-safe anonymized transfers using zk-based Privacy Pools. (Comming soon)",
   p: []
  },
  {
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/rotki.png",
   n: "ROTKI",
   t: 20,
-  d: "Fetch analytics data from Rotki.(Comming soon)",
-  a: "Fetch analytics data from Rotki.(Comming soon)",
+  d: "Pull portfolio, asset, and tax-related data from Rotki for crypto accounting and reporting. (Comming soon)",
+  a: "Pull portfolio, asset, and tax-related data from Rotki for crypto accounting and reporting. (Comming soon)",
   p: []
  },
  {
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/meerkat.png",
   n: "MEERKAT",
   t: 20,
-  d: "Fetch data from Meerkat.(Comming soon)",
-  a: "Fetch data from Meerkat.(Comming soon)",
+  d: "Query onchain proofs for tickets, attendance, speaker roles, and reactions. (Comming soon)",
+  a: "Query onchain proofs for tickets, attendance, speaker roles, and reactions. (Comming soon)",
   p: []
  },
  {
   LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/artemis.png",
   n: "ARTEMIS",
   t: 20,
-  d: "Fetch data from Artemis.(Comming soon)",
-  a: "Fetch data from Artemis.(Comming soon)",
+  d: "Query onchain financial metrics, developer activity, and market insights across protocols and sectors. (Comming soon)",
+  a: "Query onchain financial metrics, developer activity, and market insights across protocols and sectors. (Comming soon)",
   p: []
  },
  {
   LOGO: "https://www.tally.xyz/favicon.ico",
   n: "TALLY",
   t: 20,
-  d: "Fetch data from Tally.(Comming soon)",
-  a: "Fetch data from Tally.(Comming soon)",
+  d: "Track token launches, governance participation, staking activity, and contract usage. (Comming soon)",
+  a: "Track token launches, governance participation, staking activity, and contract usage. (Comming soon)",
+  p: []
+ },
+  {
+  LOGO: "https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/MYANIMELIST.png",
+  n: "MYANIMELIST",
+  t: 20,
+  d: "Kawaiii, comming soon. Hello Keith! (Comming soon)",
+  a: "Kawaiii, comming soon. Hello Keith! (Comming soon)",
   p: []
  },
  
