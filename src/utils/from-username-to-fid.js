@@ -3,7 +3,7 @@ export const fromUsernameToFid = async (username, apiKey) => {
   const url = `https://api.neynar.com/v2/farcaster/user/search/?q=${username}&limit=5`;
   const res = await fetch(url, {
     headers: {
-      'x-api-key': API_KEY,
+      'x-api-key': apiKey,
       'x-neynar-experimental': 'false'
     }
   });
