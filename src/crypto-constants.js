@@ -7,8 +7,7 @@ export const SERVICE_API_KEY = {
   Firefly: "FIRE_FLY_API_KEY",
   GnosisPay: 'GNOSIS_API_KEY',
   Neynar: 'NEYNAR_API_KEY',
-  Defillama: 'DEFILLAMA_API_KEY',
-  Uniswap: 'UNISWAP_API_KEY'
+  Defillama: 'DEFILLAMA_API_KEY'
 }
 
 export const FUNCTION_LOCALE = [
@@ -74,50 +73,81 @@ export const FUNCTION_LOCALE = [
   ],
 },
 {
-  API_KEY: SERVICE_API_KEY.Uniswap,
   LOGO: "https://app.uniswap.org/favicon.png",
   BRAND_COLOR: "#fef5fc",
   BRAND_SECONDARY_COLOR: "#f50db4",
   n: "UNISWAP",
   t: 20,
-  d: "Returns Uniswap transaction history for the given address",
+  d: "Returns Uniswap pools and tokens data",
   a: "Retrieves Uniswap data for a given chain and address from Uniswap",
   p: [
     {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
+      name: "graphType",
+      detail: "Graph type to Query. Can be 'v3', 'v3-raw'",
+      example: `"v3"`,
       require: "m",
       type: "string"
     },
     {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
+      name: "category",
+      detail: "Query type for the data. Can be 'tokens', 'markets'",
+      example: `"tokens"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param1",
+      detail: "Token Contract Address",
       example: `"ethereum"`,
       require: "m",
       type: "string"
     },
     {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
+      name: "param2",
+      detail: "Token Contract Address - only required in case of markets",
+      example: `"ethereum"`,
       require: "o",
       type: "string"
     },
+  ]
+},
+{
+  LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
+  BRAND_COLOR: "#f7f7ff",
+  BRAND_SECONDARY_COLOR: "#9896ff",
+  n: "AAVE",
+  t: 20,
+  d: "Returns Aave pools and tokens data",
+  a: "Retrieves Aave data for a given chain and address from Aave",
+  p: [
     {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
+      name: "graphType",
+      detail: "Graph type to Query. Can be 'v2', 'v2-raw'",
+      example: `"v2"`,
+      require: "m",
       type: "string"
     },
     {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2025"`,
+      name: "category",
+      detail: "Query type for the data. Can be 'tokens', 'markets'",
+      example: `"tokens"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param1",
+      detail: "Token Contract Address",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param2",
+      detail: "Token Contract Address - only required in case of markets",
+      example: `"ethereum"`,
       require: "o",
       type: "string"
-    }
+    },
   ]
 },
 {
@@ -487,54 +517,6 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
       }
     ]
   },
-
-{
-  API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
-  BRAND_COLOR: "#f7f7ff",
-  BRAND_SECONDARY_COLOR: "#9896ff",
-  n: "AAVE",
-  t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
-  p: [
-    {
-      name: "type",
-      detail: "The type of data to retrieve. Can be 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
-      example: `"all-txns"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "chain",
-      detail: "The chain name (e.g. 'ethereum', 'base', 'gnosis').",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "address",
-      detail: "Wallet address to query",
-      example: `"0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "startDate",
-      detail: "Used to filter block range.",
-      example: `"01/01/2024"`,
-      require: "o",
-      type: "string"
-    },
-    {
-      name: "endDate",
-      detail: "Used to filter block range.",
-      example: `"01/07/2025"`,
-      require: "o",
-      type: "string"
-    }
-  ]
-},
 
 {
   API_KEY: SERVICE_API_KEY.Firefly,

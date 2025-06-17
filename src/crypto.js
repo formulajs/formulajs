@@ -745,6 +745,37 @@ export async function DEFILLAMA() {
   }
 }
 
+export async function UNISWAP() {
+  const [graphType, category, param1, param2] = utils.argsToArray(arguments)
+  const baseUrl = "https://onchain-proxy.fileverse.io/third-party";  
+  try {
+    const url = `${baseUrl}?service=uniswap&graphType=${graphType}&category=${category}&input1=${param1}&input2=${param2}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return removeNestedStructure(json);
+  } catch (err) {
+    console.error("UNISWAP fetch error:", err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
+
+export async function AAVE() {
+  const [graphType, category, param1, param2] = utils.argsToArray(arguments)
+  const baseUrl = "https://onchain-proxy.fileverse.io/third-party";
+  try {
+    const url = `${baseUrl}?service=aave&graphType=${graphType}&category=${category}&input1=${param1}&input2=${param2}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return removeNestedStructure(json);
+  } catch (err) {
+    console.error("AAVE fetch error:", err);
+    return ERROR_MESSAGES_FLAG.DEFAULT;
+  }
+}
+
+
 export function POLYMARKET() {
   return "Coming Soon"
  }
