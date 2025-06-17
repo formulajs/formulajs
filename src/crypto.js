@@ -111,7 +111,7 @@ export async function LENS() {
           flat[key] = value;
         }
       }
-      flat.platform = platform;
+      flat.platform = 'lens';
       return flat;
     });
 
@@ -164,7 +164,7 @@ export async function FARCASTER() {
           flat[key] = value;
         }
       }
-      flat.platform = platform;
+      flat.platform = "farcaster";
       return flat;
     });
 
@@ -301,7 +301,7 @@ export async function NEYNAR() {
     return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
   }
 
-  const fid = await fromUsernameToFid(username)
+  const fid = await fromUsernameToFid(username, API_KEY)
 
   if(!fid){
     return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
@@ -511,8 +511,25 @@ export async function COINGECKO(category, param1, param2) {
       if (json.length > 200) {
         data = json.slice(0, 200)
       }
-      if (json && json.tickers && json.tickers.tickers) {
-        data = json.tickers.tickers.slice(0, 200)
+
+      if(param1 !== 'all' && json && json.tickers){
+        const exchangeDetails = {
+          exchange_id: param1,
+          exchange_name: json.name,
+          exchange_logo: json.logo,
+          exchange_url: json.url,
+          exchange_trade_volume_24h_btc: json.trade_volume_24h_btc,
+          exchange_number_of_futures_pairs: json.number_of_futures_pairs,
+          exchange_number_of_perpetual_pairs: json.number_of_perpetual_pairs,
+          exchange_open_interest_btc: json.open_interest_btc,
+        };
+        data = json.tickers.slice(0, 200).map(item => {
+          return {
+            ...item,
+            ...exchangeDetails,
+            usd_volume: item.converted_volume && item.converted_volume.usd,
+          }
+        });
       }
     }
 
@@ -532,28 +549,23 @@ export async function COINGECKO(category, param1, param2) {
   }
 }
 
-export async function EOA(
-) {
+export async function EOA() {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan);
   if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
-
   let [
-      addresses,
-  category,
-  chains,
-  startTime,
-  endTime,
-  page = 1,
-  offset = 10,
+    addresses,
+    category,
+    chains,
+    startTime,
+    endTime,
+    page = 1,
+    offset = 10,
   ] = utils.argsToArray(arguments)
-
   const INPUTS = addresses.split(",").map(a => a.trim()).filter(Boolean);
   const CHAINS = chains.split(",").map(c => c.trim()).filter(Boolean);
   const out = [];
-
   // Map: finalAddress => ENS name (if applicable)
   const ADDRESS_MAP = {};
-
   for (const input of INPUTS) {
     if (isAddress(input)) {
       ADDRESS_MAP[input.toLowerCase()] = null; // it's a direct address
@@ -566,51 +578,42 @@ export async function EOA(
       }
     }
   }
-
   const ADDRS = Object.keys(ADDRESS_MAP);
-
   for (const chain of CHAINS) {
     const chainId = CHAIN_ID_MAP[chain];
     if (!chainId) return ERROR_MESSAGES_FLAG.UNSUPPORTED_CHAIN;
-
     if (category === "balance") {
       for (let i = 0; i < ADDRS.length; i += 20) {
         const slice = ADDRS.slice(i, i + 20).join(",");
-        const action = ADDRS.length > 1 ? "balancemulti" : "balance";
-
+        const action = 'addresstokenbalance';
         const url =
           `https://api.etherscan.io/v2/api?chainid=${chainId}` +
           `&module=account&action=${action}&address=${slice}` +
-          `&tag=latest&apikey=${API_KEY}`;
-
+          `&page=${page}&offset=${offset}&apikey=${API_KEY}`;
         const data = await fetchJSON(url);
         if (typeof data === "string") return data;
-
-        (Array.isArray(data) ? data : [data]).forEach(r =>
+        data.forEach(tx =>
           out.push({
             chain,
-            ...r,
-            name: ADDRESS_MAP[(r.account || r.address || "").toLowerCase()] || null,
+            address: ADDRS[i],
+            name: ADDRESS_MAP[ADDRS[i]],
+            ...tx,
           }),
         );
       }
       continue;
     }
-
     if (category === "txns") {
       const startBlock = await fromTimeStampToBlock(toTimestamp(startTime), chain, API_KEY);
       const endBlock = await fromTimeStampToBlock(toTimestamp(endTime), chain, API_KEY);
-
       for (const addr of ADDRS) {
         const url =
           `https://api.etherscan.io/v2/api?chainid=${chainId}` +
           `&module=account&action=txlist&address=${addr}` +
           `&startblock=${startBlock}&endblock=${endBlock}` +
           `&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`;
-
         const data = await fetchJSON(url);
         if (typeof data === "string") return data;
-
         data.forEach(tx =>
           out.push({
             chain,
@@ -622,7 +625,6 @@ export async function EOA(
       }
       continue;
     }
-
     return ERROR_MESSAGES_FLAG.INVALID_CATEGORY;
   }
 
@@ -704,33 +706,45 @@ export async function SAFE() {
 }
 
 export async function DEFILLAMA() {
-  let [category, param1] = utils.argsToArray(arguments)
+  let [category] = utils.argsToArray(arguments)
   const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Defillama);
   if (!apiKey) return `${SERVICE_API_KEY.Defillama}_MISSING`;
-  const baseUrl = 'https://api.llama.fi/'
   const categoryList = ['protocols', 'yields', 'dex'];
   const categoryMap = {
-    [categoryList[0]]: 'protocols',
-    [categoryList[1]]: 'pools',
-    [categoryList[2]]: 'overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true'
+    [categoryList[0]]: 'https://api.llama.fi/protocols',
+    [categoryList[1]]: 'https://yields.llama.fi/pools',
+    [categoryList[2]]: 'https://api.llama.fi/overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true'
   }
-  let url = `${baseUrl}/${categoryMap[category]}`
-  if(categoryMap[category] === categoryList[0] && param1){
-    url += `/${param1}`
-  }
+  let url = categoryMap[category]
+
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
     let json = await response.json();
-    if(json.length > 300){
-      json = json.slice(0, 300)
+    switch(category){
+      case categoryList[0]: {
+        if(json.length > 500){
+          json = json.slice(0, 500)
+        }
+        break;
+      }
+      case categoryList[1]: {
+        json = json.data.slice(0, 500)
+        break;
+      }
+      case categoryList[2]: {
+        json = json.protocols.slice(0, 500)
+        break;
+      }
     }
-    return removeNestedStructure(json);
+
+    return removeNestedStructure(Array.isArray(json) ? json : [json]);
   } catch (e) {
     console.log(e);
     return "ERROR IN FETCHING";
   }
 }
+
 export function POLYMARKET() {
   return "Coming Soon"
  }

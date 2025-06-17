@@ -7,7 +7,8 @@ export const SERVICE_API_KEY = {
   Firefly: "FIRE_FLY_API_KEY",
   GnosisPay: 'GNOSIS_API_KEY',
   Neynar: 'NEYNAR_API_KEY',
-  Defillama: 'DEFILLAMA_API_KEY'
+  Defillama: 'DEFILLAMA_API_KEY',
+  Uniswap: 'UNISWAP_API_KEY'
 }
 
 export const FUNCTION_LOCALE = [
@@ -579,14 +580,14 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
     ],
   },
 {
-  API_KEY: SERVICE_API_KEY.Etherscan,
+  API_KEY: SERVICE_API_KEY.Uniswap,
   LOGO: "https://app.uniswap.org/favicon.png",
   BRAND_COLOR: "#fef5fc",
   BRAND_SECONDARY_COLOR: "#f50db4",
   n: "UNISWAP",
   t: 20,
-  d: "Returns blockchain transaction history for the given address",
-  a: "Retrieves blockchain data for a given chain and address from Etherscan, including txns, token/nft transfers, and gas metrics.",
+  d: "Returns Uniswap transaction history for the given address",
+  a: "Retrieves Uniswap data for a given chain and address from Uniswap",
   p: [
     {
       name: "type",
