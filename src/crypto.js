@@ -450,7 +450,6 @@ export async function COINGECKO(category, param1, param2) {
       const trend = param2 ? `&price_change_percentage=${param2}` : '';
 
       url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=1&per_page=100`;
-      if (key && !categoryVal) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
       if (categoryVal) url += `&category=${categoryVal}`;
       if (trend) url += trend;
       break;
@@ -709,11 +708,12 @@ export async function DEFILLAMA() {
   let [category] = utils.argsToArray(arguments)
   const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Defillama);
   if (!apiKey) return `${SERVICE_API_KEY.Defillama}_MISSING`;
-  const categoryList = ['protocols', 'yields', 'dex'];
+  const categoryList = ['protocols', 'yields', 'dex', 'fees'];
   const categoryMap = {
     [categoryList[0]]: 'https://api.llama.fi/protocols',
     [categoryList[1]]: 'https://yields.llama.fi/pools',
-    [categoryList[2]]: 'https://api.llama.fi/overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true'
+    [categoryList[2]]: 'https://api.llama.fi/overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true',
+    [categoryList[3]]: 'https://api.llama.fi/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true&dataType=dailyFees'
   }
   let url = categoryMap[category]
 
@@ -733,6 +733,10 @@ export async function DEFILLAMA() {
         break;
       }
       case categoryList[2]: {
+        json = json.protocols.slice(0, 500)
+        break;
+      }
+      case categoryList[3]: {
         json = json.protocols.slice(0, 500)
         break;
       }

@@ -157,15 +157,8 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
   p: [
     {
       name: "category",
-      detail: "Type of content to fetch. Supports 'protocols', 'yields', or 'dex'.",
+      detail: "Type of content to fetch. Supports 'protocols', 'yields', 'dex', or 'fees'.",
       example: `"protocols"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "param1",
-      detail: "For protocols, it's the protocol name. (optional)",
-      example: `"aave"`,
       require: "m",
       type: "string"
     }
