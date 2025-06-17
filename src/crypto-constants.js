@@ -13,7 +13,7 @@ export const SERVICE_API_KEY = {
 export const FUNCTION_LOCALE = [
   {
   API_KEY: SERVICE_API_KEY.Etherscan,
-  LOGO: "https://etherscan.io/images/favicon3.ico",
+  LOGO: "https://raw.githubusercontent.com/ethereum/ethereum-org/master/dist/favicon.ico",
   BRAND_COLOR: "#F6F7F8",
   BRAND_SECONDARY_COLOR: "#21325B",
   n: "EOA",
@@ -511,7 +511,8 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
 
 {
   API_KEY: SERVICE_API_KEY.Firefly,
-  LOGO: "https://firefly.social/android-chrome-192x192.png",
+  LOGO: 'https://tse3.mm.bing.net/th?id=OIP.1TANdvYNcEadCk6CO1bCcgAAAA&r=0&w=440&h=440&c=7',
+  SECONDARY_LOGO: "https://firefly.social/android-chrome-192x192.png",
   BRAND_COLOR: "#f8f5fc",
   BRAND_SECONDARY_COLOR: "#855dcd",
   n: "LENS",
@@ -553,7 +554,8 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
 
 {
   API_KEY: SERVICE_API_KEY.Firefly,
-  LOGO: "https://firefly.social/android-chrome-192x192.png",
+  LOGO: "https://farcaster.xyz/favicon.ico",
+  SECONDARY_LOGO: "https://firefly.social/android-chrome-192x192.png", 
   BRAND_COLOR: "#f8f5fc",
   BRAND_SECONDARY_COLOR: "#855dcd",
   n: "FARCASTER",
