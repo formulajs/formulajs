@@ -112,45 +112,6 @@ export const FUNCTION_LOCALE = [
   ]
 },
 {
-  LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
-  BRAND_COLOR: "#f7f7ff",
-  BRAND_SECONDARY_COLOR: "#9896ff",
-  n: "AAVE",
-  t: 20,
-  d: "Returns Aave pools and tokens data",
-  a: "Retrieves Aave data for a given chain and address from Aave",
-  p: [
-    {
-      name: "graphType",
-      detail: "Graph type to Query. Can be 'v2', 'v2-raw'",
-      example: `"v2"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "category",
-      detail: "Query type for the data. Can be 'tokens', 'markets'",
-      example: `"tokens"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "param1",
-      detail: "Token Contract Address",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
-      name: "param2",
-      detail: "Token Contract Address - only required in case of markets",
-      example: `"ethereum"`,
-      require: "o",
-      type: "string"
-    },
-  ]
-},
-{
   LOGO: 'https://files.readme.io/06394e687778e238a6cd43de6e1d7d339043aa50054703f64606369352ef1864-VariantCG-Symbol-Color.png',
   BRAND_COLOR: '#f8fdf8',
   BRAND_SECONDARY_COLOR: '#4bc63d',
@@ -515,6 +476,45 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
       }
     ]
   },
+  {
+  LOGO: "https://avatars.githubusercontent.com/u/47617460?s=200&v=4",
+  BRAND_COLOR: "#f7f7ff",
+  BRAND_SECONDARY_COLOR: "#9896ff",
+  n: "AAVE",
+  t: 20,
+  d: "Returns Aave pools and tokens data",
+  a: "Retrieves Aave data for a given chain and address from Aave",
+  p: [
+    {
+      name: "graphType",
+      detail: "Graph type to Query. Can be 'v2', 'v2-raw'",
+      example: `"v2"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "category",
+      detail: "Query type for the data. Can be 'tokens', 'markets'",
+      example: `"tokens"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param1",
+      detail: "Token Contract Address",
+      example: `"ethereum"`,
+      require: "m",
+      type: "string"
+    },
+    {
+      name: "param2",
+      detail: "Token Contract Address - only required in case of markets",
+      example: `"ethereum"`,
+      require: "o",
+      type: "string"
+    },
+  ]
+},
 
 {
   API_KEY: SERVICE_API_KEY.Firefly,
