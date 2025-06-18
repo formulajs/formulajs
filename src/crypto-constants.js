@@ -493,17 +493,10 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
       type: "string"
     },
     {
-      name: "param1",
-      detail: "Token Contract Address",
-      example: `"ethereum"`,
-      require: "m",
-      type: "string"
-    },
-    {
       name: "param2",
-      detail: "Token Contract Address - only required in case of markets",
-      example: `"ethereum"`,
-      require: "o",
+      detail: "Token Contract Address for market category or Token symbol",
+      example: `"usdt"`,
+      require: "m",
       type: "string"
     },
   ]
