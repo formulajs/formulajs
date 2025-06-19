@@ -97,16 +97,9 @@ export const FUNCTION_LOCALE = [
     },
     {
       name: "param1",
-      detail: "Token Contract Address",
-      example: `"ethereum"`,
+      detail: "Token Contract Address for market or Token symbol ",
+      example: `"eth"`,
       require: "m",
-      type: "string"
-    },
-    {
-      name: "param2",
-      detail: "Token Contract Address - only required in case of markets",
-      example: `"ethereum"`,
-      require: "o",
       type: "string"
     },
   ]
@@ -132,7 +125,7 @@ export const FUNCTION_LOCALE = [
       detail: `If "price" then - eg. "BTC", "ETH", OR any token on coingecko\n
 If "market": one of "all", "base", "meme", "aiagents", "bitcoin", "ethereum", "hyperliquid", "pump", "solana".\n
 If "stablecoins": one of "all", "yield-bearing-stablecoins", "crypto-backed-stablecoin".\n
-If "derivatives": exchange name (e.g., "binance_futures").`,
+If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-futures", "bybit" ).`,
       example: `"yield-bearing-stablecoins"`,
       require: 'm'
     },
@@ -495,7 +488,7 @@ If "derivatives": exchange name (e.g., "binance_futures").`,
     {
       name: "param2",
       detail: "Token Contract Address for market category or Token symbol",
-      example: `"usdt"`,
+      example: `"USDT"`,
       require: "m",
       type: "string"
     },

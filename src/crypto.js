@@ -438,7 +438,7 @@ export async function COINGECKO(category, param1, param2) {
         base: 'base-ecosystem',
         solana: 'solana-ecosystem',
         gnosis: 'gnosis-chain',
-        hyperliquid: 'hyperliquid',
+        hyperliquid: 'hyperliquid-ecosystem',
         bitcoin: 'bitcoin-ecosystem',
         pump: 'pump-ecosystem',
         aiagents: 'ai-agents',
