@@ -410,24 +410,24 @@ export function ATANH(number) {
  * @param {*} min_length Optional. The minimum length of the returned string. Must be an integer greater than or equal to 0.
  * @returns
  */
-export function BASE(number, radix, min_length) {
-  number = utils.parseNumber(number)
-  radix = utils.parseNumber(radix)
-  min_length = utils.parseNumber(min_length)
-  const anyError = utils.anyError(number, radix, min_length)
+// export function BASE(number, radix, min_length) {
+//   number = utils.parseNumber(number)
+//   radix = utils.parseNumber(radix)
+//   min_length = utils.parseNumber(min_length)
+//   const anyError = utils.anyError(number, radix, min_length)
 
-  if (anyError) {
-    return anyError
-  }
+//   if (anyError) {
+//     return anyError
+//   }
 
-  if (radix === 0) {
-    return error.num
-  }
+//   if (radix === 0) {
+//     return error.num
+//   }
 
-  const result = number.toString(radix)
+//   const result = number.toString(radix)
 
-  return new Array(Math.max(min_length + 1 - result.length, 0)).join('0') + result
-}
+//   return new Array(Math.max(min_length + 1 - result.length, 0)).join('0') + result
+// }
 
 /**
  * Rounds a number to the nearest integer or to the nearest multiple of significance.

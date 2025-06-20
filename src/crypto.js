@@ -500,11 +500,11 @@ export async function COINGECKO(category, param1, param2) {
 
     if (!response.ok) {
       const message = json?.status?.error_message || '';
-      if (message.includes('API Key Missing')) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
-      }
       if (response.status === 429) {
         return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+      }
+      if (message.includes('API Key Missing')) {
+        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`;
       }
     }
 
