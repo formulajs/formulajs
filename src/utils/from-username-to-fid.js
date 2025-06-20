@@ -8,7 +8,7 @@ export const fromUsernameToFid = async (username, apiKey) => {
     }
   });
   const json = await res.json();
-  const users = json.result && json.result.users;
+  const users = json.result ? json.result.users : []
   const user = users.find(user => user.username === username);
   return user && user.fid || null;
 };

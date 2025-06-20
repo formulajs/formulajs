@@ -1,5 +1,5 @@
 import {fromTimeStampToBlock} from './from-timestamp-to-block'
-import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG} from './constants'
+import {CHAIN_ID_MAP, ERROR_MESSAGES_FLAG, MAX_PAGE_LIMIT} from './constants'
 import {SERVICE_API_KEY} from '../crypto-constants'
 import {toTimestamp} from './toTimestamp'
 import { isAddress } from './is-address';
@@ -21,6 +21,9 @@ export async function handleScanRequest({
   const API_KEY = window.localStorage.getItem(scanKey);
   if (!API_KEY) return `${scanKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   if (API_KEY === 'xxxx') return `${scanKey}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`;
+  if(offset > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
 
   let chainId = CHAIN_ID_MAP[chain?.toLowerCase()];
   if (!chainId) return `${scanKey}${ERROR_MESSAGES_FLAG.INVALID_CHAIN}`;

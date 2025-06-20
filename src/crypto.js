@@ -1,6 +1,6 @@
 import { SERVICE_API_KEY } from "./crypto-constants";
 import {fromTimeStampToBlock} from './utils/from-timestamp-to-block'
-import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG} from './utils/constants'
+import {CHAIN_ID_MAP, BLOCKSCOUT_CHAINS_MAP, SAFE_CHAIN_MAP, ERROR_MESSAGES_FLAG, MAX_PAGE_LIMIT} from './utils/constants'
 import { handleScanRequest } from "./utils/handle-explorer-request";
 import {toTimestamp} from './utils/toTimestamp'
 import {isAddress} from './utils/is-address'
@@ -12,6 +12,9 @@ import * as utils from './utils/common'
 
 export async function FIREFLY() {
   const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
+  if(end > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
   if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
@@ -74,6 +77,10 @@ export async function LENS() {
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
   if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
 
+    if(end > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
+
   const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
   const headers = { "x-api-key": API_KEY };
 
@@ -125,7 +132,9 @@ export async function FARCASTER() {
   const [contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
   const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly);
   if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
-
+  if(end > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
   const baseUrl = "https://openapi.firefly.land/v1/fileverse/fetch";
   const headers = { "x-api-key": API_KEY };
 
@@ -176,6 +185,9 @@ export async function FARCASTER() {
 
 export async function BLOCKSCOUT() {
     let [address, type, chain, startTimestamp, endTimestamp, page, offset] = utils.argsToArray(arguments)
+      if(offset > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
   if (!chain) {
     chain = 'ethereum'
   }
@@ -343,6 +355,9 @@ export async function GNOSISPAY({
   const API_KEY = window.localStorage.getItem(apiKeyKey);
   if (!API_KEY) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   if (!cardId) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+    if(limit > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
 
   const url = new URL(`https://api.gnosispay.com/cards/${cardId}/transactions`);
   url.searchParams.set('limit', limit.toString());
@@ -560,6 +575,9 @@ export async function EOA() {
     page = 1,
     offset = 10,
   ] = utils.argsToArray(arguments)
+    if(offset > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
   const INPUTS = addresses.split(",").map(a => a.trim()).filter(Boolean);
   const CHAINS = chains.split(",").map(c => c.trim()).filter(Boolean);
   const out = [];
@@ -662,11 +680,14 @@ export async function FLVURL(token, vs_currencies) {
 
 export async function SAFE() {
 
-  let [address, utility, chain, limit, offset] = utils.argsToArray(arguments)
+  let [address, utility, chain, limit = 10, offset = 0] = utils.argsToArray(arguments)
 
   if (typeof limit !== 'number' || limit < 0) return 'INVALID_LIMIT';
   if (typeof offset !== 'number' || offset < 0) return 'INVALID_OFFSET';
   if (utility !== 'txns') return 'UTILITY IS NOT SUPPORTED';
+    if(limit > MAX_PAGE_LIMIT){
+    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+  }
 
   const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Safe);
   const chainIdentifier = SAFE_CHAIN_MAP[chain];
@@ -707,7 +728,7 @@ export async function SAFE() {
 export async function DEFILLAMA() {
   let [category] = utils.argsToArray(arguments)
   const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Defillama);
-  if (!apiKey) return `${SERVICE_API_KEY.Defillama}_MISSING`;
+  if (!apiKey) return `${SERVICE_API_KEY.Defillama}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
   const categoryList = ['protocols', 'yields', 'dex', 'fees'];
   const categoryMap = {
     [categoryList[0]]: 'https://api.llama.fi/protocols',
