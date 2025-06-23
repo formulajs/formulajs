@@ -184,7 +184,7 @@ export async function FARCASTER() {
 }
 
 export async function BLOCKSCOUT() {
-    let [address, type, chain, startTimestamp, endTimestamp, page, offset = 10] = utils.argsToArray(arguments)
+    let [address, type, chain, startTimestamp, endTimestamp, page = 1, offset = 10] = utils.argsToArray(arguments)
       if(offset > MAX_PAGE_LIMIT){
     return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
   }
