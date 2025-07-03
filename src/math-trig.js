@@ -1796,6 +1796,26 @@ export function SUM() {
   return result
 }
 
+export function MINUS() {
+  const args = utils.argsToArray(arguments);
+  if (args.length !== 2) {
+    return error.value; // or some other error message
+  }
+
+  const num1 = args[0];
+  const num2 = args[1];
+
+  if (num1 instanceof Error || num2 instanceof Error) {
+    return num1 instanceof Error ? num1 : num2;
+  }
+
+  if (typeof num1 !== 'number' || typeof num2 !== 'number') {
+    return error.value; // or some other error message
+  }
+
+  return num1 - num2;
+}
+
 /**
  * Adds the values specified by a given criteria.
  *
