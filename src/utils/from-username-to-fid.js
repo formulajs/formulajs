@@ -1,4 +1,4 @@
-export const fromUsernameToFid = async (username, apiKey) => {
+ const fromUsernameToFid = async (username, apiKey) => {
   if(!username) return null
   const url = `https://api.neynar.com/v2/farcaster/user/search/?q=${username}&limit=5`;
   const res = await fetch(url, {
@@ -12,3 +12,6 @@ export const fromUsernameToFid = async (username, apiKey) => {
   const user = users.find(user => user.username === username);
   return user && user.fid || null;
 };
+export default {
+  fromUsernameToFid
+}

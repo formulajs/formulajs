@@ -1,66 +1,77 @@
-import { SERVICE_API_KEY } from './crypto-constants'
-import { fromTimeStampToBlock } from './utils/from-timestamp-to-block'
+/* global window */
+
+import { SERVICES_API_KEY } from './crypto-constants.js'
+import * as fromTimeStampToBlockUtil from './utils/from-timestamp-to-block.js'
 import {
   CHAIN_ID_MAP,
   BLOCKSCOUT_CHAINS_MAP,
   SAFE_CHAIN_MAP,
-  ERROR_MESSAGES_FLAG,
-  MAX_PAGE_LIMIT
-} from './utils/constants'
-import { handleScanRequest } from './utils/handle-explorer-request'
-import { toTimestamp } from './utils/toTimestamp'
-import { isAddress } from './utils/is-address'
-import { fromEnsNameToAddress } from './utils/from-ens-name-to-address'
-import { fromUsernameToFid } from './utils/from-username-to-fid'
-import { removeNestedStructure } from './utils/remove-nested-structure'
-import * as utils from './utils/common'
+} from './utils/constants.js'
+import { handleScanRequest } from './utils/handle-explorer-request.js'
+import { toTimestamp } from './utils/toTimestamp.js'
+import * as isAddressUtil from './utils/is-address.js'
+import * as fromEnsNameToAddressUtil from './utils/from-ens-name-to-address.js'
+import * as fromUsernameToFidUtil  from './utils/from-username-to-fid.js'
+import * as utils from './utils/common.js'
+import { errorMessageHandler, validateParams } from './utils/error-messages-handler.js'
+import { fireflyParamsSchema, fireFlyPlaformType } from './crypto-function-schema/firefly.js'
+import { lensParamsSchema } from './crypto-function-schema/lens-schema.js'
+import { farcasterParamsSchema } from './crypto-function-schema/farcaster-schema.js'
+import { blockscoutParamsSchema} from './crypto-function-schema/blockscout-schema.js'
+import {MissingApiKeyError, NetworkError, EnsError, ValidationError, InvalidApiKeyError, RateLimitError } from './utils/error-instances.js'
+import { baseParamsSchema } from './crypto-function-schema/base-schema.js'
+import { z } from 'zod'
+import { etherscanParamsSchema } from './crypto-function-schema/etherscan-schema.js'
+import { coingeckoParamsSchema } from './crypto-function-schema/coingecko-schema.js'
+import { eoaParamsSchema } from './crypto-function-schema/eoa-schema.js'
+import { safeParamsSchema } from './crypto-function-schema/safe-schema.js'
+import { CATEGORY_URLS, defillamaParamsSchema } from './crypto-function-schema/defillama-schema.js'
+import { uniswapParamsSchema } from './crypto-function-schema/uniswap-schema.js'
+import { aaveParamsSchema } from './crypto-function-schema/aave-schema.js'
+
 
 export async function FIREFLY() {
-  const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
-  if (end > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly)
-  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-
-  const baseUrl = 'https://openapi.firefly.land/v1/fileverse/fetch'
-  const headers = { 'x-api-key': API_KEY }
-
-  const typeMap = {
-    farcaster: {
-      posts: 'farcasterid',
-      replies: 'farcasterpostid',
-      channels: 'farcasterchannels'
-    },
-    lens: {
-      posts: 'lensid',
-      replies: 'lenspostid'
-    }
-  }
-
-  const platformType = typeMap[platform]?.[contentType]
-  if (!platformType) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.INVALID_TYPE}`
-
-  const query = identifier
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(',')
-
-  const url = new URL(baseUrl)
-  url.searchParams.set('query', query)
-  url.searchParams.set('type', platformType)
-  url.searchParams.set('start', String(start))
-  url.searchParams.set('end', String(end))
-
   try {
-    const res = await fetch(url.toString(), { headers })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
 
-    const json = await res.json()
-    if (!Array.isArray(json?.data)) return []
+validateParams(fireflyParamsSchema, {
+      platform,
+      contentType,
+      identifier,
+      start,
+      end,
+    })
 
-    return json.data.map((item) => {
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Firefly)
+    if (!apiKey) {
+      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
+    }
+
+    const url = new URL('https://openapi.firefly.land/v1/fileverse/fetch')
+    url.searchParams
+      .set('query',
+        identifier
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean)
+          .join(',')
+      )
+      url.searchParams.set('type',  fireFlyPlaformType[platform][contentType])
+          url.searchParams.set('start', String(start))
+          url.searchParams.set('end',   String(end))
+
+    const response = await fetch(url.toString(), {
+      headers: { 'x-api-key': apiKey }
+    })
+    if (!response.ok) {
+      throw new NetworkError(SERVICES_API_KEY.Firefly, response.status)
+    }
+
+    const { data } = await response.json()
+    if (!Array.isArray(data)) {
+      return []
+    }
+    return data.map(item => {
       const flat = {}
       for (const [key, value] of Object.entries(item)) {
         if (typeof value !== 'object' || value === null) {
@@ -70,55 +81,65 @@ export async function FIREFLY() {
       flat.platform = platform
       return flat
     })
+
   } catch (err) {
-    console.error('FIREFLY fetch error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'FIREFLY')
   }
 }
 
+
 export async function LENS() {
-  const [contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly)
-  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-
-  if (end > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-
-  const baseUrl = 'https://openapi.firefly.land/v1/fileverse/fetch'
-  const headers = { 'x-api-key': API_KEY }
-
-  const typeMap = {
-    posts: 'lensid',
-    replies: 'lenspostid'
-  }
-
-  const platformType = typeMap[contentType]
-  if (!platformType) return `Lens: ${ERROR_MESSAGES_FLAG.INVALID_TYPE}`
-
-  const query = identifier
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(',')
-
-  const url = new URL(baseUrl)
-  url.searchParams.set('query', query)
-  url.searchParams.set('type', platformType)
-  url.searchParams.set('start', String(start))
-  url.searchParams.set('end', String(end))
-
   try {
-    const res = await fetch(url.toString(), { headers })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const [contentType, identifier, start = 0, end = 10] =
+      utils.argsToArray(arguments)
 
-    const json = await res.json()
-    if (!Array.isArray(json?.data)) return []
+    validateParams(lensParamsSchema, {
+      contentType,
+      identifier,
+      start,
+      end,
+    })
 
-    return json.data.map((item) => {
+    const apiKey = window.localStorage.getItem(
+      SERVICES_API_KEY.Firefly
+    )
+    if (!apiKey) {
+      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
+    }
+
+    const url = new URL(
+      'https://openapi.firefly.land/v1/fileverse/fetch'
+    )
+    url.searchParams.set(
+      'query',
+      identifier
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(',')
+    )
+    const typeMap = {
+      posts:   'lensid',
+      replies: 'lenspostid',
+    }
+    url.searchParams.set('type', typeMap[contentType])
+    url.searchParams.set('start', String(start))
+    url.searchParams.set('end',   String(end))
+
+    const response = await fetch(url.toString(), {
+      headers: { 'x-api-key': apiKey },
+    })
+    if (!response.ok) {
+      throw new NetworkError(SERVICES_API_KEY.Firefly, response.status)
+    }
+
+    const { data } = await response.json()
+    if (!Array.isArray(data)) return []
+
+    return data.map((item) => {
       const flat = {}
       for (const [key, value] of Object.entries(item)) {
-        if (typeof value !== 'object' || value === null) {
+        if (value == null || typeof value !== 'object') {
           flat[key] = value
         }
       }
@@ -126,418 +147,412 @@ export async function LENS() {
       return flat
     })
   } catch (err) {
-    console.error('LENS fetch error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'LENS')
   }
 }
-
 export async function FARCASTER() {
-  const [contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Firefly)
-  if (!API_KEY) return `${SERVICE_API_KEY.Firefly}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-  if (end > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-  const baseUrl = 'https://openapi.firefly.land/v1/fileverse/fetch'
-  const headers = { 'x-api-key': API_KEY }
-
-  const typeMap = {
-    posts: 'farcasterid',
-    replies: 'farcasterpostid',
-    channels: 'farcasterchannels'
-  }
-
-  const platformType = typeMap[contentType]
-  if (!platformType) return `Farcaster: ${ERROR_MESSAGES_FLAG.INVALID_TYPE}`
-
-  const query = identifier
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(',')
-
-  const url = new URL(baseUrl)
-  url.searchParams.set('query', query)
-  url.searchParams.set('type', platformType)
-  url.searchParams.set('start', String(start))
-  url.searchParams.set('end', String(end))
-
   try {
-    const res = await fetch(url.toString(), { headers })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const [contentType, identifier, start = 0, end = 10] =
+      utils.argsToArray(arguments)
+validateParams(farcasterParamsSchema, {
+      contentType,
+      identifier,
+      start,
+      end,
+    })
 
-    const json = await res.json()
-    if (!Array.isArray(json?.data)) return []
+    const apiKey = window.localStorage.getItem(
+      SERVICES_API_KEY.Firefly
+    )
+    if (!apiKey) {
+      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
+    }
 
-    return json.data.map((item) => {
+    const url = new URL(
+      'https://openapi.firefly.land/v1/fileverse/fetch'
+    )
+    url.searchParams.set(
+      'query',
+      identifier
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean)
+        .join(',')
+    )
+    const typeMap = {
+  posts:    'farcasterid',
+  replies:  'farcasterpostid',
+  channels: 'farcasterchannels',
+}
+    url.searchParams.set('type', typeMap[contentType])
+    url.searchParams.set('start', String(start))
+    url.searchParams.set('end',   String(end))
+
+    const response = await fetch(url.toString(), {
+      headers: { 'x-api-key': apiKey },
+    })
+    if (!response.ok) {
+      throw new NetworkError(
+        SERVICES_API_KEY.Firefly,
+        response.status
+      )
+    }
+
+    const { data } = await response.json()
+    if (!Array.isArray(data)) return []
+
+    return data.map(item => {
       const flat = {}
-      for (const [key, value] of Object.entries(item)) {
-        if (typeof value !== 'object' || value === null) {
-          flat[key] = value
+      for (const [k, v] of Object.entries(item)) {
+        if (v == null || typeof v !== 'object') {
+          flat[k] = v
         }
       }
       flat.platform = 'farcaster'
       return flat
     })
   } catch (err) {
-    console.error('Farcaster fetch error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'FARCASTER')
   }
 }
 
+
 export async function BLOCKSCOUT() {
-  let [address, type, chain, startTimestamp, endTimestamp, page = 1, offset = 10] = utils.argsToArray(arguments)
-  if (offset > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-  if (!chain) {
-    chain = 'ethereum'
-  }
-
-  if (!type) {
-    return 'TYPE_MISSING'
-  }
-
-  if (!startTimestamp) {
-    const currentTimestamp = Date.now()
-    startTimestamp = currentTimestamp - 30 * 24 * 60 * 60 * 1000
-    startTimestamp = Math.floor(startTimestamp / 1000)
-  }
-
-  if (isNaN(startTimestamp)) {
-    startTimestamp = toTimestamp(startTimestamp)
-  }
-
-  if (isNaN(endTimestamp) && endTimestamp) {
-    endTimestamp = toTimestamp(endTimestamp)
-  }
-
-  if (!isAddress(address)) {
-    address = await fromEnsNameToAddress(address)
-  }
-
-  if (!address) {
-    return `${address}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  }
-
-  const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
-
-  let requestUrl
-
-  switch (type) {
-    case 'stat':
-      requestUrl = `${hostname}/api/v2/addresses/${address}/counters`
-      break
-    case 'txns':
-      requestUrl = `${hostname}/api?module=account&action=txlist&address=${address}&start_timestamp=${startTimestamp}&end_timestamp=${endTimestamp}&page=${page}&offset=${offset}&sort=asc`
-      break
-    case 'tokens':
-      requestUrl = `${hostname}/api?module=account&action=tokenlist&address=${address}`
-      break
-    default:
-      return 'INVALID_TYPE'
-  }
   try {
-    const response = await fetch(requestUrl)
+    const [
+      address,
+      type,
+      chain = 'ethereum',
+      startTimestamp,
+      endTimestamp,
+      page,
+      offset,
+    ] = utils.argsToArray(arguments)
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`)
+    validateParams(blockscoutParamsSchema, {
+      address,
+      type,
+      chain,
+      startTimestamp,
+      endTimestamp,
+      page,
+      offset
+    })
+
+    const startTs =
+      startTimestamp ?? Math.floor((Date.now() - 30 * 24 * 3600 * 1000) / 1000)
+    const endTs = endTimestamp
+
+    let resolvedAddress = address
+    if (!isAddressUtil.default.isAddress(resolvedAddress)) {
+      const ensName = resolvedAddress
+      resolvedAddress = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ensName)
+      if (!resolvedAddress) {
+        throw new EnsError(ensName)
+      }
     }
+
+    const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
+
+    let requestUrl
+    switch (type) {
+      case 'stat':
+        requestUrl = `${hostname}/api/v2/addresses/${resolvedAddress}/counters`
+        break
+      case 'txns':
+        requestUrl =
+          `${hostname}/api?module=account&action=txlist` +
+          `&address=${resolvedAddress}` +
+          `&start_timestamp=${startTs}` +
+          `&end_timestamp=${endTs ?? ''}` +
+          `&page=${page}` +
+          `&offset=${offset}` +
+          `&sort=asc`
+        break
+      case 'tokens':
+        requestUrl =
+          `${hostname}/api?module=account&action=tokenlist` +
+          `&address=${resolvedAddress}`
+        break
+    }
+
+    const response = await fetch(requestUrl)
+    if (!response.ok) {
+      throw new NetworkError('BLOCKSCOUT', response.status)
+    }
+
     const json = await response.json()
 
-    console.log(json)
+    // custom error conditions
     if (json?.result?.includes('Invalid parameter(s)')) {
-      return `INVALID_REQUEST_PARAMS`
+      throw new ValidationError('Invalid parameters')
     }
     if (json?.result?.includes('Not found')) {
-      return `ADDRESS_NOT_FOUND`
+      throw new ValidationError('Address information not found')
     }
 
-    if (type === 'stat') {
-      /*
-      For type === "stat"
-      [{transactions_count: "2940",token_transfers_count: "8346015",gas_usage_count: "91296738",validations_count: "0"}]
-      */
-      return [json]
-    }
-
-    /*
-    For type === "tokens"
-    [{balance: "287933140055877783279",contractAddress: "0x0000019226b5a2e87714daebde6a21e67fa88787",decimals: "18",name: "Doge King",symbol: "DOGEK",type: "ERC-20"}]
-
-    For type === "txns"
-    [{blockNumber: '65204', timeStamp: '1439232889', blockHash: '0x3c3c3c3c', nonce: '0',....}]
-    */
-    return json.result
-  } catch (error) {
-    return 'ERROR IN FETCHING'
+    return type === 'stat' ? [json] : json.result
+  } catch (err) {
+    return errorMessageHandler(err, 'BLOCKSCOUT')
   }
 }
 
 export async function BASE() {
-  const [type, chain, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
-  return handleScanRequest({
-    scanKey: SERVICE_API_KEY.Basescan,
-    baseUrl: 'https://api.basescan.org/api',
-    type,
-    chain,
-    address,
-    startDate,
-    endDate,
-    page,
-    offset: limit
-  })
+try {
+    const [type, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
+   validateParams(baseParamsSchema, { type, address, startDate, endDate, page, limit })
+    const API_KEY = window.localStorage.getItem(SERVICES_API_KEY.Basescan)
+    if (!API_KEY) throw new MissingApiKeyError(SERVICES_API_KEY.Basescan)
+  
+    return await handleScanRequest({
+      type,
+      address,
+      startDate,
+      endDate,
+      page,
+      offset: limit,
+      apiKey: API_KEY,
+      functionName: 'BASE',
+      chainId: CHAIN_ID_MAP.base,
+      network: 'base'
+    })
+} catch (error) {
+  return errorMessageHandler(error, 'BASE')
+}
 }
 export async function GNOSIS() {
-  const [type, chain, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
-  return handleScanRequest({
-    scanKey: SERVICE_API_KEY.Gnosisscan,
-    baseUrl: 'https://api.gnosisscan.io/api',
-    type,
-    chain,
-    address,
-    startDate,
-    endDate,
-    page,
-    offset: limit
-  })
+  try {
+    const [type, address, startDate, endDate, page = 1, limit = 10] =
+      utils.argsToArray(arguments)
+
+    // same validation rules as BASE
+    validateParams(baseParamsSchema, {
+      type,
+      address,
+      startDate,
+      endDate,
+      page,
+      limit,
+    })
+
+    const apiKey = window.localStorage.getItem(
+      SERVICES_API_KEY.Gnosisscan
+    )
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Gnosisscan)
+
+    return await handleScanRequest({
+      type,
+      address,
+      startDate,
+      endDate,
+      page,
+      offset: limit,
+      apiKey,
+      functionName: 'GNOSIS',
+      chainId: CHAIN_ID_MAP.gnosis,
+      network: 'gnosis',
+    })
+  } catch (err) {
+    return errorMessageHandler(err, 'GNOSIS')
+  }
 }
 
 export async function NEYNAR() {
-  const [username] = utils.argsToArray(arguments)
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Neynar)
-  if (!API_KEY) return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-
-  if (!username) {
-    return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  }
-
-  const fid = await fromUsernameToFid(username, API_KEY)
-
-  if (!fid) {
-    return `${SERVICE_API_KEY.Neynar}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  }
-
-  const url = `https://api.neynar.com/v2/farcaster/followers?fid=${fid}`
-
   try {
+     const neynarParamsSchema = z.object({
+  username: z.string().nonempty()
+})
+
+    const [username] = utils.argsToArray(arguments)
+
+    validateParams(neynarParamsSchema, { username })
+
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Neynar)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Neynar)
+
+    const fid = await fromUsernameToFidUtil.default.fromUsernameToFid(username, apiKey)
+    if (!fid) throw new ValidationError(`Invalid username: ${username}`)
+
+    const url = `https://api.neynar.com/v2/farcaster/followers?fid=${fid}`
+
     const response = await fetch(url, {
       headers: {
-        'x-api-key': API_KEY,
-        'x-neynar-experimental': 'false'
+        'x-api-key': apiKey,
+        'x-neynar-experimental': 'false',
       }
     })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json?.users?.length) return []
+    if (!response.ok) {
+      throw new NetworkError(SERVICES_API_KEY.Neynar, response.status)
+    }
 
-    return json.users.map(({ user }) => ({
+    const json = await response.json()
+    const users = json?.users || []
+    if (!users.length) return []
+
+    return users.map(({ user }) => ({
       username: user.username,
       custody_address: user.custody_address,
       follower_count: user.follower_count,
       country: user.profile?.location?.address?.country || '',
-      city: user.profile?.location?.address?.city || ''
+      city: user.profile?.location?.address?.city || '',
     }))
   } catch (err) {
-    console.error('NEYNAR_FETCH_FOLLOWERS error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'NEYNAR')
   }
 }
-export async function GNOSISPAY({ cardId, startDate, endDate, limit = 20, offset = 0 }) {
-  const apiKeyKey = SERVICE_API_KEY.GnosisPay
-  const API_KEY = window.localStorage.getItem(apiKeyKey)
-  if (!API_KEY) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-  if (!cardId) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  if (limit > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
 
-  const url = new URL(`https://api.gnosispay.com/cards/${cardId}/transactions`)
-  url.searchParams.set('limit', limit.toString())
-  url.searchParams.set('offset', offset.toString())
+// export async function GNOSISPAY({
+//   cardId,
+//   startDate,
+//   endDate,
+//   limit = 20,
+//   offset = 0,
+// }) {
+//   const apiKeyKey = SERVICES_API_KEY.GnosisPay
+//   const API_KEY = window.localStorage.getItem(apiKeyKey);
+//   if (!API_KEY) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.MISSING_KEY}`;
+//   if (!cardId) return `${apiKeyKey}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`;
+//     if(limit > MAX_PAGE_LIMIT){
+//     return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
+//   }
 
-  if (!isNaN(toTimestamp(startDate))) {
-    url.searchParams.set('startDate', new Date(startDate * 1000).toISOString())
-  }
+//   const url = new URL(`https://api.gnosispay.com/cards/${cardId}/transactions`);
+//   url.searchParams.set('limit', limit.toString());
+//   url.searchParams.set('offset', offset.toString());
 
-  if (!isNaN(toTimestamp(endDate))) {
-    url.searchParams.set('endDate', new Date(endDate * 1000).toISOString())
-  }
+//   if (!isNaN(toTimestamp(startDate))) {
+//     url.searchParams.set('startDate', new Date(startDate * 1000).toISOString());
+//   }
 
+//   if (!isNaN(toTimestamp(endDate))) {
+//     url.searchParams.set('endDate', new Date(endDate * 1000).toISOString());
+//   }
+
+//   try {
+//     const res = await fetch(url.toString(), {
+//       headers: {
+//         Authorization: `Bearer ${API_KEY}`,
+//         'Content-Type': 'application/json',
+//       },
+//     });
+
+//     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+//     const json = await res.json();
+
+//     if (!Array.isArray(json)) return [];
+
+//     return json.map(tx => ({
+//       createdAt: tx.createdAt,
+//       clearedAt: tx.clearedAt,
+//       country: tx.country,
+//       merchant: tx.merchant,
+//       billingAmount: tx.billingAmount,
+//       billingCurrency: tx.billingCurrency,
+//       transactionAmount: tx.transactionAmount,
+//       transactionCurrency: tx.transactionCurrency,
+//       transactionType: tx.transactionType,
+//       kind: tx.kind,
+//       status: tx.status || null,
+//       mcc: tx.mcc,
+//     }));
+//   } catch (err) {
+//     console.error('GNOSISPAY_CARD_TXNS error:', err);
+//     return ERROR_MESSAGES_FLAG.DEFAULT;
+//   }
+// }
+
+export async function ETHERSCAN() {
   try {
-    const res = await fetch(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json'
-      }
+    const [type, chain, address, startDate, endDate, page = 1, limit = 10] =
+      utils.argsToArray(arguments)
+
+
+    validateParams(etherscanParamsSchema, { type, chain, address, startDate, endDate, page, limit })
+
+    const chainId = CHAIN_ID_MAP[chain]
+    if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
+
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Etherscan)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Etherscan)
+
+    return await handleScanRequest({
+      type,
+      address,
+      startDate,
+      endDate,
+      page,
+      offset: limit,
+      apiKey,
+      functionName: 'ETHERSCAN',
+      chainId,
+      network: chain,
     })
-
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`)
-
-    const json = await res.json()
-
-    if (!Array.isArray(json)) return []
-
-    return json.map((tx) => ({
-      createdAt: tx.createdAt,
-      clearedAt: tx.clearedAt,
-      country: tx.country,
-      merchant: tx.merchant,
-      billingAmount: tx.billingAmount,
-      billingCurrency: tx.billingCurrency,
-      transactionAmount: tx.transactionAmount,
-      transactionCurrency: tx.transactionCurrency,
-      transactionType: tx.transactionType,
-      kind: tx.kind,
-      status: tx.status || null,
-      mcc: tx.mcc
-    }))
   } catch (err) {
-    console.error('GNOSISPAY_CARD_TXNS error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'ETHERSCAN')
   }
 }
 
-export async function ETHERSCAN(...args) {
-  const [type, chain, address, startDate, endDate, page, limit] = args
-  return handleScanRequest({
-    scanKey: SERVICE_API_KEY.Etherscan,
-    baseUrl: 'https://api.etherscan.io/v2/api',
-    type,
-    chain,
-    address,
-    startDate,
-    endDate,
-    page,
-    offset: limit
-  })
-}
 
-export async function COINGECKO(category, param1, param2) {
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Coingecko)
-  if (!API_KEY) return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-
-  const headers = {
-    accept: 'application/json',
-    'x-cg-demo-api-key': API_KEY
-  }
-
-  let url = ''
-  const lowerCategory = (category || '').toLowerCase()
-
-  switch (lowerCategory) {
-    case 'price': {
-      const token = param1
-      const vsCurrencies = param2
-      if (!token) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-      }
-      url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vsCurrencies ? vsCurrencies : 'usd'}&symbols=${token}`
-      break
-    }
-
-    case 'market': {
-      const ecosystemMap = {
-        all: '',
-        ethereum: 'ethereum-ecosystem',
-        base: 'base-ecosystem',
-        solana: 'solana-ecosystem',
-        gnosis: 'gnosis-chain',
-        hyperliquid: 'hyperliquid-ecosystem',
-        bitcoin: 'bitcoin-ecosystem',
-        pump: 'pump-ecosystem',
-        aiagents: 'ai-agents',
-        meme: 'meme-token'
-      }
-
-      const key = param1?.toLowerCase()
-      const categoryVal = ecosystemMap[key] || ''
-      const trend = param2 ? `&price_change_percentage=${param2}` : ''
-
-      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=1&per_page=100`
-      if (categoryVal) url += `&category=${categoryVal}`
-      if (trend) url += trend
-      break
-    }
-
-    case 'stablecoins': {
-      const category = !param1 || param1.toLowerCase() === 'all' ? 'stablecoins' : param1.toLowerCase()
-
-      const trend = param2 ? `&price_change_percentage=${param2}` : ''
-      url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${category}&order=market_cap_desc&page=1&per_page=100${trend}`
-      break
-    }
-
-    case 'derivatives': {
-      const exchange = param1
-      if (!exchange || exchange === 'all') {
-        url = `https://api.coingecko.com/api/v3/derivatives`
-      } else {
-        url = `https://api.coingecko.com/api/v3/derivatives/exchanges/${exchange}?include_tickers=all`
-      }
-      break
-    }
-
-    default:
-      return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  }
-
+export async function COINGECKO() {
   try {
-    const response = await fetch(url, { method: 'GET', headers })
-    const json = await response.json()
+    const [category, param1, param2] = utils.argsToArray(arguments)
+    validateParams(coingeckoParamsSchema, { category, param1, param2 })
 
-    if (!response.ok) {
-      const message = json?.status?.error_message || ''
-      if (response.status === 429) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Coingecko)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Coingecko)
+
+    const headers = {
+      accept: 'application/json',
+      'x-cg-demo-api-key': apiKey,
+    }
+    let url = ''
+    switch (category?.toLowerCase?.()) {
+      case 'price': {
+        const vs = param2 || 'usd'
+        url = `https://api.coingecko.com/api/v3/simple/price?vs_currencies=${vs}&symbols=${param1}`
+        break
       }
-      if (message.includes('API Key Missing')) {
-        return `${SERVICE_API_KEY.Coingecko}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
+      case 'market': {
+        const map = { all:'', base:'base-ecosystem', meme:'meme-token', aiagents:'ai-agents', bitcoin:'bitcoin-ecosystem', ethereum:'ethereum-ecosystem', hyperliquid:'hyperliquid-ecosystem', pump:'pump-ecosystem', solana:'solana-ecosystem' }
+        const _category = map[param1] || ''
+        const trend = param2 ? `&price_change_percentage=${param2}` : ''
+        url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=1&per_page=100${_category?`&category=${_category}`:''}${trend}`
+        break
+      }
+      case 'stablecoins': {
+        const _category = param1==='all'? 'stablecoins' : param1
+        const trend = param2 ? `&price_change_percentage=${param2}` : ''
+        url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${_category}&order=market_cap_desc&page=1&per_page=100${trend}`
+        break
+      }
+      case 'derivatives': {
+        url = (!param1 || param1==='all')
+          ? 'https://api.coingecko.com/api/v3/derivatives'
+          : `https://api.coingecko.com/api/v3/derivatives/exchanges/${param1}?include_tickers=all`
+        break
       }
     }
 
-    if (lowerCategory === 'price') {
-      const output = {}
-      for (const [token, prices] of Object.entries(json)) {
-        for (const [currency, value] of Object.entries(prices)) {
-          const key = `${token.charAt(0).toUpperCase() + token.slice(1)}_${currency.toUpperCase()}`
-          output[key] = value
-        }
-      }
-      return [output]
+    const res = await fetch(url, { headers })
+    const json = await res.json()
+    if (!res.ok) {
+      const msg = json?.status?.error_message || ''
+      if (msg.includes('API Key Missing')) throw new InvalidApiKeyError(SERVICES_API_KEY.Coingecko)
+      throw new NetworkError(SERVICES_API_KEY.Coingecko, res.status)
     }
 
-    let data = json
-
-    if (lowerCategory === 'derivatives') {
-      if (json.length > 200) {
-        data = json.slice(0, 200)
-      }
-
-      if (param1 !== 'all' && json && json.tickers) {
-        const exchangeDetails = {
-          exchange_id: param1,
-          exchange_name: json.name,
-          exchange_logo: json.logo,
-          exchange_url: json.url,
-          exchange_trade_volume_24h_btc: json.trade_volume_24h_btc,
-          exchange_number_of_futures_pairs: json.number_of_futures_pairs,
-          exchange_number_of_perpetual_pairs: json.number_of_perpetual_pairs,
-          exchange_open_interest_btc: json.open_interest_btc
-        }
-        data = json.tickers.slice(0, 200).map((item) => {
-          return {
-            ...item,
-            ...exchangeDetails,
-            usd_volume: item.converted_volume && item.converted_volume.usd
-          }
-        })
-      }
+    if (category==='price') {
+      const out = {}
+      for (const [token, prices] of Object.entries(json))
+        for (const [cur,val] of Object.entries(prices))
+          out[`${token.charAt(0).toUpperCase()+token.slice(1)}_${cur.toUpperCase()}`]=val
+      return [out]
     }
 
-    const flatArray = Array.isArray(data) ? data : [data]
-    return flatArray.map((item) => {
-      const flat = {}
+    const data = Array.isArray(json) ? json : [json]
+    return data.map(item=>{
+      const flat={}
       for (const [key, value] of Object.entries(item)) {
         if (typeof value !== 'object' || value === null) {
           flat[key] = value
@@ -545,113 +560,87 @@ export async function COINGECKO(category, param1, param2) {
       }
       return flat
     })
-  } catch (error) {
-    console.error(error)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+  } catch(err) {
+    return errorMessageHandler(err,'COINGECKO')
   }
 }
 
 export async function EOA() {
-  const API_KEY = window.localStorage.getItem(SERVICE_API_KEY.Etherscan)
-  if (!API_KEY) return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-  let [addresses, category, chains, startTime, endTime, page = 1, offset = 10] = utils.argsToArray(arguments)
-  if (offset > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-  const INPUTS = addresses
-    .split(',')
-    .map((a) => a.trim())
-    .filter(Boolean)
-  const CHAINS = chains
-    .split(',')
-    .map((c) => c.trim())
-    .filter(Boolean)
-  const out = []
-  // Map: finalAddress => ENS name (if applicable)
-  const ADDRESS_MAP = {}
-  for (const input of INPUTS) {
-    if (isAddress(input)) {
-      ADDRESS_MAP[input.toLowerCase()] = null // it's a direct address
-    } else {
-      try {
-        const resolved = await fromEnsNameToAddress(input) // ENS -> address
-        if (resolved) ADDRESS_MAP[resolved.toLowerCase()] = input
-      } catch {
-        return `${input}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-      }
-    }
-  }
-  const ADDRS = Object.keys(ADDRESS_MAP)
-  for (const chain of CHAINS) {
-    const chainId = CHAIN_ID_MAP[chain]
-    if (!chainId) return ERROR_MESSAGES_FLAG.UNSUPPORTED_CHAIN
-    if (category === 'balance') {
-      for (let i = 0; i < ADDRS.length; i += 20) {
-        const slice = ADDRS.slice(i, i + 20).join(',')
-        const action = 'addresstokenbalance'
-        const url =
-          `https://api.etherscan.io/v2/api?chainid=${chainId}` +
-          `&module=account&action=${action}&address=${slice}` +
-          `&page=${page}&offset=100&apikey=${API_KEY}`
-        const data = await fetchJSON(url)
-        if (typeof data === 'string') return data
-        data.forEach((tx) =>
-          out.push({
-            chain,
-            address: ADDRS[i],
-            name: ADDRESS_MAP[ADDRS[i]],
-            ...tx
-          })
-        )
-      }
-      continue
-    }
-    if (category === 'txns') {
-      const startBlock = await fromTimeStampToBlock(toTimestamp(startTime), chain, API_KEY)
-      const endBlock = await fromTimeStampToBlock(toTimestamp(endTime), chain, API_KEY)
-      for (const addr of ADDRS) {
-        const url =
-          `https://api.etherscan.io/v2/api?chainid=${chainId}` +
-          `&module=account&action=tokentx&address=${addr}` +
-          `&startblock=${startBlock}&endblock=${endBlock}` +
-          `&page=${page}&offset=${offset}&sort=asc&apikey=${API_KEY}`
-        const data = await fetchJSON(url)
-        if (typeof data === 'string') return data
-        data.forEach((tx) =>
-          out.push({
-            chain,
-            address: addr,
-            name: ADDRESS_MAP[addr],
-            ...tx
-          })
-        )
-      }
-      continue
-    }
-    return ERROR_MESSAGES_FLAG.INVALID_CATEGORY
-  }
+  try {
+    const [addresses, category, chains, startTime, endTime, page = 1, offset = 10] =
+      utils.argsToArray(arguments)
+    validateParams(eoaParamsSchema, { addresses, category, chains, startTime, endTime, page, offset })
 
-  return out
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Etherscan)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Etherscan)
 
-  async function fetchJSON(url) {
-    try {
+    const INPUTS = addresses.split(',').map(s=>s.trim()).filter(Boolean)
+    const CHAINS = chains.split(',').map(s=>s.trim()).filter(Boolean)
+
+    const ADDRESS_MAP = {}
+    for (const inp of INPUTS) {
+      if (isAddressUtil.default.isAddress(inp)) {
+        ADDRESS_MAP[inp.toLowerCase()] = null
+      } else {
+        const ens = inp
+        const resolved = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ens)
+        if (!resolved) throw new EnsError(ens)
+        ADDRESS_MAP[resolved.toLowerCase()] = ens
+      }
+    }
+    const ADDRS = Object.keys(ADDRESS_MAP)
+    const out = []
+
+    async function fetchJSON(url) {
       const res = await fetch(url)
-      if (!res.ok) return `HTTP_${res.status}`
-
+      if (!res.ok) throw new NetworkError(SERVICES_API_KEY.Etherscan, res.status)
       const json = await res.json()
 
-      if (json.result?.includes?.('Invalid API Key'))
-        return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.INVALID_API_KEY}`
-
-      if (json.result?.includes?.('Max rate limit reached'))
-        return `${SERVICE_API_KEY.Etherscan}${ERROR_MESSAGES_FLAG.RATE_LIMIT}`
-
-      if (json.status === '0' && json.message !== 'No transactions found') return ERROR_MESSAGES_FLAG.DEFAULT
-
+      if (typeof json.result === 'string') {
+        if (json.result.includes('Invalid API Key')) throw new InvalidApiKeyError(SERVICES_API_KEY.Etherscan)
+        if (json.result.includes('Max rate limit reached')) throw new RateLimitError(SERVICES_API_KEY.Etherscan)
+      }
       return json.result
-    } catch {
-      return ERROR_MESSAGES_FLAG.DEFAULT
     }
+
+
+    for (const chain of CHAINS) {
+      const chainId = CHAIN_ID_MAP[chain]
+      if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
+
+      if (category === 'balance') {
+        // chunk 20
+        for (let i=0; i<ADDRS.length; i+=20) {
+          const slice = ADDRS.slice(i,i+20).join(',')
+          const url =
+            `https://api.etherscan.io/v2/api?chainid=${chainId}`+
+            `&module=account&action=addresstokenbalance&address=${slice}`+
+            `&page=${page}&offset=${offset}&apikey=${apiKey}`
+          const data = await fetchJSON(url)
+          if (!Array.isArray(data)) return data
+          data.forEach((item, idx) => out.push({ chain, address: ADDRS[i+idx], name: ADDRESS_MAP[ADDRS[i+idx]], ...item }))
+        }
+      } else {
+        // txns
+        const sb = await fromTimeStampToBlockUtil.default.fromTimeStampToBlock(toTimestamp(startTime), chain, apiKey)
+        const eb = await fromTimeStampToBlockUtil.default.fromTimeStampToBlock(toTimestamp(endTime), chain, apiKey)
+        if (!sb) throw new ValidationError(`Invalid startTime: ${startTime}`)
+        if (!eb) throw new ValidationError(`Invalid endTime: ${endTime}`)
+        for (const addr of ADDRS) {
+          const url =
+            `https://api.etherscan.io/v2/api?chainid=${chainId}`+
+            `&module=account&action=tokentx&address=${addr}`+
+            `&startblock=${sb}&endblock=${eb}`+
+            `&page=${page}&offset=${offset}&sort=asc&apikey=${apiKey}`
+          const data = await fetchJSON(url)
+          if (!Array.isArray(data)) return data
+          data.forEach(item => out.push({ chain, address: addr, name: ADDRESS_MAP[addr], ...item }))
+        }
+      }
+    }
+    return out
+  } catch (err) {
+    return errorMessageHandler(err, 'EOA')
   }
 }
 
@@ -664,123 +653,155 @@ export async function FLVURL(token, vs_currencies) {
 }
 
 export async function SAFE() {
-  let [address, utility, chain, limit = 10, offset = 0] = utils.argsToArray(arguments)
-
-  if (typeof limit !== 'number' || limit < 0) return 'INVALID_LIMIT'
-  if (typeof offset !== 'number' || offset < 0) return 'INVALID_OFFSET'
-  if (utility !== 'txns') return 'UTILITY IS NOT SUPPORTED'
-  if (limit > MAX_PAGE_LIMIT) {
-    return ERROR_MESSAGES_FLAG.MAX_PAGE_LIMIT
-  }
-
-  const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Safe)
-  const chainIdentifier = SAFE_CHAIN_MAP[chain]
-
-  if (!apiKey) return `${SERVICE_API_KEY.Safe}_MISSING`
-  if (!chainIdentifier) return 'CHAIN IS NOT SUPPORTED'
-
-  if (!isAddress(address)) {
-    address = await fromEnsNameToAddress(address)
-  }
-
-  if (!address) {
-    return `${address}${ERROR_MESSAGES_FLAG.INVALID_PARAM}`
-  }
-
-  const url = `https://api.safe.global/tx-service/${chainIdentifier}/api/v2/safes/${address}/multisig-transactions?limit=${limit}&offset=${offset}`
   try {
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${apiKey}`
-      }
-    })
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-    const json = await response.json()
-    if (!Array.isArray(json.results)) {
-      return 'INVALID API RESPONSE'
+    const [address, utility, chain, limit = 10, offset = 0] = utils.argsToArray(arguments)
+
+    validateParams(safeParamsSchema, { address, utility, chain, limit, offset })
+
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Safe)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Safe)
+
+    const chainId = SAFE_CHAIN_MAP[chain]
+    if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
+
+    let resolved = address
+    if (!isAddressUtil.default.isAddress(resolved)) {
+      const ens = resolved
+      resolved = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ens)
+      if (!resolved) throw new EnsError(ens)
     }
-    // remove nested structure from the response
+
+
+    const url = `https://api.safe.global/tx-service/${chainId}/api/v2/safes/${resolved}/multisig-transactions?limit=${limit}&offset=${offset}`
+
+
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } })
+    if (!res.ok) throw new NetworkError(SERVICES_API_KEY.Safe, res.status)
+    const json = await res.json()
+
+    if (!Array.isArray(json.results)) {
+      throw new ValidationError('Invalid API response')
+    }
+
+
     return json.results.map(({ confirmations, dataDecoded, ...rest }) => rest)
-  } catch (e) {
-    console.log(e)
-    return 'ERROR IN FETCHING'
+  } catch (err) {
+    return errorMessageHandler(err, 'SAFE')
   }
 }
 
-export async function DEFILLAMA() {
-  let [category] = utils.argsToArray(arguments)
-  const apiKey = window.localStorage.getItem(SERVICE_API_KEY.Defillama)
-  if (!apiKey) return `${SERVICE_API_KEY.Defillama}${ERROR_MESSAGES_FLAG.MISSING_KEY}`
-  const categoryList = ['protocols', 'yields', 'dex', 'fees']
-  const categoryMap = {
-    [categoryList[0]]: 'https://api.llama.fi/protocols',
-    [categoryList[1]]: 'https://yields.llama.fi/pools',
-    [categoryList[2]]:
-      'https://api.llama.fi/overview/dexs?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true',
-    [categoryList[3]]:
-      'https://api.llama.fi/overview/fees?excludeTotalDataChart=true&excludeTotalDataChartBreakdown=true&dataType=dailyFees'
-  }
-  let url = categoryMap[category]
 
+export async function DEFILLAMA() {
   try {
-    const response = await fetch(url)
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
-    let json = await response.json()
+    const [category] = utils.argsToArray(arguments)
+    validateParams(defillamaParamsSchema, { category })
+    const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Defillama)
+    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Defillama)
+    const url = CATEGORY_URLS[category]
+    if (!url) throw new ValidationError(`Invalid category: ${category}`)
+    const res = await fetch(url)
+    if (!res.ok) throw new NetworkError(SERVICES_API_KEY.Defillama, res.status)
+    let json = await res.json()
+
     switch (category) {
-      case categoryList[0]: {
-        if (json.length > 500) {
-          json = json.slice(0, 500)
-        }
+      case 'protocols':
+        json = Array.isArray(json) ? json.slice(0,500) : []
         break
-      }
-      case categoryList[1]: {
-        json = json.data.slice(0, 500)
+      case 'yields':
+        json = Array.isArray(json.data) ? json.data.slice(0,500) : []
         break
-      }
-      case categoryList[2]: {
-        json = json.protocols.slice(0, 500)
+      case 'dex':
+      case 'fees':
+        json = Array.isArray(json.protocols) ? json.protocols.slice(0,500) : []
         break
-      }
-      case categoryList[3]: {
-        json = json.protocols.slice(0, 500)
-        break
-      }
     }
 
-    return removeNestedStructure(Array.isArray(json) ? json : [json])
-  } catch (e) {
-    console.log(e)
-    return 'ERROR IN FETCHING'
+    return (Array.isArray(json) ? json : [json]).map(item => {
+      const out = {}
+      for (const [k,v] of Object.entries(item)) {
+        if (v === null || typeof v !== 'object') out[k] = v
+      }
+      return out
+    })
+  } catch (err) {
+    return errorMessageHandler(err, 'DEFILLAMA')
   }
 }
 
 export async function UNISWAP() {
-  const [graphType, category, param1, param2] = utils.argsToArray(arguments)
-  const baseUrl = 'https://onchain-proxy.fileverse.io/third-party'
   try {
-    const url = `${baseUrl}?service=uniswap&graphType=${graphType}&category=${category}&input1=${param1}&input2=${param2}`
+    const [graphType, category, param1, param2] = utils.argsToArray(arguments)
+
+    validateParams(uniswapParamsSchema, { graphType, category, param1, param2 })
+
+    const baseUrl = 'https://onchain-proxy.fileverse.io/third-party'
+    const url =
+      `${baseUrl}` +
+      `?service=uniswap` +
+      `&graphType=${graphType}` +
+      `&category=${category}` +
+      `&input1=${encodeURIComponent(param1)}` +
+      (param2 ? `&input2=${encodeURIComponent(param2)}` : '')
+
+    // fetch data
     const res = await fetch(url)
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    if (!res.ok) {
+      throw new NetworkError('UNISWAP', res.status)
+    }
+
     const json = await res.json()
-    return removeNestedStructure(json)
+    if (Array.isArray(json)) {
+      // flatten nested
+      return json.map(item => {
+        const flat = {}
+        Object.entries(item).forEach(([k,v]) => {
+          if (v === null || typeof v !== 'object') flat[k] = v
+        })
+        return flat
+      })
+    }
+    return json
   } catch (err) {
-    console.error('UNISWAP fetch error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'UNISWAP')
   }
 }
 
+
 export async function AAVE() {
-  const [graphType, category, param1, param2] = utils.argsToArray(arguments)
-  const baseUrl = 'https://onchain-proxy.fileverse.io/third-party'
   try {
-    const url = `${baseUrl}?service=aave&graphType=${graphType}&category=${category}&input1=${param1}&input2=${param2}`
+
+    const [graphType, category, param1, param2] = utils.argsToArray(arguments)
+
+
+    validateParams(aaveParamsSchema, { graphType, category, param1, param2 })
+
+    const baseUrl = 'https://onchain-proxy.fileverse.io/third-party'
+    const url =
+      `${baseUrl}` +
+      `?service=aave` +
+      `&graphType=${encodeURIComponent(graphType)}` +
+      `&category=${encodeURIComponent(category)}` +
+      `&input1=${encodeURIComponent(param1)}` +
+      (param2 ? `&input2=${encodeURIComponent(param2)}` : '')
+
     const res = await fetch(url)
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    if (!res.ok) {
+      throw new NetworkError('AAVE', res.status)
+    }
+
     const json = await res.json()
-    return removeNestedStructure(json)
+    if (Array.isArray(json)) {
+      return json.map(item => {
+        const flat = {}
+        Object.entries(item).forEach(([k, v]) => {
+          if (v === null || typeof v !== 'object') flat[k] = v
+        })
+        return flat
+      })
+    }
+    return json
   } catch (err) {
-    console.error('AAVE fetch error:', err)
-    return ERROR_MESSAGES_FLAG.DEFAULT
+    return errorMessageHandler(err, 'AAVE')
   }
 }
 

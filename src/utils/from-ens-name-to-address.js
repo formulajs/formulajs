@@ -1,6 +1,13 @@
-import { UTILITY } from './constants'
+/* global document */
+/* global window */
+/* global ethers */
 
-export async function fromEnsNameToAddress(name) {
+
+
+import {UTILITY} from './constants.js'
+
+
+async function fromEnsNameToAddress(name) {
   if (typeof ethers === 'undefined') {
     await new Promise((resolve, reject) => {
       const script = document.createElement('script')
@@ -25,4 +32,8 @@ export async function fromEnsNameToAddress(name) {
     console.error('ENS resolution failed:', err.message)
     return null
   }
+}
+
+export default {
+  fromEnsNameToAddress
 }

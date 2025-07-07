@@ -1,18 +1,18 @@
-export const SERVICE_API_KEY = {
-  Etherscan: 'ETHERSCAN_API_KEY',
-  Coingecko: 'COINGECKO_API_KEY',
-  Safe: 'SAFE_API_KEY',
-  Basescan: 'BASESCAN_API_KEY',
-  Gnosisscan: 'GNOSIS_API_KEY',
-  Firefly: 'FIRE_FLY_API_KEY',
-  GnosisPay: 'GNOSIS_API_KEY',
-  Neynar: 'NEYNAR_API_KEY',
-  Defillama: 'DEFILLAMA_API_KEY'
+export const SERVICES_API_KEY = {
+  Etherscan: 'Etherscan',
+  Coingecko: 'Coingecko',
+  Safe: 'Safe',
+  Basescan: 'Basescan',
+  Gnosisscan: 'Gnosisscan',
+  Firefly: 'Firefly',
+  GnosisPay: 'GnosisPay',
+  Neynar: 'Neynar',
+  Defillama: 'Defillama'
 }
 
 export const FUNCTION_LOCALE = [
   {
-    API_KEY: SERVICE_API_KEY.Etherscan,
+    API_KEY: SERVICES_API_KEY.Etherscan,
     LOGO: 'https://raw.githubusercontent.com/ethereum/ethereum-org/master/dist/favicon.ico',
     BRAND_COLOR: '#F6F7F8',
     BRAND_SECONDARY_COLOR: '#21325B',
@@ -110,7 +110,7 @@ export const FUNCTION_LOCALE = [
     BRAND_SECONDARY_COLOR: '#4bc63d',
     n: 'COINGECKO',
     t: 20,
-    API_KEY: SERVICE_API_KEY.Coingecko,
+    API_KEY: SERVICES_API_KEY.Coingecko,
     d: 'Query crypto prices, ecosystem market data, stablecoins, or derivatives from CoinGecko.',
     a: 'Supports querying: "price" for specific tokens "market" for ecosystem categories (ETH, BASE, SOL, GNOSIS, HYPERLIQUID, BITCOIN, PUMP)\n- "stablecoins" for stablecoin categories like "crypto-backed-stablecoin"\n- "derivatives" globally or per exchange.\nPagination is supported for all except single-exchange derivatives.',
     p: [
@@ -139,7 +139,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Defillama,
+    API_KEY: SERVICES_API_KEY.Defillama,
     LOGO: 'https://defillama.com/favicon-32x32.png',
     BRAND_COLOR: '#f8f5fc',
     BRAND_SECONDARY_COLOR: '#855dcd',
@@ -158,7 +158,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
     ]
   },
   {
-    API_KEY: SERVICE_API_KEY.Basescan,
+    API_KEY: SERVICES_API_KEY.Basescan,
     LOGO: 'https://2064089921-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FevP3L0cUvP9xmRefuzCm%2Fuploads%2F2K1pvFsE7JAfcI3LAxYl%2Fbase-logo-in-blue.webp?alt=media&token=32c80439-dbdc-432a-b199-220e012efc3c',
     BRAND_COLOR: '#f1f5ff',
     BRAND_SECONDARY_COLOR: '#2752ff',
@@ -171,13 +171,6 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
         name: 'type',
         detail: "Data category: 'all-txns' | 'token-txns' | 'nft-txns' | 'gas'.",
         example: `"token-txns"`,
-        require: 'm',
-        type: 'string'
-      },
-      {
-        name: 'chain',
-        detail: "Must be 'base'.",
-        example: `"base"`,
         require: 'm',
         type: 'string'
       },
@@ -219,7 +212,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
     ]
   },
   {
-    API_KEY: SERVICE_API_KEY.Gnosisscan,
+    API_KEY: SERVICES_API_KEY.Gnosisscan,
     LOGO: 'https://gnosisscan.io/assets/generic/html/favicon-light.ico',
     BRAND_COLOR: '#f6f7f6',
     BRAND_SECONDARY_COLOR: '#133629',
@@ -232,13 +225,6 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
         name: 'type',
         detail: "Data category to fetch. Options: 'all-txns', 'token-txns', 'nft-txns', or 'gas'.",
         example: `"nft-txns"`,
-        require: 'm',
-        type: 'string'
-      },
-      {
-        name: 'chain',
-        detail: "Must be 'gnosis'.",
-        example: `"gnosis"`,
         require: 'm',
         type: 'string'
       },
@@ -266,14 +252,14 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
       {
         name: 'page',
         detail: "Page number for paginated transaction results. Applies only to 'txns', 'token-txns', and 'nft-txns'.",
-        example: `"1"`,
+        example: `1`,
         require: 'o',
         type: 'number'
       },
       {
         name: 'offset',
         detail: "Number of results per page (limit). Applies only to 'txns', 'token-txns', and 'nft-txns'.",
-        example: `"50"`,
+        example: `50`,
         require: 'o',
         type: 'number'
       }
@@ -281,7 +267,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Etherscan,
+    API_KEY: SERVICES_API_KEY.Etherscan,
     LOGO: 'https://etherscan.io/images/favicon3.ico',
     BRAND_COLOR: '#F6F7F8',
     BRAND_SECONDARY_COLOR: '#21325B',
@@ -308,7 +294,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
         name: 'address',
         detail: 'Wallet address / Ens name to query',
         example: `"vitalik.eth"`,
-        require: 'o',
+        require: 'm',
         type: 'string'
       },
       {
@@ -354,7 +340,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Safe,
+    API_KEY: SERVICES_API_KEY.Safe,
     LOGO: 'https://safe-transaction-mainnet.safe.global/static/safe/favicon.png',
     BRAND_COLOR: '#ebf9f3',
     BRAND_SECONDARY_COLOR: '#00B460',
@@ -423,7 +409,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
       },
       {
         name: 'chain',
-        detail: 'The blockchain to query. By default on Ethereum mainnet.',
+        detail: 'The blockchain to query. By default on Ethereum mainnet. Can be gnosis, arbitrum, optimism, soneium, unichain  ',
         example: `"ethereum"`,
         require: 'o',
         type: 'string'
@@ -484,7 +470,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
         type: 'string'
       },
       {
-        name: 'param2',
+        name: 'param1',
         detail: 'Token Contract Address for market category or Token symbol',
         example: `"USDT"`,
         require: 'm',
@@ -494,7 +480,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Firefly,
+    API_KEY: SERVICES_API_KEY.Firefly,
     LOGO: 'https://tse3.mm.bing.net/th?id=OIP.1TANdvYNcEadCk6CO1bCcgAAAA&r=0&w=440&h=440&c=7',
     SECONDARY_LOGO: 'https://firefly.social/android-chrome-192x192.png',
     BRAND_COLOR: '#f8f5fc',
@@ -536,7 +522,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Firefly,
+    API_KEY: SERVICES_API_KEY.Firefly,
     LOGO: 'https://farcaster.xyz/favicon.ico',
     SECONDARY_LOGO: 'https://firefly.social/android-chrome-192x192.png',
     BRAND_COLOR: '#f8f5fc',
@@ -578,7 +564,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Firefly,
+    API_KEY: SERVICES_API_KEY.Firefly,
     LOGO: 'https://firefly.social/android-chrome-192x192.png',
     BRAND_COLOR: '#f8f5fc',
     BRAND_SECONDARY_COLOR: '#855dcd',
@@ -627,7 +613,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   },
 
   {
-    API_KEY: SERVICE_API_KEY.Neynar,
+    API_KEY: SERVICES_API_KEY.Neynar,
     LOGO: 'https://framerusercontent.com/images/OS5YeZ2Y7DmszAxL6Zf06pXtKzc.svg',
     BRAND_COLOR: '#e8e6ff',
     BRAND_SECONDARY_COLOR: '#28204A',
@@ -669,7 +655,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   // },
 
   // {
-  //   API_KEY: SERVICE_API_KEY.Etherscan,
+  //   API_KEY: SERVICES_API_KEY.Etherscan,
   //   LOGO: "https://www.pendle.finance/uploads/wp-content/uploads/2021/12/cropped-Pendle-Logo-quite-small.png",
   //   BRAND_COLOR: "#eafffb",
   //   BRAND_SECONDARY_COLOR: "#47e2c2",
@@ -717,7 +703,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   // },
 
   // {
-  //   API_KEY: SERVICE_API_KEY.Etherscan,
+  //   API_KEY: SERVICES_API_KEY.Etherscan,
   //   LOGO: "https://cdn.prod.website-files.com/6760e87b474d412dfa9a7a68/6760e8ebe8faad5fb985c89a_Frame%201321316795.png",
   //   BRAND_COLOR: "#f6f4ff",
   //   BRAND_SECONDARY_COLOR: "#684ff8",
@@ -764,7 +750,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   //   ]
   // },
   // {
-  //   API_KEY: SERVICE_API_KEY.GnosisPay,
+  //   API_KEY: SERVICES_API_KEY.GnosisPay,
   //   LOGO: "https://gnosisscan.io/assets/generic/html/favicon-light.ico",
   //   BRAND_COLOR: "#f6f7f6",
   //   BRAND_SECONDARY_COLOR: "#133629",
@@ -811,7 +797,7 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   //   ]
   // },
   // {
-  //   API_KEY: SERVICE_API_KEY.Etherscan,
+  //   API_KEY: SERVICES_API_KEY.Etherscan,
   //   LOGO: "https://www.tally.xyz/favicon.ico",
   //   BRAND_COLOR: "#f9f8ff",
   //   BRAND_SECONDARY_COLOR: "#725bff",
@@ -916,4 +902,4 @@ If "derivatives": exchange name (e.g., "binance_futures", "hyperliquid", "weex-f
   }
 ]
 
-export * from './utils/constants'
+export * from './utils/constants.js'
