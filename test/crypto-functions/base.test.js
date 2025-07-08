@@ -5,6 +5,7 @@ import { ERROR_MESSAGES_FLAG } from '../../src/utils/constants.js'
 import * as isAddressModule from '../../src/utils/is-address.js'
 import * as fromEnsNameToAddress from '../../src/utils/from-ens-name-to-address.js'
 import { SERVICES_API_KEY } from '../../src/crypto-constants.js'
+import { ValidationError } from '../../src/utils/error-instances.js'
 
 describe('BASE', () => {
   beforeEach(() => {
@@ -53,10 +54,11 @@ describe('BASE', () => {
   it('should return ENS error if address is ENS and resolution fails', async () => {
     window.localStorage.getItem.returns('key')
     sinon.stub(isAddressModule.default, 'isAddress').returns(false);
-    sinon.stub(fromEnsNameToAddress.default, 'fromEnsNameToAddress').resolves(null);
+    sinon.stub(fromEnsNameToAddress.default, 'validateAndGetAddress').throws(new ValidationError("Invalid address"));
+
 
     const result = await BASE('all-txns', 'vitalik.eth');
-    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.ENS);
+    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.INVALID_PARAM);
     expect(result.functionName).to.equal('BASE');
   });
 
@@ -64,7 +66,7 @@ describe('BASE', () => {
     it('should resolve successfully with right ens name', async () => {
     window.localStorage.getItem.returns('key')
     sinon.stub(isAddressModule.default, 'isAddress').returns(false)
-    sinon.stub(fromEnsNameToAddress.default, 'fromEnsNameToAddress').resolves('0xjoshua')
+    sinon.stub(fromEnsNameToAddress.default, 'validateAndGetAddress').resolves('0xjoshua')
     const responseJson = ['data']
     global.fetch.resolves({ ok: true, json: async () => ({ result: responseJson }) })
 
@@ -74,7 +76,7 @@ describe('BASE', () => {
 
   it('should return NETWORK_ERROR when fetch response status != 2xx', async () => {
     window.localStorage.getItem.returns('key')
-    sinon.stub(isAddressModule.default, 'isAddress').returns(true)
+    sinon.stub(fromEnsNameToAddress.default, 'validateAndGetAddress').resolves('0xjoshua')
     global.fetch.resolves({ ok: false, status: 502 })
 
     const result = await BASE('all-txns', '0xabc', '01/01/2023', '01/02/2023', 1, 10)

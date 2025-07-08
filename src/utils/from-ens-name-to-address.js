@@ -5,6 +5,8 @@
 
 
 import {UTILITY} from './constants.js'
+import { ValidationError } from './error-instances.js'
+import * as isAddressUtil from './is-address.js'
 
 
 async function fromEnsNameToAddress(name) {
@@ -33,7 +35,14 @@ async function fromEnsNameToAddress(name) {
     return null
   }
 }
+const validateAndGetAddress = async (address) => {
+if(isAddressUtil.default.isAddress(address)) return address
+
+const resolvedAddress = await fromEnsNameToAddress(address)
+if(resolvedAddress) return resolvedAddress
+throw new ValidationError("Invalid address")
+}
 
 export default {
-  fromEnsNameToAddress
+  validateAndGetAddress
 }

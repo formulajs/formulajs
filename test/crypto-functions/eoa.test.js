@@ -7,6 +7,7 @@ import * as isAddressModule from '../../src/utils/is-address.js'
 import * as fromEnsNameUtil from '../../src/utils/from-ens-name-to-address.js'
 import { SERVICES_API_KEY } from '../../src/crypto-constants.js'
 import * as fromTimeStampToBlockUtil from '../../src/utils/from-timestamp-to-block.js';
+import { ValidationError } from '../../src/utils/error-instances.js'
 
 
 describe('EOA', () => {
@@ -51,9 +52,9 @@ describe('EOA', () => {
   it('should return ENS error if ENS resolution fails', async()=>{
     window.localStorage.getItem.returns('key')
     sinon.stub(isAddressModule.default,'isAddress').returns(false)
-    sinon.stub(fromEnsNameUtil.default,'fromEnsNameToAddress').resolves(null)
+    sinon.stub(fromEnsNameUtil.default,'validateAndGetAddress').throws(new ValidationError("Invalid address"));
     const res=await EOA('vitalik.eth','balance','ethereum')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.ENS)
+    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.INVALID_PARAM)
         expect(res.functionName).to.equal('EOA')
   })
 

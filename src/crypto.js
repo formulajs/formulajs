@@ -14,11 +14,11 @@ import * as fromEnsNameToAddressUtil from './utils/from-ens-name-to-address.js'
 import * as fromUsernameToFidUtil  from './utils/from-username-to-fid.js'
 import * as utils from './utils/common.js'
 import { errorMessageHandler, validateParams } from './utils/error-messages-handler.js'
-import { fireflyParamsSchema, fireFlyPlaformType } from './crypto-function-schema/firefly.js'
+import { fireflyParamsSchema, fireFlyPlaformType } from './crypto-function-schema/firefly-schema.js'
 import { lensParamsSchema } from './crypto-function-schema/lens-schema.js'
 import { farcasterParamsSchema } from './crypto-function-schema/farcaster-schema.js'
 import { blockscoutParamsSchema} from './crypto-function-schema/blockscout-schema.js'
-import {MissingApiKeyError, NetworkError, EnsError, ValidationError, InvalidApiKeyError, RateLimitError } from './utils/error-instances.js'
+import {MissingApiKeyError, NetworkError, ValidationError, InvalidApiKeyError, RateLimitError } from './utils/error-instances.js'
 import { baseParamsSchema } from './crypto-function-schema/base-schema.js'
 import { z } from 'zod'
 import { etherscanParamsSchema } from './crypto-function-schema/etherscan-schema.js'
@@ -243,14 +243,7 @@ export async function BLOCKSCOUT() {
       startTimestamp ?? Math.floor((Date.now() - 30 * 24 * 3600 * 1000) / 1000)
     const endTs = endTimestamp
 
-    let resolvedAddress = address
-    if (!isAddressUtil.default.isAddress(resolvedAddress)) {
-      const ensName = resolvedAddress
-      resolvedAddress = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ensName)
-      if (!resolvedAddress) {
-        throw new EnsError(ensName)
-      }
-    }
+    const resolvedAddress = await fromEnsNameToAddressUtil.default.validateAndGetAddress(address)
 
     const hostname = BLOCKSCOUT_CHAINS_MAP[chain]
 
@@ -582,10 +575,8 @@ export async function EOA() {
       if (isAddressUtil.default.isAddress(inp)) {
         ADDRESS_MAP[inp.toLowerCase()] = null
       } else {
-        const ens = inp
-        const resolved = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ens)
-        if (!resolved) throw new EnsError(ens)
-        ADDRESS_MAP[resolved.toLowerCase()] = ens
+      const _address = await fromEnsNameToAddressUtil.default.validateAndGetAddress(inp)
+        ADDRESS_MAP[_address.toLowerCase()] = _address
       }
     }
     const ADDRS = Object.keys(ADDRESS_MAP)
@@ -664,12 +655,10 @@ export async function SAFE() {
     const chainId = SAFE_CHAIN_MAP[chain]
     if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
 
-    let resolved = address
-    if (!isAddressUtil.default.isAddress(resolved)) {
-      const ens = resolved
-      resolved = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(ens)
-      if (!resolved) throw new EnsError(ens)
-    }
+
+    
+
+    const resolved = await fromEnsNameToAddressUtil.default.validateAndGetAddress(address)
 
 
     const url = `https://api.safe.global/tx-service/${chainId}/api/v2/safes/${resolved}/multisig-transactions?limit=${limit}&offset=${offset}`

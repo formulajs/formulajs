@@ -6,6 +6,7 @@ import { ERROR_MESSAGES_FLAG } from '../../src/utils/constants.js';
 import * as isAddressUtil from '../../src/utils/is-address.js';
 import * as fromEnsNameToAddressUtil from '../../src/utils/from-ens-name-to-address.js';
 import { SERVICES_API_KEY } from '../../src/crypto-constants.js';
+import { ValidationError } from '../../src/utils/error-instances.js';
 
 
 describe('SAFE', () => {
@@ -53,10 +54,10 @@ describe('SAFE', () => {
   it('should return ENS_ERROR if ENS resolution fails', async () => {
     window.localStorage.getItem.returns('key')
     sinon.stub(isAddressUtil.default,'isAddress').returns(false)
-    sinon.stub(fromEnsNameToAddressUtil.default,'fromEnsNameToAddress').resolves(null)
+    sinon.stub(fromEnsNameToAddressUtil.default,  'validateAndGetAddress').throws(new ValidationError("Invalid address"));
     const res = await SAFE('vitalik.eth','txns','ethereum')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.ENS)
-            expect(res.functionName).to.equal('SAFE')
+    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.INVALID_PARAM)
+    expect(res.functionName).to.equal('SAFE')
   })
 
   it('should return NETWORK_ERROR on HTTP error', async () => {
@@ -95,7 +96,7 @@ describe('SAFE', () => {
       it('should resolve successfully with right ens name', async () => {
     window.localStorage.getItem.returns('key')
     sinon.stub(isAddressUtil.default, 'isAddress').returns(false)
-    sinon.stub(fromEnsNameToAddressUtil.default, 'fromEnsNameToAddress').resolves('0xjoshua')
+    sinon.stub(fromEnsNameToAddressUtil.default, 'validateAndGetAddress').resolves('0xjoshua')
     const responseJson = [{b:'data'}]
     global.fetch.resolves({ ok: true, json: async () => ({ results: responseJson }) })
 

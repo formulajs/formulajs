@@ -1,0 +1,2 @@
+echo "✅ Husky pre-commit is running"
+npm run test:crypto

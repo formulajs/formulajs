@@ -6,6 +6,7 @@ import { BLOCKSCOUT } from '../../src/crypto.js'
 import { ERROR_MESSAGES_FLAG } from '../../src/utils/constants.js'
 import * as fromEnsNameToAddress from '../../src/utils/from-ens-name-to-address.js'
 import * as isAddressModule from '../../src/utils/is-address.js'
+import { ValidationError } from '../../src/utils/error-instances.js'
 
 describe('BLOCKSCOUT', () => {
   beforeEach(() => {
@@ -47,10 +48,10 @@ describe('BLOCKSCOUT', () => {
 
   it('should return ENS error if ENS resolution fails', async () => {
     sinon.stub(isAddressModule.default, 'isAddress').returns(false)
-    sinon.stub(fromEnsNameToAddress.default, 'fromEnsNameToAddress').resolves(null)
+    sinon.stub(fromEnsNameToAddress.default, 'validateAndGetAddress').throws(new ValidationError("Invalid address"));
 
     const result = await BLOCKSCOUT('vitalik.eth', 'txns', 'ethereum')
-    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.ENS)
+    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.INVALID_PARAM)
     expect(result.functionName).to.equal('BLOCKSCOUT')
   })
 

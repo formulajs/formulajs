@@ -1,6 +1,6 @@
 {
   "name": "@fileverse-dev/formulajs",
-  "version": "4.4.11-mod-71",
+  "version": "4.4.11-mod-77",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "publishConfig": {
@@ -57,7 +57,8 @@
     "test:coverage": "c8 mocha --recursive",
     "test:watch": "mocha --recursive --watch --parallel --reporter min",
     "types": "tsc",
-    "test:crypto": "npx mocha 'test/crypto-functions/**/*.js' --recursive"
+    "test:crypto": "npx mocha 'test/crypto-functions/**/*.js' --recursive",
+    "prepare": "husky install"
   },
   "dependencies": {
     "bessel": "^1.0.2",
@@ -77,6 +78,7 @@
     "chai": "^5.2.0",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "mocha": "^11.7.1",
     "mochawesome": "^7.1.3",

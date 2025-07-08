@@ -1,9 +1,8 @@
 import * as fromTimeStampToBlockUtil from './from-timestamp-to-block.js'
 import { toTimestamp } from './toTimestamp.js'
-import * as isAddressUtil from './is-address.js'
 import * as fromEnsNameToAddressUtil from './from-ens-name-to-address.js'
 import { SERVICES_API_KEY } from '../crypto-constants.js'
-import { EnsError, InvalidApiKeyError, NetworkError, RateLimitError, ValidationError } from './error-instances.js'
+import { InvalidApiKeyError, NetworkError, RateLimitError, ValidationError } from './error-instances.js'
 export async function handleScanRequest({
   type,
   address,
@@ -22,12 +21,8 @@ export async function handleScanRequest({
     GNOSIS: { url: 'https://api.gnosisscan.io/api', apiKeyName: SERVICES_API_KEY.Gnosisscan }
   }
 
-  if (!isAddressUtil.default.isAddress(address) && type !== 'gas') {
-    const ensName = address
-    address = await fromEnsNameToAddressUtil.default.fromEnsNameToAddress(address)
-    if (!address) {
-      throw new EnsError(ensName)
-    }
+  if (type !== 'gas') {
+    address = await fromEnsNameToAddressUtil.default.validateAndGetAddress(address)
   }
 
   const apiInfo = API_INFO_MAP[functionName]
