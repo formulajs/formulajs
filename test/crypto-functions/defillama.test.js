@@ -18,12 +18,12 @@ describe('DEFILLAMA', () => {
     expect(res.functionName).to.equal('DEFILLAMA')
   })
 
-  it('should return MISSING_KEY when no API key', async () => {
-    window.localStorage.getItem.returns(null)
-    const res = await DEFILLAMA('protocols')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
-    expect(res.functionName).to.equal('DEFILLAMA')
-  })
+  // it('should return MISSING_KEY when no API key', async () => {
+  //   window.localStorage.getItem.returns(null)
+  //   const res = await DEFILLAMA('protocols')
+  //   expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
+  //   expect(res.functionName).to.equal('DEFILLAMA')
+  // })
 
   it('should return INVALID_PARAM for bad category', async () => {
     const res = await DEFILLAMA('foo')

@@ -29,12 +29,12 @@ describe('FARCASTER', () => {
     expect(result.functionName).to.equal('FARCASTER')
   })
 
-  it('should return MISSING_KEY if no API key in localStorage', async () => {
-    window.localStorage.getItem.returns(null)
-    const result = await FARCASTER('posts', 'xyz')
-    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
-    expect(result.functionName).to.equal('FARCASTER')
-  })
+  // it('should return MISSING_KEY if no API key in localStorage', async () => {
+  //   window.localStorage.getItem.returns(null)
+  //   const result = await FARCASTER('posts', 'xyz')
+  //   expect(result.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
+  //   expect(result.functionName).to.equal('FARCASTER')
+  // })
 
   it('should return INVALID_PARAM for unsupported contentType', async () => {
     window.localStorage.getItem.returns('key')

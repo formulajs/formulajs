@@ -36,12 +36,12 @@ describe('BASE', () => {
     expect(res).to.deep.equal(responseJson)
   })
 
-  it('should return MISSING_KEY when no API key', async () => {
-    window.localStorage.getItem.returns(null)
-    const res = await BASE('gas')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
-    expect(res.functionName).to.equal('BASE')
-  })
+  // it('should return MISSING_KEY when no API key', async () => {
+  //   window.localStorage.getItem.returns(null)
+  //   const res = await BASE('gas')
+  //   expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
+  //   expect(res.functionName).to.equal('BASE')
+  // })
 
   it('should return INVALID_PARAM when limit exceeds MAX_PAGE_LIMIT', async () => {
     window.localStorage.getItem.returns('key')

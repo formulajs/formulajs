@@ -22,12 +22,12 @@ describe('NEYNAR', () => {
     expect(res.functionName).to.equal('NEYNAR')
   })
 
-  it('should return MISSING_KEY when no API key', async () => {
-    window.localStorage.getItem.returns(null)
-    const res = await NEYNAR('alice')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
-    expect(res.functionName).to.equal('NEYNAR')
-  })
+  // it('should return MISSING_KEY when no API key', async () => {
+  //   window.localStorage.getItem.returns(null)
+  //   const res = await NEYNAR('alice')
+  //   expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
+  //   expect(res.functionName).to.equal('NEYNAR')
+  // })
 
   it('should return INVALID_PARAM when fid resolution fails', async () => {
     sinon.stub(fromUsernameToFidUtil.default, 'fromUsernameToFid').resolves(null)

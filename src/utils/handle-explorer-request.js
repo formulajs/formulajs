@@ -2,6 +2,8 @@ import * as fromTimeStampToBlockUtil from './from-timestamp-to-block.js'
 import { toTimestamp } from './toTimestamp.js'
 import * as fromEnsNameToAddressUtil from './from-ens-name-to-address.js'
 import { SERVICES_API_KEY } from '../crypto-constants.js'
+import { getUrlAndHeaders } from './proxy-url-map.js'
+
 import { InvalidApiKeyError, NetworkError, RateLimitError, ValidationError } from './error-instances.js'
 export async function handleScanRequest({
   type,
@@ -55,7 +57,11 @@ export async function handleScanRequest({
     }
     url += `&page=${page}&offset=${offset}`
   }
-    const res = await fetch(url)
+    const { URL: finalUrl, HEADERS } = getUrlAndHeaders({url, serviceName: apiInfo.apiKeyName, headers: {}});
+    const res = await fetch(finalUrl, {
+        method: 'GET',
+        headers: HEADERS,
+      })
     if (!res.ok) {
       throw new NetworkError(apiInfo.apiKeyName, res.status)
     }

@@ -1,3 +1,4 @@
+// if data block need API key
 export const SERVICES_API_KEY = {
   Etherscan: 'Etherscan',
   Coingecko: 'Coingecko',

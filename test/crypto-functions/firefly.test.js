@@ -29,12 +29,12 @@ describe('FIREFLY', () => {
   });
 
 
-  it('should return MISSING_KEY error if no API key in localStorage', async () => {
-    window.localStorage.getItem.returns(null);
-    const result = await FIREFLY('farcaster', 'posts', 'xyz');
-    expect(result.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY);
-    expect(result.functionName).to.equal('FIREFLY');
-  });
+  // it('should return MISSING_KEY error if no API key in localStorage', async () => {
+  //   window.localStorage.getItem.returns(null);
+  //   const result = await FIREFLY('farcaster', 'posts', 'xyz');
+  //   expect(result.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY);
+  //   expect(result.functionName).to.equal('FIREFLY');
+  // });
 
   it('should return INVALID_PARAM for unsupported platform', async () => {
     window.localStorage.getItem.returns('dummy-key');

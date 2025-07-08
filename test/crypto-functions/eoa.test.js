@@ -20,12 +20,12 @@ describe('EOA', () => {
     expect(res.functionName).to.equal('EOA')
   })
 
-  it('should return MISSING_KEY when no API key', async()=>{
-    window.localStorage.getItem.returns(null)
-    const res=await EOA('0x1','balance','ethereum')
-    expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
-        expect(res.functionName).to.equal('EOA')
-  })
+  // it('should return MISSING_KEY when no API key', async()=>{
+  //   window.localStorage.getItem.returns(null)
+  //   const res=await EOA('0x1','balance','ethereum')
+  //   expect(res.type).to.equal(ERROR_MESSAGES_FLAG.MISSING_KEY)
+  //       expect(res.functionName).to.equal('EOA')
+  // })
 
   it('should return INVALID_PARAM for invalid chain', async()=>{
     window.localStorage.getItem.returns('key')

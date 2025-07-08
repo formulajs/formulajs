@@ -11,14 +11,14 @@ import { handleScanRequest } from './utils/handle-explorer-request.js'
 import { toTimestamp } from './utils/toTimestamp.js'
 import * as isAddressUtil from './utils/is-address.js'
 import * as fromEnsNameToAddressUtil from './utils/from-ens-name-to-address.js'
-import * as fromUsernameToFidUtil  from './utils/from-username-to-fid.js'
+import * as fromUsernameToFidUtil from './utils/from-username-to-fid.js'
 import * as utils from './utils/common.js'
 import { errorMessageHandler, validateParams } from './utils/error-messages-handler.js'
 import { fireflyParamsSchema, fireFlyPlaformType } from './crypto-function-schema/firefly-schema.js'
 import { lensParamsSchema } from './crypto-function-schema/lens-schema.js'
 import { farcasterParamsSchema } from './crypto-function-schema/farcaster-schema.js'
-import { blockscoutParamsSchema} from './crypto-function-schema/blockscout-schema.js'
-import {MissingApiKeyError, NetworkError, ValidationError, InvalidApiKeyError, RateLimitError } from './utils/error-instances.js'
+import { blockscoutParamsSchema } from './crypto-function-schema/blockscout-schema.js'
+import { NetworkError, ValidationError, InvalidApiKeyError, RateLimitError } from './utils/error-instances.js'
 import { baseParamsSchema } from './crypto-function-schema/base-schema.js'
 import { z } from 'zod'
 import { etherscanParamsSchema } from './crypto-function-schema/etherscan-schema.js'
@@ -28,13 +28,14 @@ import { safeParamsSchema } from './crypto-function-schema/safe-schema.js'
 import { CATEGORY_URLS, defillamaParamsSchema } from './crypto-function-schema/defillama-schema.js'
 import { uniswapParamsSchema } from './crypto-function-schema/uniswap-schema.js'
 import { aaveParamsSchema } from './crypto-function-schema/aave-schema.js'
+import { getUrlAndHeaders } from './utils/proxy-url-map.js'
 
 
 export async function FIREFLY() {
   try {
-  const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
+    const [platform, contentType, identifier, start = 0, end = 10] = utils.argsToArray(arguments)
 
-validateParams(fireflyParamsSchema, {
+    validateParams(fireflyParamsSchema, {
       platform,
       contentType,
       identifier,
@@ -43,9 +44,6 @@ validateParams(fireflyParamsSchema, {
     })
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Firefly)
-    if (!apiKey) {
-      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
-    }
 
     const url = new URL('https://openapi.firefly.land/v1/fileverse/fetch')
     url.searchParams
@@ -56,12 +54,14 @@ validateParams(fireflyParamsSchema, {
           .filter(Boolean)
           .join(',')
       )
-      url.searchParams.set('type',  fireFlyPlaformType[platform][contentType])
-          url.searchParams.set('start', String(start))
-          url.searchParams.set('end',   String(end))
+    url.searchParams.set('type', fireFlyPlaformType[platform][contentType])
+    url.searchParams.set('start', String(start))
+    url.searchParams.set('end', String(end))
 
-    const response = await fetch(url.toString(), {
-      headers: { 'x-api-key': apiKey }
+    const { URL: finalUrl, HEADERS } = getUrlAndHeaders({ url: url.toString(), serviceName: 'Firefly', headers: { 'x-api-key': apiKey } });
+    const response = await fetch(finalUrl, {
+      method: 'GET',
+      headers: HEADERS,
     })
     if (!response.ok) {
       throw new NetworkError(SERVICES_API_KEY.Firefly, response.status)
@@ -103,9 +103,6 @@ export async function LENS() {
     const apiKey = window.localStorage.getItem(
       SERVICES_API_KEY.Firefly
     )
-    if (!apiKey) {
-      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
-    }
 
     const url = new URL(
       'https://openapi.firefly.land/v1/fileverse/fetch'
@@ -119,15 +116,18 @@ export async function LENS() {
         .join(',')
     )
     const typeMap = {
-      posts:   'lensid',
+      posts: 'lensid',
       replies: 'lenspostid',
     }
     url.searchParams.set('type', typeMap[contentType])
     url.searchParams.set('start', String(start))
-    url.searchParams.set('end',   String(end))
+    url.searchParams.set('end', String(end))
 
-    const response = await fetch(url.toString(), {
-      headers: { 'x-api-key': apiKey },
+    const { URL: finalUrl, HEADERS } = getUrlAndHeaders({ url: url.toString(), serviceName: 'Firefly', headers: { 'x-api-key': apiKey } });
+
+    const response = await fetch(finalUrl, {
+      method: 'GET',
+      headers: HEADERS,
     })
     if (!response.ok) {
       throw new NetworkError(SERVICES_API_KEY.Firefly, response.status)
@@ -154,7 +154,7 @@ export async function FARCASTER() {
   try {
     const [contentType, identifier, start = 0, end = 10] =
       utils.argsToArray(arguments)
-validateParams(farcasterParamsSchema, {
+    validateParams(farcasterParamsSchema, {
       contentType,
       identifier,
       start,
@@ -164,9 +164,6 @@ validateParams(farcasterParamsSchema, {
     const apiKey = window.localStorage.getItem(
       SERVICES_API_KEY.Firefly
     )
-    if (!apiKey) {
-      throw new MissingApiKeyError(SERVICES_API_KEY.Firefly)
-    }
 
     const url = new URL(
       'https://openapi.firefly.land/v1/fileverse/fetch'
@@ -180,16 +177,19 @@ validateParams(farcasterParamsSchema, {
         .join(',')
     )
     const typeMap = {
-  posts:    'farcasterid',
-  replies:  'farcasterpostid',
-  channels: 'farcasterchannels',
-}
+      posts: 'farcasterid',
+      replies: 'farcasterpostid',
+      channels: 'farcasterchannels',
+    }
     url.searchParams.set('type', typeMap[contentType])
     url.searchParams.set('start', String(start))
-    url.searchParams.set('end',   String(end))
+    url.searchParams.set('end', String(end))
 
-    const response = await fetch(url.toString(), {
-      headers: { 'x-api-key': apiKey },
+    const { URL: finalUrl, HEADERS } = getUrlAndHeaders({ url: url.toString(), serviceName: 'Firefly', headers: { 'x-api-key': apiKey } });
+
+    const response = await fetch(finalUrl, {
+      method: 'GET',
+      headers: HEADERS,
     })
     if (!response.ok) {
       throw new NetworkError(
@@ -291,12 +291,11 @@ export async function BLOCKSCOUT() {
 }
 
 export async function BASE() {
-try {
+  try {
     const [type, address, startDate, endDate, page, limit] = utils.argsToArray(arguments)
-   validateParams(baseParamsSchema, { type, address, startDate, endDate, page, limit })
+    validateParams(baseParamsSchema, { type, address, startDate, endDate, page, limit })
     const API_KEY = window.localStorage.getItem(SERVICES_API_KEY.Basescan)
-    if (!API_KEY) throw new MissingApiKeyError(SERVICES_API_KEY.Basescan)
-  
+
     return await handleScanRequest({
       type,
       address,
@@ -309,9 +308,9 @@ try {
       chainId: CHAIN_ID_MAP.base,
       network: 'base'
     })
-} catch (error) {
-  return errorMessageHandler(error, 'BASE')
-}
+  } catch (error) {
+    return errorMessageHandler(error, 'BASE')
+  }
 }
 export async function GNOSIS() {
   try {
@@ -331,7 +330,6 @@ export async function GNOSIS() {
     const apiKey = window.localStorage.getItem(
       SERVICES_API_KEY.Gnosisscan
     )
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Gnosisscan)
 
     return await handleScanRequest({
       type,
@@ -352,27 +350,33 @@ export async function GNOSIS() {
 
 export async function NEYNAR() {
   try {
-     const neynarParamsSchema = z.object({
-  username: z.string().nonempty()
-})
+    const neynarParamsSchema = z.object({
+      username: z.string().nonempty()
+    })
 
     const [username] = utils.argsToArray(arguments)
 
     validateParams(neynarParamsSchema, { username })
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Neynar)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Neynar)
 
     const fid = await fromUsernameToFidUtil.default.fromUsernameToFid(username, apiKey)
     if (!fid) throw new ValidationError(`Invalid username: ${username}`)
 
     const url = `https://api.neynar.com/v2/farcaster/followers?fid=${fid}`
 
-    const response = await fetch(url, {
-      headers: {
-        'x-api-key': apiKey,
-        'x-neynar-experimental': 'false',
-      }
+    const { URL: finalUrl, HEADERS } = getUrlAndHeaders({
+      url: url.toString(), serviceName: 'Neynar',
+        headers: {
+          'x-api-key': apiKey,
+          'x-neynar-experimental': 'false'
+        }
+      
+    });
+
+    const response = await fetch(finalUrl, {
+      method: 'GET',
+      headers: HEADERS,
     })
     if (!response.ok) {
       throw new NetworkError(SERVICES_API_KEY.Neynar, response.status)
@@ -467,7 +471,6 @@ export async function ETHERSCAN() {
     if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Etherscan)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Etherscan)
 
     return await handleScanRequest({
       type,
@@ -493,7 +496,6 @@ export async function COINGECKO() {
     validateParams(coingeckoParamsSchema, { category, param1, param2 })
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Coingecko)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Coingecko)
 
     const headers = {
       accept: 'application/json',
@@ -507,27 +509,28 @@ export async function COINGECKO() {
         break
       }
       case 'market': {
-        const map = { all:'', base:'base-ecosystem', meme:'meme-token', aiagents:'ai-agents', bitcoin:'bitcoin-ecosystem', ethereum:'ethereum-ecosystem', hyperliquid:'hyperliquid-ecosystem', pump:'pump-ecosystem', solana:'solana-ecosystem' }
+        const map = { all: '', base: 'base-ecosystem', meme: 'meme-token', aiagents: 'ai-agents', bitcoin: 'bitcoin-ecosystem', ethereum: 'ethereum-ecosystem', hyperliquid: 'hyperliquid-ecosystem', pump: 'pump-ecosystem', solana: 'solana-ecosystem' }
         const _category = map[param1] || ''
         const trend = param2 ? `&price_change_percentage=${param2}` : ''
-        url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=1&per_page=100${_category?`&category=${_category}`:''}${trend}`
+        url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&include_tokens=top&page=1&per_page=100${_category ? `&category=${_category}` : ''}${trend}`
         break
       }
       case 'stablecoins': {
-        const _category = param1==='all'? 'stablecoins' : param1
+        const _category = param1 === 'all' ? 'stablecoins' : param1
         const trend = param2 ? `&price_change_percentage=${param2}` : ''
         url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=${_category}&order=market_cap_desc&page=1&per_page=100${trend}`
         break
       }
       case 'derivatives': {
-        url = (!param1 || param1==='all')
+        url = (!param1 || param1 === 'all')
           ? 'https://api.coingecko.com/api/v3/derivatives'
           : `https://api.coingecko.com/api/v3/derivatives/exchanges/${param1}?include_tickers=all`
         break
       }
     }
+    const {URL: finalUrl, HEADERS} = getUrlAndHeaders({url, serviceName: 'Coingecko', headers})
 
-    const res = await fetch(url, { headers })
+    const res = await fetch(finalUrl, { headers: HEADERS })
     const json = await res.json()
     if (!res.ok) {
       const msg = json?.status?.error_message || ''
@@ -535,17 +538,17 @@ export async function COINGECKO() {
       throw new NetworkError(SERVICES_API_KEY.Coingecko, res.status)
     }
 
-    if (category==='price') {
+    if (category === 'price') {
       const out = {}
       for (const [token, prices] of Object.entries(json))
-        for (const [cur,val] of Object.entries(prices))
-          out[`${token.charAt(0).toUpperCase()+token.slice(1)}_${cur.toUpperCase()}`]=val
+        for (const [cur, val] of Object.entries(prices))
+          out[`${token.charAt(0).toUpperCase() + token.slice(1)}_${cur.toUpperCase()}`] = val
       return [out]
     }
 
     const data = Array.isArray(json) ? json : [json]
-    return data.map(item=>{
-      const flat={}
+    return data.map(item => {
+      const flat = {}
       for (const [key, value] of Object.entries(item)) {
         if (typeof value !== 'object' || value === null) {
           flat[key] = value
@@ -553,8 +556,8 @@ export async function COINGECKO() {
       }
       return flat
     })
-  } catch(err) {
-    return errorMessageHandler(err,'COINGECKO')
+  } catch (err) {
+    return errorMessageHandler(err, 'COINGECKO')
   }
 }
 
@@ -565,10 +568,9 @@ export async function EOA() {
     validateParams(eoaParamsSchema, { addresses, category, chains, startTime, endTime, page, offset })
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Etherscan)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Etherscan)
 
-    const INPUTS = addresses.split(',').map(s=>s.trim()).filter(Boolean)
-    const CHAINS = chains.split(',').map(s=>s.trim()).filter(Boolean)
+    const INPUTS = addresses.split(',').map(s => s.trim()).filter(Boolean)
+    const CHAINS = chains.split(',').map(s => s.trim()).filter(Boolean)
 
     const ADDRESS_MAP = {}
     for (const inp of INPUTS) {
@@ -583,7 +585,11 @@ export async function EOA() {
     const out = []
 
     async function fetchJSON(url) {
-      const res = await fetch(url)
+      const { URL: finalUrl, HEADERS } = getUrlAndHeaders({ url, serviceName: 'Etherscan', headers: {} });
+      const res = await fetch(finalUrl, {
+        method: 'GET',
+        headers: HEADERS,
+      })
       if (!res.ok) throw new NetworkError(SERVICES_API_KEY.Etherscan, res.status)
       const json = await res.json()
 
@@ -601,15 +607,15 @@ export async function EOA() {
 
       if (category === 'balance') {
         // chunk 20
-        for (let i=0; i<ADDRS.length; i+=20) {
-          const slice = ADDRS.slice(i,i+20).join(',')
+        for (let i = 0; i < ADDRS.length; i += 20) {
+          const slice = ADDRS.slice(i, i + 20).join(',')
           const url =
-            `https://api.etherscan.io/v2/api?chainid=${chainId}`+
-            `&module=account&action=addresstokenbalance&address=${slice}`+
+            `https://api.etherscan.io/v2/api?chainid=${chainId}` +
+            `&module=account&action=addresstokenbalance&address=${slice}` +
             `&page=${page}&offset=${offset}&apikey=${apiKey}`
           const data = await fetchJSON(url)
           if (!Array.isArray(data)) return data
-          data.forEach((item, idx) => out.push({ chain, address: ADDRS[i+idx], name: ADDRESS_MAP[ADDRS[i+idx]], ...item }))
+          data.forEach((item, idx) => out.push({ chain, address: ADDRS[i + idx], name: ADDRESS_MAP[ADDRS[i + idx]], ...item }))
         }
       } else {
         // txns
@@ -619,9 +625,9 @@ export async function EOA() {
         if (!eb) throw new ValidationError(`Invalid endTime: ${endTime}`)
         for (const addr of ADDRS) {
           const url =
-            `https://api.etherscan.io/v2/api?chainid=${chainId}`+
-            `&module=account&action=tokentx&address=${addr}`+
-            `&startblock=${sb}&endblock=${eb}`+
+            `https://api.etherscan.io/v2/api?chainid=${chainId}` +
+            `&module=account&action=tokentx&address=${addr}` +
+            `&startblock=${sb}&endblock=${eb}` +
             `&page=${page}&offset=${offset}&sort=asc&apikey=${apiKey}`
           const data = await fetchJSON(url)
           if (!Array.isArray(data)) return data
@@ -650,7 +656,6 @@ export async function SAFE() {
     validateParams(safeParamsSchema, { address, utility, chain, limit, offset })
 
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Safe)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Safe)
 
     const chainId = SAFE_CHAIN_MAP[chain]
     if (!chainId) throw new ValidationError(`Invalid chain: ${chain}`)
@@ -663,8 +668,8 @@ export async function SAFE() {
 
     const url = `https://api.safe.global/tx-service/${chainId}/api/v2/safes/${resolved}/multisig-transactions?limit=${limit}&offset=${offset}`
 
-
-    const res = await fetch(url, { headers: { Authorization: `Bearer ${apiKey}` } })
+      const { URL: finalUrl, HEADERS } = getUrlAndHeaders({ url, serviceName: 'Etherscan', headers: { Authorization: `Bearer ${apiKey}` } });
+    const res = await fetch(finalUrl, { headers: HEADERS })
     if (!res.ok) throw new NetworkError(SERVICES_API_KEY.Safe, res.status)
     const json = await res.json()
 
@@ -685,7 +690,6 @@ export async function DEFILLAMA() {
     const [category] = utils.argsToArray(arguments)
     validateParams(defillamaParamsSchema, { category })
     const apiKey = window.localStorage.getItem(SERVICES_API_KEY.Defillama)
-    if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Defillama)
     const url = CATEGORY_URLS[category]
     if (!url) throw new ValidationError(`Invalid category: ${category}`)
     const res = await fetch(url)
@@ -694,20 +698,20 @@ export async function DEFILLAMA() {
 
     switch (category) {
       case 'protocols':
-        json = Array.isArray(json) ? json.slice(0,500) : []
+        json = Array.isArray(json) ? json.slice(0, 500) : []
         break
       case 'yields':
-        json = Array.isArray(json.data) ? json.data.slice(0,500) : []
+        json = Array.isArray(json.data) ? json.data.slice(0, 500) : []
         break
       case 'dex':
       case 'fees':
-        json = Array.isArray(json.protocols) ? json.protocols.slice(0,500) : []
+        json = Array.isArray(json.protocols) ? json.protocols.slice(0, 500) : []
         break
     }
 
     return (Array.isArray(json) ? json : [json]).map(item => {
       const out = {}
-      for (const [k,v] of Object.entries(item)) {
+      for (const [k, v] of Object.entries(item)) {
         if (v === null || typeof v !== 'object') out[k] = v
       }
       return out
@@ -743,7 +747,7 @@ export async function UNISWAP() {
       // flatten nested
       return json.map(item => {
         const flat = {}
-        Object.entries(item).forEach(([k,v]) => {
+        Object.entries(item).forEach(([k, v]) => {
           if (v === null || typeof v !== 'object') flat[k] = v
         })
         return flat
