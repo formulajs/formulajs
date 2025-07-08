@@ -83,14 +83,48 @@ This will be automatically rendered in the UI as a table.
 For single-value returns, simply return a string that will update a single UI cell.
 
 ### 4. Error Handling
+Our crypto formulas use a unified errorMessageHandler to catch and standardize all errors. Each error is represented as an object
 
-#### API Key Management
-- If an API key is missing, return `${SERVICE_API_KEY.Etherscan}_MISSING`
-- The function will be re-executed once the API key is available
+```javascript
+{ message: string; functionName: string; type: string; reason?: string }
+```
 
-#### Other Errors
-- Return descriptive error messages as strings
-- Example: `"ERROR IN FETCHING"`
+#### Built‑in Error Types
+
+- `INVALID_PARAM`: Thrown when input validation (using Zod) fails.
+
+- `MISSING_KEY`: Thrown when a required API key is not found in localStorage.
+
+- `NETWORK_ERROR`: Thrown when an HTTP request returns a non-2xx status (other than rate limits).
+
+- `RATE_LIMIT`: Thrown when status code is 429 or a RateLimitError is encountered.
+
+- `INVALID_API_KEY`: Thrown when the API returns an "Invalid API Key" message.
+
+- `DEFAULT`: A fallback for unexpected errors; includes a reason field.
+
+ #### How to Throw Errors
+In your formula, simply throw one of our custom error classes:
+
+```javascript
+if (!apiKey) throw new MissingApiKeyError(SERVICES_API_KEY.Etherscan)
+if (!res.ok) throw new NetworkError('ETHERSCAN', res.status)
+throw new ValidationError(`Invalid param: ${param}`)
+```
+
+At the end of your function, wrap all logic in `try/catch` and forward to `errorMessageHandler`:
+
+```javascript
+export async function ETHERSCAN(...) {
+  try {
+    // ... validation, fetch, parsing
+  } catch (err) {
+    return errorMessageHandler(err, 'ETHERSCAN')
+  }
+}
+
+```
+
 
 ### 5. Function Metadata
 
@@ -119,9 +153,9 @@ type Parameter {
 
 ### 6. Testing Data Block
 
-- You can change ```Data-Block-Test.html``` with your added function, with hard code arguments.
-- Add you API in localstorage manualy.
-- Click Test Button, now you can see you return value in UI.
+- Create a schema for your function in `src/crypto-function-schema` to validate it parameters
+- Add it test cases `test/crypto-functions`
+- Run `npm run test:crypto` to run tests cases for all crypto functions
 
 ## Code Style Guidelines
 
