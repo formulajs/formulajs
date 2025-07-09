@@ -10,39 +10,39 @@ function initializeProxyMap() {
         
         PROXY_MAP = {
     Etherscan: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['apikey']
     },
     Basescan: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['apikey']
     },
     Gnosisscan: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['apikey']
     },
     Coingecko: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['apikey']
     },
     Firefly: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['apikey']
     },
     Neynar: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['api_key']
     },
     Safe: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['api_key']
     },
     Defillama: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['api_key']
     },
     GnosisPay: {
-        url: `${fileverseProxyUrl}/proxy`,
+        url: fileverseProxyUrl,
         removeParams: ['api_key']
     },
     // Add more services as needed. It can be direct url instead of ENV variable
