@@ -1,7 +1,7 @@
 import { SERVICES_API_KEY } from '../crypto-constants.js';
 import { MissingApiKeyError } from './error-instances.js'
 
-const fileverseProxyUrl = `${process?.env?.NEXT_PUBLIC_PROXY_BASE_URL}/proxy`
+const fileverseProxyUrl = `${window.NEXT_PUBLIC_PROXY_BASE_URL}/proxy`
 // Proxy map configuration
 const PROXY_MAP = {
     Etherscan: {
