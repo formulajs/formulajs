@@ -1,48 +1,56 @@
+import { file } from 'zod/v4';
 import { SERVICES_API_KEY } from '../crypto-constants.js';
 import { MissingApiKeyError } from './error-instances.js'
 
-const fileverseProxyUrl = `${window.NEXT_PUBLIC_PROXY_BASE_URL}/proxy`
-// Proxy map configuration
-const PROXY_MAP = {
+let PROXY_MAP;
+
+function initializeProxyMap() {
+    if (!PROXY_MAP) {
+        const fileverseProxyUrl = `${window.NEXT_PUBLIC_PROXY_BASE_URL}/proxy`;
+        
+        PROXY_MAP = {
     Etherscan: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['apikey']
     },
     Basescan: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['apikey']
     },
     Gnosisscan: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['apikey']
     },
     Coingecko: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['apikey']
     },
     Firefly: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['apikey']
     },
     Neynar: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['api_key']
     },
     Safe: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['api_key']
     },
     Defillama: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['api_key']
     },
     GnosisPay: {
-        url: fileverseProxyUrl,
+        url: `${fileverseProxyUrl}/proxy`,
         removeParams: ['api_key']
     },
     // Add more services as needed. It can be direct url instead of ENV variable
     // ANOTHER_SERVICE: "https://another-proxy-url.com"
-};
+}
+    }
+    return PROXY_MAP;
+}
 
 /**
  * Removes specified parameters from a URL
@@ -74,12 +82,13 @@ function removeUrlParams(url, paramsToRemove) {
  * @returns {Object} Object containing URL and HEADERS for the fetch request
  */
 export function getUrlAndHeaders({ url, serviceName, headers = {} }) {
+    const proxyMap = initializeProxyMap();
     // Check if proxy is enabled in localStorage
     const apiKeyLS = window.localStorage.getItem(SERVICES_API_KEY[serviceName]);
     const isProxyModeEnabledValue = apiKeyLS === 'DEFAULT_PROXY_MODE';
 
     // Check if proxy URL exists for this service
-    const proxyConfig = PROXY_MAP[serviceName];
+    const proxyConfig = proxyMap[serviceName];
 
     if (!proxyConfig && SERVICES_API_KEY[serviceName] && (!apiKeyLS || apiKeyLS === '')) {
         throw new MissingApiKeyError(SERVICES_API_KEY[serviceName])
