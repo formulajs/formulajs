@@ -1,6 +1,6 @@
 {
   "name": "@fileverse-dev/formulajs",
-  "version": "4.4.11-mod-83",
+  "version": "4.4.11-mod-84",
   "description": "JavaScript implementation of most Microsoft Excel formula functions",
   "author": "Formulajs",
   "publishConfig": {
@@ -57,7 +57,7 @@
     "test:coverage": "c8 mocha --recursive",
     "test:watch": "mocha --recursive --watch --parallel --reporter min",
     "types": "tsc",
-    "test:crypto": "npx mocha 'test/crypto-functions/**/*.js' --recursive",
+    "test:crypto": "npx mocha 'test/crypto/*.test.js' --recursive",
     "prepare": "husky install"
   },
   "dependencies": {

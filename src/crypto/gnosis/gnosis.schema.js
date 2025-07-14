@@ -1,0 +1,1 @@
+export {baseParamsSchema as gnosisParamsSchema} from '../base/base-schema.js'

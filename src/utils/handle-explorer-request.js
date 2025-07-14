@@ -1,7 +1,7 @@
 import * as fromTimeStampToBlockUtil from './from-timestamp-to-block.js'
 import { toTimestamp } from './toTimestamp.js'
 import * as fromEnsNameToAddressUtil from './from-ens-name-to-address.js'
-import { SERVICES_API_KEY } from '../crypto-constants.js'
+import { SERVICES_API_KEY } from '../utils/constants.js'
 import { getUrlAndHeaders } from './proxy-url-map.js'
 
 import { InvalidApiKeyError, NetworkError, RateLimitError, ValidationError } from './error-instances.js'

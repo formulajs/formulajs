@@ -32,3 +32,15 @@ export const UTILITY = {
   ALCHEMY_API_KEY: 'ALCHEMY_API_KEY'
 }
 export const MAX_PAGE_LIMIT = 250
+
+export const SERVICES_API_KEY = {
+  Etherscan: 'Etherscan',
+  Coingecko: 'Coingecko',
+  Safe: 'Safe',
+  Basescan: 'Basescan',
+  Gnosisscan: 'Gnosisscan',
+  Firefly: 'Firefly',
+  GnosisPay: 'GnosisPay',
+  Neynar: 'Neynar',
+  Defillama: 'Defillama'
+}
