@@ -12,6 +12,7 @@ export { LENS } from './lens/lens.js'
 export { NEYNAR } from './neynar/neynar.js'
 export { SAFE } from './safe/safe.js'
 export { UNISWAP } from './uniswap/uniswap.js'
+export {SMARTCONTRACT}from './smart-contract/smart-contract.js'
 
 
 
