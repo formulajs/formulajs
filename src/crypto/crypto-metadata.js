@@ -13,6 +13,7 @@ import { LENS_metadata } from './lens/metadata.js'
 import { FARCASTER_metadata } from './farcaster/metadata.js'
 import { FIREFLY_metadata } from './firefly/metadata.js'
 import { Neynar_metadata } from './neynar/metadata.js'
+import {SMARTCONTRACT_metadata} from './smart-contract/metadata.js'
 
 export const FUNCTION_LOCALE = [
   EOA_metadata,
@@ -30,6 +31,7 @@ export const FUNCTION_LOCALE = [
   FARCASTER_metadata,
   FIREFLY_metadata,
   Neynar_metadata,
+  SMARTCONTRACT_metadata,
   {
     LOGO: 'https://raw.githubusercontent.com/mritunjayz/github-storage/refs/heads/main/ploymarket.png',
     n: 'POLYMARKET',
