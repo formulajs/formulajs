@@ -1,7 +1,4 @@
 export const SMARTCONTRACT_metadata = {
-    LOGO: 'https://gnosisscan.io/assets/generic/html/favicon-light.ico',
-    BRAND_COLOR: '#f6f7f6',
-    BRAND_SECONDARY_COLOR: '#133629',
     n: 'SMARTCONTRACT',
     t: 20,
     d: 'Pulls data from a given contract',
