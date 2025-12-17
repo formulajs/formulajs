@@ -518,7 +518,7 @@ export function SUBSTITUTE(text, old_text, new_text, instance_num) {
 }
 
 /**
- * Converts its arguments to text.
+ * Returns the input if it's an Error or string, otherwise an empty string.
  *
  * Category: Text
  *
