@@ -1402,13 +1402,27 @@ export function ROMAN(number) {
 export function ROUND(number, num_digits) {
   number = utils.parseNumber(number)
   num_digits = utils.parseNumber(num_digits)
+
   const anyError = utils.anyError(number, num_digits)
 
   if (anyError) {
     return anyError
   }
 
-  return Number(Math.round(Number(number + 'e' + num_digits)) + 'e' + num_digits * -1)
+  const sign = number >= 0 ? 1 : -1
+  const val = Math.abs(number)
+
+  // Shift the decimal point using scientific notation strings.
+  // Use strings because standard math (e.g., 1.005 * 100) introduces
+  // artifacts like 100.499999... which rounds incorrectly.
+  let pair = (val + 'e' + num_digits).split('e')
+  const shifted = Math.round(pair[0] + 'e' + pair[1])
+
+  // Shift back
+  pair = (shifted + 'e' + -num_digits).split('e')
+  const rounded = Number(pair[0] + 'e' + pair[1])
+
+  return rounded * sign
 }
 
 /**
