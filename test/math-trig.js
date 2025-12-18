@@ -731,7 +731,11 @@ describe('Math & Trig', () => {
     expect(mathTrig.ROUND(2.149, 1)).to.approximately(2.1, 1e-9)
     expect(mathTrig.ROUND(600.425, 2)).to.approximately(600.43, 1e-9)
     expect(mathTrig.ROUND(600.435, 2)).to.approximately(600.44, 1e-9)
-    expect(mathTrig.ROUND(-1.475, 2)).to.approximately(-1.47, 1e-9) // TODO: check if -1.48 would be the correct result or a precision error
+    expect(mathTrig.ROUND(-1.475, 2)).to.approximately(-1.48, 1e-9)
+    expect(mathTrig.ROUND(0.04485, 3)).to.approximately(0.045, 1e-9)
+    expect(mathTrig.ROUND(2.675, 2)).to.approximately(2.68, 1e-9)
+    expect(mathTrig.ROUND(-10.5, 0)).to.equal(-11)
+    expect(mathTrig.ROUND(-2.5, 0)).to.equal(-3)
     expect(mathTrig.ROUND(21.5, -1)).to.equal(20)
     expect(mathTrig.ROUND(626.3, -3)).to.equal(1000)
     expect(mathTrig.ROUND(1.98, -1)).to.equal(0)
