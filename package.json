@@ -73,7 +73,7 @@
     "mocha": "^11.7.5",
     "mochawesome": "^7.1.4",
     "prettier": "^3.7.4",
-    "rollup": "^4.53.5",
+    "rollup": "^4.54.0",
     "typescript": "^5.9.3"
   }
 }
