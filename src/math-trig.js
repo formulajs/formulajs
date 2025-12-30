@@ -1439,10 +1439,6 @@ function roundBase(number, num_digits, roundFn) {
  * @returns
  */
 export function ROUND(number, num_digits) {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
   return roundBase(number, num_digits, Math.round)
 }
 
@@ -1456,10 +1452,6 @@ export function ROUND(number, num_digits) {
  * @returns
  */
 export function ROUNDDOWN(number, num_digits) {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
   return roundBase(number, num_digits, Math.floor)
 }
 
@@ -1473,10 +1465,6 @@ export function ROUNDDOWN(number, num_digits) {
  * @returns
  */
 export function ROUNDUP(number, num_digits) {
-  if (arguments.length < 2) {
-    return error.na
-  }
-
   return roundBase(number, num_digits, Math.ceil)
 }
 
