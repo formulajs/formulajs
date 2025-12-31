@@ -1391,6 +1391,45 @@ export function ROMAN(number) {
 }
 
 /**
+ * The core logic for all Excel rounding functions.
+ * Applies the specific Math strategy (round/ceil/floor) to the absolute value.
+ *
+ * @param {*} number The number that you want to round.
+ * @param {*} num_digits The number of digits to which you want to round the number argument.
+ * @param {*} roundFn The specific rounding function to apply (Math.round, Math.ceil, Math.floor).
+ * @returns
+ */
+function roundBase(number, num_digits, roundFn) {
+  number = utils.parseNumber(number)
+  num_digits = utils.parseNumber(num_digits)
+
+  const anyError = utils.anyError(number, num_digits)
+
+  if (anyError) {
+    return anyError
+  }
+
+  // Strip sign (Work with absolute value for symmetric behavior)
+  const sign = number >= 0 ? 1 : -1
+  const val = Math.abs(number)
+
+  // Shift the decimal point using scientific notation strings.
+  // Use strings because standard math (e.g., 1.005 * 100) introduces
+  // artifacts like 100.499999... which rounds incorrectly.
+  let pair = (val + 'e' + num_digits).split('e')
+
+  // Apply the specific rounding strategy (round, floor, or ceil)
+  const shifted = roundFn(pair[0] + 'e' + pair[1])
+
+  // Shift back
+  pair = (shifted + 'e' + -num_digits).split('e')
+  const rounded = Number(pair[0] + 'e' + pair[1])
+
+  // Restore sign
+  return rounded * sign
+}
+
+/**
  * Rounds a number to a specified number of digits.
  *
  * Category: Math and trigonometry
@@ -1400,15 +1439,7 @@ export function ROMAN(number) {
  * @returns
  */
 export function ROUND(number, num_digits) {
-  number = utils.parseNumber(number)
-  num_digits = utils.parseNumber(num_digits)
-  const anyError = utils.anyError(number, num_digits)
-
-  if (anyError) {
-    return anyError
-  }
-
-  return Number(Math.round(Number(number + 'e' + num_digits)) + 'e' + num_digits * -1)
+  return roundBase(number, num_digits, Math.round)
 }
 
 /**
@@ -1421,17 +1452,7 @@ export function ROUND(number, num_digits) {
  * @returns
  */
 export function ROUNDDOWN(number, num_digits) {
-  number = utils.parseNumber(number)
-  num_digits = utils.parseNumber(num_digits)
-  const anyError = utils.anyError(number, num_digits)
-
-  if (anyError) {
-    return anyError
-  }
-
-  const sign = number > 0 ? 1 : -1
-
-  return (sign * Math.floor(Math.abs(number) * Math.pow(10, num_digits))) / Math.pow(10, num_digits)
+  return roundBase(number, num_digits, Math.floor)
 }
 
 /**
@@ -1444,17 +1465,7 @@ export function ROUNDDOWN(number, num_digits) {
  * @returns
  */
 export function ROUNDUP(number, num_digits) {
-  number = utils.parseNumber(number)
-  num_digits = utils.parseNumber(num_digits)
-  const anyError = utils.anyError(number, num_digits)
-
-  if (anyError) {
-    return anyError
-  }
-
-  const sign = number > 0 ? 1 : -1
-
-  return (sign * Math.ceil(Math.abs(number) * Math.pow(10, num_digits))) / Math.pow(10, num_digits)
+  return roundBase(number, num_digits, Math.ceil)
 }
 
 /**
