@@ -254,6 +254,7 @@ describe('Statistical', () => {
   })
 
   it('COUNTIF', () => {
+    expect(statistical.COUNTIF([true, false], '=1')).to.equal(1)
     expect(statistical.COUNTIF([undefined], '>1')).to.equal(0)
     expect(statistical.COUNTIF([error.na], '>1')).to.equal(0)
     expect(statistical.COUNTIF([1, null, 3, 'a', ''], '>1')).to.equal(1)
