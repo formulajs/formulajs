@@ -34,6 +34,47 @@ export function CHOOSE() {
 }
 
 /**
+ * Returns the specified columns from an array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array range of values or an array constant.
+ * @param {*} col_num1 required column index
+ * @param {*} col_nums additionnal column indexes
+ * @returns
+ */
+export function CHOOSECOLS(array, col_num1, ...col_nums) {
+  if (!Array.isArray(array))
+    return error.value
+  
+  const colArgs = utils.flatten([ col_num1, ...col_nums ])
+  const colCount = array?.[0]?.length ?? 0
+  const notInRange = colArgs.some(col_num => {
+    const absColNum = Math.abs(col_num)
+    return !((0 < absColNum) && (absColNum <= colCount))
+  })
+  if (notInRange)
+    return error.value
+
+  const targetColNums = colArgs.map(col_num => {
+    return (col_num < 0)
+         ? col_num + colCount + 1
+         : col_num
+  });
+    
+  const arrayResult = []
+  for (let iRow = 0; iRow < array.length; iRow++) {
+    const rowResult = []
+    for (let iCol = 0; iCol < targetColNums.length; iCol++) {
+      const columnValue = array[iRow][targetColNums[iCol] - 1] ?? 0
+      rowResult.push(columnValue)
+    }
+    arrayResult.push(rowResult)
+  }
+  return arrayResult
+}
+
+/**
  * Returns the column number of a reference.
  *
  * Category: Lookup and reference

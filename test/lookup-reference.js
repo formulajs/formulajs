@@ -13,6 +13,104 @@ describe('Lookup Reference', () => {
     expect(lookup.CHOOSE(255, 'jima')).to.equal(error.value)
   })
 
+  it('CHOOSECOLS', () => {
+    expect(lookup.CHOOSECOLS([[ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ]], 0)).to.equal(error.value)
+    expect(lookup.CHOOSECOLS([[ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ]], 5)).to.equal(error.value)
+    expect(lookup.CHOOSECOLS([[ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ]], -5)).to.equal(error.value)
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ],
+        [ 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12' ]
+      ]
+      , 2)
+    ).to.deep.equal(
+      [
+        ['ITEM_2'],
+        ['ITEM_6'],
+        ['ITEM_10']
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ],
+        [ 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12' ]
+      ]
+      , 2, 4, 3)
+    ).to.deep.equal(
+      [
+        ['ITEM_2', 'ITEM_4', 'ITEM_3'],
+        ['ITEM_6', 'ITEM_8', 'ITEM_7'],
+        ['ITEM_10', 'ITEM_12', 'ITEM_11']
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ],
+        [ 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12' ]
+      ]
+      , 2, 2, 4)
+    ).to.deep.equal(
+      [
+        ['ITEM_2', 'ITEM_2', 'ITEM_4'],
+        ['ITEM_6', 'ITEM_6', 'ITEM_8'],
+        ['ITEM_10', 'ITEM_10', 'ITEM_12']
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ],
+        [ 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12' ]
+      ]
+      , -1, 1, -3)
+    ).to.deep.equal(
+      [
+        [ 'ITEM_4', 'ITEM_1', 'ITEM_2' ],
+        [ 'ITEM_8', 'ITEM_5', 'ITEM_6' ],
+        [ 'ITEM_12', 'ITEM_9', 'ITEM_10' ]
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4' ],
+        [ 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12' ]
+      ]
+      , [2, 3, 2], 1, [4, 1])
+    ).to.deep.equal(
+      [
+        ['ITEM_2', 'ITEM_3', 'ITEM_2', 'ITEM_1', 'ITEM_4', 'ITEM_1'],
+        ['ITEM_6', 'ITEM_7', 'ITEM_6', 'ITEM_5', 'ITEM_8', 'ITEM_5'],
+        ['ITEM_10', 'ITEM_11', 'ITEM_10', 'ITEM_9', 'ITEM_12', 'ITEM_9']
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', null, 'ITEM_4' ],
+        [ undefined, 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', undefined ]
+      ]
+      , 2, 3, 4)
+    ).to.deep.equal(
+      [
+        [ 'ITEM_2', 0, 'ITEM_4' ],
+        [ 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_10', 'ITEM_11', 0 ]
+      ]
+    )
+    expect(lookup.CHOOSECOLS(
+      [
+        [ 'ITEM_1', 'ITEM_2', null, 'ITEM_4' ],
+        [ undefined, 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+        [ 'ITEM_9', 'ITEM_10', 'ITEM_11', undefined ]
+      ]
+      , 2, 5, 4)
+    ).to.equal(error.value)
+  })
+
   it('COLUMN', () => {
     expect(lookup.COLUMN()).to.equal(error.na)
     expect(
