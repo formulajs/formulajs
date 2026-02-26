@@ -1,5 +1,5 @@
 ## Excel functions implemented in Formula.js
-As of Mon, 12 May 2025 19:07:00 GMT 
+As of Tue, 03 Feb 2026 05:12:36 GMT 
 
 Total: 515 functions | Implemented: 399 | Not Implemented: 116
 
@@ -85,6 +85,7 @@ Total: 515 functions | Implemented: 399 | Not Implemented: 116
 | CONFIDENCE.NORM | Statistical | Returns the confidence interval for a population mean. | ✅ |
 | CONFIDENCE.T | Statistical | Returns the confidence interval for a population mean, using a Student's t distribution. | ✅ |
 | CONVERT | Engineering | Converts a number from one measurement system to another. | ✅ |
+| COPILOT | Text | Categorize, summarize, and generate text using Copilot. | ❌ |
 | CORREL | Statistical | Returns the correlation coefficient between two data sets. | ✅ |
 | COS | Math and trigonometry | Returns the cosine of a number. | ✅ |
 | COSH | Math and trigonometry | Returns the hyperbolic cosine of a number. | ✅ |
@@ -428,7 +429,6 @@ Total: 515 functions | Implemented: 399 | Not Implemented: 116
 | SQRT | Math and trigonometry | Returns a positive square root. | ✅ |
 | SQRTPI | Math and trigonometry | Returns the square root of (number * pi). | ✅ |
 | STANDARDIZE | Statistical | Returns a normalized value. | ✅ |
-| STOCKHISTORY | Information | Retrieves historical data about a financial instrument. | ❌ |
 | STDEV | Compatibility | Estimates standard deviation based on a sample. | ❌ |
 | STDEV.P | Statistical | Calculates standard deviation based on the entire population. | ✅ |
 | STDEV.S | Statistical | Estimates standard deviation based on a sample. | ✅ |
