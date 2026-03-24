@@ -87,6 +87,69 @@ export function COLUMNS(array) {
 }
 
 /**
+ * Excludes a specified number of rows or columns from the start or end of an array.
+ * 
+ * Category: Lookup and reference
+ * 
+ * @param {*} array The array from which to drop rows or columns.
+ * @param {*} rows The number of rows to drop. A negative value drops from the end of the array. Optionnal when columns provided
+ * @param {*} columns The number of columns to exclude. A negative value drops from the end of the array. Optionnal when rows provided
+ * @returns
+ */
+export function DROP(array, rows, columns) {
+  if (utils.anyIsError(array, rows, columns)) {
+    return utils.anyError(array, rows, columns)
+  }
+
+  if (!(array instanceof Array)) {
+    return error.value
+  }
+
+  const dropResult = []
+  const [ rowsSize, colsSize ] = utils.getMatrixSize(array)
+
+  let iRowStart = 0,
+      iRowEnd = rowsSize;
+  if (typeof rows === 'number') {
+    const absRowsArg = Math.abs(rows)
+    if (absRowsArg > rowsSize) {
+      return error.calc
+    }
+
+    if (rows > 0) {
+      iRowStart = rows
+    } else if (rows < 0) {
+      iRowEnd += rows 
+    }
+  }
+
+  let iColStart = 0,
+      iColEnd = colsSize;
+  if (typeof columns === 'number') {
+    const absColumnsArg = Math.abs(columns)
+    if (absColumnsArg > colsSize) {
+      return error.calc
+    }
+
+    if (columns > 0) {
+      iColStart = columns
+    } else if (columns < 0) {
+      iColEnd += columns
+    }
+  }
+
+  for (let iRow = iRowStart; iRow < iRowEnd; iRow++) {
+    const shallowClonedRow = [
+      ...array[iRow].slice(iColStart, iColEnd)
+                    .map(value => value ?? 0)
+    ]
+    dropResult.push(shallowClonedRow);
+  }
+
+  return dropResult
+}
+
+/**
  * Looks in the top row of an array and returns the value of the indicated value.
  *
  * Category: Lookup and reference
