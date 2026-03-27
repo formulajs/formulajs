@@ -3,10 +3,8 @@ import { JSDOM } from 'jsdom'
 import * as formulajs from './../src/index.js'
 
 const FILE_NAME = 'IMPLEMENTATION_STATS'
-const URL_BASE = 
-  'https://support.microsoft.com'
-const URL =
-  `${URL_BASE}/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188`
+const URL_BASE = 'https://support.microsoft.com'
+const URL = `${URL_BASE}/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188`
 
 /**
  * Generates a Markdown table from the stats array.
@@ -19,7 +17,10 @@ function generateMarkdownTable(stats) {
   const tableStats = `Total: ${total} functions | Implemented: ${implemented} | Not Implemented: ${notImplemented}\n\n`
   const tableHeader = `| Function Name | Category | Description | Implemented |\n| :--- | :--- | :--- | :--- |\n`
   const tableRows = stats
-    .map((stat) => `| [${stat.name}](${stat.url}) | ${stat.category} | ${stat.description} | ${stat.implemented ? '✅' : '❌'} |`)
+    .map(
+      (stat) =>
+        `| [${stat.name}](${stat.url}) | ${stat.category} | ${stat.description} | ${stat.implemented ? '✅' : '❌'} |`
+    )
     .join('\n')
 
   return pageTitle + tableStats + tableHeader + tableRows
@@ -39,7 +40,10 @@ function generateYMLTable(stats) {
     .sort()
     .map(([category, funcs]) => {
       return `- category: ${category}\n  functions:\n${funcs
-        .map((f) => `    - title: ${f.name}\n      description: ${f.description}\n      implemented: ${f.implemented}\n      url: ${f.url}`)
+        .map(
+          (f) =>
+            `    - title: ${f.name}\n      description: ${f.description}\n      implemented: ${f.implemented}\n      url: ${f.url}`
+        )
         .join('\n')}`
     })
     .join('\n')
@@ -61,7 +65,7 @@ async function fetchAndProcessData() {
       throw new Error('No rows found in the table. The webpage structure might have changed.')
     }
 
-    const fnDocUrlPathRegex = /href="(?<docUrlPath>.*?)"/;
+    const fnDocUrlPathRegex = /href="(?<docUrlPath>.*?)"/
     rows.forEach((row) => {
       const cells = row.querySelectorAll('td')
 
@@ -79,8 +83,7 @@ async function fetchAndProcessData() {
       description = description.endsWith('.') ? description : description + '.'
 
       let docUrlPath = cells[0].innerHTML.match(fnDocUrlPathRegex)?.groups?.docUrlPath ?? null
-      if (docUrlPath)
-        docUrlPath = `${URL_BASE}${docUrlPath}`
+      if (docUrlPath) docUrlPath = `${URL_BASE}${docUrlPath}`
 
       const implemented = typeof name.split('.').reduce((o, k) => o?.[k], formulajs) === 'function'
 

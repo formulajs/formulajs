@@ -66,7 +66,7 @@ export function getMatrixSize(array) {
   const columnSize = array.reduce((maxColSize, row) => {
     return Math.max(maxColSize, row.length)
   }, 0)
-  return [ rowSize, columnSize ]
+  return [rowSize, columnSize]
 }
 
 export function fillMatrix(matrix, fill_value) {

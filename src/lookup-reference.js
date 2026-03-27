@@ -37,36 +37,31 @@ export function CHOOSE() {
  * Returns the specified rows from an array.
  *
  * Category: Lookup and reference
- * 
+ *
  * @param {*} array array range of values or an array constant.
  * @param {*} row_num1 required row index
  * @param {*} row_nums additionnal row indexes
  * @returns
  */
 export function CHOOSEROWS(array, row_num1, ...row_nums) {
-  if (!Array.isArray(array))
-    return error.value
+  if (!Array.isArray(array)) return error.value
 
-  const rowArgs = utils.flatten([ row_num1, ...row_nums ])
-  const notInRange = rowArgs.some(row_num => {
-    if (!utils.isDefined(row_num))
-      return true
+  const rowArgs = utils.flatten([row_num1, ...row_nums])
+  const notInRange = rowArgs.some((row_num) => {
+    if (!utils.isDefined(row_num)) return true
 
     const absRowNum = Math.abs(row_num)
-    return !((0 < absRowNum) && (absRowNum <= array.length))
-  });
+    return !(0 < absRowNum && absRowNum <= array.length)
+  })
 
-  if (notInRange)
-    return error.value
+  if (notInRange) return error.value
 
-  const targetRowNums = rowArgs.map(row_num => {
-    return (row_num < 0)
-         ? row_num + array.length + 1
-         : row_num
+  const targetRowNums = rowArgs.map((row_num) => {
+    return row_num < 0 ? row_num + array.length + 1 : row_num
   })
 
   return targetRowNums.reduce((selectedRows, row_num_selection) => {
-    const clonedRow = [ ...array[--row_num_selection] ].map(value => {
+    const clonedRow = [...array[--row_num_selection]].map((value) => {
       return utils.isDefined(value) ? value : 0
     })
 
@@ -130,9 +125,9 @@ export function COLUMNS(array) {
 
 /**
  * Excludes a specified number of rows or columns from the start or end of an array.
- * 
+ *
  * Category: Lookup and reference
- * 
+ *
  * @param {*} array The array from which to drop rows or columns.
  * @param {*} rows The number of rows to drop. A negative value drops from the end of the array. Optionnal when columns provided
  * @param {*} columns The number of columns to exclude. A negative value drops from the end of the array. Optionnal when rows provided
@@ -148,10 +143,10 @@ export function DROP(array, rows, columns) {
   }
 
   const dropResult = []
-  const [ rowsSize, colsSize ] = utils.getMatrixSize(array)
+  const [rowsSize, colsSize] = utils.getMatrixSize(array)
 
   let iRowStart = 0,
-      iRowEnd = rowsSize;
+    iRowEnd = rowsSize
   if (typeof rows === 'number') {
     const absRowsArg = Math.abs(rows)
     if (absRowsArg > rowsSize) {
@@ -161,12 +156,12 @@ export function DROP(array, rows, columns) {
     if (rows > 0) {
       iRowStart = rows
     } else if (rows < 0) {
-      iRowEnd += rows 
+      iRowEnd += rows
     }
   }
 
   let iColStart = 0,
-      iColEnd = colsSize;
+    iColEnd = colsSize
   if (typeof columns === 'number') {
     const absColumnsArg = Math.abs(columns)
     if (absColumnsArg > colsSize) {
@@ -181,11 +176,8 @@ export function DROP(array, rows, columns) {
   }
 
   for (let iRow = iRowStart; iRow < iRowEnd; iRow++) {
-    const shallowClonedRow = [
-      ...array[iRow].slice(iColStart, iColEnd)
-                    .map(value => value ?? 0)
-    ]
-    dropResult.push(shallowClonedRow);
+    const shallowClonedRow = [...array[iRow].slice(iColStart, iColEnd).map((value) => value ?? 0)]
+    dropResult.push(shallowClonedRow)
   }
 
   return dropResult
