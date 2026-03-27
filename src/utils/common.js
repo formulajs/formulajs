@@ -57,6 +57,18 @@ export function arrayValuesToNumbers(arr) {
   return arr
 }
 
+/**
+ * @param {any[][]} array Matrix input as 2-dim array
+ * @returns {[ number, number ]} Returns matrix size as [ rowCount, columnCount ]
+ */
+export function getMatrixSize(array) {
+  const rowSize = array.length
+  const columnSize = array.reduce((maxColSize, row) => {
+    return Math.max(maxColSize, row.length)
+  }, 0)
+  return [ rowSize, columnSize ]
+}
+
 export function fillMatrix(matrix, fill_value) {
   if (!matrix) {
     return error.value

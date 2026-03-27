@@ -213,6 +213,272 @@ describe('Lookup Reference', () => {
     expect(lookup.COLUMNS([1, 2])).to.equal(1)
   })
 
+  describe('DROP', () => {
+    describe('args: (array, rows, [columns])', () => {
+      describe('should drop rows / columns from array', () => {
+        describe('Only rows provided', () => {
+          it('when rows args = 0 explicitely => equals to provided array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 0)).to.eql([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('when positive rows arg (1 <= rows <= length), drops from start of array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 2)).to.eql([
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 1)).to.eql([
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('when negative rows arg (-length <= rows <= -1), drops from end of array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -2)).to.eql([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -1)).to.eql([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ]
+            ])
+          })
+        })
+        
+        describe('Only columns provided', () => {
+          it('when columns args = 0 explicitely => equals to provided array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 0)).to.eql([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('when positive columns arg (1 <= columns <= length), drops from start of row array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], undefined, 2)).to.eql([
+              [ 'ITEM_3' ],
+              [ 'ITEM_6' ],
+              [ 'ITEM_9' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], null, 1)).to.eql([
+              [ 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('when negative columns arg (-length <= columns <= -1), drops from end of row array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], undefined, -2)).to.eql([
+              [ 'ITEM_1' ],
+              [ 'ITEM_4' ],
+              [ 'ITEM_7' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], null, -1)).to.eql([
+              [ 'ITEM_1', 'ITEM_2' ],
+              [ 'ITEM_4', 'ITEM_5' ],
+              [ 'ITEM_7', 'ITEM_8' ]
+            ])
+          })
+        })
+
+        describe('Rows and columns provided', () => {
+          it('when args = 0 explicitely => equals to provided array', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 0, 0)).to.eql([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('with positive args, drops from start of rows, then start of columns', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 1, 2)).to.eql([
+              [ 'ITEM_6' ],
+              [ 'ITEM_9' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 2, 1)).to.eql([
+              [ 'ITEM_8', 'ITEM_9' ]
+            ])
+          })
+
+          it('with negative args, drops from end of rows, then end of columns', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -1, -2)).to.eql([
+              [ 'ITEM_1' ],
+              [ 'ITEM_4' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -2, -1)).to.eql([
+              [ 'ITEM_1', 'ITEM_2' ]
+            ])
+          })
+
+          it('can mix positive and negative args', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 1, -2)).to.eql([
+              [ 'ITEM_4' ],
+              [ 'ITEM_7' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -2, 1)).to.eql([
+              [ 'ITEM_2', 'ITEM_3' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], 2, 2)).to.eql([
+              [ 'ITEM_9' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+              [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+            ], -2, -2)).to.eql([
+              [ 'ITEM_1' ]
+            ])
+          })
+        })
+
+        describe('Empty cells on array', () => {
+          it('should be replaced by 0s on drop', () => {
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', undefined ],
+              [ 'ITEM_7', null, 'ITEM_9' ]
+            ], 1, 1)).to.eql([
+              [ 'ITEM_5', 0 ],
+              [ 0, 'ITEM_9' ]
+            ])
+            expect(lookup.DROP([
+              [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+              [ 'ITEM_4', 'ITEM_5', undefined ],
+              [ 'ITEM_7', null, 'ITEM_9' ]
+            ], -1, 2)).to.eql([
+              [ 'ITEM_3' ],
+              [ 0 ]
+            ])
+          })
+        })
+      })
+
+      describe('throw error #CALC!', () => {
+        it('when rows (positive or negative) arg exceed rows length', () => {
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], 4)).to.equal(error.calc)
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], -4)).to.equal(error.calc)
+        })
+
+        it('when columns (positive or negative) arg exceed columns length', () => {
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], 0, 4)).to.equal(error.calc)
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], 0, -4)).to.equal(error.calc)
+        })
+
+        it('when at least rows / columns args exceed array rows / columns size', () => {
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], -5, 2)).to.equal(error.calc)
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], 5, -2)).to.equal(error.calc)
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], 2, -5)).to.equal(error.calc)
+          expect(lookup.DROP([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ]
+          ], -2, 5)).to.equal(error.calc)
+        })
+      })
+    })
+  })
+
   describe('MATCH', () => {
     it('should throw an error in case of missing arguments', () => {
       expect(lookup.MATCH()).to.equal(error.na)

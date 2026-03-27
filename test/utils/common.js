@@ -57,6 +57,43 @@ describe('Utils => Common', () => {
       ])
     })
 
+    describe('getMatrixSize', () => {
+      describe('args: (array) => [ rowSize, columnSize ]', () => {
+        it('should return matrix size for regular matrix', () => {
+          expect(utils.getMatrixSize([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5' ],
+            [ 'ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10' ],
+            [ 'ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15' ]
+          ])).to.eql([ 3, 5 ])
+          expect(utils.getMatrixSize([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6' ],
+            [ 'ITEM_7', 'ITEM_8', 'ITEM_9' ],
+            [ 'ITEM_10', 'ITEM_11', 'ITEM_12' ],
+            [ 'ITEM_13', 'ITEM_14', 'ITEM_15' ],
+            [ 'ITEM_16', 'ITEM_17', 'ITEM_18' ]
+          ])).to.eql([ 6, 3 ])
+        })
+
+        it('for unregular matrix (rows with different column size), should return max size column', () => {
+          expect(utils.getMatrixSize([
+            [ 'ITEM_1', 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8' ],
+            [ 'ITEM_9', 'ITEM_10' ],
+            [ 'ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14' ]
+          ])).to.eql([ 4, 5 ])
+          expect(utils.getMatrixSize([
+            [ 'ITEM_1' ],
+            [ 'ITEM_2', 'ITEM_3' ],
+            [ 'ITEM_4', 'ITEM_5' ],
+            [ 'ITEM_6', 'ITEM_7' ],
+            [ 'ITEM_8' ],
+            [ 'ITEM_9', 'ITEM_10', 'ITEM_11' ]
+          ])).to.eql([ 6, 3 ])
+        })
+      })
+    })
+
     describe('fillMatrix', () => {
       it('should fill empty/null/undefined values in a matrix with 0s', () => {
         expect(
