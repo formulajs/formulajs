@@ -34,6 +34,48 @@ export function CHOOSE() {
 }
 
 /**
+ * Returns the specified rows from an array.
+ *
+ * Category: Lookup and reference
+ * 
+ * @param {*} array array range of values or an array constant.
+ * @param {*} row_num1 required row index
+ * @param {*} row_nums additionnal row indexes
+ * @returns
+ */
+export function CHOOSEROWS(array, row_num1, ...row_nums) {
+  if (!Array.isArray(array))
+    return error.value
+
+  const rowArgs = utils.flatten([ row_num1, ...row_nums ])
+  const notInRange = rowArgs.some(row_num => {
+    if (!utils.isDefined(row_num))
+      return true
+
+    const absRowNum = Math.abs(row_num)
+    return !((0 < absRowNum) && (absRowNum <= array.length))
+  });
+
+  if (notInRange)
+    return error.value
+
+  const targetRowNums = rowArgs.map(row_num => {
+    return (row_num < 0)
+         ? row_num + array.length + 1
+         : row_num
+  })
+
+  return targetRowNums.reduce((selectedRows, row_num_selection) => {
+    const clonedRow = [ ...array[--row_num_selection] ].map(value => {
+      return utils.isDefined(value) ? value : 0
+    })
+
+    selectedRows.push(clonedRow)
+    return selectedRows
+  }, [])
+}
+
+/**
  * Returns the column number of a reference.
  *
  * Category: Lookup and reference
