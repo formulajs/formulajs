@@ -139,12 +139,53 @@ describe('Text', () => {
     expect(text.LOWER()).to.equal(error.value)
   })
 
-  it('MID', () => {
-    const data = 'Fluid Flow'
-    expect(text.MID(data, 1, 5)).to.equal('Fluid')
-    expect(text.MID(data, 7, 20)).to.equal('Flow')
-    expect(text.MID(data, 20, 50)).to.equal('')
-    expect(text.MID(0)).to.equal(error.value)
+  describe('MID', () => {
+    describe('args: (text, start_num, num_chars)', () => {
+      describe('should extract numbers of characters (num_chars) from text, starting from start_num (1-based index)', () => {
+        it('examples from Microsoft docs', () => {
+          const data = 'Fluid Flow'
+          expect(text.MID(data, 1, 5)).to.equal('Fluid')
+          expect(text.MID(data, 7, 20)).to.equal('Flow')
+          expect(text.MID(data, 20, 5)).to.equal('')
+        })
+
+        const textTest = 'Programming language and core technology of the Web'
+        it('when start_num + num_chars less than or equal text length => simple substring', () => {
+          expect(text.MID(textTest, 12, 10)).to.equal(' language ')
+          expect(text.MID(textTest, 31, 21)).to.equal('technology of the Web')
+        })
+
+        it('when start_num + num_chars greater than text length => substring until end', () => {
+          expect(text.MID(textTest, 12, 100)).to.equal(' language and core technology of the Web')
+          expect(text.MID(textTest, 31, 25)).to.equal('technology of the Web')
+        })
+
+        it('when start_num greater than text length => returns empty text', () => {
+          const start_num = textTest.length + 1
+          expect(text.MID(textTest, start_num, 1)).to.equal('')
+        })
+
+        it('when non defined text provided => return empty text', () => {
+          expect(text.MID(undefined, 20, 3)).to.equal('')
+          expect(text.MID(null, 52, 8)).to.equal('')
+        })
+
+        it('when text defined and not string typed => treated as string', () => {
+          expect(text.MID(-162, 1, 3)).to.equal('-16')
+          expect(text.MID(162.178925, 3, 6)).to.equal('2.1789')
+          expect(text.MID(true, 3, 2)).to.equal('ue')
+          expect(text.MID(false, 2, 6)).to.equal('alse')
+        })
+      })
+
+      describe('should throw error #VALUE!', () => {
+        it('when start_num or num_chars are not strictly positive (> 1)', () => {
+          expect(text.MID('', -3, 3)).to.equal(error.value)
+          expect(text.MID('', 3, -3)).to.equal(error.value)
+          expect(text.MID('', -3, -3)).to.equal(error.value)
+        })
+      })
+    })
   })
 
   describe('NUMBERVALUE', () => {

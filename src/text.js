@@ -309,16 +309,23 @@ export function LOWER(text) {
  * @returns
  */
 export function MID(text, start_num, num_chars) {
-  if (start_num === undefined || start_num === null) {
-    return error.value
+  if (utils.anyIsError(text, start_num, num_chars)) {
+    return utils.anyError(text, start_num, num_chars)
   }
 
-  start_num = utils.parseNumber(start_num)
-  num_chars = utils.parseNumber(num_chars)
+  const numArgs = [start_num, num_chars].map((num) => utils.parseNumber(num))
+  const validNumArgs = numArgs.every((numArg) => {
+    return !(numArg instanceof Error) && numArg > 0
+  })
+  if (!validNumArgs) return error.value
 
-  if (utils.anyIsError(start_num, num_chars) || typeof text !== 'string') {
-    return num_chars
+  if (!utils.isDefined(text)) {
+    text = ''
+  } else if (typeof text !== 'string') {
+    text = String(text)
   }
+
+  [start_num, num_chars] = numArgs
 
   const begin = start_num - 1
   const end = begin + num_chars
