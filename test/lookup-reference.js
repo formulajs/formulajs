@@ -2466,4 +2466,121 @@ describe('Lookup Reference', () => {
       })
     })
   })
+
+  describe('VSTACK', () => {
+    describe('args: (array, ...otherArrays)', () => {
+      describe('should append vertically array(s) in order', () => {
+        it('single array provided => should return array', () => {
+          expect(
+            lookup.VSTACK([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+              ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+            ])
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+            ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+          ])
+        })
+
+        it('many arrays provided with same column size', () => {
+          expect(
+            lookup.VSTACK(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              [
+                [1, 2, 3],
+                [4, 5, 6],
+                [7, 8, 9]
+              ]
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+          ])
+          expect(
+            lookup.VSTACK(
+              [
+                [1, 2],
+                [3, 4],
+                [5, 6]
+              ],
+              [
+                ['A', 'B'],
+                ['C', 'D']
+              ],
+              [['X', 'Y']]
+            )
+          ).to.eql([
+            [1, 2],
+            [3, 4],
+            [5, 6],
+            ['A', 'B'],
+            ['C', 'D'],
+            ['X', 'Y']
+          ])
+        })
+
+        it('empty cells are replaced by 0s', () => {
+          expect(
+            lookup.VSTACK(
+              [
+                [1, 2],
+                [3, null],
+                [5, 6]
+              ],
+              [
+                [undefined, 'ITEM_1'],
+                ['ITEM_2', null]
+              ],
+              [
+                ['A', 'B'],
+                [undefined, 'D']
+              ],
+              [['X', 'Y']]
+            )
+          ).to.eql([
+            [1, 2],
+            [3, 0],
+            [5, 6],
+            [0, 'ITEM_1'],
+            ['ITEM_2', 0],
+            ['A', 'B'],
+            [0, 'D'],
+            ['X', 'Y']
+          ])
+        })
+      })
+
+      describe('Error handler', () => {
+        it('when many arrays provided with non-same column size => pad with #N/A on right', () => {
+          expect(
+            lookup.VSTACK(
+              [
+                [1, 2],
+                [3, 4],
+                [5, 6]
+              ],
+              [
+                ['A', 'B', 'C'],
+                ['D', 'E', 'F']
+              ],
+              [[error.value]]
+            )
+          ).to.eql([
+            [1, 2, error.na],
+            [3, 4, error.na],
+            [5, 6, error.na],
+            ['A', 'B', 'C'],
+            ['D', 'E', 'F'],
+            [error.value, error.na, error.na]
+          ])
+        })
+      })
+    })
+  })
 })
