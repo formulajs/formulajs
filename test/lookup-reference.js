@@ -2466,4 +2466,113 @@ describe('Lookup Reference', () => {
       })
     })
   })
+
+  describe('HSTACK', () => {
+    describe('args: (array, ...otherArrays)', () => {
+      describe('should append horizontally array(s) in order', () => {
+        it('single array provided => should return array', () => {
+          expect(
+            lookup.HSTACK([
+              ['ITEM_1', 'ITEM_2'],
+              ['ITEM_3', 'ITEM_4'],
+              ['ITEM_5', 'ITEM_6'],
+              ['ITEM_7', 'ITEM_8']
+            ])
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2'],
+            ['ITEM_3', 'ITEM_4'],
+            ['ITEM_5', 'ITEM_6'],
+            ['ITEM_7', 'ITEM_8']
+          ])
+        })
+
+        it('many arrays provided with same row size', () => {
+          expect(
+            lookup.HSTACK(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              [
+                [1, 2, 3, 4],
+                [5, 6, 7, 8]
+              ]
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3', 1, 2, 3, 4],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6', 5, 6, 7, 8]
+          ])
+          expect(
+            lookup.HSTACK(
+              [
+                [1, 2],
+                [3, 4],
+                [5, 6]
+              ],
+              [
+                ['A', 'B'],
+                ['C', 'D'],
+                ['E', 'F']
+              ],
+              [['ITEM_1'], ['ITEM_2'], ['ITEM_3']]
+            )
+          ).to.eql([
+            [1, 2, 'A', 'B', 'ITEM_1'],
+            [3, 4, 'C', 'D', 'ITEM_2'],
+            [5, 6, 'E', 'F', 'ITEM_3']
+          ])
+        })
+
+        it('empty cells are replaced by 0s', () => {
+          expect(
+            lookup.HSTACK(
+              [
+                [1, 2],
+                [3, null],
+                [5, 6]
+              ],
+              [
+                [undefined, 'ITEM_1'],
+                ['ITEM_2', null],
+                ['ITEM_3', null]
+              ],
+              [
+                ['A', 'B'],
+                [undefined, 'D'],
+                ['E', 'F']
+              ],
+              [['X'], ['Y'], ['Z']]
+            )
+          ).to.eql([
+            [1, 2, 0, 'ITEM_1', 'A', 'B', 'X'],
+            [3, 0, 'ITEM_2', 0, 0, 'D', 'Y'],
+            [5, 6, 'ITEM_3', 0, 'E', 'F', 'Z']
+          ])
+        })
+      })
+
+      describe('Error handler', () => {
+        it('when many arrays provided with non-same row size => pad with #N/A on bottom', () => {
+          expect(
+            lookup.HSTACK(
+              [
+                [1, 2],
+                [3, 4],
+                [5, 6]
+              ],
+              [
+                ['A', 'B', 'C'],
+                ['D', 'E', 'F']
+              ],
+              [[error.value]]
+            )
+          ).to.eql([
+            [1, 2, 'A', 'B', 'C', error.value],
+            [3, 4, 'D', 'E', 'F', error.na],
+            [5, 6, error.na, error.na, error.na, error.na]
+          ])
+        })
+      })
+    })
+  })
 })

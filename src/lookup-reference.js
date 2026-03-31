@@ -538,3 +538,42 @@ export function VLOOKUP(lookup_value, table_array, col_index_num, range_lookup) 
 
   return result
 }
+
+/**
+ * Appends arrays horizontally and in sequence to return a larger array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array
+ * @param  {...*} otherArrays
+ * @returns
+ */
+export function HSTACK(array, ...otherArrays) {
+  const arrays = [array, ...otherArrays]
+
+  let maxRowCount = 0
+  let totalColCount = 0
+  const colsPerArray = []
+  for (const currentArray of arrays) {
+    const [rowSize, colSize] = utils.getMatrixSize(currentArray)
+    maxRowCount = Math.max(maxRowCount, rowSize)
+    totalColCount += colSize
+    colsPerArray.push(colSize)
+  }
+
+  const arrayResult = Array.from({ length: maxRowCount }, () => new Array(totalColCount))
+
+  let iColResult = 0
+  for (let iArr = 0; iArr < arrays.length; iArr++) {
+    const currentArray = arrays[iArr]
+    const currentArrayColCount = colsPerArray[iArr]
+    for (let iCol = 0; iCol < currentArrayColCount; iCol++) {
+      for (let iRow = 0; iRow < maxRowCount; iRow++) {
+        arrayResult[iRow][iColResult] = currentArray[iRow]?.[iCol] ?? (iRow < currentArray.length ? 0 : error.na)
+      }
+      iColResult++
+    }
+  }
+
+  return arrayResult
+}
