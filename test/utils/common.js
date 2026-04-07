@@ -102,6 +102,46 @@ describe('Utils => Common', () => {
       })
     })
 
+    describe('createMatrix', () => {
+      describe('args: (rowSize, columnSize) => [][]', () => {
+        it('should create empty matrix with dimension rowSize x columnSize', () => {
+          expect(
+            utils.createMatrix(3, 3)
+          ).to.eql([
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined]
+          ])
+          expect(
+            utils.createMatrix(2, 5)
+          ).to.eql([
+            [undefined, undefined, undefined, undefined, undefined],
+            [undefined, undefined, undefined, undefined, undefined]
+          ])
+          expect(
+            utils.createMatrix(4, 3)
+          ).to.eql([
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined],
+            [undefined, undefined, undefined]
+          ])
+        })
+
+        it('should throw error #N/A when row and/or col size not defined', () => {
+          expect(utils.createMatrix(undefined, undefined)).to.equal(error.na)
+          expect(utils.createMatrix(undefined, 3)).to.equal(error.na)
+          expect(utils.createMatrix(5, undefined)).to.equal(error.na)
+        })
+
+        it('should throw error #VALUE! when row and/or col size not strictly positive', () => {
+          expect(utils.createMatrix(-5, -2)).to.equal(error.value)
+          expect(utils.createMatrix(3, 0)).to.equal(error.value)
+          expect(utils.createMatrix(-1, 10)).to.equal(error.value)
+        })
+      })
+    })
+
     describe('fillMatrix', () => {
       it('should fill empty/null/undefined values in a matrix with 0s', () => {
         expect(
