@@ -105,22 +105,16 @@ describe('Utils => Common', () => {
     describe('createMatrix', () => {
       describe('args: (rowSize, columnSize) => [][]', () => {
         it('should create empty matrix with dimension rowSize x columnSize', () => {
-          expect(
-            utils.createMatrix(3, 3)
-          ).to.eql([
+          expect(utils.createMatrix(3, 3)).to.eql([
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],
             [undefined, undefined, undefined]
           ])
-          expect(
-            utils.createMatrix(2, 5)
-          ).to.eql([
+          expect(utils.createMatrix(2, 5)).to.eql([
             [undefined, undefined, undefined, undefined, undefined],
             [undefined, undefined, undefined, undefined, undefined]
           ])
-          expect(
-            utils.createMatrix(4, 3)
-          ).to.eql([
+          expect(utils.createMatrix(4, 3)).to.eql([
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],
             [undefined, undefined, undefined],

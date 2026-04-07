@@ -71,22 +71,16 @@ export function getMatrixSize(array) {
 
 /**
  * Create new 2-dim array filled with undefined values
- * @param {Number} rowSize 
- * @param {Number} columnSize 
+ * @param {Number} rowSize
+ * @param {Number} columnSize
  * @returns {undefined[][]}
  */
 export function createMatrix(rowSize, columnSize) {
   const sizeArgs = [rowSize, columnSize]
-  if (sizeArgs.some(size => !isDefined(size))) return error.na
-  if (sizeArgs.some(size => size <= 0)) return error.value
+  if (sizeArgs.some((size) => !isDefined(size))) return error.na
+  if (sizeArgs.some((size) => size <= 0)) return error.value
 
-  return Array.from(
-    {length: rowSize},
-    () => Array.from(
-      {length: columnSize},
-      () => undefined
-    )
-  )
+  return Array.from({ length: rowSize }, () => Array.from({ length: columnSize }, () => undefined))
 }
 
 export function fillMatrix(matrix, fill_value) {
