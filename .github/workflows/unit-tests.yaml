@@ -5,6 +5,9 @@ on:
       - '**'
     tags-ignore:
       - '**'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   unit-tests:

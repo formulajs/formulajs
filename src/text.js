@@ -325,7 +325,7 @@ export function MID(text, start_num, num_chars) {
     text = String(text)
   }
 
-  [start_num, num_chars] = numArgs
+  ;[start_num, num_chars] = numArgs
 
   const begin = start_num - 1
   const end = begin + num_chars
