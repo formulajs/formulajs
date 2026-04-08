@@ -243,7 +243,7 @@ describe('Date & Time', () => {
   it('TIMEVALUE', () => {
     expect(dateTime.TIMEVALUE('1/1/1900 00:00:00')).to.equal(0)
     expect(dateTime.TIMEVALUE('1/1/1900 12:00:00')).to.approximately(0.5, 1e-9)
-    expect(dateTime.TIMEVALUE('a')).to.equal(error.value)
+      expect(dateTime.TIMEVALUE('a')).to.equal(error.value)
   })
 
   describe('TODAY', () => {
