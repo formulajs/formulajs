@@ -647,3 +647,38 @@ export function HSTACK(array, ...otherArrays) {
 
   return arrayResult
 }
+
+/**
+ * Appends arrays vertically and in sequence to return a larger array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array
+ * @param  {...*} otherArrays
+ * @returns
+ */
+export function VSTACK(array, ...otherArrays) {
+  const arrays = [array, ...otherArrays]
+
+  let maxColCount = 0
+  let totalRowCount = 0
+  for (const currentArray of arrays) {
+    const [rowSize, colSize] = utils.getMatrixSize(currentArray)
+    maxColCount = Math.max(maxColCount, colSize)
+    totalRowCount += rowSize
+  }
+
+  const arrayResult = new Array(totalRowCount)
+  let currentArray
+  let iRowResult = -1
+  while ((currentArray = arrays.shift()) !== undefined) {
+    for (let iRow = 0; iRow < currentArray.length; iRow++) {
+      arrayResult[++iRowResult] = new Array(maxColCount)
+      for (let iCol = 0; iCol < maxColCount; iCol++) {
+        arrayResult[iRowResult][iCol] = currentArray[iRow][iCol] ?? (iCol < currentArray[iRow].length ? 0 : error.na)
+      }
+    }
+  }
+
+  return arrayResult
+}
