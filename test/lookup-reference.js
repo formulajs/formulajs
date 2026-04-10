@@ -696,6 +696,173 @@ describe('Lookup Reference', () => {
     })
   })
 
+  describe('EXPAND', () => {
+    describe('args: (array, [rows], [columns], [pad_with])', () => {
+      describe('should expands given array to specified row and column dimensions', () => {
+        it('examples from Microsoft docs', () => {
+          expect(
+            lookup.EXPAND(
+              [
+                [1, 2],
+                [3, 4]
+              ],
+              3,
+              3
+            )
+          ).to.eql([
+            [1, 2, error.na],
+            [3, 4, error.na],
+            [error.na, error.na, error.na]
+          ])
+          expect(
+            lookup.EXPAND(
+              [
+                [1, 2],
+                [3, 4]
+              ],
+              3,
+              3,
+              '-'
+            )
+          ).to.eql([
+            [1, 2, '-'],
+            [3, 4, '-'],
+            ['-', '-', '-']
+          ])
+        })
+
+        it('when neither rows nor columns provided => returns input array (shallow) copy', () => {
+          expect(
+            lookup.EXPAND([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+              ['ITEM_4', 'ITEM_5', 'ITEM_6']
+            ])
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6']
+          ])
+        })
+
+        it('when rows and / or columns provided (with pad_with) => init new matrix and fill cells from top-left from given array', () => {
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              3,
+              undefined,
+              'PAD_WITH_VALUE'
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+            ['PAD_WITH_VALUE', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE']
+          ])
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              undefined,
+              5,
+              'PAD_WITH_VALUE'
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE'],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE']
+          ])
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              3,
+              4,
+              'PAD_WITH_VALUE'
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3', 'PAD_WITH_VALUE'],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6', 'PAD_WITH_VALUE'],
+            ['PAD_WITH_VALUE', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE']
+          ])
+        })
+
+        it('empty cell from input array will be replaced by 0s', () => {
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', undefined, 'ITEM_3'],
+                [null, 'ITEM_5', undefined]
+              ],
+              3,
+              4,
+              'PAD_WITH_VALUE'
+            )
+          ).to.eql([
+            ['ITEM_1', 0, 'ITEM_3', 'PAD_WITH_VALUE'],
+            [0, 'ITEM_5', 0, 'PAD_WITH_VALUE'],
+            ['PAD_WITH_VALUE', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE', 'PAD_WITH_VALUE']
+          ])
+        })
+      })
+
+      describe('throws error', () => {
+        it('when defined rows and / or columns less than given array size => #VALUE!', () => {
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              1,
+              2
+            )
+          ).to.equal(error.value)
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              3,
+              1
+            )
+          ).to.equal(error.value)
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              1,
+              4
+            )
+          ).to.equal(error.value)
+        })
+
+        it('when no pad_with provided => #N/A will replace empty cell after expand', () => {
+          expect(
+            lookup.EXPAND(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              3,
+              4
+            )
+          ).to.eql([
+            ['ITEM_1', 'ITEM_2', 'ITEM_3', error.na],
+            ['ITEM_4', 'ITEM_5', 'ITEM_6', error.na],
+            [error.na, error.na, error.na, error.na]
+          ])
+        })
+      })
+    })
+  })
+
   describe('MATCH', () => {
     it('should throw an error in case of missing arguments', () => {
       expect(lookup.MATCH()).to.equal(error.na)

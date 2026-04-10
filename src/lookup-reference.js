@@ -184,6 +184,39 @@ export function DROP(array, rows, columns) {
 }
 
 /**
+ * Expands or pads an array to specified row and column dimensions.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The array to expand.
+ * @param {*} rows The number of rows in the expanded array. If missing, rows will not be expanded.
+ * @param {*} columns The number of columns in the expanded array. If missing, columns will not be expanded.
+ * @param {*} pad_with The value with which to pad. If missing, #N/A will be used.
+ */
+export function EXPAND(array, rows, columns, pad_with) {
+  const [rowSizeOriginal, columnSizeOriginal] = utils.getMatrixSize(array)
+
+  if (!utils.isDefined(rows)) rows = rowSizeOriginal
+  if (!utils.isDefined(columns)) columns = columnSizeOriginal
+
+  if (rows < rowSizeOriginal) return error.value
+  if (columns < columnSizeOriginal) return error.value
+
+  const result = utils.createMatrix(rows, columns)
+  for (let iRow = 0; iRow < rows; iRow++) {
+    for (let iCol = 0; iCol < columns; iCol++) {
+      let value = array[iRow]?.[iCol]
+      if (!utils.isDefined(value))
+        value = iRow < rowSizeOriginal && iCol < columnSizeOriginal ? 0 : (pad_with ?? error.na)
+
+      result[iRow][iCol] = value
+    }
+  }
+
+  return result
+}
+
+/**
  * Looks in the top row of an array and returns the value of the indicated value.
  *
  * Category: Lookup and reference
