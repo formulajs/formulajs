@@ -34,6 +34,43 @@ export function CHOOSE() {
 }
 
 /**
+ * Returns the specified columns from an array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array range of values or an array constant.
+ * @param {*} col_num1 required column index
+ * @param {*} col_nums additionnal column indexes
+ * @returns
+ */
+export function CHOOSECOLS(array, col_num1, ...col_nums) {
+  if (!Array.isArray(array)) return error.value
+
+  const colArgs = utils.flatten([col_num1, ...col_nums])
+  const [rowsSize, colsSize] = utils.getMatrixSize(array)
+  const notInRange = colArgs.some((col_num) => {
+    if (!utils.isDefined(col_num)) return true
+
+    const absColNum = Math.abs(col_num)
+    return !(0 < absColNum && absColNum <= colsSize)
+  })
+  if (notInRange) return error.value
+
+  const targetColNums = colArgs.map((col_num) => {
+    return col_num < 0 ? col_num + colsSize + 1 : col_num
+  })
+
+  const arrayResult = new Array(rowsSize)
+  for (let iRow = 0; iRow < rowsSize; iRow++) {
+    arrayResult[iRow] = new Array(targetColNums.length)
+    for (let iCol = 0; iCol < targetColNums.length; iCol++) {
+      arrayResult[iRow][iCol] = array[iRow][targetColNums[iCol] - 1] ?? 0
+    }
+  }
+  return arrayResult
+}
+
+/**
  * Returns the specified rows from an array.
  *
  * Category: Lookup and reference

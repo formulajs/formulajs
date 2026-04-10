@@ -13,6 +13,225 @@ describe('Lookup Reference', () => {
     expect(lookup.CHOOSE(255, 'jima')).to.equal(error.value)
   })
 
+  describe('CHOOSECOLS', () => {
+    describe('args: (array, col_num1, ...col_nums)', () => {
+      describe('Should select column(s) from array by index(es) (1-based)', () => {
+        it('single col_num provided', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+              ],
+              2
+            )
+          ).to.eql([['ITEM_2'], ['ITEM_6'], ['ITEM_10']])
+        })
+        it('many col_nums provided => selection should follow col_nums provided order', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+              ],
+              2,
+              4,
+              1
+            )
+          ).to.eql([
+            ['ITEM_2', 'ITEM_4', 'ITEM_1'],
+            ['ITEM_6', 'ITEM_8', 'ITEM_5'],
+            ['ITEM_10', 'ITEM_12', 'ITEM_9']
+          ])
+        })
+        it('many col_nums provided at least twice', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', 'ITEM_19', 'ITEM_20']
+              ],
+              3,
+              5,
+              2,
+              5,
+              3
+            )
+          ).to.eql([
+            ['ITEM_3', 'ITEM_5', 'ITEM_2', 'ITEM_5', 'ITEM_3'],
+            ['ITEM_8', 'ITEM_10', 'ITEM_7', 'ITEM_10', 'ITEM_8'],
+            ['ITEM_13', 'ITEM_15', 'ITEM_12', 'ITEM_15', 'ITEM_13'],
+            ['ITEM_18', 'ITEM_20', 'ITEM_17', 'ITEM_20', 'ITEM_18']
+          ])
+        })
+        it('for column with empty cell => values will be replaced by 0', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', undefined, 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', undefined, 'ITEM_13', 'ITEM_14', null],
+                [null, 'ITEM_17', 'ITEM_18', null, 'ITEM_20']
+              ],
+              4,
+              1,
+              2,
+              5
+            )
+          ).to.eql([
+            ['ITEM_4', 'ITEM_1', 'ITEM_2', 'ITEM_5'],
+            ['ITEM_9', 'ITEM_6', 'ITEM_7', 'ITEM_10'],
+            ['ITEM_14', 'ITEM_11', 0, 0],
+            [0, 0, 'ITEM_17', 'ITEM_20']
+          ])
+        })
+        it('can provide col_num(s) as array', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', 'ITEM_19', 'ITEM_20']
+              ],
+              [2]
+            )
+          ).to.eql([['ITEM_2'], ['ITEM_7'], ['ITEM_12'], ['ITEM_17']])
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', 'ITEM_19', 'ITEM_20']
+              ],
+              3,
+              [2, 5],
+              [3, 4, 1]
+            )
+          ).to.eql([
+            ['ITEM_3', 'ITEM_2', 'ITEM_5', 'ITEM_3', 'ITEM_4', 'ITEM_1'],
+            ['ITEM_8', 'ITEM_7', 'ITEM_10', 'ITEM_8', 'ITEM_9', 'ITEM_6'],
+            ['ITEM_13', 'ITEM_12', 'ITEM_15', 'ITEM_13', 'ITEM_14', 'ITEM_11'],
+            ['ITEM_18', 'ITEM_17', 'ITEM_20', 'ITEM_18', 'ITEM_19', 'ITEM_16']
+          ])
+        })
+        it('when negative col_num(s) provided => select back from the end of array column', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', 'ITEM_19', 'ITEM_20']
+              ],
+              -2
+            )
+          ).to.eql([['ITEM_4'], ['ITEM_9'], ['ITEM_14'], ['ITEM_19']])
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4', 'ITEM_5'],
+                ['ITEM_6', 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', 'ITEM_14', 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', 'ITEM_19', 'ITEM_20']
+              ],
+              -2,
+              4
+            )
+          ).to.eql([
+            ['ITEM_4', 'ITEM_4'],
+            ['ITEM_9', 'ITEM_9'],
+            ['ITEM_14', 'ITEM_14'],
+            ['ITEM_19', 'ITEM_19']
+          ])
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', undefined, 'ITEM_3', 'ITEM_4', null],
+                [null, 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+                ['ITEM_11', 'ITEM_12', 'ITEM_13', undefined, 'ITEM_15'],
+                ['ITEM_16', 'ITEM_17', 'ITEM_18', undefined, 'ITEM_20']
+              ],
+              [-1, -2],
+              [-3],
+              [-4, -5, 1, 2],
+              3,
+              4,
+              5
+            )
+          ).to.eql([
+            [0, 'ITEM_4', 'ITEM_3', 0, 'ITEM_1', 'ITEM_1', 0, 'ITEM_3', 'ITEM_4', 0],
+            ['ITEM_10', 'ITEM_9', 'ITEM_8', 'ITEM_7', 0, 0, 'ITEM_7', 'ITEM_8', 'ITEM_9', 'ITEM_10'],
+            ['ITEM_15', 0, 'ITEM_13', 'ITEM_12', 'ITEM_11', 'ITEM_11', 'ITEM_12', 'ITEM_13', 0, 'ITEM_15'],
+            ['ITEM_20', 0, 'ITEM_18', 'ITEM_17', 'ITEM_16', 'ITEM_16', 'ITEM_17', 'ITEM_18', 0, 'ITEM_20']
+          ])
+        })
+      })
+
+      describe('Error cases', () => {
+        it('when no args provided', () => expect(lookup.CHOOSECOLS()).to.equal(error.value))
+        it('when array provided without any col_nums', () =>
+          expect(lookup.CHOOSECOLS([['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4']])).to.equal(error.value))
+        it('when 0s provided on any col_nums args', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+              ],
+              0
+            )
+          ).to.equal(error.value)
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+              ],
+              1,
+              [0, 2]
+            )
+          ).to.equal(error.value)
+        })
+        it('when any col_nums args exceed col length', () => {
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+              ],
+              5
+            )
+          ).to.equal(error.value)
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+              ],
+              -5
+            )
+          ).to.equal(error.value)
+          expect(
+            lookup.CHOOSECOLS(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+              ],
+              -3,
+              [3, 10]
+            )
+          ).to.equal(error.value)
+        })
+      })
+    })
+  })
+
   describe('CHOOSEROWS', () => {
     describe('Error cases', () => {
       it('when no args provided', () => expect(lookup.CHOOSEROWS()).to.equal(error.value))
