@@ -512,6 +512,75 @@ export function SORT(array, sort_index = 1, sort_order = 1, by_col = false) {
 }
 
 /**
+ * Returns a specified number of contiguous rows or columns from the start or end of an array.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The array from which to take rows or columns.
+ * @param {*} rows The number of rows to take. A positive value takes from the start, a negative value takes from the end.
+ * @param {*} columns The number of columns to take. A positive value takes from the start, a negative value takes from the end.
+ * @returns
+ */
+export function TAKE(array, rows, columns) {
+  if (utils.anyIsError(array, rows, columns)) {
+    return utils.anyError(array, rows, columns)
+  }
+
+  if (!(array instanceof Array)) {
+    return error.value
+  }
+
+  const [rowsSize, colsSize] = utils.getMatrixSize(array)
+
+  let iRowStart = 0,
+    iRowEnd = rowsSize - 1
+  if (typeof rows === 'number') {
+    if (rows === 0) {
+      return error.calc
+    } else {
+      const rowAbs = Math.abs(rows)
+      if (rowAbs <= rowsSize) {
+        if (rows < 0) {
+          iRowStart = rowsSize + rows
+        } else {
+          iRowEnd = rows - 1
+        }
+      }
+    }
+  }
+
+  let iColStart = 0,
+    iColEnd = colsSize - 1
+  if (typeof columns === 'number') {
+    if (columns === 0) {
+      return error.calc
+    } else {
+      const colAbs = Math.abs(columns)
+      if (colAbs <= colsSize) {
+        if (columns < 0) {
+          iColStart = colsSize + columns
+        } else {
+          iColEnd = columns - 1
+        }
+      }
+    }
+  }
+
+  const takeResult = utils.createMatrix(iRowEnd - iRowStart + 1, iColEnd - iColStart + 1)
+  let iRowResult = -1,
+    iColResult
+  for (let iRow = iRowStart; iRow <= iRowEnd; iRow++) {
+    iRowResult++
+    iColResult = -1
+    for (let iCol = iColStart; iCol <= iColEnd; iCol++) {
+      takeResult[iRowResult][++iColResult] = array[iRow]?.[iCol] ?? 0
+    }
+  }
+
+  return takeResult
+}
+
+/**
  * Returns the transpose of an array.
  *
  * Category: Lookup and reference
