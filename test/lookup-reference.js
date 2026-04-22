@@ -2221,6 +2221,379 @@ describe('Lookup Reference', () => {
     })
   })
 
+  describe('TAKE', () => {
+    describe('args: (array, rows, [columns])', () => {
+      describe('should take rows / columns from array', () => {
+        describe('Only rows provided', () => {
+          it('when positive rows arg, takes from start of array', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                2
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+              ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                1
+              )
+            ).to.eql([['ITEM_1', 'ITEM_2', 'ITEM_3']])
+          })
+
+          it('when negative rows arg, takes from end of array', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                -2
+              )
+            ).to.eql([
+              ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+              ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                -1
+              )
+            ).to.eql([['ITEM_7', 'ITEM_8', 'ITEM_9']])
+          })
+
+          it('when positive / negative rows arg exceed array row size, takes all rows', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                4
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+              ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+              ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                -5
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+              ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+              ['ITEM_7', 'ITEM_8', 'ITEM_9']
+            ])
+          })
+        })
+
+        describe('Only columns provided', () => {
+          it('when positive columns arg, takes from start of column array', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                undefined,
+                2
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2'],
+              ['ITEM_5', 'ITEM_6'],
+              ['ITEM_9', 'ITEM_10']
+            ])
+          })
+
+          it('when negative columns arg, takes from end of column array', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                undefined,
+                -2
+              )
+            ).to.eql([
+              ['ITEM_3', 'ITEM_4'],
+              ['ITEM_7', 'ITEM_8'],
+              ['ITEM_11', 'ITEM_12']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                null,
+                -1
+              )
+            ).to.eql([['ITEM_3'], ['ITEM_6'], ['ITEM_9']])
+          })
+
+          it('when positive / negative columns arg exceed array col size, takes all columns', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                undefined,
+                5
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+              ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+              ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                undefined,
+                -4
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+              ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+              ['ITEM_7', 'ITEM_8', 'ITEM_9']
+            ])
+          })
+        })
+
+        describe('Rows and columns provided', () => {
+          it('with positive args, takes from start of rows and columns', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                2,
+                2
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2'],
+              ['ITEM_5', 'ITEM_6']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                1,
+                1
+              )
+            ).to.eql([['ITEM_1']])
+          })
+
+          it('with negative args, takes from end of rows and columns', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                -2,
+                -2
+              )
+            ).to.eql([
+              ['ITEM_7', 'ITEM_8'],
+              ['ITEM_11', 'ITEM_12']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                -1,
+                -1
+              )
+            ).to.eql([['ITEM_9']])
+          })
+
+          it('can mix positive and negative args', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3', 'ITEM_4'],
+                  ['ITEM_5', 'ITEM_6', 'ITEM_7', 'ITEM_8'],
+                  ['ITEM_9', 'ITEM_10', 'ITEM_11', 'ITEM_12']
+                ],
+                2,
+                -1
+              )
+            ).to.eql([['ITEM_4'], ['ITEM_8']])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                -1,
+                2
+              )
+            ).to.eql([['ITEM_7', 'ITEM_8']])
+          })
+
+          it('with at least rows or columns exceeding array row / col size, takes all rows / columns', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                5,
+                -1
+              )
+            ).to.eql([['ITEM_3'], ['ITEM_6'], ['ITEM_9']])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                2,
+                -4
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+              ['ITEM_4', 'ITEM_5', 'ITEM_6']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                4,
+                -10
+              )
+            ).to.eql([
+              ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+              ['ITEM_4', 'ITEM_5', 'ITEM_6'],
+              ['ITEM_7', 'ITEM_8', 'ITEM_9']
+            ])
+          })
+        })
+
+        describe('Empty cells on array', () => {
+          it('should be replaced by 0s on take', () => {
+            expect(
+              lookup.TAKE(
+                [
+                  ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', undefined, 'ITEM_6'],
+                  [null, 'ITEM_8', 'ITEM_9']
+                ],
+                -2,
+                -2
+              )
+            ).to.eql([
+              [0, 'ITEM_6'],
+              ['ITEM_8', 'ITEM_9']
+            ])
+            expect(
+              lookup.TAKE(
+                [
+                  [null, 'ITEM_2', 'ITEM_3'],
+                  ['ITEM_4', undefined, 'ITEM_6'],
+                  ['ITEM_7', 'ITEM_8', 'ITEM_9']
+                ],
+                2,
+                1
+              )
+            ).to.eql([[0], ['ITEM_4']])
+          })
+        })
+      })
+
+      describe('throw error #CALC!', () => {
+        it('when at least rows / columns args is 0', () => {
+          expect(
+            lookup.TAKE(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              0
+            )
+          ).to.equal(error.calc)
+          expect(
+            lookup.TAKE(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              0,
+              2
+            )
+          ).to.equal(error.calc)
+          expect(
+            lookup.TAKE(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              undefined,
+              0
+            )
+          ).to.equal(error.calc)
+          expect(
+            lookup.TAKE(
+              [
+                ['ITEM_1', 'ITEM_2', 'ITEM_3'],
+                ['ITEM_4', 'ITEM_5', 'ITEM_6']
+              ],
+              -2,
+              0
+            )
+          ).to.equal(error.calc)
+        })
+      })
+    })
+  })
+
   it('TRANSPOSE', () => {
     expect(lookup.TRANSPOSE()).to.equal(error.na)
     expect(lookup.TRANSPOSE([])).to.eql([])
