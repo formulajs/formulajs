@@ -967,26 +967,12 @@ describe('Math & Trig', () => {
   it('SUMIFS', () => {
     expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '<9')).to.equal(2)
     expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '*')).to.equal(5)
-
-    // Excel ignores text in the sum range, even when the corresponding row meets the criteria.
     expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(3)
-
-    // Whole-column Excel ranges commonly include a text header that is not part of the matched rows.
     expect(mathTrig.SUMIFS(['Achieved Value', 10852, 2500], ['UID', 'C001048', 'C002032'], 'C001048')).to.equal(10852)
-
-    // An empty string returned by another formula is also ignored when its row meets the criteria.
     expect(mathTrig.SUMIFS(['', 10852, 2500], ['C001048', 'C001048', 'C002032'], 'C001048')).to.equal(10852)
-
-    // When every matching sum cell is text or an empty string, Excel returns zero.
     expect(mathTrig.SUMIFS(['Header', ''], [1, 1], 1)).to.equal(0)
-
-    // Actual blank cells are also treated as zero without hiding matching numeric values.
     expect(mathTrig.SUMIFS([undefined, null, 3], [1, 1, 1], 1)).to.equal(3)
-
-    // Non-numeric sum cells remain zero when more than one criteria range is evaluated.
     expect(mathTrig.SUMIFS(['', 2, 'ignored', 4], ['A', 'A', 'A', 'A'], 'A', [0, 1, 1, 0], 1)).to.equal(2)
-
-    // Flattening a two-dimensional range preserves each sum value's criteria alignment.
     expect(
       mathTrig.SUMIFS(
         [
