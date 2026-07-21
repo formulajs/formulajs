@@ -1785,7 +1785,10 @@ export function SUMIF(range, criteria, sum_range) {
  * @returns
  */
 export function SUMIFS() {
-  const values = utils.applyCriteria(...arguments)
+  const args = utils.argsToArray(arguments)
+  args[0] = utils.arrayValuesToNumbers(utils.flatten(args[0]))
+
+  const values = utils.applyCriteria(...args)
   return SUM(values)
 }
 
