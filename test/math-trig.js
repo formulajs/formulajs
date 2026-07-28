@@ -967,7 +967,28 @@ describe('Math & Trig', () => {
   it('SUMIFS', () => {
     expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '<9')).to.equal(2)
     expect(mathTrig.SUMIFS([1, 2, 3], [4, 5, 6], '>4', [7, 8, 9], '*')).to.equal(5)
-    expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(error.value)
+    expect(mathTrig.SUMIFS([1, 'invalid', 3], [4, 5, 6], '>4')).to.equal(3)
+    expect(mathTrig.SUMIFS(['Achieved Value', 10852, 2500], ['UID', 'C001048', 'C002032'], 'C001048')).to.equal(10852)
+    expect(mathTrig.SUMIFS(['', 10852, 2500], ['C001048', 'C001048', 'C002032'], 'C001048')).to.equal(10852)
+    expect(mathTrig.SUMIFS(['Header', ''], [1, 1], 1)).to.equal(0)
+    expect(mathTrig.SUMIFS([undefined, null, 3], [1, 1, 1], 1)).to.equal(3)
+    expect(mathTrig.SUMIFS(['', 2, 'ignored', 4], ['A', 'A', 'A', 'A'], 'A', [0, 1, 1, 0], 1)).to.equal(2)
+    expect(
+      mathTrig.SUMIFS(
+        [
+          ['Header', 10],
+          [20, '']
+        ],
+        [
+          [0, 1],
+          [1, 1]
+        ],
+        1
+      )
+    ).to.equal(30)
+
+    // Preserve Formula.js' existing Excel-compatible conversion of logical sum cells.
+    expect(mathTrig.SUMIFS([true, false, 3], [1, 1, 1], 1)).to.equal(4)
   })
 
   it('SUMPRODUCT', () => {
