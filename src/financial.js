@@ -293,8 +293,8 @@ export function DB(cost, salvage, life, period, month) {
     return error.value
   }
 
-  // Return error if any of the parameters is negative
-  if (cost < 0 || salvage < 0 || life < 0 || period < 0) {
+  // Excel returns #NUM! when life or period is not positive
+  if (cost < 0 || salvage < 0 || life <= 0 || period <= 0) {
     return error.num
   }
 
@@ -368,8 +368,8 @@ export function DDB(cost, salvage, life, period, factor) {
     return error.value
   }
 
-  // Return error if any of the parameters is negative or if factor is null
-  if (cost < 0 || salvage < 0 || life < 0 || period < 0 || factor <= 0) {
+  // Excel returns #NUM! when life or period is not positive
+  if (cost < 0 || salvage < 0 || life <= 0 || period < 1 || factor <= 0) {
     return error.num
   }
 
