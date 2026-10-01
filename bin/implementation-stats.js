@@ -3,8 +3,8 @@ import { JSDOM } from 'jsdom'
 import * as formulajs from './../src/index.js'
 
 const FILE_NAME = 'IMPLEMENTATION_STATS'
-const URL_BASE = 'https://support.microsoft.com'
-const URL = `${URL_BASE}/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c6d90033e188`
+const URL_BASE = 'https://support.microsoft.com/en-us/excel'
+const URL = `${URL_BASE}/excel-functions-alphabetical`
 
 /**
  * Generates a Markdown table from the stats array.
@@ -59,7 +59,7 @@ async function fetchAndProcessData() {
     const response = await fetch(URL)
     const data = await response.text()
     const dom = new JSDOM(data)
-    const rows = dom.window.document.querySelectorAll('.ocpIntroduction table tbody tr')
+    const rows = dom.window.document.querySelectorAll('.learnArticleContent table tbody tr')
 
     if (!rows.length) {
       throw new Error('No rows found in the table. The webpage structure might have changed.')
@@ -83,7 +83,7 @@ async function fetchAndProcessData() {
       description = description.endsWith('.') ? description : description + '.'
 
       let docUrlPath = cells[0].innerHTML.match(fnDocUrlPathRegex)?.groups?.docUrlPath ?? null
-      if (docUrlPath) docUrlPath = `${URL_BASE}${docUrlPath}`
+      if (docUrlPath) docUrlPath = `${URL_BASE}/${docUrlPath}`
 
       const implemented = typeof name.split('.').reduce((o, k) => o?.[k], formulajs) === 'function'
 
