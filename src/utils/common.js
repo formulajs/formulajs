@@ -70,6 +70,26 @@ export function getMatrixSize(array) {
 }
 
 /**
+ * Call `callback` for every cell of a matrix, row by row or column by column
+ * @param {any[][]} matrix Matrix input as 2-dim array
+ * @param {boolean} byColumn Scan column by column instead of row by row
+ * @param {(value: any) => void} callback Called with each cell value (undefined for missing cells of ragged rows)
+ */
+export function loopMatrix(matrix, byColumn, callback) {
+  const [rowSize, columnSize] = getMatrixSize(matrix)
+
+  if (byColumn) {
+    for (let iCol = 0; iCol < columnSize; iCol++) {
+      for (let iRow = 0; iRow < rowSize; iRow++) callback(matrix[iRow][iCol])
+    }
+  } else {
+    for (let iRow = 0; iRow < rowSize; iRow++) {
+      for (let iCol = 0; iCol < columnSize; iCol++) callback(matrix[iRow][iCol])
+    }
+  }
+}
+
+/**
  * Create new 2-dim array filled with undefined values
  * @param {Number} rowSize
  * @param {Number} columnSize

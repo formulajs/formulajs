@@ -3451,4 +3451,434 @@ describe('Lookup Reference', () => {
       })
     })
   })
+
+  describe('TOCOL', () => {
+    describe('args: (array, ignore, scan_by_column)', () => {
+      describe('should flatten array in a single column.', () => {
+        it('examples from Microsoft docs', () => {
+          expect(
+            lookup.TOCOL([
+              ['Ben', 'Peter', 'Mary', 'Sam'],
+              ['John', 'Hillary', 'Jenny', 'James'],
+              ['Agnes', 'Harry', 'Felicity', 'Joe']
+            ])
+          ).to.eql([
+            ['Ben'],
+            ['Peter'],
+            ['Mary'],
+            ['Sam'],
+            ['John'],
+            ['Hillary'],
+            ['Jenny'],
+            ['James'],
+            ['Agnes'],
+            ['Harry'],
+            ['Felicity'],
+            ['Joe']
+          ])
+
+          expect(
+            lookup.TOCOL([
+              ['Ben', 'Peter', 'Mary', 'Sam'],
+              ['John', 'Hillary', 'Jenny', 'James'],
+              ['Agnes', 'Harry', undefined, undefined]
+            ])
+          ).to.eql([
+            ['Ben'],
+            ['Peter'],
+            ['Mary'],
+            ['Sam'],
+            ['John'],
+            ['Hillary'],
+            ['Jenny'],
+            ['James'],
+            ['Agnes'],
+            ['Harry'],
+            [0],
+            [0]
+          ])
+
+          expect(
+            lookup.TOCOL(
+              [
+                ['Ben', 'Peter', 'Mary', 'Sam'],
+                ['John', 'Hillary', 'Jenny', 'James'],
+                ['Agnes', 'Harry', undefined, undefined]
+              ],
+              1
+            )
+          ).to.eql([
+            ['Ben'],
+            ['Peter'],
+            ['Mary'],
+            ['Sam'],
+            ['John'],
+            ['Hillary'],
+            ['Jenny'],
+            ['James'],
+            ['Agnes'],
+            ['Harry']
+          ])
+
+          expect(
+            lookup.TOCOL(
+              [
+                ['Ben', 'Peter', 'Mary', 'Sam'],
+                ['John', 'Hillary', 'Jenny', 'James'],
+                ['Agnes', 'Harry', undefined, undefined]
+              ],
+              1,
+              true
+            )
+          ).to.eql([
+            ['Ben'],
+            ['John'],
+            ['Agnes'],
+            ['Peter'],
+            ['Hillary'],
+            ['Harry'],
+            ['Mary'],
+            ['Jenny'],
+            ['Sam'],
+            ['James']
+          ])
+        })
+
+        describe('with default args (ignore = 0, scan_by_column = false)', () => {
+          it('should scan by row and take all values, including empty values (replaced by 0) and errors', () => {
+            expect(
+              lookup.TOCOL([
+                [1, 2, 3],
+                [4, 5, 6]
+              ])
+            ).to.eql([[1], [2], [3], [4], [5], [6]])
+
+            expect(
+              lookup.TOCOL([
+                [1, undefined, 3],
+                [error.div0, 5, undefined]
+              ])
+            ).to.eql([[1], [0], [3], [error.div0], [5], [0]])
+          })
+        })
+
+        describe('with ignore = 1', () => {
+          it('should scan by row skipping empty values', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, undefined, 3],
+                  [null, 5, 6]
+                ],
+                1
+              )
+            ).to.eql([[1], [3], [5], [6]])
+
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                1
+              )
+            ).to.eql([[1], [3], [error.div0], [5]])
+          })
+        })
+
+        describe('with ignore = 2', () => {
+          it('should scan by row skipping errors', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, error.calc, 3],
+                  [null, 5, 6]
+                ],
+                2
+              )
+            ).to.eql([[1], [3], [0], [5], [6]])
+          })
+        })
+
+        describe('with ignore = 3', () => {
+          it('should scan by row skipping empty values and errors both', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, error.calc, 3],
+                  [null, 5, 6]
+                ],
+                3
+              )
+            ).to.eql([[1], [3], [5], [6]])
+          })
+        })
+
+        describe('with scan_by_column = true', () => {
+          it('should scan by column', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                0,
+                true
+              )
+            ).to.eql([[1], [error.div0], [0], [5], [3], [0]])
+          })
+
+          it('should scan by column skipping empty values', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                1,
+                true
+              )
+            ).to.eql([[1], [error.div0], [5], [3]])
+          })
+
+          it('should scan by column skipping errors', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                2,
+                true
+              )
+            ).to.eql([[1], [0], [5], [3], [0]])
+          })
+
+          it('should scan by column skipping empty values and errors', () => {
+            expect(
+              lookup.TOCOL(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                3,
+                true
+              )
+            ).to.eql([[1], [5], [3]])
+          })
+        })
+      })
+
+      describe('should returns error', () => {
+        it('#N/A when array is not defined or is an empty matrix', () => {
+          expect(lookup.TOCOL()).to.equal(error.na)
+          expect(lookup.TOCOL([])).to.equal(error.na)
+          expect(lookup.TOCOL([[]])).to.equal(error.na)
+        })
+
+        it('#VALUE! when ignore is not between 0 and 3', () => {
+          expect(lookup.TOCOL([[1, 2]], -1)).to.equal(error.value)
+          expect(lookup.TOCOL([[1, 2]], 4)).to.equal(error.value)
+        })
+
+        it('#CALC! when ignore is in range [0, 3] and the resulting array is empty', () => {
+          expect(lookup.TOCOL([[undefined, undefined]], 1)).to.equal(error.calc)
+          expect(lookup.TOCOL([[error.na]], 2)).to.equal(error.calc)
+          expect(lookup.TOCOL([[undefined, error.value]], 3)).to.equal(error.calc)
+        })
+      })
+    })
+  })
+
+  describe('TOROW', () => {
+    describe('args: (array, ignore, scan_by_column)', () => {
+      describe('should flatten array in a single row.', () => {
+        it('examples from Microsoft docs', () => {
+          expect(
+            lookup.TOROW([
+              ['Ben', 'Peter', 'Mary', 'Sam'],
+              ['John', 'Hillary', 'Jenny', 'James'],
+              ['Agnes', 'Harry', 'Felicity', 'Joe']
+            ])
+          ).to.eql([
+            ['Ben', 'Peter', 'Mary', 'Sam', 'John', 'Hillary', 'Jenny', 'James', 'Agnes', 'Harry', 'Felicity', 'Joe']
+          ])
+
+          expect(
+            lookup.TOROW([
+              ['Ben', 'Peter', 'Mary', 'Sam'],
+              ['John', 'Hillary', 'Jenny', 'James'],
+              ['Agnes', 'Harry', undefined, undefined]
+            ])
+          ).to.eql([['Ben', 'Peter', 'Mary', 'Sam', 'John', 'Hillary', 'Jenny', 'James', 'Agnes', 'Harry', 0, 0]])
+
+          expect(
+            lookup.TOROW(
+              [
+                ['Ben', 'Peter', 'Mary', 'Sam'],
+                ['John', 'Hillary', 'Jenny', 'James'],
+                ['Agnes', 'Harry', undefined, undefined]
+              ],
+              1
+            )
+          ).to.eql([['Ben', 'Peter', 'Mary', 'Sam', 'John', 'Hillary', 'Jenny', 'James', 'Agnes', 'Harry']])
+
+          expect(
+            lookup.TOROW(
+              [
+                ['Ben', 'Peter', 'Mary', 'Sam'],
+                ['John', 'Hillary', 'Jenny', 'James'],
+                ['Agnes', 'Harry', undefined, undefined]
+              ],
+              1,
+              true
+            )
+          ).to.eql([['Ben', 'John', 'Agnes', 'Peter', 'Hillary', 'Harry', 'Mary', 'Jenny', 'Sam', 'James']])
+        })
+
+        describe('with default args (ignore = 0, scan_by_column = false)', () => {
+          it('should scan by row and take all values, including empty values (replaced by 0) and errors', () => {
+            expect(
+              lookup.TOROW([
+                [1, 2, 3],
+                [4, 5, 6]
+              ])
+            ).to.eql([[1, 2, 3, 4, 5, 6]])
+
+            expect(
+              lookup.TOROW([
+                [1, undefined, 3],
+                [error.div0, 5, undefined]
+              ])
+            ).to.eql([[1, 0, 3, error.div0, 5, 0]])
+          })
+        })
+
+        describe('with ignore = 1', () => {
+          it('should scan by row skipping empty values', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, undefined, 3],
+                  [null, 5, 6]
+                ],
+                1
+              )
+            ).to.eql([[1, 3, 5, 6]])
+
+            expect(
+              lookup.TOROW(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                1
+              )
+            ).to.eql([[1, 3, error.div0, 5]])
+          })
+        })
+
+        describe('with ignore = 2', () => {
+          it('should scan by row skipping errors', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, error.calc, 3],
+                  [null, 5, 6]
+                ],
+                2
+              )
+            ).to.eql([[1, 3, 0, 5, 6]])
+          })
+        })
+
+        describe('with ignore = 3', () => {
+          it('should scan by row skipping empty values and errors both', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, error.calc, 3],
+                  [null, 5, 6]
+                ],
+                3
+              )
+            ).to.eql([[1, 3, 5, 6]])
+          })
+        })
+
+        describe('with scan_by_column = true', () => {
+          it('should scan by column', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                0,
+                true
+              )
+            ).to.eql([[1, error.div0, 0, 5, 3, 0]])
+          })
+
+          it('should scan by column skipping empty values', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                1,
+                true
+              )
+            ).to.eql([[1, error.div0, 5, 3]])
+          })
+
+          it('should scan by column skipping errors', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                2,
+                true
+              )
+            ).to.eql([[1, 0, 5, 3, 0]])
+          })
+
+          it('should scan by column skipping empty values and errors', () => {
+            expect(
+              lookup.TOROW(
+                [
+                  [1, null, 3],
+                  [error.div0, 5, undefined]
+                ],
+                3,
+                true
+              )
+            ).to.eql([[1, 5, 3]])
+          })
+        })
+      })
+
+      describe('should returns error', () => {
+        it('#N/A when array is not defined or is an empty matrix', () => {
+          expect(lookup.TOROW()).to.equal(error.na)
+          expect(lookup.TOROW([])).to.equal(error.na)
+          expect(lookup.TOROW([[]])).to.equal(error.na)
+        })
+
+        it('#VALUE! when ignore is not between 0 and 3', () => {
+          expect(lookup.TOROW([[1, 2]], -1)).to.equal(error.value)
+          expect(lookup.TOROW([[1, 2]], 4)).to.equal(error.value)
+        })
+
+        it('#CALC! when ignore is in range [0, 3] and the resulting array is empty', () => {
+          expect(lookup.TOROW([[undefined, undefined]], 1)).to.equal(error.calc)
+          expect(lookup.TOROW([[error.na]], 2)).to.equal(error.calc)
+          expect(lookup.TOROW([[undefined, error.value]], 3)).to.equal(error.calc)
+        })
+      })
+    })
+  })
 })
