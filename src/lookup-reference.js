@@ -751,3 +751,103 @@ export function VSTACK(array, ...otherArrays) {
 
   return arrayResult
 }
+
+// Validates the arguments shared by WRAPROWS and WRAPCOLS.
+// Returns an error, or the flattened values along with the truncated wrap_count.
+function parseWrapArguments(array, wrap_count) {
+  if (utils.anyIsError(array, wrap_count)) {
+    return utils.anyError(array, wrap_count)
+  }
+
+  wrap_count = utils.parseNumber(wrap_count)
+  if (wrap_count instanceof Error) {
+    return wrap_count
+  }
+
+  wrap_count = Math.trunc(wrap_count)
+  if (wrap_count < 1) {
+    return error.num
+  }
+
+  if (!Array.isArray(array)) {
+    array = [array]
+  }
+
+  if (array.some((row) => Array.isArray(row))) {
+    const [rowsSize, colsSize] = utils.getMatrixSize(array)
+    if (rowsSize > 1 && colsSize > 1) {
+      return error.value
+    }
+  }
+
+  const values = utils.flatten(array)
+  if (values.length === 0) {
+    return error.calc
+  }
+
+  return { values, wrapCount: wrap_count }
+}
+
+/**
+ * Wraps the provided row or column of values by columns after a specified number of elements.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The row or column vector to wrap.
+ * @param {*} wrap_count The maximum number of values for each column.
+ * @param {*} [pad_with=error.na] The value with which to pad. The default is #N/A.
+ * @returns
+ */
+export function WRAPCOLS(array, wrap_count, pad_with = error.na) {
+  const parsed = parseWrapArguments(array, wrap_count)
+  if (parsed instanceof Error) {
+    return parsed
+  }
+
+  const { values, wrapCount } = parsed
+
+  const height = Math.min(wrapCount, values.length)
+  const width = Math.ceil(values.length / height)
+
+  const result = utils.createMatrix(height, width)
+  for (let iCol = 0; iCol < width; iCol++) {
+    for (let iRow = 0; iRow < height; iRow++) {
+      const iValue = iCol * height + iRow
+      result[iRow][iCol] = iValue < values.length ? (values[iValue] ?? 0) : (pad_with ?? error.na)
+    }
+  }
+
+  return result
+}
+
+/**
+ * Wraps the provided row or column of values by rows after a specified number of elements.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The row or column vector to wrap.
+ * @param {*} wrap_count The maximum number of values for each row.
+ * @param {*} [pad_with=error.na] The value with which to pad. The default is #N/A.
+ * @returns
+ */
+export function WRAPROWS(array, wrap_count, pad_with = error.na) {
+  const parsed = parseWrapArguments(array, wrap_count)
+  if (parsed instanceof Error) {
+    return parsed
+  }
+
+  const { values, wrapCount } = parsed
+
+  const width = Math.min(wrapCount, values.length)
+  const height = Math.ceil(values.length / width)
+
+  const result = utils.createMatrix(height, width)
+  for (let iRow = 0; iRow < height; iRow++) {
+    for (let iCol = 0; iCol < width; iCol++) {
+      const iValue = iRow * width + iCol
+      result[iRow][iCol] = iValue < values.length ? (values[iValue] ?? 0) : (pad_with ?? error.na)
+    }
+  }
+
+  return result
+}
