@@ -1026,7 +1026,9 @@ export function NPER(rate, pmt, pv, fv, type) {
  * @returns
  */
 export function NPV() {
-  const args = utils.parseNumberArray(utils.flatten(arguments))
+  const args = utils.parseNumberArray(
+    utils.flatten(arguments).filter((value, index) => index === 0 || typeof value === 'number')
+  )
 
   if (args instanceof Error) {
     return args

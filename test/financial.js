@@ -559,6 +559,26 @@ describe('Financial', () => {
     expect(financial.NPV('invalid', [12000, 15000, 18000, 21000, 24000])).to.equal(error.value)
   })
 
+  it('NPV ignores nonnumeric cash flows', () => {
+    const expected = 25.6198347107438
+
+    for (const value of ['30', true, false, 'label', null, undefined, '', error.value]) {
+      expect(financial.NPV(0.1, [10, value, 20])).to.approximately(expected, 1e-9)
+    }
+
+    expect(
+      financial.NPV(0.1, [
+        [10, '30'],
+        [true, 'label', error.value, 20]
+      ])
+    ).to.approximately(expected, 1e-9)
+    expect(financial.NPV('0.1', [10, '30', 20])).to.approximately(expected, 1e-9)
+    expect(financial.NPV(0.1, ['30', true, null, error.value])).to.equal(0)
+    expect(financial.NPV(0.1, [10, 'label', 0, 20])).to.approximately(24.11720510894064, 1e-9)
+    expect(financial.NPV()).to.equal(error.value)
+    expect(financial.NPV(0.1, [10, NaN, 20])).to.equal(error.value)
+  })
+
   it('PDURATION', () => {
     expect(financial.PDURATION(0.1, 1000, 2000)).to.approximately(7.272540897341714, 1e-9)
     expect(financial.PDURATION('Hello World!', 1000, 2000)).to.equal(error.value)
