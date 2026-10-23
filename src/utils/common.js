@@ -128,26 +128,28 @@ export function flattenShallow(array) {
     return [array]
   }
 
-  return array.reduce((a, b) => {
-    const aIsArray = Array.isArray(a)
-    const bIsArray = Array.isArray(b)
+  // One element or none: like a reduce without an initial value, the element itself or a TypeError
+  if (array.length < 2) {
+    return array.reduce((a) => a)
+  }
 
-    if (aIsArray && bIsArray) {
-      return a.concat(b)
+  // A loop, not a reduce that concatenates onto its accumulator: that copies the accumulator per element,
+  // which is quadratic in the number of rows of a range
+  const result = []
+
+  for (let i = 0; i < array.length; ++i) {
+    const value = array[i]
+
+    if (Array.isArray(value)) {
+      for (let j = 0; j < value.length; ++j) {
+        result.push(value[j])
+      }
+    } else {
+      result.push(value)
     }
+  }
 
-    if (aIsArray) {
-      a.push(b)
-
-      return a
-    }
-
-    if (bIsArray) {
-      return [a].concat(b)
-    }
-
-    return [a, b]
-  })
+  return result
 }
 
 export function initial(array, idx) {

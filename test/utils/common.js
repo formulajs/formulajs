@@ -248,6 +248,87 @@ describe('Utils => Common', () => {
       it('should force an array in case of single value', () => {
         expect(utils.flattenShallow('not array')).to.deep.equal(['not array'])
       })
+
+      describe('compared to the previous reduce', () => {
+        const previousFlattenShallow = (array) =>
+          array.reduce((a, b) => {
+            if (Array.isArray(a) && Array.isArray(b)) {
+              return a.concat(b)
+            }
+
+            if (Array.isArray(a)) {
+              a.push(b)
+
+              return a
+            }
+
+            if (Array.isArray(b)) {
+              return [a].concat(b)
+            }
+
+            return [a, b]
+          })
+
+        const previousFlatten = (array) => {
+          let result = [...array]
+
+          while (!utils.isFlat(result)) {
+            result = previousFlattenShallow(result)
+          }
+
+          return result
+        }
+
+        // Factories, as the previous reduce pushed into its input
+        const shapes = [
+          () => [
+            [1, 2],
+            [3, 4],
+            [5, 6]
+          ],
+          () => [[1, 2, 3]],
+          () => [[7]],
+          () => [[1, [2, [3, [4]]]], 5],
+          () => [1, [2, 3], 4],
+          () => [[1, 2], 3],
+          () => [[], [1], [], [[], 2], []],
+          () => [[], [[]]],
+          () => [1, 'a', true],
+          () => [null, [undefined, 'a'], [true, [NaN, error.value]], 0]
+        ]
+
+        it('should flatten one level the same way', () => {
+          shapes.forEach((shape) => {
+            expect(utils.flattenShallow(shape())).to.deep.equal(previousFlattenShallow(shape()))
+          })
+        })
+
+        it('should flatten fully the same way', () => {
+          shapes.forEach((shape) => {
+            expect(utils.flatten(shape())).to.deep.equal(previousFlatten(shape()))
+          })
+          expect(utils.flatten([])).to.deep.equal(previousFlatten([]))
+        })
+
+        it('should return a single element as is and throw on an empty array', () => {
+          expect(utils.flattenShallow([5])).to.equal(5)
+          expect(() => utils.flattenShallow([])).to.throw(TypeError)
+          expect(() => previousFlattenShallow([])).to.throw(TypeError)
+        })
+
+        it('should leave its input alone', () => {
+          const array = [[1, 2], 3]
+          utils.flatten(array)
+          expect(array).to.deep.equal([[1, 2], 3])
+        })
+      })
+
+      it('should be linear in the number of rows of a range', () => {
+        const range = Array.from({ length: 200000 }, (_, row) => [row, row, row, row])
+        const start = Date.now()
+        expect(utils.flatten(range)).to.have.length(800000)
+        expect(Date.now() - start).to.be.below(1000)
+      })
     })
   })
 
