@@ -662,7 +662,11 @@ describe('Financial', () => {
   })
 
   it('TBILLEQ', () => {
-    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0.0914)).to.approximately(0.09412721351734614, 1e-9)
+    expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0.0914)).to.approximately(0.09415149356594302, 1e-9)
+    expect(financial.TBILLEQ('01/01/2026', '07/02/2026', 0.8)).to.approximately(1.3619402985074627, 1e-9)
+    expect(financial.TBILLEQ('01/01/2026', '07/03/2026', 0.8)).to.approximately(1.3644976822112611, 1e-9)
+    expect(financial.TBILLEQ('01/01/2026', '12/27/2026', 0.8)).to.approximately(2.5066048253748145, 1e-9)
+    expect(financial.TBILLEQ('01/01/2026', '11/15/2026', 0.5)).to.approximately(0.7787541318484793, 1e-9)
     expect(financial.TBILLEQ('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
     expect(financial.TBILLEQ('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLEQ('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
@@ -670,7 +674,7 @@ describe('Financial', () => {
   })
 
   it('TBILLPRICE', () => {
-    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0.0914)).to.approximately(98.45127777777778, 1e-9)
+    expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0.09)).to.approximately(98.45, 1e-9)
     expect(financial.TBILLPRICE('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
     expect(financial.TBILLPRICE('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLPRICE('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)
@@ -678,10 +682,7 @@ describe('Financial', () => {
   })
 
   it('TBILLYIELD', () => {
-    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 98.45127777777778)).to.approximately(
-      0.09283779963354702,
-      1e-9
-    )
+    expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 98.45)).to.approximately(0.09141696292534264, 1e-9)
     expect(financial.TBILLYIELD('invalid date', '06/01/2008', 0.0914)).to.equal(error.value)
     expect(financial.TBILLYIELD('03/31/2008', '06/01/2008', 0)).to.equal(error.num)
     expect(financial.TBILLYIELD('09/31/2008', '06/01/2008', 0.0914)).to.equal(error.num)

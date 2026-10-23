@@ -1443,8 +1443,18 @@ export function TBILLEQ(settlement, maturity, discount) {
     return error.num
   }
 
+  const days = dateTime.DAYS(maturity, settlement)
+
   // Return bond-equivalent yield
-  return (365 * discount) / (360 - discount * dateTime.DAYS360(settlement, maturity, false))
+  if (days <= 182) {
+    return (365 * discount) / (360 - discount * days)
+  }
+
+  // Past half a year, as if with a coupon at the half year
+  const price = 100 - (discount * days * 100) / 360
+  const t = days / 365
+
+  return (-t + Math.sqrt(t * t - (2 * t - 1) * (1 - 100 / price))) / (t - 0.5)
 }
 
 /**
@@ -1482,7 +1492,7 @@ export function TBILLPRICE(settlement, maturity, discount) {
   }
 
   // Return bond-equivalent yield
-  return 100 * (1 - (discount * dateTime.DAYS360(settlement, maturity, false)) / 360)
+  return 100 * (1 - (discount * dateTime.DAYS(maturity, settlement)) / 360)
 }
 
 /**
@@ -1520,7 +1530,7 @@ export function TBILLYIELD(settlement, maturity, pr) {
   }
 
   // Return bond-equivalent yield
-  return ((100 - pr) * 360) / (pr * dateTime.DAYS360(settlement, maturity, false))
+  return ((100 - pr) * 360) / (pr * dateTime.DAYS(maturity, settlement))
 }
 
 /**

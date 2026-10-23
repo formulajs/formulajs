@@ -160,9 +160,15 @@ describe('Date & Time', () => {
   })
 
   it('HOUR', () => {
+    expect(dateTime.HOUR('14:30')).to.equal(14)
+    expect(dateTime.HOUR('12:15 AM')).to.equal(0)
+    expect(dateTime.HOUR('4 AM')).to.equal(4)
+    expect(dateTime.HOUR('9:30 p')).to.equal(21)
+    expect(dateTime.HOUR('23:59:59.999')).to.equal(23)
+    expect(dateTime.HOUR('13:00 PM')).to.equal(error.value)
     expect(dateTime.HOUR('1/1/1900')).to.equal(0)
     expect(dateTime.HOUR('1/1/1900 1:00')).to.equal(1)
-    // expect(dateTime.HOUR('1:00')).to.equal(1);
+    expect(dateTime.HOUR('1:00')).to.equal(1)
     // expect(dateTime.HOUR('0.75')).to.equal(18);
     expect(dateTime.HOUR('a')).to.equal(error.value)
   })
@@ -177,9 +183,11 @@ describe('Date & Time', () => {
   })
 
   it('MINUTE', () => {
+    expect(dateTime.MINUTE('14:35')).to.equal(35)
+    expect(dateTime.MINUTE('14:75')).to.equal(error.value)
     expect(dateTime.MINUTE('1/1/1901')).to.equal(0)
     expect(dateTime.MINUTE('1/1/1901 1:01')).to.equal(1)
-    // expect(dateTime.MINUTE('1:01')).to.equal(1);
+    expect(dateTime.MINUTE('1:01')).to.equal(1)
     expect(dateTime.MINUTE('a')).to.equal(error.value)
   })
 
@@ -228,6 +236,7 @@ describe('Date & Time', () => {
   })
 
   it('SECOND', () => {
+    expect(dateTime.SECOND('14:35:20')).to.equal(20)
     expect(dateTime.SECOND('1/1/1900')).to.equal(0)
     expect(dateTime.SECOND('1/1/1900 1:00:01')).to.equal(1)
     expect(dateTime.SECOND('a')).to.equal(error.value)
@@ -241,6 +250,12 @@ describe('Date & Time', () => {
   })
 
   it('TIMEVALUE', () => {
+    expect(dateTime.TIMEVALUE('6:00 PM')).to.equal(0.75)
+    expect(dateTime.TIMEVALUE('18:00')).to.equal(0.75)
+    expect(dateTime.TIMEVALUE('6 PM')).to.equal(0.75)
+    expect(dateTime.TIMEVALUE('00:00:00.5')).to.equal(0.5 / 86400)
+    expect(dateTime.TIMEVALUE('25:00')).to.approximately(1 / 24, 1e-12)
+    expect(dateTime.TIMEVALUE('14:75')).to.equal(error.value)
     expect(dateTime.TIMEVALUE('1/1/1900 00:00:00')).to.equal(0)
     expect(dateTime.TIMEVALUE('1/1/1900 12:00:00')).to.approximately(0.5, 1e-9)
     expect(dateTime.TIMEVALUE('a')).to.equal(error.value)

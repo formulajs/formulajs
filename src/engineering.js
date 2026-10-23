@@ -135,11 +135,11 @@ export function BIN2HEX(number, places) {
   const stringified = number.toString()
 
   if (stringified.length === 10 && stringified.substring(0, 1) === '1') {
-    return (1099511627264 + parseInt(stringified.substring(1), 2)).toString(16)
+    return (1099511627264 + parseInt(stringified.substring(1), 2)).toString(16).toUpperCase()
   }
 
   // Convert binary number to hexadecimal
-  const result = parseInt(number, 2).toString(16)
+  const result = parseInt(number, 2).toString(16).toUpperCase()
 
   // Return hexadecimal number using the minimum number of characters necessary if places is undefined
   if (places === undefined) {
@@ -427,16 +427,18 @@ export function COMPLEX(real_num, i_num, suffix) {
     return error.value
   }
 
+  const imaginary = i_num === 1 ? suffix : i_num === -1 ? '-' + suffix : i_num.toString() + suffix
+
   // Return complex number
   if (real_num === 0 && i_num === 0) {
     return 0
   } else if (real_num === 0) {
-    return i_num === 1 ? suffix : i_num.toString() + suffix
+    return imaginary
   } else if (i_num === 0) {
     return real_num.toString()
   } else {
     const sign = i_num > 0 ? '+' : ''
-    return real_num.toString() + sign + (i_num === 1 ? suffix : i_num.toString() + suffix)
+    return real_num.toString() + sign + imaginary
   }
 }
 
@@ -455,6 +457,32 @@ export function CONVERT(number, from_unit, to_unit) {
 
   if (number instanceof Error) {
     return number
+  }
+
+  // Temperatures whose zero isn't kelvin's (not a ratio, as the units below are): [to Celsius, from Celsius]
+  const temperatures = {
+    C: [(x) => x, (x) => x],
+    cel: [(x) => x, (x) => x],
+    F: [(x) => (x - 32) / 1.8, (x) => x * 1.8 + 32],
+    fah: [(x) => (x - 32) / 1.8, (x) => x * 1.8 + 32],
+    Reau: [(x) => x / 0.8, (x) => x * 0.8]
+  }
+  const from_temperature = Object.prototype.hasOwnProperty.call(temperatures, from_unit) && temperatures[from_unit]
+  const to_temperature = Object.prototype.hasOwnProperty.call(temperatures, to_unit) && temperatures[to_unit]
+
+  if (from_temperature && to_temperature) {
+    return to_temperature[1](from_temperature[0](number))
+  }
+
+  // Between those and others, through kelvin (any other unit than a temperature is #N/A)
+  if (from_temperature) {
+    return CONVERT(from_temperature[0](number) + 273.15, 'K', to_unit)
+  }
+
+  if (to_temperature) {
+    const kelvin = CONVERT(number, from_unit, 'K')
+
+    return kelvin instanceof Error ? kelvin : to_temperature[1](kelvin - 273.15)
   }
 
   // List of units supported by CONVERT and units defined by the International System of Units
@@ -814,11 +842,11 @@ export function DEC2HEX(number, places) {
 
   // Ignore places and return a 10-character hexadecimal number if number is negative
   if (number < 0) {
-    return (1099511627776 + number).toString(16)
+    return (1099511627776 + number).toString(16).toUpperCase()
   }
 
   // Convert decimal number to hexadecimal
-  const result = parseInt(number, 10).toString(16)
+  const result = parseInt(number, 10).toString(16).toUpperCase()
 
   // Return hexadecimal number using the minimum number of characters necessary if places is undefined
   if (typeof places === 'undefined') {
@@ -2012,11 +2040,11 @@ export function OCT2HEX(number, places) {
 
   // Ignore places and return a 10-character octal number if number is negative
   if (decimal >= 536870912) {
-    return 'ff' + (decimal + 3221225472).toString(16)
+    return 'FF' + (decimal + 3221225472).toString(16).toUpperCase()
   }
 
   // Convert decimal number to hexadecimal
-  const result = decimal.toString(16)
+  const result = decimal.toString(16).toUpperCase()
 
   // Return hexadecimal number using the minimum number of characters necessary if places is undefined
   if (places === undefined) {

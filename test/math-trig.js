@@ -123,6 +123,8 @@ describe('Math & Trig', () => {
     expect(mathTrig.BASE(error.na, 2)).to.equal(error.na)
     expect(mathTrig.BASE(2, error.na)).to.equal(error.na)
     expect(mathTrig.BASE(7, 2)).to.equal('111')
+    expect(mathTrig.BASE(255, 16)).to.equal('FF')
+    expect(mathTrig.BASE(35, 36)).to.equal('Z')
     expect(mathTrig.BASE(400, 10, 10)).to.equal('0000000400')
     expect(mathTrig.BASE('invalid', 10, 10)).to.equal(error.value)
   })

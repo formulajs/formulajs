@@ -603,9 +603,24 @@ export function TRANSPOSE(array) {
  *
  * Category: Lookup and reference
  *
+ * Given a range (an array of rows), works as Excel's UNIQUE(array, [by_col], [exactly_once]).
+ *
  * @returns
  */
 export function UNIQUE() {
+  const [array, by_col, exactly_once] = arguments
+
+  if (
+    arguments.length <= 3 &&
+    array instanceof Array &&
+    array.length > 0 &&
+    array.every((row) => row instanceof Array) &&
+    !(by_col instanceof Array) &&
+    !(exactly_once instanceof Array)
+  ) {
+    return uniqueLines(array, by_col, exactly_once)
+  }
+
   const result = []
 
   for (let i = 0; i < arguments.length; ++i) {
@@ -750,4 +765,51 @@ export function VSTACK(array, ...otherArrays) {
   }
 
   return arrayResult
+}
+
+// The distinct rows (or columns, by_col) of a range, text compared in any case; only those appearing once with exactly_once
+function uniqueLines(array, by_col, exactly_once) {
+  by_col = by_col === undefined ? false : utils.parseBool(by_col)
+  exactly_once = exactly_once === undefined ? false : utils.parseBool(exactly_once)
+
+  if (by_col instanceof Error) {
+    return by_col
+  }
+
+  if (exactly_once instanceof Error) {
+    return exactly_once
+  }
+
+  const lines = by_col ? utils.transpose(array) : array
+  const keys = lines.map((line) =>
+    JSON.stringify(
+      line.map((value) =>
+        value instanceof Error ? { error: value.message } : typeof value === 'string' ? value.toLowerCase() : value
+      )
+    )
+  )
+  const counts = {}
+
+  keys.forEach((k) => {
+    counts[k] = (counts[k] || 0) + 1
+  })
+
+  const seen = {}
+  const result = lines.filter((line, i) => {
+    const k = keys[i]
+
+    if (seen[k] || (exactly_once && counts[k] !== 1)) {
+      return false
+    }
+
+    seen[k] = true
+
+    return true
+  })
+
+  if (result.length === 0) {
+    return error.calc
+  }
+
+  return by_col ? utils.transpose(result) : result
 }

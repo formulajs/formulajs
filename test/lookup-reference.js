@@ -2636,6 +2636,26 @@ describe('Lookup Reference', () => {
     expect(lookup.UNIQUE('jima', 'jimb', 'jima', 'jimc')).to.deep.equal(['jima', 'jimb', 'jimc'])
     expect(lookup.UNIQUE()).to.eql([])
     expect(lookup.UNIQUE([])).to.eql([[]])
+    expect(lookup.UNIQUE([['red'], ['blue'], ['Red'], ['green']])).to.deep.equal([['red'], ['blue'], ['green']])
+    expect(
+      lookup.UNIQUE([
+        [1, 'a'],
+        [2, 'b'],
+        [1, 'a']
+      ])
+    ).to.deep.equal([
+      [1, 'a'],
+      [2, 'b']
+    ])
+    expect(lookup.UNIQUE([[1, 2, 1]], true)).to.deep.equal([[1, 2]])
+    expect(lookup.UNIQUE([['a'], ['b'], ['a']], false, true)).to.deep.equal([['b']])
+    expect(lookup.UNIQUE([['a'], ['a']], false, true)).to.equal(error.calc)
+    expect(lookup.UNIQUE([['a'], ['a'], ['b']], 'FALSE', 'TRUE')).to.deep.equal([['b']])
+    expect(lookup.UNIQUE([['a'], ['a'], ['b']], false, 'FALSE')).to.deep.equal([['a'], ['b']])
+    expect(lookup.UNIQUE([[1]], error.value)).to.equal(error.value)
+    expect(lookup.UNIQUE([[error.na], [error.value], [error.na]])).to.deep.equal([[error.na], [error.value]])
+    expect(lookup.UNIQUE([[1], ['1']])).to.deep.equal([[1], ['1']])
+    expect(lookup.UNIQUE([[1]], [[2]])).to.deep.equal([[[1]], [[2]]])
   })
 
   it('VLOOKUP', () => {

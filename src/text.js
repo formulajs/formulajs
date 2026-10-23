@@ -712,6 +712,12 @@ export function VALUE(text) {
     return error.value
   }
 
+  const time = utils.parseTime(text)
+
+  if (time !== null) {
+    return time
+  }
+
   const isPercent = /(%)$/.test(text) || /^(%)/.test(text)
   text = text.replace(/^[^0-9-]{0,3}/, '')
   text = text.replace(/[^0-9]{0,3}$/, '')
