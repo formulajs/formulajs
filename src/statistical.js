@@ -988,7 +988,13 @@ F.TEST = (array1, array2) => {
   const sum1 = sumOfSquares(array1, x1) / (array1.length - 1)
   const sum2 = sumOfSquares(array2, x2) / (array2.length - 1)
 
-  return sum1 / sum2
+  if (sum1 === 0 || sum2 === 0) {
+    return error.div0
+  }
+
+  const p = jStat.centralF.cdf(sum1 / sum2, array1.length - 1, array2.length - 1)
+
+  return 2 * Math.min(p, 1 - p)
 }
 
 /**
@@ -2703,11 +2709,19 @@ export function STEYX(known_y, known_x) {
  * @returns
  */
 T.DIST = (x, deg_freedom, cumulative) => {
-  if (cumulative !== 1 && cumulative !== 2) {
+  x = utils.parseNumber(x)
+  deg_freedom = utils.parseNumber(deg_freedom)
+  cumulative = utils.parseBool(cumulative)
+
+  if (utils.anyIsError(x, deg_freedom, cumulative)) {
+    return error.value
+  }
+
+  if (deg_freedom < 1) {
     return error.num
   }
 
-  return cumulative === 1 ? T.DIST.RT(x, deg_freedom) : T.DIST['2T'](x, deg_freedom)
+  return cumulative ? jStat.studentt.cdf(x, deg_freedom) : jStat.studentt.pdf(x, deg_freedom)
 }
 
 /**
@@ -2758,6 +2772,24 @@ T.DIST.RT = function (x, deg_freedom) {
   }
 
   return 1 - jStat.studentt.cdf(x, deg_freedom)
+}
+
+/**
+ * Returns the Student's t-distribution, right-tailed (tails = 1) or two-tailed (tails = 2), as the legacy TDIST.
+ *
+ * Category: Statistical
+ *
+ * @param {*} x The numeric value at which to evaluate the distribution.
+ * @param {*} deg_freedom An integer indicating the number of degrees of freedom.
+ * @param {*} tails Specifies the number of distribution tails to return.
+ * @returns
+ */
+T.DIST.TAILS = (x, deg_freedom, tails) => {
+  if (tails !== 1 && tails !== 2) {
+    return error.num
+  }
+
+  return tails === 1 ? T.DIST.RT(x, deg_freedom) : T.DIST['2T'](x, deg_freedom)
 }
 
 /**
@@ -2813,15 +2845,67 @@ T.INV['2T'] = (probability, deg_freedom) => {
  *
  * @param {*} array1 The first data set.
  * @param {*} array2 The second data set.
+ * @param {*} [tails] Specifies the number of distribution tails. If tails = 1, T.TEST uses the one-tailed distribution. If tails = 2, T.TEST uses the two-tailed distribution.
+ * @param {*} [type] The kind of t-Test to perform: 1 paired, 2 two-sample equal variance, 3 two-sample unequal variance.
  * @returns
  */
-T.TEST = (array1, array2) => {
+T.TEST = (array1, array2, tails, type) => {
   array1 = utils.parseNumberArray(utils.flatten(array1))
   array2 = utils.parseNumberArray(utils.flatten(array2))
 
   if (utils.anyIsError(array1, array2)) {
     return error.value
   }
+
+  if (tails !== undefined || type !== undefined) {
+    tails = Math.trunc(utils.parseNumber(tails))
+    type = Math.trunc(utils.parseNumber(type))
+
+    if (utils.anyIsError(tails, type) || isNaN(tails) || isNaN(type)) {
+      return error.value
+    }
+
+    if ((tails !== 1 && tails !== 2) || type < 1 || type > 3) {
+      return error.num
+    }
+
+    let t
+    let df
+
+    if (type === 1) {
+      if (array1.length !== array2.length) {
+        return error.na
+      }
+
+      const diffs = array1.map((x, i) => x - array2[i])
+      t = jStat.mean(diffs) / (jStat.stdev(diffs, true) / Math.sqrt(diffs.length))
+      df = diffs.length - 1
+    } else {
+      const n1 = array1.length
+      const n2 = array2.length
+      const v1 = jStat.variance(array1, true)
+      const v2 = jStat.variance(array2, true)
+      const diff = jStat.mean(array1) - jStat.mean(array2)
+
+      if (type === 2) {
+        df = n1 + n2 - 2
+        t = diff / Math.sqrt((((n1 - 1) * v1 + (n2 - 1) * v2) / df) * (1 / n1 + 1 / n2))
+      } else {
+        const s1 = v1 / n1
+        const s2 = v2 / n2
+        t = diff / Math.sqrt(s1 + s2)
+        df = Math.pow(s1 + s2, 2) / (Math.pow(s1, 2) / (n1 - 1) + Math.pow(s2, 2) / (n2 - 1))
+      }
+    }
+
+    if (!isFinite(t) || !(df >= 1)) {
+      return error.div0
+    }
+
+    return tails * (1 - jStat.studentt.cdf(Math.abs(t), df))
+  }
+
+  // Without tails and type (not a form Excel accepts), the result is computed as before
 
   const mean_x = jStat.mean(array1)
   const mean_y = jStat.mean(array2)

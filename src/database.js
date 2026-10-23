@@ -31,7 +31,7 @@ function findResultIndex(database, criterias) {
     }
   }
 
-  for (let k = 1; k < database.length; ++k) {
+  for (let k = 0; k < database.length; ++k) {
     for (let l = 1; l < database[k].length; ++l) {
       let currentCriteriaResult = false
       let hasMatchingCriteria = false

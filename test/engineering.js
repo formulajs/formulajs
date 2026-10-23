@@ -197,6 +197,9 @@ describe('Engineering', () => {
   it('ERF', () => {
     expect(engineering.ERF(0.745)).to.approximately(0.7079289200957377, 1e-9)
     expect(engineering.ERF(1)).to.approximately(0.8427007929497149, 1e-9)
+    expect(engineering.ERF(0, 1)).to.approximately(0.8427007929497149, 1e-9)
+    expect(engineering.ERF(1, 2)).to.approximately(0.1526214720692377, 1e-9)
+    expect(engineering.ERF(1, 0)).to.approximately(-0.8427007929497149, 1e-9)
     expect(engineering.ERF('a')).to.equal(error.value)
   })
 
@@ -246,6 +249,9 @@ describe('Engineering', () => {
   })
 
   it('IMAGINARY', () => {
+    expect(engineering.IMAGINARY('1.2246467991473532e-16+2i')).to.equal(2)
+    expect(engineering.IMAGINARY('1e-3-2i')).to.equal(-2)
+    expect(engineering.IMAGINARY('1e+5+2i')).to.equal(2)
     expect(engineering.IMAGINARY('3+4i')).to.equal(4)
     expect(engineering.IMAGINARY('i')).to.equal(1)
     expect(engineering.IMAGINARY('+i')).to.equal('+1')
@@ -264,7 +270,7 @@ describe('Engineering', () => {
     expect(engineering.IMARGUMENT('2i')).to.equal(Math.PI / 2)
     expect(engineering.IMARGUMENT('-2i')).to.equal(-Math.PI / 2)
     expect(engineering.IMARGUMENT('2')).to.equal(0)
-    expect(engineering.IMARGUMENT('-2')).to.equal(-Math.PI)
+    expect(engineering.IMARGUMENT('-2')).to.equal(Math.PI)
     expect(engineering.IMARGUMENT('-1+2i')).to.approximately(2.0344439357957027, 1e-9)
     expect(engineering.IMARGUMENT('-1-2i')).to.approximately(-2.0344439357957027, 1e-9)
   })
@@ -331,6 +337,9 @@ describe('Engineering', () => {
     const im = engineering.IMLN('3+4i')
     expect(engineering.IMREAL(im)).to.approximately(1.6094379124341003, 1e-9)
     expect(engineering.IMAGINARY(im)).to.approximately(0.9272952180016122, 1e-9)
+    const negative = engineering.IMLN('-2')
+    expect(engineering.IMREAL(negative)).to.approximately(0.6931471805599453, 1e-9)
+    expect(engineering.IMAGINARY(negative)).to.approximately(3.141592653589793, 1e-9)
     expect(engineering.IMLN('a')).to.equal(error.value)
   })
 
@@ -338,6 +347,9 @@ describe('Engineering', () => {
     const im = engineering.IMLOG10('3+4i')
     expect(engineering.IMREAL(im)).to.approximately(0.6989700043360187, 1e-9)
     expect(engineering.IMAGINARY(im)).to.approximately(0.4027191962733731, 1e-9)
+    const negative = engineering.IMLOG10('-2')
+    expect(engineering.IMREAL(negative)).to.approximately(0.30102999566398114, 1e-9)
+    expect(engineering.IMAGINARY(negative)).to.approximately(1.3643763538418412, 1e-9)
     expect(engineering.IMLOG10('a')).to.equal(error.value)
   })
 
@@ -345,6 +357,9 @@ describe('Engineering', () => {
     const im = engineering.IMLOG2('3+4i')
     expect(engineering.IMREAL(im)).to.approximately(2.321928094887362, 1e-9)
     expect(engineering.IMAGINARY(im)).to.approximately(1.3378042124509761, 1e-9)
+    const negative = engineering.IMLOG2('-2')
+    expect(engineering.IMREAL(negative)).to.approximately(1, 1e-9)
+    expect(engineering.IMAGINARY(negative)).to.approximately(4.532360141827194, 1e-9)
     expect(engineering.IMLOG2('a')).to.equal(error.value)
   })
 
@@ -365,6 +380,9 @@ describe('Engineering', () => {
   })
 
   it('IMREAL', () => {
+    expect(engineering.IMREAL('1.2246467991473532e-16+2i')).to.equal(1.2246467991473532e-16)
+    expect(engineering.IMREAL('1e-3-2i')).to.equal(0.001)
+    expect(engineering.IMREAL('1e+5+2i')).to.equal(100000)
     expect(engineering.IMREAL('6-9i')).to.equal(6)
     expect(engineering.IMREAL('i')).to.equal(0)
     expect(engineering.IMREAL('+i')).to.equal(0)
@@ -415,6 +433,7 @@ describe('Engineering', () => {
     const im = engineering.IMSQRT('1+i')
     expect(engineering.IMREAL(im)).to.approximately(1.0986841134678098, 1e-9)
     expect(engineering.IMAGINARY(im)).to.approximately(0.45508986056222733, 1e-9)
+    expect(engineering.IMSQRT('-4')).to.match(/\+2i$/)
     expect(engineering.IMSQRT('a')).to.equal(error.value)
   })
 

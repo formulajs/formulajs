@@ -8,7 +8,7 @@ function validDate(d) {
 }
 
 function ensureDate(d) {
-  return d instanceof Date ? d : new Date(d)
+  return d instanceof Date ? d : typeof d === 'number' ? utils.parseDate(d) : new Date(d)
 }
 
 // Calculate last coupon date before settlement

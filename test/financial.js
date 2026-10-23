@@ -5,6 +5,7 @@ import * as financial from '../src/financial.js'
 
 describe('Financial', () => {
   it('ACCRINT', () => {
+    expect(financial.ACCRINT(46023, 46204, 46113, 0.05, 1000, 2, 0)).to.approximately(12.5, 1e-9)
     expect(financial.ACCRINT('2/2/2012', '3/30/2012', '12/4/2013', 0.1, 1000, 1, 0, true)).to.approximately(
       183.88888888888889,
       1e-9,

@@ -104,6 +104,7 @@ describe('Math & Trig', () => {
     expect(mathTrig.ATAN2(undefined)).to.equal(0)
     expect(mathTrig.ATAN2(error.na)).to.equal(error.na)
     expect(mathTrig.ATAN2(1, 1)).to.approximately(0.7853981633974483, 1e-9)
+    expect(mathTrig.ATAN2(1, 2)).to.approximately(1.1071487177940904, 1e-9)
     expect(mathTrig.ATAN2(1, 'invalid')).to.equal(error.value)
   })
 
@@ -1005,6 +1006,13 @@ describe('Math & Trig', () => {
       )
     ).to.equal(error.na)
     expect(mathTrig.SUMPRODUCT([[undefined, undefined]], [[undefined, undefined]])).to.equal(0)
+    expect(mathTrig.SUMPRODUCT(2, 3)).to.equal(6)
+    expect(mathTrig.SUMPRODUCT([[3]], 2)).to.equal(6)
+    expect(mathTrig.SUMPRODUCT(2, [[3]])).to.equal(6)
+    expect(mathTrig.SUMPRODUCT([3], 2)).to.equal(6)
+    expect(mathTrig.SUMPRODUCT(2, [3, 4])).to.equal(error.value)
+    expect(mathTrig.SUMPRODUCT([[3], [4]], 2)).to.equal(error.value)
+    expect(mathTrig.SUMPRODUCT([1, 2, 3], [1, 2])).to.equal(error.value)
     expect(
       mathTrig.SUMPRODUCT(
         [
