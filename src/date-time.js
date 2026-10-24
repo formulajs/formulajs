@@ -828,9 +828,12 @@ function isLeapYear(year) {
   return new Date(year, 1, 29).getMonth() === 1
 }
 
-// TODO : Use DAYS ?
+// Whole calendar days between two dates, ignoring time of day and daylight-saving shifts
 function daysBetween(start_date, end_date) {
-  return Math.ceil((end_date - start_date) / 1000 / 60 / 60 / 24)
+  const start = Date.UTC(start_date.getFullYear(), start_date.getMonth(), start_date.getDate())
+  const end = Date.UTC(end_date.getFullYear(), end_date.getMonth(), end_date.getDate())
+
+  return Math.round((end - start) / 86400000)
 }
 
 /**
@@ -857,6 +860,14 @@ export function YEARFRAC(start_date, end_date, basis) {
   }
 
   basis = basis || 0
+
+  // The order of the dates does not matter (as in Excel and LibreOffice)
+  if (startOfDay(start_date) > startOfDay(end_date)) {
+    const swap = start_date
+    start_date = end_date
+    end_date = swap
+  }
+
   let sd = start_date.getDate()
   const sm = start_date.getMonth() + 1
   const sy = start_date.getFullYear()
@@ -896,7 +907,7 @@ export function YEARFRAC(start_date, end_date, basis) {
       let ylength = 365
 
       if (sy === ey || (sy + 1 === ey && (sm > em || (sm === em && sd >= ed)))) {
-        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 1 && ed === 29)) {
+        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 2 && ed === 29)) {
           ylength = 366
         }
 
@@ -904,7 +915,7 @@ export function YEARFRAC(start_date, end_date, basis) {
       }
 
       const years = ey - sy + 1
-      const days = (new Date(ey + 1, 0, 1) - new Date(sy, 0, 1)) / 1000 / 60 / 60 / 24
+      const days = daysBetween(new Date(sy, 0, 1), new Date(ey + 1, 0, 1))
       const average = days / years
 
       return daysBetween(start_date, end_date) / average
@@ -919,8 +930,12 @@ export function YEARFRAC(start_date, end_date, basis) {
 
       return daysBetween(start_date, end_date) / 365
     case 4:
-      // European 30/360
+      // European 30/360: the 31st of a month counts as the 30th
+      sd = Math.min(sd, 30)
+      ed = Math.min(ed, 30)
 
       return (ed + em * 30 + ey * 360 - (sd + sm * 30 + sy * 360)) / 360
+    default:
+      return error.num
   }
 }
