@@ -1308,10 +1308,21 @@ export function RATE(nper, pmt, pv, fv, type, guess) {
       dy = pv * df + pmt * (1 / rate + type) * df + pmt * (-1 / (rate * rate)) * (f - 1)
     }
 
-    rate -= y / dy
+    const step = y / dy
+
+    if (!isFinite(step)) {
+      return error.num
+    }
+
+    rate -= step
+
+    if (Math.abs(step) < epsMax) {
+      return rate
+    }
   }
 
-  return rate
+  // Excel returns #NUM! when RATE does not converge; the last iterate is not a root
+  return error.num
 }
 
 /**
