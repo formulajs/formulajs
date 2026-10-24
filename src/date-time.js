@@ -532,6 +532,16 @@ NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
     holidays[i] = h
   }
 
+  // An end date before the start date gives a negative count of working days, as in Excel
+  let sign = 1
+
+  if (end_date < start_date) {
+    const swap = start_date
+    start_date = end_date
+    end_date = swap
+    sign = -1
+  }
+
   const days = Math.round((end_date - start_date) / (1000 * 60 * 60 * 24)) + 1
   let total = days
   const day = start_date
@@ -560,7 +570,7 @@ NETWORKDAYS.INTL = (start_date, end_date, weekend, holidays) => {
     day.setDate(day.getDate() + 1)
   }
 
-  return total
+  return sign * total
 }
 
 /**
