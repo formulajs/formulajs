@@ -598,6 +598,9 @@ CONFIDENCE.T = (alpha, standard_dev, size) => {
  * @returns
  */
 export function CORREL(array1, array2) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[array1, array2] = utils.withoutEmptyPairs(utils.flatten(array1), utils.flatten(array2))
+
   array1 = utils.parseNumberArray(utils.flatten(array1))
   array2 = utils.parseNumberArray(utils.flatten(array2))
 
@@ -749,6 +752,9 @@ export const COVARIANCE = {}
  * @returns
  */
 COVARIANCE.P = (array1, array2) => {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[array1, array2] = utils.withoutEmptyPairs(utils.flatten(array1), utils.flatten(array2))
+
   array1 = utils.parseNumberArray(utils.flatten(array1))
   array2 = utils.parseNumberArray(utils.flatten(array2))
 
@@ -780,6 +786,9 @@ COVARIANCE.P = (array1, array2) => {
  * @returns
  */
 COVARIANCE.S = (array1, array2) => {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[array1, array2] = utils.withoutEmptyPairs(utils.flatten(array1), utils.flatten(array2))
+
   array1 = utils.parseNumberArray(utils.flatten(array1))
   array2 = utils.parseNumberArray(utils.flatten(array2))
 
@@ -799,7 +808,7 @@ COVARIANCE.S = (array1, array2) => {
  * @returns
  */
 export function DEVSQ() {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -1040,6 +1049,9 @@ export function FISHERINV(y) {
  * @returns
  */
 export function FORECAST(x, known_ys, known_xs) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[known_ys, known_xs] = utils.withoutEmptyPairs(utils.flatten(known_ys), utils.flatten(known_xs))
+
   x = utils.parseNumber(x)
   known_ys = utils.parseNumberArray(utils.flatten(known_ys))
   known_xs = utils.parseNumberArray(utils.flatten(known_xs))
@@ -1259,7 +1271,7 @@ export function GAUSS(z) {
  * @returns
  */
 export function GEOMEAN() {
-  const args = utils.parseNumberArray(utils.flatten(arguments))
+  const args = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (args instanceof Error) {
     return args
@@ -1377,7 +1389,7 @@ export function GROWTH(known_y, known_x, new_x, use_const) {
  * @returns
  */
 export function HARMEAN() {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -1447,6 +1459,9 @@ HYPGEOM.DIST = (sample_s, number_sample, population_s, number_pop, cumulative) =
  * @returns
  */
 export function INTERCEPT(known_y, known_x) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[known_y, known_x] = utils.withoutEmptyPairs(utils.flatten(known_y), utils.flatten(known_x))
+
   known_y = utils.parseNumberArray(known_y)
   known_x = utils.parseNumberArray(known_x)
 
@@ -1470,7 +1485,7 @@ export function INTERCEPT(known_y, known_x) {
  * @returns
  */
 export function KURT() {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -1713,7 +1728,7 @@ export function MAXIFS() {
  * @returns
  */
 export function MEDIAN() {
-  const flatArguments = utils.flatten(arguments)
+  const flatArguments = utils.withoutEmpty(utils.flatten(arguments))
   const someError = utils.anyError.apply(undefined, flatArguments)
 
   if (someError) {
@@ -1839,7 +1854,7 @@ MODE.MULT = function () {
  * @returns
  */
 MODE.SNGL = function () {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -1976,6 +1991,9 @@ NORM.S.INV = (probability) => {
  * @returns
  */
 export function PEARSON(array1, array2) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[array1, array2] = utils.withoutEmptyPairs(utils.flatten(array1), utils.flatten(array2))
+
   array2 = utils.parseNumberArray(utils.flatten(array2))
   array1 = utils.parseNumberArray(utils.flatten(array1))
 
@@ -2010,7 +2028,7 @@ export const PERCENTILE = {}
  * @returns
  */
 PERCENTILE.EXC = (array, k) => {
-  array = utils.parseNumberArray(utils.flatten(array))
+  array = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(array)))
   k = utils.parseNumber(k)
 
   if (utils.anyIsError(array, k)) {
@@ -2041,7 +2059,7 @@ PERCENTILE.EXC = (array, k) => {
  * @returns
  */
 PERCENTILE.INC = (array, k) => {
-  array = utils.parseNumberArray(utils.flatten(array))
+  array = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(array)))
   k = utils.parseNumber(k)
 
   if (utils.anyIsError(array, k)) {
@@ -2443,6 +2461,9 @@ export function ROW(reference, index) {
  * @returns
  */
 export function RSQ(known_y, known_x) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[known_y, known_x] = utils.withoutEmptyPairs(utils.flatten(known_y), utils.flatten(known_x))
+
   // no need to flatten here, PEARSON will take care of that
   known_y = utils.parseNumberArray(utils.flatten(known_y))
   known_x = utils.parseNumberArray(utils.flatten(known_x))
@@ -2463,7 +2484,7 @@ export function RSQ(known_y, known_x) {
  * @returns
  */
 export function SKEW() {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -2489,7 +2510,7 @@ export function SKEW() {
  * @returns
  */
 SKEW.P = function () {
-  const range = utils.parseNumberArray(utils.flatten(arguments))
+  const range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(arguments)))
 
   if (range instanceof Error) {
     return range
@@ -2522,6 +2543,9 @@ SKEW.P = function () {
  * @returns
  */
 export function SLOPE(known_y, known_x) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[known_y, known_x] = utils.withoutEmptyPairs(utils.flatten(known_y), utils.flatten(known_x))
+
   known_y = utils.parseNumberArray(utils.flatten(known_y))
   known_x = utils.parseNumberArray(utils.flatten(known_x))
 
@@ -2554,7 +2578,7 @@ export function SLOPE(known_y, known_x) {
  * @returns
  */
 export function SMALL(array, k) {
-  array = utils.parseNumberArray(utils.flatten(array))
+  array = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(array)))
   k = utils.parseNumber(k)
 
   if (utils.anyIsError(array, k)) {
@@ -2668,6 +2692,9 @@ export function STDEVPA() {
  * @returns
  */
 export function STEYX(known_y, known_x) {
+  // A pair is skipped when either cell is empty, as in Excel
+  ;[known_y, known_x] = utils.withoutEmptyPairs(utils.flatten(known_y), utils.flatten(known_x))
+
   known_y = utils.parseNumberArray(utils.flatten(known_y))
   known_x = utils.parseNumberArray(utils.flatten(known_x))
 
@@ -2890,7 +2917,7 @@ export function TREND(known_ys, known_xs, new_xs) {
  * @returns
  */
 export function TRIMMEAN(range, percent) {
-  range = utils.parseNumberArray(utils.flatten(range))
+  range = utils.parseNumberArray(utils.withoutEmpty(utils.flatten(range)))
   percent = utils.parseNumber(percent)
 
   if (utils.anyIsError(range, percent)) {

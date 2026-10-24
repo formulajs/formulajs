@@ -1026,7 +1026,9 @@ export function NPER(rate, pmt, pv, fv, type) {
  * @returns
  */
 export function NPV() {
-  const args = utils.parseNumberArray(utils.flatten(arguments))
+  // Empty cells among the values are ignored, as in Excel
+  const flat = utils.flatten(arguments)
+  const args = utils.parseNumberArray([flat[0]].concat(utils.withoutEmpty(flat.slice(1))))
 
   if (args instanceof Error) {
     return args

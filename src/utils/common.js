@@ -473,6 +473,35 @@ export function applyCriteria() {
   return values
 }
 
+// Empty cells (null or undefined) inside a range are ignored, as Excel ignores empty cells in range arguments
+export function withoutEmpty(arr) {
+  return Array.isArray(arr) ? arr.filter(isDefined) : arr
+}
+
+// For two paired ranges, a pair is ignored when either of its cells is empty
+export function withoutEmptyPairs(arr1, arr2) {
+  if (!Array.isArray(arr1) || !Array.isArray(arr2) || arr1.length !== arr2.length) {
+    return [arr1, arr2]
+  }
+
+  // Preserve error propagation even when the other cell in that pair is empty.
+  if (arr1.some((v) => v instanceof Error) || arr2.some((v) => v instanceof Error)) {
+    return [arr1, arr2]
+  }
+
+  const a = []
+  const b = []
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (isDefined(arr1[i]) && isDefined(arr2[i])) {
+      a.push(arr1[i])
+      b.push(arr2[i])
+    }
+  }
+
+  return [a, b]
+}
+
 export function isDefined(arg) {
   return arg !== undefined && arg !== null
 }
