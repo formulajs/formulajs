@@ -436,9 +436,8 @@ export function DISC(settlement, maturity, pr, redemption, basis) {
       diff = dateTime.DAYS360(settlement, maturity, false)
       break
     case 1:
-      basisVal = 365
-      diff = dateTime.DATEDIF(settlement, maturity, 'D')
-      break
+      // Actual/actual: the year length follows the calendar (366 in a leap year), as YEARFRAC basis 1
+      return (redemption - pr) / redemption / dateTime.YEARFRAC(settlement, maturity, 1)
     case 2:
       basisVal = 360
       diff = dateTime.DATEDIF(settlement, maturity, 'D')
@@ -1189,9 +1188,8 @@ export function PRICEDISC(settlement, maturity, discount, redemption, basis) {
       diff = dateTime.DAYS360(settlement, maturity, false)
       break
     case 1:
-      basisVal = 365
-      diff = dateTime.DATEDIF(settlement, maturity, 'D')
-      break
+      // Actual/actual: the year length follows the calendar (366 in a leap year), as YEARFRAC basis 1
+      return redemption - discount * redemption * dateTime.YEARFRAC(settlement, maturity, 1)
     case 2:
       basisVal = 360
       diff = dateTime.DATEDIF(settlement, maturity, 'D')
