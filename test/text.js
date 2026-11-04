@@ -419,6 +419,529 @@ describe('Text', () => {
     expect(text.UPPER(1)).to.equal('1')
   })
 
+  // Expected values were measured in desktop Excel, except the documentation examples.
+  // The full matrix of measured cases is replayed by discovery/textafter-textbefore-matrix.mjs.
+  // `undefined` is an omitted argument and `null` is an empty cell.
+  describe('TEXTAFTER', () => {
+    describe('args: (text, delimiter, [instance_num], [match_mode], [match_end], [if_not_found])', () => {
+      describe('should return the text after the delimiter', () => {
+        it('examples from Microsoft docs', () => {
+          expect(text.TEXTAFTER("Red riding hood's, red hood", 'hood')).to.equal("'s, red hood")
+          expect(text.TEXTAFTER("Red riding hood's, red hood", '')).to.equal("Red riding hood's, red hood")
+          expect(text.TEXTAFTER("Red riding hood's, red hood", '', -1)).to.equal('')
+          expect(text.TEXTAFTER("Little Red Riding Hood's red hood", 'Red')).to.equal(" Riding Hood's red hood")
+          expect(text.TEXTAFTER("Little Red Riding Hood's red hood", 'basket')).to.equal(error.na)
+          expect(text.TEXTAFTER("Little red Riding Hood's red hood", 'red', 2)).to.equal(' hood')
+          expect(text.TEXTAFTER("Little red Riding Hood's red hood", 'red', -2)).to.equal(" Riding Hood's red hood")
+          expect(text.TEXTAFTER('Marcus Aurelius', ' ', undefined, undefined, 1)).to.equal('Aurelius')
+        })
+
+        it('with only the required args, uses the first instance', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-')).to.equal('deux-trois')
+        })
+
+        it('when instance_num > 0, counts the instances from the start of the text', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 2)).to.equal('trois')
+        })
+
+        it('when instance_num < 0, counts the instances from the end of the text', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', -1)).to.equal('trois')
+          expect(text.TEXTAFTER('un-deux-trois', '-', -2)).to.equal('deux-trois')
+        })
+
+        it('when instance_num is decimal, rounds it down like INT', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 1.9)).to.equal('deux-trois')
+          expect(text.TEXTAFTER('un-deux-trois', '-', -1.9)).to.equal('deux-trois')
+          expect(text.TEXTAFTER('un-deux-trois', '-', -0.5)).to.equal('trois')
+        })
+
+        it('when instance_num is a numeric text or a boolean, converts it to a number', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', ' 2 ')).to.equal('trois')
+          expect(text.TEXTAFTER('un-deux-trois', '-', true)).to.equal('deux-trois')
+        })
+
+        it('when the delimiter repeats, the instances do not overlap', () => {
+          expect(text.TEXTAFTER('aaaa', 'aa', 1)).to.equal('aa')
+          expect(text.TEXTAFTER('aaaa', 'aa', 2)).to.equal('')
+          expect(text.TEXTAFTER('aaa', 'aa', -1)).to.equal('')
+        })
+
+        it('matches wildcard characters literally', () => {
+          expect(text.TEXTAFTER('a*b?c~d.e', '*')).to.equal('b?c~d.e')
+          expect(text.TEXTAFTER('a*b?c~d.e', '~*')).to.equal(error.na)
+        })
+
+        it('counts an emoji as a single character', () => {
+          expect(text.TEXTAFTER('😀a😀b', '😀', -1)).to.equal('b')
+        })
+      })
+
+      describe('with an empty delimiter', () => {
+        it('when instance_num > 0, matches the start of the text', () => {
+          expect(text.TEXTAFTER('abc', '', 100)).to.equal('abc')
+        })
+
+        it('when instance_num < 0, matches the end of the text', () => {
+          expect(text.TEXTAFTER('abc', '', -1)).to.equal('')
+        })
+
+        it('an empty cell is an empty delimiter', () => {
+          expect(text.TEXTAFTER('un-deux-trois', null)).to.equal('un-deux-trois')
+        })
+      })
+
+      describe('should convert text and delimiter to text', () => {
+        it('with numbers, keeps 15 significant digits like Excel', () => {
+          expect(text.TEXTAFTER(12345, 3)).to.equal('45')
+          expect(text.TEXTAFTER(0.1 + 0.2, '.')).to.equal('3')
+          expect(text.TEXTAFTER(1 / 3, '.')).to.equal('333333333333333')
+          expect(text.TEXTAFTER(1e21, '+')).to.equal('21')
+          // Excel typed as 123456789012345678 keeps only 15 digits at input time
+          expect(text.TEXTAFTER(123456789012345000, '9')).to.equal('012345000')
+        })
+
+        it('with booleans, uses TRUE / FALSE', () => {
+          expect(text.TEXTAFTER(true, 'R')).to.equal('UE')
+          expect(text.TEXTAFTER('xTRUEy', true)).to.equal('y')
+        })
+      })
+
+      describe('match_mode', () => {
+        it('when 0 or omitted, the search is case-sensitive', () => {
+          expect(text.TEXTAFTER('xAyaz', 'a')).to.equal('z')
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 0)).to.equal('z')
+        })
+
+        it('when 1, the search is case-insensitive', () => {
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 1)).to.equal('yaz')
+          expect(text.TEXTAFTER('aéb', 'É', undefined, 1)).to.equal('b')
+          expect(text.TEXTAFTER('aİb', 'i', undefined, 1)).to.equal('b')
+        })
+
+        it('when 1, does not fold ß to SS', () => {
+          expect(text.TEXTAFTER('straße', 'SS', undefined, 1)).to.equal(error.na)
+        })
+
+        it('when decimal, truncates it toward 0', () => {
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 1.5)).to.equal('yaz')
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 0.99)).to.equal('z')
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, -0.5)).to.equal('z')
+        })
+      })
+
+      describe('match_end', () => {
+        it('when 1 and instance_num > 0, the end of the text counts as one more delimiter', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 3, 0, 1)).to.equal('')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', 1, 0, 1)).to.equal('')
+          expect(text.TEXTAFTER('un-deux-trois', '-', 4, 0, 1)).to.equal(error.na)
+        })
+
+        it('when 1 and instance_num < 0, the start of the text counts as one more delimiter', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', -3, 0, 1)).to.equal('un-deux-trois')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', -1, 0, 1)).to.equal('un-deux-trois')
+        })
+
+        it('when decimal, truncates it toward 0', () => {
+          expect(text.TEXTAFTER('un-deux-trois', 'z', 1, 0, 1.5)).to.equal('')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', 1, 0, 0.99)).to.equal(error.na)
+        })
+      })
+
+      describe('with several delimiters (array or range)', () => {
+        it('any of them is a delimiter, whatever their order', () => {
+          expect(text.TEXTAFTER('a-b_c', [['-'], ['_']])).to.equal('b_c')
+          expect(text.TEXTAFTER('a-b_c', [['_'], ['-']])).to.equal('b_c')
+          expect(text.TEXTAFTER('a-b_c', [['-'], ['_']], 2)).to.equal('c')
+        })
+
+        it('at a given position, the longest delimiter wins', () => {
+          expect(text.TEXTAFTER('a--b', [['-'], ['--']])).to.equal('b')
+          expect(text.TEXTAFTER('a---b', [['--'], ['-']], 1)).to.equal('-b')
+          expect(text.TEXTAFTER('a---b', [['--'], ['-']], 2)).to.equal('b')
+        })
+
+        it('when instance_num < 0, two instances may overlap', () => {
+          expect(text.TEXTAFTER('a--b--c', [['-'], ['--']], -1)).to.equal('c')
+          expect(text.TEXTAFTER('a--b--c', [['-'], ['--']], -2)).to.equal('c')
+          expect(text.TEXTAFTER('a--b--c', [['-'], ['--']], -3)).to.equal('b--c')
+          expect(text.TEXTAFTER('xabcx', [['abc'], ['c']], -1)).to.equal('x')
+          expect(text.TEXTAFTER('xabcx', [['abc'], ['c']], -2)).to.equal('x')
+        })
+
+        it('flattens a 1D array, a column, a row or a 2D range', () => {
+          expect(text.TEXTAFTER('a-b_c', ['-', '_'])).to.equal('b_c')
+          expect(text.TEXTAFTER('a-b_c', [['-'], ['_']])).to.equal('b_c')
+          expect(text.TEXTAFTER('a-b_c', [['-', '_']])).to.equal('b_c')
+          expect(
+            text.TEXTAFTER('a-b_c', [
+              ['-', '_'],
+              ['x', 'y']
+            ])
+          ).to.equal('b_c')
+        })
+      })
+
+      describe('when the delimiter is not found', () => {
+        it('returns #N/A', () => {
+          expect(text.TEXTAFTER('un-deux-trois', 'z')).to.equal(error.na)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 3)).to.equal(error.na)
+          expect(text.TEXTAFTER('ab', 'abc')).to.equal(error.na)
+          expect(text.TEXTAFTER('', '-')).to.equal(error.na)
+          expect(text.TEXTAFTER(null, '-')).to.equal(error.na)
+        })
+
+        it('returns if_not_found instead of #N/A, converted to text', () => {
+          expect(text.TEXTAFTER('un-deux-trois', 'z', undefined, undefined, undefined, 'NF')).to.equal('NF')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', undefined, undefined, undefined, 5)).to.equal('5')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', undefined, undefined, undefined, true)).to.equal('TRUE')
+          expect(text.TEXTAFTER('un-deux-trois', 'z', undefined, undefined, undefined, null)).to.equal('')
+        })
+
+        it('returns an error given as if_not_found only when it is used', () => {
+          expect(text.TEXTAFTER('un-deux-trois', 'z', undefined, undefined, undefined, error.div0)).to.equal(error.div0)
+          expect(text.TEXTAFTER('un-deux-trois', '-', undefined, undefined, undefined, error.div0)).to.equal(
+            'deux-trois'
+          )
+        })
+      })
+
+      describe('throw error #VALUE!', () => {
+        it('when instance_num is 0 or rounds down to 0', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 0)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 0.5)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', false)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', null)).to.equal(error.value)
+        })
+
+        it('when instance_num is a non-numeric text', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 'abc')).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', '')).to.equal(error.value)
+        })
+
+        it('when |instance_num| > length of text - length of the shortest delimiter + 1', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 13)).to.equal(error.na)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 14)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', -14)).to.equal(error.value)
+          expect(text.TEXTAFTER('abcd', 'bc', 3)).to.equal(error.na)
+          expect(text.TEXTAFTER('abcd', 'bc', 4)).to.equal(error.value)
+          expect(text.TEXTAFTER('ab', 'abc', 1)).to.equal(error.value)
+          expect(text.TEXTAFTER('', '-', 1)).to.equal(error.value)
+        })
+
+        it('when instance_num is out of bounds, even with match_end or if_not_found', () => {
+          expect(text.TEXTAFTER('abcd', 'bc', 4, 0, 1)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 14, undefined, undefined, 'NF')).to.equal(error.value)
+        })
+
+        it('when match_mode or match_end is not 0 or 1', () => {
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 2)).to.equal(error.value)
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, -1)).to.equal(error.value)
+          expect(text.TEXTAFTER('xAyaz', 'a', undefined, 'x')).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 1, 0, 2)).to.equal(error.value)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 1, 0, -1)).to.equal(error.value)
+        })
+
+        it('when delimiter is an empty array', () => {
+          expect(text.TEXTAFTER('a-b_c', [])).to.equal(error.value)
+        })
+
+        it('when an array is given for another argument than delimiter', () => {
+          expect(text.TEXTAFTER([['a-b'], ['c-d']], '-')).to.equal(error.value)
+          expect(text.TEXTAFTER('a-b-c', '-', [[1], [2]])).to.equal(error.value)
+          expect(text.TEXTAFTER('a-b-c', '-', 1, [[0], [1]])).to.equal(error.value)
+          expect(text.TEXTAFTER('a-b-c', '-', 1, 0, [[0], [1]])).to.equal(error.value)
+          expect(text.TEXTAFTER('a-b-c', 'z', 1, 0, 0, [['NF']])).to.equal(error.value)
+        })
+      })
+
+      describe('errors given as args', () => {
+        it('are propagated, whatever the argument', () => {
+          expect(text.TEXTAFTER(error.div0, '-')).to.equal(error.div0)
+          expect(text.TEXTAFTER('un-deux-trois', error.div0)).to.equal(error.div0)
+          expect(text.TEXTAFTER('un-deux-trois', '-', error.div0)).to.equal(error.div0)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 1, error.div0)).to.equal(error.div0)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 1, 0, error.div0)).to.equal(error.div0)
+        })
+
+        it('in a delimiter array, are propagated even if another delimiter is found', () => {
+          expect(text.TEXTAFTER('a-b', [['-'], [error.na]])).to.equal(error.na)
+        })
+
+        it('the first error in argument order wins, a conversion failure included', () => {
+          expect(text.TEXTAFTER(error.div0, error.na)).to.equal(error.div0)
+          expect(text.TEXTAFTER(error.na, error.div0)).to.equal(error.na)
+          expect(text.TEXTAFTER('un-deux-trois', '-', 'abc', error.na)).to.equal(error.value)
+        })
+
+        it('win over an out-of-range value of a previous argument', () => {
+          expect(text.TEXTAFTER('un-deux-trois', '-', 0, error.div0)).to.equal(error.div0)
+          expect(text.TEXTAFTER(error.div0, '-', 0)).to.equal(error.div0)
+        })
+      })
+    })
+  })
+
+  describe('TEXTBEFORE', () => {
+    describe('args: (text, delimiter, [instance_num], [match_mode], [match_end], [if_not_found])', () => {
+      describe('should return the text before the delimiter', () => {
+        it('examples from Microsoft docs', () => {
+          expect(text.TEXTBEFORE("Red riding hood's, red hood", 'hood')).to.equal('Red riding ')
+          expect(text.TEXTBEFORE("Red riding hood's, red hood", '')).to.equal('')
+          expect(text.TEXTBEFORE("Red riding hood's, red hood", '', -1)).to.equal("Red riding hood's, red hood")
+          expect(text.TEXTBEFORE("Little Red Riding Hood's red hood", 'Red')).to.equal('Little ')
+          expect(text.TEXTBEFORE("Little red Riding Hood's red hood", 'Red')).to.equal(error.na)
+          expect(text.TEXTBEFORE("Little red Riding Hood's red hood", 'red', 2)).to.equal("Little red Riding Hood's ")
+          expect(text.TEXTBEFORE('Marcus Aurelius', ' ', undefined, undefined, 1)).to.equal('Marcus')
+          expect(text.TEXTBEFORE('Socrates', ' ', undefined, undefined, 1)).to.equal('Socrates')
+        })
+
+        it('with only the required args, uses the first instance', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-')).to.equal('un')
+        })
+
+        it('when instance_num > 0, counts the instances from the start of the text', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 2)).to.equal('un-deux')
+        })
+
+        it('when instance_num < 0, counts the instances from the end of the text', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -1)).to.equal('un-deux')
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -2)).to.equal('un')
+        })
+
+        it('when instance_num is decimal, rounds it down like INT', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 1.9)).to.equal('un')
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -1.9)).to.equal('un')
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -0.5)).to.equal('un-deux')
+        })
+
+        it('when instance_num is a numeric text or a boolean, converts it to a number', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', ' 2 ')).to.equal('un-deux')
+          expect(text.TEXTBEFORE('un-deux-trois', '-', true)).to.equal('un')
+        })
+
+        it('when the delimiter repeats, the instances do not overlap', () => {
+          expect(text.TEXTBEFORE('aaaa', 'aa', 1)).to.equal('')
+          expect(text.TEXTBEFORE('aaaa', 'aa', 2)).to.equal('aa')
+          expect(text.TEXTBEFORE('aaa', 'aa', -1)).to.equal('a')
+        })
+
+        it('matches wildcard characters literally', () => {
+          expect(text.TEXTBEFORE('a*b?c~d.e', '*')).to.equal('a')
+          expect(text.TEXTBEFORE('a*b?c~d.e', '~*')).to.equal(error.na)
+        })
+
+        it('counts an emoji as a single character', () => {
+          expect(text.TEXTBEFORE('😀a😀b', '😀', -1)).to.equal('😀a')
+        })
+      })
+
+      describe('with an empty delimiter', () => {
+        it('when instance_num > 0, matches the start of the text', () => {
+          expect(text.TEXTBEFORE('abc', '', 100)).to.equal('')
+        })
+
+        it('when instance_num < 0, matches the end of the text', () => {
+          expect(text.TEXTBEFORE('abc', '', -1)).to.equal('abc')
+        })
+
+        it('an empty cell is an empty delimiter', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', null)).to.equal('')
+        })
+      })
+
+      describe('should convert text and delimiter to text', () => {
+        it('with numbers, keeps 15 significant digits like Excel', () => {
+          expect(text.TEXTBEFORE(12345, 3)).to.equal('12')
+          expect(text.TEXTBEFORE(0.1 + 0.2, '.')).to.equal('0')
+          expect(text.TEXTBEFORE(1 / 3, '.')).to.equal('0')
+          expect(text.TEXTBEFORE(1e21, '+')).to.equal('1E')
+          // Excel typed as 123456789012345678 keeps only 15 digits at input time
+          expect(text.TEXTBEFORE(123456789012345000, '9')).to.equal('12345678')
+          // derived from the measured TEXTAFTER(1 / 3, '.') = '333333333333333': the text is '0.333333333333333'
+          expect(text.TEXTBEFORE(1 / 3, '3', -1)).to.equal('0.33333333333333')
+        })
+
+        it('with booleans, uses TRUE / FALSE', () => {
+          expect(text.TEXTBEFORE(true, 'R')).to.equal('T')
+          expect(text.TEXTBEFORE('xTRUEy', true)).to.equal('x')
+        })
+      })
+
+      describe('match_mode', () => {
+        it('when 0 or omitted, the search is case-sensitive', () => {
+          expect(text.TEXTBEFORE('xAyaz', 'a')).to.equal('xAy')
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 0)).to.equal('xAy')
+        })
+
+        it('when 1, the search is case-insensitive', () => {
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 1)).to.equal('x')
+          expect(text.TEXTBEFORE('aéb', 'É', undefined, 1)).to.equal('a')
+          expect(text.TEXTBEFORE('aİb', 'i', undefined, 1)).to.equal('a')
+        })
+
+        it('when 1, does not fold ß to SS', () => {
+          expect(text.TEXTBEFORE('straße', 'SS', undefined, 1)).to.equal(error.na)
+        })
+
+        it('when decimal, truncates it toward 0', () => {
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 1.5)).to.equal('x')
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 0.99)).to.equal('xAy')
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, -0.5)).to.equal('xAy')
+        })
+      })
+
+      describe('match_end', () => {
+        it('when 1 and instance_num > 0, the end of the text counts as one more delimiter', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 3, 0, 1)).to.equal('un-deux-trois')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', 1, 0, 1)).to.equal('un-deux-trois')
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 4, 0, 1)).to.equal(error.na)
+        })
+
+        it('when 1 and instance_num < 0, the start of the text counts as one more delimiter', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -3, 0, 1)).to.equal('')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', -1, 0, 1)).to.equal('')
+        })
+
+        it('when decimal, truncates it toward 0', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', 1, 0, 1.5)).to.equal('un-deux-trois')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', 1, 0, 0.99)).to.equal(error.na)
+        })
+      })
+
+      describe('with several delimiters (array or range)', () => {
+        it('any of them is a delimiter, whatever their order', () => {
+          expect(text.TEXTBEFORE('a-b_c', [['-'], ['_']])).to.equal('a')
+          expect(text.TEXTBEFORE('a-b_c', [['_'], ['-']])).to.equal('a')
+          expect(text.TEXTBEFORE('a-b_c', [['-'], ['_']], 2)).to.equal('a-b')
+        })
+
+        it('at a given position, the longest delimiter wins', () => {
+          expect(text.TEXTBEFORE('a--b', [['-'], ['--']])).to.equal('a')
+          expect(text.TEXTBEFORE('a---b', [['--'], ['-']], 1)).to.equal('a')
+          expect(text.TEXTBEFORE('a---b', [['--'], ['-']], 2)).to.equal('a--')
+        })
+
+        it('when instance_num < 0, two instances may overlap', () => {
+          expect(text.TEXTBEFORE('a--b--c', [['-'], ['--']], -1)).to.equal('a--b-')
+          expect(text.TEXTBEFORE('a--b--c', [['-'], ['--']], -2)).to.equal('a--b')
+          expect(text.TEXTBEFORE('a--b--c', [['-'], ['--']], -3)).to.equal('a-')
+          expect(text.TEXTBEFORE('xabcx', [['abc'], ['c']], -1)).to.equal('xab')
+          expect(text.TEXTBEFORE('xabcx', [['abc'], ['c']], -2)).to.equal('x')
+        })
+
+        it('flattens a 1D array, a column, a row or a 2D range', () => {
+          expect(text.TEXTBEFORE('a-b_c', ['-', '_'])).to.equal('a')
+          expect(text.TEXTBEFORE('a-b_c', [['-'], ['_']])).to.equal('a')
+          expect(text.TEXTBEFORE('a-b_c', [['-', '_']])).to.equal('a')
+          expect(
+            text.TEXTBEFORE('a-b_c', [
+              ['-', '_'],
+              ['x', 'y']
+            ])
+          ).to.equal('a')
+        })
+      })
+
+      describe('when the delimiter is not found', () => {
+        it('returns #N/A', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', 'z')).to.equal(error.na)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 3)).to.equal(error.na)
+          expect(text.TEXTBEFORE('ab', 'abc')).to.equal(error.na)
+          expect(text.TEXTBEFORE('', '-')).to.equal(error.na)
+          expect(text.TEXTBEFORE(null, '-')).to.equal(error.na)
+        })
+
+        it('returns if_not_found instead of #N/A, converted to text', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', undefined, undefined, undefined, 'NF')).to.equal('NF')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', undefined, undefined, undefined, 5)).to.equal('5')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', undefined, undefined, undefined, true)).to.equal('TRUE')
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', undefined, undefined, undefined, null)).to.equal('')
+        })
+
+        it('returns an error given as if_not_found only when it is used', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', 'z', undefined, undefined, undefined, error.div0)).to.equal(
+            error.div0
+          )
+          expect(text.TEXTBEFORE('un-deux-trois', '-', undefined, undefined, undefined, error.div0)).to.equal('un')
+        })
+      })
+
+      describe('throw error #VALUE!', () => {
+        it('when instance_num is 0 or rounds down to 0', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 0)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 0.5)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', false)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', null)).to.equal(error.value)
+        })
+
+        it('when instance_num is a non-numeric text', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 'abc')).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', '')).to.equal(error.value)
+        })
+
+        it('when |instance_num| > length of text - length of the shortest delimiter + 1', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 13)).to.equal(error.na)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 14)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', -14)).to.equal(error.value)
+          expect(text.TEXTBEFORE('abcd', 'bc', 3)).to.equal(error.na)
+          expect(text.TEXTBEFORE('abcd', 'bc', 4)).to.equal(error.value)
+          expect(text.TEXTBEFORE('ab', 'abc', 1)).to.equal(error.value)
+          expect(text.TEXTBEFORE('', '-', 1)).to.equal(error.value)
+        })
+
+        it('when instance_num is out of bounds, even with match_end or if_not_found', () => {
+          expect(text.TEXTBEFORE('abcd', 'bc', 4, 0, 1)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 14, undefined, undefined, 'NF')).to.equal(error.value)
+        })
+
+        it('when match_mode or match_end is not 0 or 1', () => {
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 2)).to.equal(error.value)
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, -1)).to.equal(error.value)
+          expect(text.TEXTBEFORE('xAyaz', 'a', undefined, 'x')).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 1, 0, 2)).to.equal(error.value)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 1, 0, -1)).to.equal(error.value)
+        })
+
+        it('when delimiter is an empty array', () => {
+          expect(text.TEXTBEFORE('a-b_c', [])).to.equal(error.value)
+        })
+
+        it('when an array is given for another argument than delimiter', () => {
+          expect(text.TEXTBEFORE([['a-b'], ['c-d']], '-')).to.equal(error.value)
+          expect(text.TEXTBEFORE('a-b-c', '-', [[1], [2]])).to.equal(error.value)
+          expect(text.TEXTBEFORE('a-b-c', '-', 1, [[0], [1]])).to.equal(error.value)
+          expect(text.TEXTBEFORE('a-b-c', '-', 1, 0, [[0], [1]])).to.equal(error.value)
+          expect(text.TEXTBEFORE('a-b-c', 'z', 1, 0, 0, [['NF']])).to.equal(error.value)
+        })
+      })
+
+      describe('errors given as args', () => {
+        it('are propagated, whatever the argument', () => {
+          expect(text.TEXTBEFORE(error.div0, '-')).to.equal(error.div0)
+          expect(text.TEXTBEFORE('un-deux-trois', error.div0)).to.equal(error.div0)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', error.div0)).to.equal(error.div0)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 1, error.div0)).to.equal(error.div0)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 1, 0, error.div0)).to.equal(error.div0)
+        })
+
+        it('in a delimiter array, are propagated even if another delimiter is found', () => {
+          expect(text.TEXTBEFORE('a-b', [['-'], [error.na]])).to.equal(error.na)
+        })
+
+        it('the first error in argument order wins, a conversion failure included', () => {
+          expect(text.TEXTBEFORE(error.div0, error.na)).to.equal(error.div0)
+          expect(text.TEXTBEFORE(error.na, error.div0)).to.equal(error.na)
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 'abc', error.na)).to.equal(error.value)
+        })
+
+        it('win over an out-of-range value of a previous argument', () => {
+          expect(text.TEXTBEFORE('un-deux-trois', '-', 0, error.div0)).to.equal(error.div0)
+          expect(text.TEXTBEFORE(error.div0, '-', 0)).to.equal(error.div0)
+        })
+      })
+    })
+  })
+
   describe('VALUE', () => {
     it('should thrown an error in case of error input', () => {
       expect(text.VALUE(error.na)).to.equal(error.na)
