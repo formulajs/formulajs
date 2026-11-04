@@ -600,6 +600,241 @@ export function TEXT(value, format_text) {
 }
 
 /**
+ * Converts a value to text the way Excel does when a text argument receives another type:
+ * numbers in the "General" format (15 significant digits), booleans as TRUE/FALSE, empty as ''.
+ */
+function valueToText(value) {
+  if (value === undefined || value === null) {
+    return ''
+  }
+
+  if (typeof value === 'boolean') {
+    return value ? 'TRUE' : 'FALSE'
+  }
+
+  if (typeof value === 'number' && isFinite(value)) {
+    const text = String(Number(value.toPrecision(15)))
+    // JS writes 1e+21 / 1e-7, Excel writes 1E+21 / 1E-07
+    return text.replace(/e([+-])(\d+)$/, (_, sign, exponent) => 'E' + sign + exponent.padStart(2, '0'))
+  }
+
+  return utils.parseString(value)
+}
+
+/**
+ * Lowercases each character on its own (simple case mapping), so that the folded text keeps the
+ * positions of the original one (e.g. 'İ' becomes 'i', not the two-character 'i̇').
+ */
+function foldCase(text) {
+  let folded = ''
+
+  for (const char of text) {
+    const lower = char.toLowerCase()
+    folded += lower.length === char.length ? lower : String.fromCodePoint(lower.codePointAt(0))
+  }
+
+  return folded
+}
+
+/**
+ * Parses an optional integer argument of TEXTAFTER / TEXTBEFORE.
+ * Returns the default value when omitted, the error when given an error or an array (#VALUE!),
+ * otherwise the number rounded with `round` (an empty cell counts as 0).
+ */
+function parseTextAroundNumber(value, defaultValue, round) {
+  if (value === undefined) {
+    return defaultValue
+  }
+
+  if (Array.isArray(value)) {
+    return error.value
+  }
+
+  if (value === '') {
+    return error.value
+  }
+
+  const number = utils.parseNumber(value)
+
+  return number instanceof Error ? number : round(number)
+}
+
+/**
+ * Shared implementation of TEXTAFTER and TEXTBEFORE.
+ *
+ * The rules below were measured in Excel (see test/text.js):
+ * - arguments are converted in order, the first error (received or from a conversion) wins;
+ * - then values are validated: instance_num 0, match_mode / match_end not 0 or 1 => #VALUE!,
+ *   and an explicit |instance_num| > LEN(text) - LEN(shortest delimiter) + 1 => #VALUE!
+ *   (no such bound when the shortest delimiter is empty);
+ * - forward search (instance_num > 0): at each position the longest matching delimiter wins,
+ *   the next search starts right after it;
+ * - backward search (instance_num < 0): positions are tried from the end, the longest delimiter
+ *   starting at a position wins, the next search starts at (position - its length);
+ * - match_end = 1 adds one virtual delimiter at the end (forward) or at the start (backward);
+ * - if_not_found replaces #N/A only, converted to text.
+ */
+function textAroundDelimiter(after, text, delimiter, instance_num, match_mode, match_end, if_not_found) {
+  if (text instanceof Error) {
+    return text
+  }
+
+  if (Array.isArray(text)) {
+    return error.value
+  }
+
+  text = valueToText(text)
+
+  const delimiterList = Array.isArray(delimiter) ? utils.flatten(delimiter) : [delimiter]
+
+  if (delimiterList.length === 0) {
+    return error.value
+  }
+
+  const delimiterError = delimiterList.find((item) => item instanceof Error)
+
+  if (delimiterError) {
+    return delimiterError
+  }
+
+  const delimiters = delimiterList.map(valueToText)
+
+  const isInstanceOmitted = instance_num === undefined
+  instance_num = parseTextAroundNumber(instance_num, 1, Math.floor)
+
+  if (instance_num instanceof Error) {
+    return instance_num
+  }
+
+  match_mode = parseTextAroundNumber(match_mode, 0, Math.trunc)
+
+  if (match_mode instanceof Error) {
+    return match_mode
+  }
+
+  match_end = parseTextAroundNumber(match_end, 0, Math.trunc)
+
+  if (match_end instanceof Error) {
+    return match_end
+  }
+
+  if (Array.isArray(if_not_found)) {
+    return error.value
+  }
+
+  if (instance_num === 0 || (match_mode !== 0 && match_mode !== 1) || (match_end !== 0 && match_end !== 1)) {
+    return error.value
+  }
+
+  const shortestLength = Math.min(...delimiters.map((item) => item.length))
+
+  if (!isInstanceOmitted && shortestLength > 0 && Math.abs(instance_num) > text.length - shortestLength + 1) {
+    return error.value
+  }
+
+  const notFound = () => {
+    if (if_not_found === undefined) {
+      return error.na
+    }
+
+    return if_not_found instanceof Error ? if_not_found : valueToText(if_not_found)
+  }
+
+  if (shortestLength > text.length) {
+    return notFound()
+  }
+
+  const ignoreCase = match_mode === 1
+  const candidates = delimiters
+    .map((item) => ({ length: item.length, value: ignoreCase ? foldCase(item) : item }))
+    .sort((a, b) => b.length - a.length)
+
+  // length of the longest delimiter starting at `position`, or -1
+  const matchLengthAt = (position) => {
+    for (const candidate of candidates) {
+      if (position + candidate.length <= text.length) {
+        const slice = text.slice(position, position + candidate.length)
+
+        if ((ignoreCase ? foldCase(slice) : slice) === candidate.value) {
+          return candidate.length
+        }
+      }
+    }
+
+    return -1
+  }
+
+  const forward = instance_num > 0
+  const target = Math.abs(instance_num)
+  let count = 0
+  let found = null
+  let position = forward ? 0 : text.length
+
+  while (position >= 0 && position <= text.length) {
+    const length = matchLengthAt(position)
+
+    if (length < 0) {
+      position += forward ? 1 : -1
+      continue
+    }
+
+    count++
+
+    // an empty delimiter matches again at the same position: every instance is this one
+    if (count === target || length === 0) {
+      found = { position, length }
+      break
+    }
+
+    position += forward ? length : -length
+  }
+
+  if (!found && match_end === 1 && count === target - 1) {
+    found = { position: forward ? text.length : 0, length: 0 }
+  }
+
+  if (!found) {
+    return notFound()
+  }
+
+  return after ? text.slice(found.position + found.length) : text.slice(0, found.position)
+}
+
+/**
+ * Returns text that occurs after a given character or string.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you are searching within. Wildcard characters are not allowed.
+ * @param {*} delimiter The text that marks the point after which you want to extract. Can be an array or a range of several delimiters.
+ * @param {*} instance_num [Optional] The instance of the delimiter after which you want to extract the text. Default is 1. A negative number starts searching from the end.
+ * @param {*} match_mode [Optional] 0 (default) for a case-sensitive match, 1 for a case-insensitive match.
+ * @param {*} match_end [Optional] 1 to treat the end of the text as a delimiter, 0 (default) otherwise.
+ * @param {*} if_not_found [Optional] Value returned if no match is found. Default is #N/A.
+ * @returns
+ */
+export function TEXTAFTER(text, delimiter, instance_num, match_mode, match_end, if_not_found) {
+  return textAroundDelimiter(true, text, delimiter, instance_num, match_mode, match_end, if_not_found)
+}
+
+/**
+ * Returns text that occurs before a given character or string.
+ *
+ * Category: Text
+ *
+ * @param {*} text The text you are searching within. Wildcard characters are not allowed.
+ * @param {*} delimiter The text that marks the point before which you want to extract. Can be an array or a range of several delimiters.
+ * @param {*} instance_num [Optional] The instance of the delimiter before which you want to extract the text. Default is 1. A negative number starts searching from the end.
+ * @param {*} match_mode [Optional] 0 (default) for a case-sensitive match, 1 for a case-insensitive match.
+ * @param {*} match_end [Optional] 1 to treat the end of the text as a delimiter, 0 (default) otherwise.
+ * @param {*} if_not_found [Optional] Value returned if no match is found. Default is #N/A.
+ * @returns
+ */
+export function TEXTBEFORE(text, delimiter, instance_num, match_mode, match_end, if_not_found) {
+  return textAroundDelimiter(false, text, delimiter, instance_num, match_mode, match_end, if_not_found)
+}
+
+/**
  * Combines the text from multiple ranges and/or strings.
  *
  * Category: Text
