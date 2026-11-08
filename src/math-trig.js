@@ -1072,10 +1072,10 @@ export function MOD(number, divisor) {
     return error.div0
   }
 
-  let modulus = Math.abs(number % divisor)
-  modulus = number < 0 ? divisor - modulus : modulus
-
-  return divisor > 0 ? modulus : -modulus
+  // Excel: MOD(number, divisor) = number - divisor * INT(number / divisor),
+  // where INT rounds toward negative infinity, so the result always has
+  // the sign of the divisor and is 0 for exact multiples.
+  return number - divisor * Math.floor(number / divisor)
 }
 
 /**
