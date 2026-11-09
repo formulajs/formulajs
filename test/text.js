@@ -165,6 +165,12 @@ describe('Text', () => {
           expect(text.MID(textTest, start_num, 1)).to.equal('')
         })
 
+        it('when num_chars is 0 => returns empty text (issue #268)', () => {
+          expect(text.MID('Hello', 2, 0)).to.equal('')
+          expect(text.MID('Hello', 1, 0)).to.equal('')
+          expect(text.MID('Hello', 2, 3)).to.equal('ell')
+        })
+
         it('when non defined text provided => return empty text', () => {
           expect(text.MID(undefined, 20, 3)).to.equal('')
           expect(text.MID(null, 52, 8)).to.equal('')
@@ -179,8 +185,10 @@ describe('Text', () => {
       })
 
       describe('should throw error #VALUE!', () => {
-        it('when start_num or num_chars are not strictly positive (> 1)', () => {
+        it('when start_num < 1 or num_chars < 0', () => {
           expect(text.MID('', -3, 3)).to.equal(error.value)
+          expect(text.MID('', 0, 3)).to.equal(error.value)
+          expect(text.MID('', 2, -1)).to.equal(error.value)
           expect(text.MID('', 3, -3)).to.equal(error.value)
           expect(text.MID('', -3, -3)).to.equal(error.value)
         })
