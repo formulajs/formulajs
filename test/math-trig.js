@@ -338,6 +338,29 @@ describe('Math & Trig', () => {
         expect(mathTrig.FACT('invalid')).to.equal(error.value)
         expect(mathTrig.FACT('E6')).to.equal(error.value)
       })
+
+      describe('memoization (preserve internal cache)', () => {
+        it('when called in any order => returns results regardless of cache state', () => {
+          expect(mathTrig.FACT(10)).to.equal(3628800)
+          expect(mathTrig.FACT(5)).to.equal(120)
+          expect(mathTrig.FACT(12)).to.equal(479001600)
+          expect(mathTrig.FACT(3)).to.equal(6)
+          expect(mathTrig.FACT(12)).to.equal(479001600)
+        })
+
+        it('when called repeatedly with the same number => returns the same result', () => {
+          expect(mathTrig.FACT(6)).to.equal(720)
+          expect(mathTrig.FACT(6)).to.equal(720)
+          expect(mathTrig.FACT(5.9)).to.equal(120)
+          expect(mathTrig.FACT(5)).to.equal(120)
+        })
+
+        it('when number reaches the floating-point limit => returns the largest finite value, then Infinity', () => {
+          expect(mathTrig.FACT(170)).to.equal(7.257415615307994e306)
+          expect(mathTrig.FACT(171)).to.equal(Infinity)
+          expect(mathTrig.FACT(171)).to.equal(Infinity)
+        })
+      })
     })
   })
 
