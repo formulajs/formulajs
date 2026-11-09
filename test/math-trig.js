@@ -307,11 +307,66 @@ describe('Math & Trig', () => {
     expect(mathTrig.EXP(1)).to.equal(2.718281828459045)
   })
 
-  it('FACT', () => {
-    expect(mathTrig.FACT(undefined)).to.equal(1)
-    expect(mathTrig.FACT(error.na)).to.equal(error.na)
-    expect(mathTrig.FACT(6)).to.equal(720)
-    expect(mathTrig.FACT('invalid')).to.equal(error.value)
+  describe('FACT', () => {
+    describe('args: (number)', () => {
+      it('when an Excel error is provided => returns that error', () => {
+        expect(mathTrig.FACT(error.na)).to.equal(error.na)
+        expect(mathTrig.FACT(error.value)).to.equal(error.value)
+        expect(mathTrig.FACT(error.div0)).to.equal(error.div0)
+      })
+
+      it('when number is 0 or 1 => returns 1', () => {
+        expect(mathTrig.FACT(0)).to.equal(1)
+        expect(mathTrig.FACT(1)).to.equal(1)
+        expect(mathTrig.FACT(undefined)).to.equal(1)
+      })
+
+      it('when number is greater than 1 => returns the factorial', () => {
+        expect(mathTrig.FACT(2)).to.equal(2)
+        expect(mathTrig.FACT(5)).to.equal(120)
+        expect(mathTrig.FACT(6)).to.equal(720)
+        expect(mathTrig.FACT(' 6')).to.equal(720)
+        expect(mathTrig.FACT(5.9)).to.equal(120)
+      })
+
+      it('when number is negative => returns #NUM!', () => {
+        expect(mathTrig.FACT(-1)).to.equal(error.num)
+        expect(mathTrig.FACT(-0.5)).to.equal(error.num)
+      })
+
+      it('when number is greater than 170 => returns #NUM!', () => {
+        expect(mathTrig.FACT(170.9)).to.equal(7.257415615307994e306)
+        expect(mathTrig.FACT(171)).to.equal(error.num)
+        expect(mathTrig.FACT(200)).to.equal(error.num)
+      })
+
+      it('when number is not a number => returns #VALUE!', () => {
+        expect(mathTrig.FACT('invalid')).to.equal(error.value)
+        expect(mathTrig.FACT('E6')).to.equal(error.value)
+      })
+
+      describe('memoization (preserve internal cache)', () => {
+        it('when called in any order => returns results regardless of cache state', () => {
+          expect(mathTrig.FACT(10)).to.equal(3628800)
+          expect(mathTrig.FACT(5)).to.equal(120)
+          expect(mathTrig.FACT(12)).to.equal(479001600)
+          expect(mathTrig.FACT(3)).to.equal(6)
+          expect(mathTrig.FACT(12)).to.equal(479001600)
+        })
+
+        it('when called repeatedly with the same number => returns the same result', () => {
+          expect(mathTrig.FACT(6)).to.equal(720)
+          expect(mathTrig.FACT(6)).to.equal(720)
+          expect(mathTrig.FACT(5.9)).to.equal(120)
+          expect(mathTrig.FACT(5)).to.equal(120)
+        })
+
+        it('when number reaches the floating-point limit => returns the largest finite value, then #NUM!', () => {
+          expect(mathTrig.FACT(170)).to.equal(7.257415615307994e306)
+          expect(mathTrig.FACT(171)).to.equal(error.num)
+        })
+      })
+    })
   })
 
   it('FACTDOUBLE', () => {

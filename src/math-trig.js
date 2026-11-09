@@ -733,7 +733,9 @@ export function FACT(number) {
 
   const n = Math.floor(number)
 
-  if (n === 0 || n === 1) {
+  if (n < 0 || n > 170) {
+    return error.num
+  } else if (n <= 1) {
     return 1
   } else if (MEMOIZED_FACT[n] > 0) {
     return MEMOIZED_FACT[n]
