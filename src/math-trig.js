@@ -733,7 +733,7 @@ export function FACT(number) {
 
   const n = Math.floor(number)
 
-  if (n < 0) {
+  if (n < 0 || n > 170) {
     return error.num
   } else if (n <= 1) {
     return 1

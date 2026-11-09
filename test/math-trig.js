@@ -334,6 +334,12 @@ describe('Math & Trig', () => {
         expect(mathTrig.FACT(-0.5)).to.equal(error.num)
       })
 
+      it('when number is greater than 170 => returns #NUM!', () => {
+        expect(mathTrig.FACT(170.9)).to.equal(7.257415615307994e306)
+        expect(mathTrig.FACT(171)).to.equal(error.num)
+        expect(mathTrig.FACT(200)).to.equal(error.num)
+      })
+
       it('when number is not a number => returns #VALUE!', () => {
         expect(mathTrig.FACT('invalid')).to.equal(error.value)
         expect(mathTrig.FACT('E6')).to.equal(error.value)
@@ -355,10 +361,9 @@ describe('Math & Trig', () => {
           expect(mathTrig.FACT(5)).to.equal(120)
         })
 
-        it('when number reaches the floating-point limit => returns the largest finite value, then Infinity', () => {
+        it('when number reaches the floating-point limit => returns the largest finite value, then #NUM!', () => {
           expect(mathTrig.FACT(170)).to.equal(7.257415615307994e306)
-          expect(mathTrig.FACT(171)).to.equal(Infinity)
-          expect(mathTrig.FACT(171)).to.equal(Infinity)
+          expect(mathTrig.FACT(171)).to.equal(error.num)
         })
       })
     })
