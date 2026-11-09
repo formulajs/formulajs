@@ -300,6 +300,8 @@ describe('Text', () => {
       expect(text.SUBSTITUTE('a-a-a', '-', ':', -1)).to.equal(error.value)
       expect(text.SUBSTITUTE('a-a-a', '-', ':', 0)).to.equal(error.value)
       expect(text.SUBSTITUTE('a-a-a', '-', ':', 0.5)).to.equal(error.value)
+      expect(text.SUBSTITUTE('abcabc', 'a', 'x', 1)).to.equal('xbcabc')
+      expect(text.SUBSTITUTE('abcabc', 'a', 'x', 2)).to.equal('abcxbc')
     })
   })
 
