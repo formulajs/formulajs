@@ -215,6 +215,8 @@ describe('Text', () => {
     expect(text.PROPER(null)).to.equal('')
     expect(text.PROPER(error.na)).to.equal(error.na)
     expect(text.PROPER('a title case')).to.equal('A Title Case')
+    expect(text.PROPER('élan vital')).to.equal('Élan Vital')
+    expect(text.PROPER('mary-jane')).to.equal('Mary-Jane')
     expect(text.PROPER(true)).to.equal('True')
     expect(text.PROPER(false)).to.equal('False')
     expect(text.PROPER(90)).to.equal('90')

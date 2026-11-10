@@ -380,7 +380,7 @@ export function PROPER(text) {
 
   text = utils.parseString(text)
 
-  return text.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase())
+  return text.toLowerCase().replace(/(^|\P{L})(\p{L})/gu, (match, before, letter) => before + letter.toUpperCase())
 }
 
 /**
