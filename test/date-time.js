@@ -310,6 +310,10 @@ describe('Date & Time', () => {
     expect(dateTime.YEARFRAC('1/1/1904', '1/1/1905', 1)).to.equal(1)
     expect(dateTime.YEARFRAC('5/1/1903', '5/1/1904', 1)).to.equal(1)
     expect(dateTime.YEARFRAC('1/1/1904', '1/2/1904', 1)).to.approximately(0.00273224043715847, 1e-3)
+    expect(dateTime.YEARFRAC('11/12/2026', '1/28/2027', 1)).to.approximately(77 / 365, 1e-9)
+    expect(dateTime.YEARFRAC('11/12/2026', '1/29/2027', 1)).to.approximately(78 / 365, 1e-9)
+    expect(dateTime.YEARFRAC('11/12/2026', '1/30/2027', 1)).to.approximately(79 / 365, 1e-9)
+    expect(dateTime.YEARFRAC('3/1/2023', '2/29/2024', 1)).to.approximately(365 / 366, 1e-9)
 
     expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 2)).to.approximately(0.002777777777777778, 1e-3)
     expect(dateTime.YEARFRAC('1/1/1900', '1/2/1900', 3)).to.approximately(0.0027397260273972603, 1e-3)
