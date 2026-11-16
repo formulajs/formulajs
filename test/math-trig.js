@@ -584,6 +584,11 @@ describe('Math & Trig', () => {
     expect(mathTrig.MOD(0, 3)).to.equal(0)
     expect(mathTrig.MOD(-5.5, 2)).to.equal(0.5)
     expect(mathTrig.MOD(5.5, -2)).to.equal(-0.5)
+
+    // Float cases: Excel's MOD is not exact here, so the result is only
+    // approximately 0.1 (the floor-based formula wrongly returns exactly 0).
+    expect(mathTrig.MOD(1, 0.1)).to.be.closeTo(0.1, 1e-9)
+    expect(mathTrig.MOD(5.5, 0.1)).to.be.closeTo(0.1, 1e-9)
   })
 
   it('MROUND', () => {
