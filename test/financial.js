@@ -579,6 +579,13 @@ describe('Financial', () => {
     expect(financial.NPV(0.1, [10, NaN, 20])).to.equal(error.value)
   })
 
+  it('NPV parses values passed directly', () => {
+    expect(financial.NPV(0.1, 100, 'x', 300)).to.equal(error.value)
+    expect(financial.NPV(0.1, 100, '5', 300)).to.approximately(320.4357625845229, 1e-9)
+    expect(financial.NPV(0.1, 100, true, 300)).to.approximately(317.1299774605559, 1e-9)
+    expect(financial.NPV(0.1, [100, 'x', 300])).to.approximately(338.8429752066115, 1e-9)
+  })
+
   it('PDURATION', () => {
     expect(financial.PDURATION(0.1, 1000, 2000)).to.approximately(7.272540897341714, 1e-9)
     expect(financial.PDURATION('Hello World!', 1000, 2000)).to.equal(error.value)
