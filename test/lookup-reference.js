@@ -3451,4 +3451,298 @@ describe('Lookup Reference', () => {
       })
     })
   })
+
+  describe('WRAPROWS', () => {
+    describe('args: (vector, wrap_count, [pad_with])', () => {
+      describe('should wrap a row or column of values into rows of wrap_count elements.', () => {
+        it('examples from Microsoft docs', () => {
+          expect(lookup.WRAPROWS([['A', 'B', 'C', 'D', 'E', 'F', 'G']], 3)).to.eql([
+            ['A', 'B', 'C'],
+            ['D', 'E', 'F'],
+            ['G', error.na, error.na]
+          ])
+
+          expect(lookup.WRAPROWS([['A', 'B', 'C', 'D', 'E', 'F', 'G']], 3, 'x')).to.eql([
+            ['A', 'B', 'C'],
+            ['D', 'E', 'F'],
+            ['G', 'x', 'x']
+          ])
+        })
+
+        describe('with required vector and wrap_count', () => {
+          it('with wrap_count = 1 => should result to 6x1', () => {
+            expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 1)).to.eql([[1], [2], [3], [4], [5], [6]])
+
+            expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 1)).to.eql([[1], [2], [3], [4], [5], [6]])
+          })
+
+          it('with wrap_count = 2 => should result to 3x2', () => {
+            expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 2)).to.eql([
+              [1, 2],
+              [3, 4],
+              [5, 6]
+            ])
+
+            expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 2)).to.eql([
+              [1, 2],
+              [3, 4],
+              [5, 6]
+            ])
+          })
+
+          it('with wrap_count = 3 => should result to 2x3', () => {
+            expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 3)).to.eql([
+              [1, 2, 3],
+              [4, 5, 6]
+            ])
+
+            expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 3)).to.eql([
+              [1, 2, 3],
+              [4, 5, 6]
+            ])
+          })
+
+          it('with wrap_count = 4 => should result to 2x4, padding with default #N/A', () => {
+            expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 4)).to.eql([
+              [1, 2, 3, 4],
+              [5, 6, error.na, error.na]
+            ])
+
+            expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 4)).to.eql([
+              [1, 2, 3, 4],
+              [5, 6, error.na, error.na]
+            ])
+          })
+
+          it('if wrap_count exceeds vector length, should result to one row', () => {
+            expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 8)).to.eql([[1, 2, 3, 4, 5, 6]])
+
+            expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 8)).to.eql([[1, 2, 3, 4, 5, 6]])
+          })
+
+          it('empty values (undefined, null) in vector will be replaced by 0', () => {
+            expect(lookup.WRAPROWS([[1, undefined, 3, 4, 5, null]], 4)).to.eql([
+              [1, 0, 3, 4],
+              [5, 0, error.na, error.na]
+            ])
+
+            expect(lookup.WRAPROWS([[1], [2], [null], [4], [undefined], [6]], 4)).to.eql([
+              [1, 2, 0, 4],
+              [0, 6, error.na, error.na]
+            ])
+          })
+
+          it('should treat a scalar as a one-element vector', () => {
+            expect(lookup.WRAPROWS(5, 3)).to.eql([[5]])
+          })
+
+          describe('with optional pad_with', () => {
+            it('default to #N/A if not set', () => {
+              expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 4)).to.eql([
+                [1, 2, 3, 4],
+                [5, 6, error.na, error.na]
+              ])
+
+              expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 4)).to.eql([
+                [1, 2, 3, 4],
+                [5, 6, error.na, error.na]
+              ])
+            })
+
+            it('should pad with given value if set', () => {
+              expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 4, 'PAD_VALUE')).to.eql([
+                [1, 2, 3, 4],
+                [5, 6, 'PAD_VALUE', 'PAD_VALUE']
+              ])
+
+              expect(lookup.WRAPROWS([[1], [2], [3], [4], [5], [6]], 4, 'PAD_VALUE')).to.eql([
+                [1, 2, 3, 4],
+                [5, 6, 'PAD_VALUE', 'PAD_VALUE']
+              ])
+            })
+          })
+        })
+      })
+
+      describe('throws error', () => {
+        it('#VALUE! when vector is not 1-dim array', () => {
+          expect(
+            lookup.WRAPROWS(
+              [
+                [1, 2, 3],
+                [4, 5, 6]
+              ],
+              4
+            )
+          ).to.eql(error.value)
+        })
+
+        it('#CALC! for an empty array', () => {
+          expect(lookup.WRAPROWS([], 3)).to.eql(error.calc)
+        })
+
+        it('#NUM! when wrap_count < 1', () => {
+          expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 0)).to.eql(error.num)
+          expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], -3)).to.eql(error.num)
+          expect(lookup.WRAPROWS([[1, 2, 3, 4, 5, 6]], 0.9)).to.eql(error.num)
+          expect(lookup.WRAPROWS([[1, 2, 3]])).to.eql(error.num)
+        })
+      })
+    })
+  })
+
+  describe('WRAPCOLS', () => {
+    describe('args: (vector, wrap_count, [pad_with])', () => {
+      describe('should wrap a row or column of values into columns of wrap_count elements.', () => {
+        it('examples from Microsoft docs', () => {
+          expect(lookup.WRAPCOLS([['A', 'B', 'C', 'D', 'E', 'F', 'G']], 3)).to.eql([
+            ['A', 'D', 'G'],
+            ['B', 'E', error.na],
+            ['C', 'F', error.na]
+          ])
+
+          expect(lookup.WRAPCOLS([['A', 'B', 'C', 'D', 'E', 'F', 'G']], 3, 'x')).to.eql([
+            ['A', 'D', 'G'],
+            ['B', 'E', 'x'],
+            ['C', 'F', 'x']
+          ])
+        })
+
+        describe('with required vector and wrap_count', () => {
+          it('with wrap_count = 1 => should result to 1x6', () => {
+            expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 1)).to.eql([[1, 2, 3, 4, 5, 6]])
+
+            expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 1)).to.eql([[1, 2, 3, 4, 5, 6]])
+          })
+
+          it('with wrap_count = 2 => should result to 2x3', () => {
+            expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 2)).to.eql([
+              [1, 3, 5],
+              [2, 4, 6]
+            ])
+
+            expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 2)).to.eql([
+              [1, 3, 5],
+              [2, 4, 6]
+            ])
+          })
+
+          it('with wrap_count = 3 => should result to 3x2', () => {
+            expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 3)).to.eql([
+              [1, 4],
+              [2, 5],
+              [3, 6]
+            ])
+
+            expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 3)).to.eql([
+              [1, 4],
+              [2, 5],
+              [3, 6]
+            ])
+          })
+
+          it('with wrap_count = 4 => should result to 4x2, padding with default #N/A', () => {
+            expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 4)).to.eql([
+              [1, 5],
+              [2, 6],
+              [3, error.na],
+              [4, error.na]
+            ])
+
+            expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 4)).to.eql([
+              [1, 5],
+              [2, 6],
+              [3, error.na],
+              [4, error.na]
+            ])
+          })
+
+          it('if wrap_count exceeds vector length, should result to one column', () => {
+            expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 8)).to.eql([[1], [2], [3], [4], [5], [6]])
+
+            expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 8)).to.eql([[1], [2], [3], [4], [5], [6]])
+          })
+
+          it('empty values (undefined, null) in vector will be replaced by 0', () => {
+            expect(lookup.WRAPCOLS([[1, undefined, 3, 4, 5, null]], 4)).to.eql([
+              [1, 5],
+              [0, 0],
+              [3, error.na],
+              [4, error.na]
+            ])
+
+            expect(lookup.WRAPCOLS([[1], [2], [null], [4], [undefined], [6]], 4)).to.eql([
+              [1, 0],
+              [2, 6],
+              [0, error.na],
+              [4, error.na]
+            ])
+          })
+
+          it('should treat a scalar as a one-element vector', () => {
+            expect(lookup.WRAPCOLS(5, 3)).to.eql([[5]])
+          })
+
+          describe('with optional pad_with', () => {
+            it('default to #N/A if not set', () => {
+              expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 4)).to.eql([
+                [1, 5],
+                [2, 6],
+                [3, error.na],
+                [4, error.na]
+              ])
+
+              expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 4)).to.eql([
+                [1, 5],
+                [2, 6],
+                [3, error.na],
+                [4, error.na]
+              ])
+            })
+
+            it('should pad with given value if set', () => {
+              expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 4, 'PAD_VALUE')).to.eql([
+                [1, 5],
+                [2, 6],
+                [3, 'PAD_VALUE'],
+                [4, 'PAD_VALUE']
+              ])
+
+              expect(lookup.WRAPCOLS([[1], [2], [3], [4], [5], [6]], 4, 'PAD_VALUE')).to.eql([
+                [1, 5],
+                [2, 6],
+                [3, 'PAD_VALUE'],
+                [4, 'PAD_VALUE']
+              ])
+            })
+          })
+        })
+      })
+
+      describe('throws error', () => {
+        it('#VALUE! when vector is not 1-dim array', () => {
+          expect(
+            lookup.WRAPCOLS(
+              [
+                [1, 2, 3],
+                [4, 5, 6]
+              ],
+              4
+            )
+          ).to.eql(error.value)
+        })
+
+        it('#CALC! for an empty array', () => {
+          expect(lookup.WRAPCOLS([], 3)).to.eql(error.calc)
+        })
+
+        it('#NUM! when wrap_count < 1', () => {
+          expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 0)).to.eql(error.num)
+          expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], -3)).to.eql(error.num)
+          expect(lookup.WRAPCOLS([[1, 2, 3, 4, 5, 6]], 0.9)).to.eql(error.num)
+          expect(lookup.WRAPCOLS([[1, 2, 3]])).to.eql(error.num)
+        })
+      })
+    })
+  })
 })
