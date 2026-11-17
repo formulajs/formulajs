@@ -896,7 +896,7 @@ export function YEARFRAC(start_date, end_date, basis) {
       let ylength = 365
 
       if (sy === ey || (sy + 1 === ey && (sm > em || (sm === em && sd >= ed)))) {
-        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 1 && ed === 29)) {
+        if ((sy === ey && isLeapYear(sy)) || feb29Between(start_date, end_date) || (em === 2 && ed === 29)) {
           ylength = 366
         }
 
