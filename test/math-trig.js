@@ -571,6 +571,24 @@ describe('Math & Trig', () => {
     expect(mathTrig.MOD(-90, 360)).to.equal(270)
     expect(mathTrig.MOD(3, 0)).to.equal(error.div0)
     expect(mathTrig.MOD(3, 'invalid')).to.equal(error.value)
+
+    // Regression tests for #269: negative dividends / divisors must follow
+    // Excel (result has the sign of the divisor, 0 for exact multiples).
+    expect(mathTrig.MOD(-6, 3)).to.equal(0)
+    expect(mathTrig.MOD(-10, -3)).to.equal(-1)
+    expect(mathTrig.MOD(2.5, -3)).to.equal(-0.5)
+    expect(mathTrig.MOD(-2.5, 0.5)).to.equal(0)
+    expect(mathTrig.MOD(-1, 3)).to.equal(2)
+    expect(mathTrig.MOD(-6, -3)).to.equal(0)
+    expect(mathTrig.MOD(6, -3)).to.equal(0)
+    expect(mathTrig.MOD(0, 3)).to.equal(0)
+    expect(mathTrig.MOD(-5.5, 2)).to.equal(0.5)
+    expect(mathTrig.MOD(5.5, -2)).to.equal(-0.5)
+
+    // Float cases: Excel's MOD is not exact here, so the result is only
+    // approximately 0.1 (the floor-based formula wrongly returns exactly 0).
+    expect(mathTrig.MOD(1, 0.1)).to.be.closeTo(0.1, 1e-9)
+    expect(mathTrig.MOD(5.5, 0.1)).to.be.closeTo(0.1, 1e-9)
   })
 
   it('MROUND', () => {

@@ -1072,10 +1072,19 @@ export function MOD(number, divisor) {
     return error.div0
   }
 
-  let modulus = Math.abs(number % divisor)
-  modulus = number < 0 ? divisor - modulus : modulus
+  // Excel: MOD(number, divisor) takes the sign of the divisor.
+  // Use the native remainder and adjust its sign only when needed:
+  // Math.floor(number / divisor) is exact where Excel's MOD is not
+  // (1 / 0.1 is exactly 10 in floating point), so the floor formula
+  // wrongly returns exactly 0 for MOD(1, 0.1) and MOD(5.5, 0.1).
+  const remainder = number % divisor
 
-  return divisor > 0 ? modulus : -modulus
+  if (remainder === 0) {
+    // Avoid returning -0 for exact multiples such as MOD(-6, 3).
+    return 0
+  }
+
+  return remainder < 0 !== divisor < 0 ? remainder + divisor : remainder
 }
 
 /**
