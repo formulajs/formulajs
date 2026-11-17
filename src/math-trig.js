@@ -715,7 +715,6 @@ export function EXP(number) {
   return number
 }
 
-const MEMOIZED_FACT = []
 /**
  * Returns the factorial of a number.
  *
@@ -724,25 +723,31 @@ const MEMOIZED_FACT = []
  * @param {*} number The nonnegative number for which you want the factorial. If number is not an integer, it is truncated.
  * @returns
  */
-export function FACT(number) {
-  number = utils.parseNumber(number)
+export const FACT = (() => {
+  const MEMOIZED = []
 
-  if (number instanceof Error) {
-    return number
+  return (number) => {
+    number = utils.parseNumber(number)
+
+    if (number instanceof Error) {
+      return number
+    }
+
+    const n = Math.floor(number)
+
+    if (n < 0 || n > 170) {
+      return error.num
+    } else if (n <= 1) {
+      return 1
+    } else if (MEMOIZED[n] > 0) {
+      return MEMOIZED[n]
+    } else {
+      MEMOIZED[n] = FACT(n - 1) * n
+
+      return MEMOIZED[n]
+    }
   }
-
-  const n = Math.floor(number)
-
-  if (n === 0 || n === 1) {
-    return 1
-  } else if (MEMOIZED_FACT[n] > 0) {
-    return MEMOIZED_FACT[n]
-  } else {
-    MEMOIZED_FACT[n] = FACT(n - 1) * n
-
-    return MEMOIZED_FACT[n]
-  }
-}
+})()
 
 /**
  * Returns the double factorial of a number.
