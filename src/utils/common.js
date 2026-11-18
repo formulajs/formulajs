@@ -285,6 +285,36 @@ export function parseBool(bool) {
   return error.value
 }
 
+/**
+ * A time written as text ("14:30", "6:00 PM", "4 AM", "14:35:20.5"), as a fraction of a day; #VALUE! for one out of
+ * range ("14:75"), null for any other text.
+ *
+ * @param {*} text
+ * @return {Number|Error|null}
+ */
+export function parseTime(text) {
+  const match = /^\s*(\d{1,2})(?::(\d{1,2})(?::(\d{1,2}(?:\.\d+)?))?)?\s*([ap]m?)?\s*$/i.exec(text)
+
+  if (!match || (match[2] === undefined && !match[4])) {
+    return null
+  }
+
+  let hours = parseInt(match[1], 10)
+  const minutes = match[2] ? parseInt(match[2], 10) : 0
+  const seconds = match[3] ? parseFloat(match[3]) : 0
+  const meridiem = match[4] && match[4].charAt(0).toLowerCase()
+
+  if (minutes > 59 || seconds >= 60 || (meridiem && (hours < 1 || hours > 12))) {
+    return error.value
+  }
+
+  if (meridiem) {
+    hours = (hours % 12) + (meridiem === 'p' ? 12 : 0)
+  }
+
+  return (hours * 3600 + minutes * 60 + seconds) / 86400
+}
+
 export function parseDate(date) {
   if (!isNaN(date)) {
     if (date instanceof Date) {
@@ -301,6 +331,19 @@ export function parseDate(date) {
   }
 
   if (typeof date === 'string') {
+    const time = parseTime(date)
+
+    if (time instanceof Error) {
+      return time
+    }
+
+    if (time !== null) {
+      const result = serialToDate(Math.floor(time))
+      result.setMilliseconds(Math.round((time % 1) * 86400000))
+
+      return result
+    }
+
     date = /(\d{4})-(\d\d?)-(\d\d?)$/.test(date) ? new Date(date + 'T00:00:00.000') : new Date(date)
 
     if (!isNaN(date)) {

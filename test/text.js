@@ -438,6 +438,13 @@ describe('Text', () => {
       expect(text.VALUE(true)).to.equal(error.value)
     })
 
+    it('should return the fraction of a day in case of a time', () => {
+      expect(text.VALUE('18:00')).to.equal(0.75)
+      expect(text.VALUE('6:00 PM')).to.equal(0.75)
+      expect(text.VALUE('4 AM')).to.equal(4 / 24)
+      expect(text.VALUE('14:75')).to.equal(error.value)
+    })
+
     it('should thrown an error in case of malformed input', () => {
       expect(text.VALUE('SOMETEXT')).to.equal(error.value)
       expect(text.VALUE('2+2')).to.equal(error.value)

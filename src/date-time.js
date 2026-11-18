@@ -627,6 +627,12 @@ export function TIME(hour, minute, second) {
  * @returns
  */
 export function TIMEVALUE(time_text) {
+  const time = typeof time_text === 'string' ? utils.parseTime(time_text) : null
+
+  if (time !== null) {
+    return time instanceof Error ? time : time % 1
+  }
+
   time_text = utils.parseDate(time_text)
 
   if (time_text instanceof Error) {

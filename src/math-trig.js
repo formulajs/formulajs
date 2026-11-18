@@ -351,7 +351,7 @@ export function BASE(number, radix, min_length) {
     return error.num
   }
 
-  const result = number.toString(radix)
+  const result = number.toString(radix).toUpperCase()
 
   return new Array(Math.max(min_length + 1 - result.length, 0)).join('0') + result
 }
