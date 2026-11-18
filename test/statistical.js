@@ -1,5 +1,6 @@
 import { expect } from 'chai'
 
+import * as compatibility from '../src/compatibility.js'
 import * as error from '../src/utils/error.js'
 import * as mathTrig from '../src/math-trig.js'
 import * as statistical from '../src/statistical.js'
@@ -377,8 +378,11 @@ describe('Statistical', () => {
     expect(statistical.F.TEST([1, 3, 5, 7, 9], [1])).to.equal(error.div0)
     expect(statistical.F.TEST([1], [1, 3, 5, 7, 9])).to.equal(error.div0)
     expect(statistical.F.TEST([1], [1])).to.equal(error.div0)
-    expect(statistical.F.TEST([1, 3, 5, 7, 9], [5, 9, 3, 8, 3])).to.approximately(1.282, 1e-3)
-    expect(statistical.F.TEST([4, 2, 5, 1, 3], [8, 3, 9, 0, 1])).to.approximately(0.1497, 1e-4)
+    expect(statistical.F.TEST([1, 3, 5, 7, 9], [5, 9, 3, 8, 3])).to.approximately(0.8155507547, 1e-9)
+    expect(statistical.F.TEST([4, 2, 5, 1, 3], [8, 3, 9, 0, 1])).to.approximately(0.0928949427, 1e-9)
+    expect(statistical.F.TEST([6, 7, 9, 15, 21], [20, 28, 31, 38, 40])).to.approximately(0.64831785, 1e-8)
+    expect(statistical.F.TEST([1, 1], [1, 2])).to.equal(error.div0)
+    expect(statistical.F.TEST([1, 2], [1, 1])).to.equal(error.div0)
   })
 
   it('FISHER', () => {
@@ -1039,12 +1043,13 @@ describe('Statistical', () => {
   })
 
   it('T.DIST', () => {
-    expect(statistical.T.DIST(1.959999998, 60, 0)).to.equal(error.num)
     expect(statistical.T.DIST(8, 'invalid', 1)).to.equal(error.value)
-    expect(statistical.T.DIST(1.959999998, 60, 1)).to.approximately(0.027322465, 1e-9)
-    expect(statistical.T.DIST(1.959999998, 60, 2)).to.approximately(0.05464493, 1e-9)
-    expect(statistical.T.DIST(3.31, 4, 1)).to.approximately(0.014827220522043, 1e-9)
-    expect(statistical.T.DIST(3.31, 4, 2)).to.approximately(0.029654441044086, 1e-9)
+    expect(statistical.T.DIST(8, 0, true)).to.equal(error.num)
+    expect(statistical.T.DIST(60, 1, true)).to.approximately(0.99469533, 1e-8)
+    expect(statistical.T.DIST(8, 3, false)).to.approximately(0.00073691, 1e-8)
+    expect(statistical.T.DIST(1.959999998, 60, 1)).to.approximately(0.972677535, 1e-9)
+    expect(statistical.T.DIST(8, 3, 'FALSE')).to.approximately(0.00073691, 1e-8)
+    expect(statistical.T.DIST(8, 3, 'invalid')).to.equal(error.value)
   })
 
   it('T.DIST.2T', () => {
@@ -1095,6 +1100,17 @@ describe('Statistical', () => {
     known_y = [6, 9, 3, 5, 4, 4, 5]
     expect(statistical.T.TEST(known_x, known_y)).to.approximately(0.6141571469712601, 1e-9)
     expect(statistical.T.TEST('invalid', known_y)).to.equal(error.value)
+    known_x = [3, 4, 5, 8, 9, 1, 2, 4, 5]
+    known_y = [6, 19, 3, 2, 14, 4, 5, 17, 1]
+    expect(statistical.T.TEST(known_x, known_y, 2, 1)).to.approximately(0.196016, 1e-6)
+    expect(statistical.T.TEST(known_x, known_y, 1, 1)).to.approximately(0.098008, 1e-6)
+    expect(statistical.T.TEST(known_x, known_y, 2, 2)).to.approximately(0.191996, 1e-6)
+    expect(statistical.T.TEST(known_x, known_y, 2, 3)).to.approximately(0.202294, 1e-6)
+    expect(statistical.T.TEST(known_x, known_y, 3, 1)).to.equal(error.num)
+    expect(statistical.T.TEST([1], [2], 2, 1)).to.equal(error.div0)
+    expect(statistical.T.TEST([1, 1], [1, 1], 2, 2)).to.equal(error.div0)
+    expect(statistical.T.TEST([1, 2, 3], [2, 3, 4], 2, 1)).to.equal(error.div0)
+    expect(statistical.T.TEST([1, 1], [1, 1], 2, 3)).to.equal(error.div0)
   })
 
   it('TREND', () => {
@@ -1147,5 +1163,13 @@ describe('Statistical', () => {
     expect(statistical.Z.TEST(data, 4)).to.approximately(0.09057419685136381, 1e-9)
     expect(statistical.Z.TEST(data, 6)).to.approximately(0.86304338912953, 1e-9)
     expect(statistical.Z.TEST(data, 'invalid')).to.equal(error.value)
+  })
+
+  it('legacy right-tailed and two-tailed functions', () => {
+    expect(compatibility.CHIDIST(18.307, 10)).to.approximately(0.050001, 1e-6)
+    expect(compatibility.CHIINV(0.050001, 10)).to.approximately(18.306973, 1e-6)
+    expect(compatibility.FDIST(15.2069, 6, 4)).to.approximately(0.01, 1e-6)
+    expect(compatibility.FINV(0.01, 6, 4)).to.approximately(15.206865, 1e-6)
+    expect(compatibility.TINV(0.05464493, 60)).to.approximately(1.959999998, 1e-6)
   })
 })
