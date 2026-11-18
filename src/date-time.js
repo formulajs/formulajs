@@ -2,11 +2,11 @@ import * as error from './utils/error.js'
 import * as utils from './utils/common.js'
 import { dateToSerial, returnSerial } from './utils/date.js'
 
+// First day of the week (0 = Sunday ... 6 = Saturday) for each WEEKNUM return_type
 const WEEK_STARTS = [
   undefined,
   0,
   1,
-  undefined,
   undefined,
   undefined,
   undefined,
@@ -698,11 +698,21 @@ export function WEEKNUM(serial_number, return_type) {
   }
 
   const week_start = WEEK_STARTS[return_type]
-  let jan = new Date(serial_number.getFullYear(), 0, 1)
-  const inc = jan.getDay() < week_start ? 1 : 0
-  jan -= Math.abs(jan.getDay() - week_start) * 24 * 60 * 60 * 1000
 
-  return Math.floor((serial_number - jan) / (1000 * 60 * 60 * 24) / 7 + 1) + inc
+  if (week_start === undefined) {
+    return error.num
+  }
+
+  // Week 1 is the week containing January 1; weeks begin on week_start
+  const jan = new Date(serial_number.getFullYear(), 0, 1)
+  const offset = (jan.getDay() - week_start + 7) % 7
+  const dayOfYear = Math.round(
+    (Date.UTC(serial_number.getFullYear(), serial_number.getMonth(), serial_number.getDate()) -
+      Date.UTC(jan.getFullYear(), 0, 1)) /
+      86400000
+  )
+
+  return Math.floor((dayOfYear + offset) / 7) + 1
 }
 
 /**
