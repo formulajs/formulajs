@@ -126,7 +126,13 @@ export function DATEDIF(start_date, end_date, unit) {
 
   switch (unit) {
     case 'Y':
-      result = Math.floor(YEARFRAC(start_date, end_date))
+      // Complete years: one less when the anniversary (month, day) has not been reached yet
+      result = end_date_year - start_date_year
+
+      if (end_date_month < start_date_month || (end_date_month === start_date_month && end_date_day < start_date_day)) {
+        result--
+      }
+
       break
     case 'D':
       result = DAYS(end_date, start_date)
@@ -165,7 +171,10 @@ export function DATEDIF(start_date, end_date, unit) {
       result = result % 12
       break
     case 'YD':
-      if (end_date_month > start_date_month || (end_date_month === start_date_month && end_date_day < start_date_day)) {
+      if (
+        end_date_month > start_date_month ||
+        (end_date_month === start_date_month && end_date_day >= start_date_day)
+      ) {
         start_date.setFullYear(end_date_year)
       } else {
         start_date.setFullYear(end_date_year - 1)
