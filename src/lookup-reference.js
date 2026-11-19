@@ -751,3 +751,87 @@ export function VSTACK(array, ...otherArrays) {
 
   return arrayResult
 }
+
+/**
+ * Returns the array in a single column.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The array or reference to return as a column.
+ * @param {*} [ignore=0] Whether to ignore certain types of values. By default, no values are ignored. (0 = Keep all values (default), 1 = Ignore blanks, 2 = Ignore errors, 3 = Ignore blanks and errors)
+ * @param {*} [scan_by_column=false] Scan the array by column. By default, the array is scanned by row. Scanning determines whether the values are ordered by row or by column.
+ * @returns
+ */
+export function TOCOL(array, ignore, scan_by_column) {
+  if (utils.anyIsError(array, ignore, scan_by_column)) {
+    return utils.anyError(array, ignore, scan_by_column)
+  }
+
+  if (!Array.isArray(array)) return error.na
+
+  const [rowSize, columnSize] = utils.getMatrixSize(array)
+  if (rowSize === 0 || columnSize === 0) return error.na
+  if (utils.isDefined(ignore) && !(ignore >= 0 && ignore <= 3)) return error.value
+
+  const colResult = new Array(rowSize * columnSize)
+  const ignoreEmpty = ignore === 1 || ignore === 3
+  const ignoreError = ignore === 2 || ignore === 3
+  let rowFilling = 0
+
+  utils.loopMatrix(array, scan_by_column, (value) => {
+    if (value instanceof Error) {
+      if (!ignoreError) colResult[rowFilling++] = [value]
+    } else if (utils.isDefined(value)) {
+      colResult[rowFilling++] = [value]
+    } else if (!ignoreEmpty) {
+      colResult[rowFilling++] = [0]
+    }
+  })
+
+  if (ignore > 0 && rowFilling === 0) return error.calc
+
+  colResult.length = rowFilling
+  return colResult
+}
+
+/**
+ * Returns the array in a single row.
+ *
+ * Category: Lookup and reference
+ *
+ * @param {*} array The array or reference to return as a row.
+ * @param {*} [ignore=0] Whether to ignore certain types of values. By default, no values are ignored. (0 = Keep all values (default), 1 = Ignore blanks, 2 = Ignore errors, 3 = Ignore blanks and errors)
+ * @param {*} [scan_by_column=false] Scan the array by column. By default, the array is scanned by row. Scanning determines whether the values are ordered by row or by column.
+ * @returns
+ */
+export function TOROW(array, ignore, scan_by_column) {
+  if (utils.anyIsError(array, ignore, scan_by_column)) {
+    return utils.anyError(array, ignore, scan_by_column)
+  }
+
+  if (!Array.isArray(array)) return error.na
+
+  const [rowSize, columnSize] = utils.getMatrixSize(array)
+  if (rowSize === 0 || columnSize === 0) return error.na
+  if (utils.isDefined(ignore) && !(ignore >= 0 && ignore <= 3)) return error.value
+
+  const rowResult = new Array(rowSize * columnSize)
+  const ignoreEmpty = ignore === 1 || ignore === 3
+  const ignoreError = ignore === 2 || ignore === 3
+  let colFilling = 0
+
+  utils.loopMatrix(array, scan_by_column, (value) => {
+    if (value instanceof Error) {
+      if (!ignoreError) rowResult[colFilling++] = value
+    } else if (utils.isDefined(value)) {
+      rowResult[colFilling++] = value
+    } else if (!ignoreEmpty) {
+      rowResult[colFilling++] = 0
+    }
+  })
+
+  if (ignore > 0 && colFilling === 0) return error.calc
+
+  rowResult.length = colFilling
+  return [rowResult]
+}

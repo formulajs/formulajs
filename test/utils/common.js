@@ -136,6 +136,29 @@ describe('Utils => Common', () => {
       })
     })
 
+    describe('loopMatrix', () => {
+      describe('args: (matrix, byColumn, callback)', () => {
+        const matrix = [
+          [1, 2, 3],
+          [4, 5, 6]
+        ]
+
+        const scan = (byColumn) => {
+          const values = []
+          utils.loopMatrix(matrix, byColumn, (value) => values.push(value))
+          return values
+        }
+
+        it('should scan matrix row by row when byColumn is false', () => {
+          expect(scan(false)).to.eql([1, 2, 3, 4, 5, 6])
+        })
+
+        it('should scan matrix column by column when byColumn is true', () => {
+          expect(scan(true)).to.eql([1, 4, 2, 5, 3, 6])
+        })
+      })
+    })
+
     describe('fillMatrix', () => {
       it('should fill empty/null/undefined values in a matrix with 0s', () => {
         expect(
