@@ -313,11 +313,11 @@ export function MID(text, start_num, num_chars) {
     return utils.anyError(text, start_num, num_chars)
   }
 
-  const numArgs = [start_num, num_chars].map((num) => utils.parseNumber(num))
-  const validNumArgs = numArgs.every((numArg) => {
-    return !(numArg instanceof Error) && numArg > 0
-  })
-  if (!validNumArgs) return error.value
+  const [startNum, numChars] = [start_num, num_chars].map((num) => utils.parseNumber(num))
+
+  // Excel returns #VALUE! only if start_num < 1 or num_chars < 0
+  const isValid = (n, min) => !(n instanceof Error) && n >= min
+  if (!isValid(startNum, 1) || !isValid(numChars, 0)) return error.value
 
   if (!utils.isDefined(text)) {
     text = ''
@@ -325,10 +325,8 @@ export function MID(text, start_num, num_chars) {
     text = String(text)
   }
 
-  ;[start_num, num_chars] = numArgs
-
-  const begin = start_num - 1
-  const end = begin + num_chars
+  const begin = startNum - 1
+  const end = begin + numChars
 
   return text.substring(begin, end)
 }
